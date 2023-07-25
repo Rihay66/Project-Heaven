@@ -1,6 +1,0 @@
-# ninja log v5
-1	56	1690293091837616076	CMakeFiles/project-heaven.dir/src/renderer.cpp.o	5a12642a55ae62b5
-1	579	1690293092357618152	CMakeFiles/project-heaven.dir/glad/glad.c.o	3c5b943a32abc4b5
-1	706	1690293092484285324	CMakeFiles/project-heaven.dir/src/main.cpp.o	a2d6d17607862456
-1	706	1690293092484285324	CMakeFiles/project-heaven.dir/src/window.cpp.o	e21d85f9119603cb
-706	1024	1690293092804286602	project-heaven	4a80604c8590ad0

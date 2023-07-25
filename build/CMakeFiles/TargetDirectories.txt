@@ -1,3 +1,0 @@
-/home/yahir/Documents/Projects/Project-Heaven/build/CMakeFiles/project-heaven.dir
-/home/yahir/Documents/Projects/Project-Heaven/build/CMakeFiles/edit_cache.dir
-/home/yahir/Documents/Projects/Project-Heaven/build/CMakeFiles/rebuild_cache.dir
