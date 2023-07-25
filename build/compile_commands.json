@@ -1,26 +1,26 @@
 [
 {
-  "directory": "/home/rihay66/homeshare/Projects/Project-Heaven/build",
-  "command": "/usr/bin/clang++ -g -o CMakeFiles/project-heaven.dir/src/main.cpp.o -c /home/rihay66/homeshare/Projects/Project-Heaven/src/main.cpp",
-  "file": "/home/rihay66/homeshare/Projects/Project-Heaven/src/main.cpp",
+  "directory": "/home/yahir/Documents/Projects/Project-Heaven/build",
+  "command": "/usr/bin/clang++ -g -o CMakeFiles/project-heaven.dir/src/main.cpp.o -c /home/yahir/Documents/Projects/Project-Heaven/src/main.cpp",
+  "file": "/home/yahir/Documents/Projects/Project-Heaven/src/main.cpp",
   "output": "CMakeFiles/project-heaven.dir/src/main.cpp.o"
 },
 {
-  "directory": "/home/rihay66/homeshare/Projects/Project-Heaven/build",
-  "command": "/usr/bin/clang++ -g -o CMakeFiles/project-heaven.dir/src/window.cpp.o -c /home/rihay66/homeshare/Projects/Project-Heaven/src/window.cpp",
-  "file": "/home/rihay66/homeshare/Projects/Project-Heaven/src/window.cpp",
+  "directory": "/home/yahir/Documents/Projects/Project-Heaven/build",
+  "command": "/usr/bin/clang++ -g -o CMakeFiles/project-heaven.dir/src/window.cpp.o -c /home/yahir/Documents/Projects/Project-Heaven/src/window.cpp",
+  "file": "/home/yahir/Documents/Projects/Project-Heaven/src/window.cpp",
   "output": "CMakeFiles/project-heaven.dir/src/window.cpp.o"
 },
 {
-  "directory": "/home/rihay66/homeshare/Projects/Project-Heaven/build",
-  "command": "/usr/bin/clang++ -g -o CMakeFiles/project-heaven.dir/src/renderer.cpp.o -c /home/rihay66/homeshare/Projects/Project-Heaven/src/renderer.cpp",
-  "file": "/home/rihay66/homeshare/Projects/Project-Heaven/src/renderer.cpp",
+  "directory": "/home/yahir/Documents/Projects/Project-Heaven/build",
+  "command": "/usr/bin/clang++ -g -o CMakeFiles/project-heaven.dir/src/renderer.cpp.o -c /home/yahir/Documents/Projects/Project-Heaven/src/renderer.cpp",
+  "file": "/home/yahir/Documents/Projects/Project-Heaven/src/renderer.cpp",
   "output": "CMakeFiles/project-heaven.dir/src/renderer.cpp.o"
 },
 {
-  "directory": "/home/rihay66/homeshare/Projects/Project-Heaven/build",
-  "command": "/usr/bin/clang -g -o CMakeFiles/project-heaven.dir/glad/glad.c.o -c /home/rihay66/homeshare/Projects/Project-Heaven/glad/glad.c",
-  "file": "/home/rihay66/homeshare/Projects/Project-Heaven/glad/glad.c",
+  "directory": "/home/yahir/Documents/Projects/Project-Heaven/build",
+  "command": "/usr/bin/clang -g -o CMakeFiles/project-heaven.dir/glad/glad.c.o -c /home/yahir/Documents/Projects/Project-Heaven/glad/glad.c",
+  "file": "/home/yahir/Documents/Projects/Project-Heaven/glad/glad.c",
   "output": "CMakeFiles/project-heaven.dir/glad/glad.c.o"
 }
 ]

@@ -3,4 +3,4 @@
 .vscode/
 
 #ignore cmake build folder
-./build
+/build
