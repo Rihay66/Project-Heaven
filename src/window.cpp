@@ -43,7 +43,6 @@ Window::Window(int h, int w, const char* name){
 Window::~Window(){
     printf("Exiting...\n");
     glfwTerminate();
-    exit(0);
 }
 
 //Handle main window input function

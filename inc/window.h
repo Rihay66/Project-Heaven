@@ -11,12 +11,14 @@
 class Window{
     public:
         GLFWwindow* handle;
-        //constructor
+        //constructor and also init shader, textures, etc...
         Window(int w, int h, const char* name);
         //destructor
         ~Window();
         //Primary window input
         void window_input();
+        void update();
+        void render();
 };
 
 #endif
