@@ -5,8 +5,12 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
+//static vars
+static bool isDebug = false;
+static bool pressed = false;
+
 //Window constructor, intializes GLFW and GLAD then creates a window with the passed parameters
-Window::Window(int h, int w, const char* name) : DeltaTime(0){
+Window::Window(int h, int w, const char* name) : DeltaTime(0), State(ACTIVE){
 
     //init GLFW
     glfwInit();
@@ -56,6 +60,23 @@ void Window::window_input(){
     if(glfwGetKey(handle, GLFW_KEY_ESCAPE) == GLFW_PRESS){
         //set window to close
         glfwSetWindowShouldClose(handle, true);
+    }
+
+    //debug enabler button
+    if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS && !pressed){
+        isDebug = !isDebug;
+        //check the isDebug value and set the proper app state
+        if(isDebug){
+            State = DEBUG;
+            std::cout << "MSG: DEBUG IS ENABLED! State: " << std::endl;
+        }
+        else{
+            State = ACTIVE;
+            std::cout << "MSG: DEBUG IS DISABLED State: " << std::endl;
+        }
+        pressed = !pressed;
+    }else if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){
+        pressed = !pressed;
     }
 }
 

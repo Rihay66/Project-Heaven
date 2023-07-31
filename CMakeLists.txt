@@ -14,9 +14,11 @@ src/texture.cpp
 src/shader.cpp
 src/stb_image.cpp
 src/resourceManager.cpp
+src/gameHandler.cpp
 glad/glad.c
 glad/glad.h
 inc/window.h
+inc/gameHandler.h
 inc/renderer.h
 inc/texture.h
 inc/stb_image.h

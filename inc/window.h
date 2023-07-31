@@ -19,6 +19,7 @@ class Window{
         //delta time variable for updating input, physics, and kind of movement
         float DeltaTime;
         //variable that can be set through input
+        APP_STATE State;
 
         //constructor and also init shader, textures, etc...
         Window(int w, int h, const char* name);
