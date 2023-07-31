@@ -15,13 +15,13 @@
 class Renderer{
     public:
         //constructor & desconstructor
-        Renderer(Shader shader);
+        Renderer(Shader &shader);
         ~Renderer();
 
-        void Draw2D(Texture2D texture, glm::vec2 position, glm::vec2 size = glm::vec2(10.0f, 10.0f), float rotation = 0.0f, glm::vec3 color = glm::vec3(1.0f));
+        void Draw2D(Texture2D &texture, glm::vec2 position, glm::vec2 size = glm::vec2(10.0f, 10.0f), float rotation = 0.0f, glm::vec3 color = glm::vec3(1.0f));
     
     private:
-        Shader* shader;
+        Shader shader;
         //stores data of a quad
         unsigned int quadVAO;
 

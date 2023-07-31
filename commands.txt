@@ -1,8 +1,0 @@
-//Compile command
- g++ -c "source files"; g++ "object files" -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi ; ./a.out
-//Necessary packages
-GLFW
-GLAD (already included)
-GLM
-stb_image (already included)
-xorg-dev

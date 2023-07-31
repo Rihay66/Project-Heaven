@@ -20,6 +20,8 @@ class Window{
         float DeltaTime;
         //variable that can be set through input
         APP_STATE State;
+        //variable storing window size
+        unsigned int width, height;
 
         //constructor and also init shader, textures, etc...
         Window(int w, int h, const char* name);

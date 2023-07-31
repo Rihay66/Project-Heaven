@@ -1,5 +1,7 @@
 #include "../inc/window.h"
 
+#include "../inc/gameHandler.h"
+
 //Callback func
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
@@ -9,8 +11,15 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 static bool isDebug = false;
 static bool pressed = false;
 
+//Instantiate gameHandler object
+gameHandler* game;
+
 //Window constructor, intializes GLFW and GLAD then creates a window with the passed parameters
-Window::Window(int h, int w, const char* name) : DeltaTime(0), State(ACTIVE){
+Window::Window(int h, int w, const char* name) : DeltaTime(0), State(ACTIVE), width(0), height(0){
+
+    //set local vars
+    width = w;
+    height = h;
 
     //init GLFW
     glfwInit();
@@ -36,10 +45,10 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), State(ACTIVE){
         exit(-1);
     }
 
-    //set openGL window size
-    glViewport(0, 0, h, w);
     //set up call back to update the opengl window
     glfwSetFramebufferSizeCallback(handle, framebuffer_size_callback);
+    //set openGL window size
+    glViewport(0, 0, h, w);
 
     //set up rendering for 2D
     glEnable(GL_BLEND);
@@ -50,6 +59,9 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), State(ACTIVE){
 
 //Destructor
 Window::~Window(){
+    //delete any pointers
+    delete game;
+
     printf("Exiting...\n");
     glfwTerminate();
 }
@@ -68,11 +80,11 @@ void Window::window_input(){
         //check the isDebug value and set the proper app state
         if(isDebug){
             State = DEBUG;
-            std::cout << "MSG: DEBUG IS ENABLED! State: " << std::endl;
+            std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
         }
         else{
             State = ACTIVE;
-            std::cout << "MSG: DEBUG IS DISABLED State: " << std::endl;
+            std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
         }
         pressed = !pressed;
     }else if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){
@@ -83,15 +95,20 @@ void Window::window_input(){
 //initialization
 void Window::init(){
     //Here goes the initial processing of shaders, textues, and objects
+    game = new gameHandler(width, height, handle);
+    game->init();
 }
 
 //updating
 void Window::update(){
     //update any variables like moving objects or updating input
     //* NOTE: that any object that needs input will need to have reference to the window handleas a parameter to be passed down
+    game->update(DeltaTime);
+    game->setGameState(State);
 }
 
 //rendering
 void Window::render(){
     //here update visually the objects, shaders, textures, etc
+    game->render();
 }
