@@ -4,16 +4,30 @@ cmake_policy(SET CMP0072 NEW)
 
 find_package(OpenGL REQUIRED)
 
+#include all files
+# TODO auto get source files and header files from /inc and /src
 add_executable(project-heaven 
 src/main.cpp
 src/window.cpp
 src/renderer.cpp
+src/texture.cpp
+src/shader.cpp
+src/stb_image.cpp
+src/resourceManager.cpp
 glad/glad.c
 glad/glad.h
 inc/window.h
 inc/renderer.h
+inc/texture.h
+inc/stb_image.h
+inc/shader.h
+inc/resourceManager.h
 
 )
+# Create folders and thier sub files for runtime loading
+file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)
+
+file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
 
 target_link_libraries(project-heaven 
 glfw 

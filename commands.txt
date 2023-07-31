@@ -1,5 +1,5 @@
 //Compile command
- g++ -c main.cpp glad.c stb_image.cpp; g++ main.o glad.o stb_image.o -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi ; ./a.out
+ g++ -c "source files"; g++ "object files" -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi ; ./a.out
 //Necessary packages
 GLFW
 GLAD (already included)
