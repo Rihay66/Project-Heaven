@@ -14,8 +14,16 @@ Camera::Camera(unsigned int Width, unsigned int Height, Shader &shader, float ca
 Camera::~Camera(){
 }
 
-void Camera::follow(glm::vec3 position){
+void Camera::follow(glm::vec3 pos){
     //follow a position
+    position = pos;
+    //update shader
+    glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1));
+
+    glm::mat4 view = glm::inverse(transform);
+
+    //tell shader to set view
+    shader.SetMatrix4("view", view);
 }
 
 void Camera::camInput(float deltaTime, GLFWwindow* window){
@@ -25,11 +33,11 @@ void Camera::camInput(float deltaTime, GLFWwindow* window){
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         //move up
-        position -= movement * up;
+        position -= movement * up * 2.0f;
     }
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
         //move down
-        position += movement * up;
+        position += movement * up * 2.0f;
     }
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
         //move left

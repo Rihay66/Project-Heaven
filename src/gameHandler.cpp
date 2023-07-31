@@ -23,6 +23,7 @@ void gameHandler::setGameState(int i){
 void gameHandler::init(){
     //load all resources like shaders, textures
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
+    //set up projection
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width), 
         static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
@@ -35,7 +36,7 @@ void gameHandler::init(){
     renderer = new Renderer(spriteShader);
 
     //set up game objects and camera
-    camera = new Camera(Width, Height, spriteShader, 100.0f);
+    camera = new Camera(Width, Height, spriteShader, 150.0f);
 
 }
 
@@ -50,5 +51,5 @@ void gameHandler::update(float deltaTime){
 void gameHandler::render(){
     //render stuff regardless of state
     Texture2D tex = ResourceManager::GetTexture("Test");
-    renderer->Draw2D(tex, glm::vec2(200.0f, 200.0f), glm::vec2(100.0f, 200.0f), 0.0f);
+    renderer->Draw2D(tex, glm::vec2(200.0f, 200.0f), glm::vec2(50.0f, 150.0f), 0.0f);
 }
