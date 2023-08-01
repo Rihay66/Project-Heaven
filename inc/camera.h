@@ -30,9 +30,9 @@ class Camera{
         ~Camera();
 
         //input
-        void camInput(float deltaTime, GLFWwindow* window);
+        void camInput(float deltaTime, GLFWwindow* &window);
         //follow a position
-        void follow(glm:: vec3 = glm::vec3(0.0f));
+        void follow(glm::vec2 = glm::vec3(0.0f), glm::vec2 size = glm::vec3(0.0f));
 
 };
 

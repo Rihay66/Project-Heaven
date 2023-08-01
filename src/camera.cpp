@@ -1,6 +1,6 @@
 #include "../inc/camera.h"
 
-Camera::Camera(unsigned int Width, unsigned int Height, Shader &shader, float cameraSpeed) : speed(cameraSpeed){
+Camera::Camera(unsigned int Width, unsigned int Height, Shader &shader, float cameraSpeed) : speed(cameraSpeed), width(Width), height(Height){
     this->shader = shader;
     //update shader
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1));
@@ -14,9 +14,9 @@ Camera::Camera(unsigned int Width, unsigned int Height, Shader &shader, float ca
 Camera::~Camera(){
 }
 
-void Camera::follow(glm::vec3 pos){
+void Camera::follow(glm::vec2 pos, glm::vec2 size){
     //follow a position
-    position = pos;
+    position = glm::vec3((pos.x + size.x / 2.0f) - this->width / 2.0f, (pos.y + size.y / 2.0f) - this->height / 2.0f, 0.0f);
     //update shader
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1));
 
@@ -26,7 +26,7 @@ void Camera::follow(glm::vec3 pos){
     shader.SetMatrix4("view", view);
 }
 
-void Camera::camInput(float deltaTime, GLFWwindow* window){
+void Camera::camInput(float deltaTime, GLFWwindow* &window){
 
     float movement = speed * deltaTime;
 

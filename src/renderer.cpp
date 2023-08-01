@@ -32,7 +32,7 @@ void Renderer::Draw2D(Texture2D &texture, glm::vec2 position, glm::vec2 size, fl
     texture.Bind();
 
     glBindVertexArray(this->quadVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
 }
 
@@ -42,13 +42,10 @@ void Renderer::initRenderData(){
     unsigned int VBO;
     float vertices[] = { 
         // pos      // tex
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f, 
-
-        0.0f, 1.0f, 0.0f, 1.0f,
         1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f
+        0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 1.0f, 0.0f, 
+        0.0f, 0.0f, 0.0f, 0.0f,
     };
 
     glGenVertexArrays(1, &this->quadVAO);

@@ -1,9 +1,9 @@
 #include "../inc/gameHandler.h"
 
-#include <iostream>
-
 Renderer* renderer;
 Camera* camera;
+GameObject* obj1;
+GameObject* obj2;
 
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
@@ -13,6 +13,8 @@ gameHandler::~gameHandler(){
     //delete any pointers and clear resources (eg ResourceManager)
     delete camera;
     delete renderer;
+    delete obj1;
+    delete obj2;
     ResourceManager::Clear();
 }
 
@@ -36,8 +38,13 @@ void gameHandler::init(){
     renderer = new Renderer(spriteShader);
 
     //set up game objects and camera
-    camera = new Camera(Width, Height, spriteShader, 150.0f);
+    camera = new Camera(this->Width, this->Height, spriteShader, 150.0f);
 
+    //set up a object
+    glm::vec2 pos = glm::vec2(200.0f, 200.0f);
+    obj1 = new GameObject(pos, glm::vec2(50.0f, 150.0f), ResourceManager::GetTexture("Test"), glm::vec2(0.0f));
+    pos = glm::vec2(500.0f, 500.0f);
+    obj2 = new GameObject(pos, glm::vec2(50.0f, 150.0f), ResourceManager::GetTexture("Test"), glm::vec2(0.0f), glm::vec3(1.0f, 0.4f, 0.2f));
 }
 
 void gameHandler::update(float deltaTime){
@@ -45,11 +52,14 @@ void gameHandler::update(float deltaTime){
 
     if(State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, window);
+    }else if(State == GAME_ACTIVE){
+        //TODO: Make a moving player with input
+        camera->follow(obj2->position, obj2->size);
     }
 }
 
 void gameHandler::render(){
     //render stuff regardless of state
-    Texture2D tex = ResourceManager::GetTexture("Test");
-    renderer->Draw2D(tex, glm::vec2(200.0f, 200.0f), glm::vec2(50.0f, 150.0f), 0.0f);
+    obj1->Draw2D(renderer);
+    obj2->Draw2D(renderer);
 }

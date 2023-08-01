@@ -16,9 +16,11 @@ src/stb_image.cpp
 src/resourceManager.cpp
 src/gameHandler.cpp
 src/camera.cpp
+src/gameObject.cpp
 glad/glad.c
 glad/glad.h
 inc/camera.h
+inc/gameObject.h
 inc/window.h
 inc/gameHandler.h
 inc/renderer.h
