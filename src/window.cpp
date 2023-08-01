@@ -90,6 +90,15 @@ void Window::window_input(){
     }else if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){
         pressed = !pressed;
     }
+
+    //debug line wireframe
+    if(isDebug && glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_PRESS){
+        //set writeframe
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }else{
+        //stop wireframe
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
 }
 
 //initialization

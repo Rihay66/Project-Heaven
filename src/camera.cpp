@@ -26,6 +26,7 @@ void Camera::follow(glm::vec2 pos, glm::vec2 size){
     shader.SetMatrix4("view", view);
 }
 
+//TODO: Add a zoom input using the scroll wheel
 void Camera::camInput(float deltaTime, GLFWwindow* &window){
 
     float movement = speed * deltaTime;

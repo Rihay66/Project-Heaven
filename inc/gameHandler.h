@@ -4,7 +4,7 @@
 #define GAMEHANDLER_H
 
 #include "../inc/resourceManager.h"
-#include "../inc/gameObject.h"
+#include "../inc/player.h"
 #include "../inc/camera.h"
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
