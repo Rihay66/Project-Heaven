@@ -7,7 +7,7 @@ Player::Player(glm::vec2 pos, glm::vec2 siz, Texture2D sprt, float spd, glm::vec
     this->collidable = true;
 }
 
-void Player::playerInput(float deltaTime, GLFWwindow* &window){
+void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone){ 
     //move the player
     float movement = this->speed * deltaTime;
 
@@ -35,5 +35,37 @@ void Player::playerInput(float deltaTime, GLFWwindow* &window){
         position += movement * right;
         //set state
         dir = RIGHT;
+    }
+
+    if(isController && glfwJoystickPresent(GLFW_JOYSTICK_1) == true){
+        int axesCount;
+        //use axes for movement
+        const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+
+        //input for movement
+        if(axes[0] < -controllerDeadZone){ //left
+            //move left
+            position -= movement * right;
+            //set state
+            dir = LEFT;
+        }
+        if(axes[0] > controllerDeadZone){ //right
+            //move right
+            position += movement * right;
+            //set state
+            dir = RIGHT;
+        }
+        if(axes[1] < -controllerDeadZone){ //up
+            //move up
+            position -= movement * up * 3.0f;
+            //set state
+            dir = UP;
+        }  
+        if(axes[1] > controllerDeadZone){ //down
+            //move down
+            position += movement * up * 3.0f;
+            //set state
+            dir = DOWN;
+        }
     }
 }

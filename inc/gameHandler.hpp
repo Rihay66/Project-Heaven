@@ -10,26 +10,33 @@
 #include <GLFW/glfw3.h>
 
 //define global vars for objects to use
-const float PlayerSpeed(150.0f);
+const float PlayerSpeed(200.0f);
 const glm::vec2 defaultSize(50.0f, 150.0f);
 const glm::vec2 smallSize(40.0f, 120.0f);
+
+ //Define game states
+enum GAMESTATE{
+    GAME_ACTIVE, GAME_DEBUG
+};
+//define controller state
+enum CONTROLSSTATE{
+    KEYBOARDMOUSE, KMCONTROLLER
+};
 
 //handler class that manages all objects and also make use of the resource manager
 class gameHandler{
     private:
-        //Define game states
-        enum GAMESTATE{
-            GAME_ACTIVE, GAME_DEBUG
-        };
 
         unsigned int Width, Height;
-
+        //contain reference of the window
         GLFWwindow* window;
 
     public:
         //Game state
-        GAMESTATE State;
+        GAMESTATE Game_State;
+        CONTROLSSTATE Controller_State;
         void setGameState(int i);
+        void setControllerState(int i);
         //Game elements & values
 
         gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle);

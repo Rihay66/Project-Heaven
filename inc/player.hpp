@@ -29,7 +29,7 @@ class Player : public GameObject{
         Player(glm::vec2 pos, glm::vec2 siz, Texture2D sprt, float speed = 1.0f, glm::vec3 clr = glm::vec3(1.0f));
 
         //input function
-        void playerInput(float deltaTime, GLFWwindow* &window);
+        void playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone);
 };
 
 #endif // __PLAYER_H__

@@ -18,16 +18,16 @@ src/gameObject.cpp
 src/player.cpp
 glad/glad.c
 glad/glad.h
-inc/camera.h
-inc/player.h
-inc/gameObject.h
-inc/window.h
-inc/gameHandler.h
-inc/renderer.h
-inc/texture.h
+inc/camera.hpp
+inc/player.hpp
+inc/gameObject.hpp
+inc/window.hpp
+inc/gameHandler.hpp
+inc/renderer.hpp
+inc/texture.hpp
 inc/stb_image.h
-inc/shader.h
-inc/resourceManager.h
+inc/shader.hpp
+inc/resourceManager.hpp
 )
 # Create folders and thier sub files for runtime loading
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)

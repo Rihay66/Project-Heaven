@@ -21,10 +21,13 @@ gameHandler::~gameHandler(){
 }
 
 void gameHandler::setGameState(int i){
-    State = (GAMESTATE)i;
+    Game_State = (GAMESTATE)i;
 }
 
-//TODO: Setup dynamic controller input
+void gameHandler::setControllerState(int i){
+    Controller_State = (CONTROLSSTATE)i;
+}
+
 //TODO: Setup 2d physics
 //TODO: Instanced rendering
 
@@ -60,10 +63,10 @@ void gameHandler::init(){
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
 
-    if(State == GAME_DEBUG){ //Check if the game state is active or on debug
+    if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, this->window);
-    }else if(State == GAME_ACTIVE){
-        plr->playerInput(deltaTime, this->window);
+    }else if(Game_State == GAME_ACTIVE){
+        plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
         camera->follow(plr->position, plr->size);
     }
 }

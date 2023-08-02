@@ -10,12 +10,13 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 //static vars
 static bool isDebug = false;
 static bool pressed = false;
+static bool controllerCheck = false;
 
 //Instantiate gameHandler object
 gameHandler* game;
 
 //Window constructor, intializes GLFW and GLAD then creates a window with the passed parameters
-Window::Window(int h, int w, const char* name) : DeltaTime(0), State(ACTIVE), width(0), height(0){
+Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE), Input_State(KM), width(0), height(0){
 
     //set local vars
     width = w;
@@ -79,13 +80,13 @@ void Window::window_input(){
         isDebug = !isDebug;
         //check the isDebug value and set the proper app state
         if(isDebug){
-            State = DEBUG;
+            App_State = DEBUG;
             std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
             //disable vsync
             glfwSwapInterval(0);
         }
         else{
-            State = ACTIVE;
+            App_State = ACTIVE;
             std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
             //enable vsync
             glfwSwapInterval(1);
@@ -103,6 +104,19 @@ void Window::window_input(){
         //stop wireframe
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+
+    //check for joystick
+    if(glfwJoystickPresent(GLFW_JOYSTICK_1) == true && !controllerCheck){
+        //print out that the joystick is connected
+        const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+        std::cout << "Controller is connected! ID: " << name << std::endl;
+        Input_State = KMANDCONTROLLER;
+        controllerCheck = !controllerCheck;
+    }else if(glfwJoystickPresent(GLFW_JOYSTICK_1) == false && controllerCheck){
+        std::cout << "Controller is disconnected!" << std::endl;
+        Input_State = KM;
+        controllerCheck = !controllerCheck;
+    }
 }
 
 //initialization
@@ -117,7 +131,8 @@ void Window::update(){
     //update any variables like moving objects or updating input
     //* NOTE: that any object that needs input will need to have reference to the window handleas a parameter to be passed down
     game->update(DeltaTime);
-    game->setGameState(State);
+    game->setGameState(App_State);
+    game->setControllerState(Input_State);
 }
 
 //rendering

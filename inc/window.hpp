@@ -13,6 +13,11 @@ enum APP_STATE{
     ACTIVE, DEBUG
 };
 
+//define input state
+enum INPUT_STATE{
+    KM, KMANDCONTROLLER
+};
+
 class Window{
     private:
         //vars used for frame profiling
@@ -26,7 +31,8 @@ class Window{
         //delta time variable for updating input, physics, and kind of movement
         float DeltaTime;
         //variable that can be set through input
-        APP_STATE State;
+        APP_STATE App_State;
+        INPUT_STATE Input_State;
         //variable storing window size
         unsigned int width, height;
 
