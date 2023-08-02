@@ -9,6 +9,11 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
+//define global vars for objects to use
+const float PlayerSpeed(150.0f);
+const glm::vec2 defaultSize(50.0f, 150.0f);
+const glm::vec2 smallSize(40.0f, 120.0f);
+
 //handler class that manages all objects and also make use of the resource manager
 class gameHandler{
     private:

@@ -24,6 +24,10 @@ void gameHandler::setGameState(int i){
     State = (GAMESTATE)i;
 }
 
+//TODO: Setup dynamic controller input
+//TODO: Setup 2d physics
+//TODO: Instanced rendering
+
 void gameHandler::init(){
     //load all resources like shaders, textures
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
@@ -46,11 +50,11 @@ void gameHandler::init(){
 
     //set up a object
     glm::vec2 pos = glm::vec2(200.0f, 200.0f);
-    obj1 = new GameObject(pos, glm::vec2(50.0f, 150.0f), ResourceManager::GetTexture("Test"), glm::vec2(0.0f));
+    obj1 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("Test"));
     pos = glm::vec2(500.0f, 500.0f);
-    obj2 = new GameObject(pos, glm::vec2(50.0f, 150.0f), ResourceManager::GetTexture("item"), glm::vec2(0.0f));
+    obj2 = new GameObject(pos, smallSize, ResourceManager::GetTexture("item"));
     pos = glm::vec2(400.0f, 40.0f);
-    plr = new Player(pos, glm::vec2(50.0f, 150.0f), ResourceManager::GetTexture("pLayer"), glm::vec2(0.0f, 0.0f), 150.0f);
+    plr = new Player(pos, defaultSize, ResourceManager::GetTexture("pLayer"), PlayerSpeed);
 }
 
 void gameHandler::update(float deltaTime){
@@ -59,7 +63,6 @@ void gameHandler::update(float deltaTime){
     if(State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, this->window);
     }else if(State == GAME_ACTIVE){
-        //TODO: Make a moving player with input
         plr->playerInput(deltaTime, this->window);
         camera->follow(plr->position, plr->size);
     }

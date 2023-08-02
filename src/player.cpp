@@ -2,7 +2,10 @@
 
 Player::Player() : speed(0.0f), dir(UP){}
 
-Player::Player(glm::vec2 pos, glm::vec2 siz, Texture2D sprt, glm::vec2 vel, float spd, glm::vec3 color) : GameObject(pos, siz, sprt, vel, color), speed(spd), dir(UP){}
+Player::Player(glm::vec2 pos, glm::vec2 siz, Texture2D sprt, float spd, glm::vec3 color) : GameObject(pos, siz, sprt, color), speed(spd), dir(UP){
+    //set any non static var from gameobject class
+    this->collidable = true;
+}
 
 void Player::playerInput(float deltaTime, GLFWwindow* &window){
     //move the player

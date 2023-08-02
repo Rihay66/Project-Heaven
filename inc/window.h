@@ -14,6 +14,13 @@ enum APP_STATE{
 };
 
 class Window{
+    private:
+        //vars used for frame profiling
+        double prevTime = 0.0;
+        double currentTime = 0.0;
+        double timeDiff;
+        unsigned int counter = 0;
+
     public:
         GLFWwindow* handle;
         //delta time variable for updating input, physics, and kind of movement
@@ -32,6 +39,8 @@ class Window{
         void init(); //used to call classes that handle the loading of shaders, textures, and objects
         void update();
         void render();
+        //frame profiling
+        void getFrameTime();
 };
 
 #endif

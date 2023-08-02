@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.5.0)
-project(project-heaven VERSION 0.0.1)
+project(project-heaven VERSION 0.0.1 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
-
-find_package(OpenGL REQUIRED)
 
 #include all files
 # TODO auto get source files and header files from /inc and /src
@@ -37,6 +35,11 @@ file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/t
 
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
 
+# Link libs if the detected OS is LINUX
+if(UNIX)
+
+find_package(OpenGL REQUIRED)
+
 target_link_libraries(project-heaven 
 glfw 
 OpenGL::GL
@@ -47,3 +50,6 @@ Xrandr
 pthread
 Xi
 )
+endif (UNIX)
+
+# Link libs if the detected OS is LINUX

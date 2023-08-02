@@ -81,10 +81,14 @@ void Window::window_input(){
         if(isDebug){
             State = DEBUG;
             std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
+            //disable vsync
+            glfwSwapInterval(0);
         }
         else{
             State = ACTIVE;
             std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
+            //enable vsync
+            glfwSwapInterval(1);
         }
         pressed = !pressed;
     }else if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){
@@ -120,4 +124,21 @@ void Window::update(){
 void Window::render(){
     //here update visually the objects, shaders, textures, etc
     game->render();
+}
+
+//Frames
+void Window::getFrameTime(){
+    this->currentTime = glfwGetTime();
+    this->timeDiff = this->currentTime - this->prevTime;
+    this->counter++;
+    if(this->timeDiff >= 1.0 / 30.0){
+        //display frame per second & frame time
+        std::string FPS = std::to_string((1.0 / this->timeDiff) * this->counter);
+        std::string ms = std::to_string((this->timeDiff / this->counter) * 1000);
+        //set up title
+        std::string newTitle = "Project-Heaven - " + FPS + "FPS / " + ms + "ms";
+        glfwSetWindowTitle(this->handle, newTitle.c_str());
+        this->prevTime = this->currentTime;
+        this->counter = 0;
+    }
 }
