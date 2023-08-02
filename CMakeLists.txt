@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.0)
-project(project-heaven VERSION 0.0.1 LANGUAGES C CXX)
+project(project-heaven VERSION 0.0.1)
 cmake_policy(SET CMP0072 NEW)
 
 #include all files
@@ -28,7 +28,6 @@ inc/texture.h
 inc/stb_image.h
 inc/shader.h
 inc/resourceManager.h
-
 )
 # Create folders and thier sub files for runtime loading
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)
@@ -53,3 +52,15 @@ Xi
 endif (UNIX)
 
 # Link libs if the detected OS is LINUX
+# NOTE was compiled using msys2's w64-x86_64 packages
+if(WIN32)
+
+find_package(OpenGL REQUIRED)
+
+target_link_libraries(project-heaven 
+glfw3
+OpenGL::GL
+OpenGL::GLU
+)
+
+endif(WIN32)
