@@ -1,6 +1,6 @@
-#include "../inc/window.h"
+#include "../inc/window.hpp"
 
-#include "../inc/gameHandler.h"
+#include "../inc/gameHandler.hpp"
 
 //Callback func
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height){

@@ -1,4 +1,4 @@
-#include "../inc/renderer.h"
+#include "../inc/renderer.hpp"
 
 Renderer::Renderer(Shader &shader){
     this->shader = shader;

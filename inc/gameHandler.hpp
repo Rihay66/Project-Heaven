@@ -3,9 +3,9 @@
 #ifndef GAMEHANDLER_H
 #define GAMEHANDLER_H
 
-#include "../inc/resourceManager.h"
-#include "../inc/player.h"
-#include "../inc/camera.h"
+#include "../inc/resourceManager.hpp"
+#include "../inc/player.hpp"
+#include "../inc/camera.hpp"
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 

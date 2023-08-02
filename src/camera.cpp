@@ -1,4 +1,4 @@
-#include "../inc/camera.h"
+#include "../inc/camera.hpp"
 
 Camera::Camera(unsigned int Width, unsigned int Height, Shader &shader, float cameraSpeed) : speed(cameraSpeed), width(Width), height(Height){
     this->shader = shader;

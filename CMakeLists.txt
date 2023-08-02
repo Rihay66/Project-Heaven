@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.0)
-project(project-heaven VERSION 0.0.1)
+project(project-heaven VERSION 0.0.1 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
 #include all files

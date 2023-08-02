@@ -8,8 +8,8 @@
 
 #include "../glad/glad.h"
 
-#include "../inc/texture.h"
-#include "../inc/shader.h"
+#include "../inc/texture.hpp"
+#include "../inc/shader.hpp"
 
 
 // A static singleton ResourceManager class that hosts several

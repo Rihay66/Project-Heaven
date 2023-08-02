@@ -1,4 +1,4 @@
-#include "../inc/player.h"
+#include "../inc/player.hpp"
 
 Player::Player() : speed(0.0f), dir(UP){}
 

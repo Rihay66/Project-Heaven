@@ -3,7 +3,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-#include "../inc/gameObject.h"
+#include "../inc/gameObject.hpp"
 #include <GLFW/glfw3.h>
 
 //future use for changing sprite

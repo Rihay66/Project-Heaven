@@ -9,8 +9,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 //include shader and texture classes
-#include "../inc/texture.h"
-#include "../inc/shader.h"
+#include "../inc/texture.hpp"
+#include "../inc/shader.hpp"
 
 class Renderer{
     public:

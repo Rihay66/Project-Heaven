@@ -3,7 +3,7 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include "../inc/renderer.h"
+#include "../inc/renderer.hpp"
 
 class GameObject{
     public:

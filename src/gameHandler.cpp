@@ -1,4 +1,4 @@
-#include "../inc/gameHandler.h"
+#include "../inc/gameHandler.hpp"
 
 Renderer* renderer;
 Camera* camera;
