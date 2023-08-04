@@ -3,6 +3,9 @@
 #ifndef GAMEHANDLER_H
 #define GAMEHANDLER_H
 
+#include <iostream>
+#include <vector>
+
 #include "../inc/resourceManager.hpp"
 #include "../inc/player.hpp"
 #include "../inc/camera.hpp"
@@ -38,6 +41,7 @@ class gameHandler{
         void setGameState(int i);
         void setControllerState(int i);
         //Game elements & values
+        std::vector<GameObject> objects;
 
         gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle);
         ~gameHandler();

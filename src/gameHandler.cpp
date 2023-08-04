@@ -2,8 +2,6 @@
 
 Renderer* renderer;
 Camera* camera;
-GameObject* obj1;
-GameObject* obj2;
 Player* plr;
 
 //constructor
@@ -14,8 +12,6 @@ gameHandler::~gameHandler(){
     //delete any pointers and clear resources (eg ResourceManager)
     delete camera;
     delete renderer;
-    delete obj1;
-    delete obj2;
     delete plr;
     ResourceManager::Clear();
 }
@@ -52,10 +48,26 @@ void gameHandler::init(){
     camera = new Camera(this->Width, this->Height, spriteShader, 150.0f);
 
     //set up a object
-    glm::vec2 pos = glm::vec2(200.0f, 200.0f);
-    obj1 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("Test"));
-    pos = glm::vec2(500.0f, 500.0f);
-    obj2 = new GameObject(pos, smallSize, ResourceManager::GetTexture("item"));
+    glm::vec2 pos = glm::vec2(0.0f, 0.0f);
+    
+    //spawn a bunch of gameobjects
+    for(int i = 0; i < 10000; i++){
+        //decide on texture to put in
+        if(i % 2 == 0){
+            pos = glm::vec2(i * 10, i);
+            GameObject obj = GameObject(pos, defaultSize, ResourceManager::GetTexture("item"));
+            //put in list
+            objects.push_back(obj);
+        }else{
+            pos = glm::vec2(i , i + 10);
+            GameObject obj = GameObject(pos, defaultSize, ResourceManager::GetTexture("test"));
+            //put in list
+            objects.push_back(obj);
+        }
+    }
+
+    std::cout << objects.size() << std::endl;
+    
     pos = glm::vec2(400.0f, 40.0f);
     plr = new Player(pos, defaultSize, ResourceManager::GetTexture("pLayer"), PlayerSpeed);
 }
@@ -73,7 +85,11 @@ void gameHandler::update(float deltaTime){
 
 void gameHandler::render(){
     //render stuff regardless of state
-    obj1->Draw2D(renderer);
-    obj2->Draw2D(renderer);
+
+    //render all objs on the vector objects
+    for(GameObject i : objects){
+        i.Draw2D(renderer);
+    }
+
     plr->Draw2D(renderer);
 }
