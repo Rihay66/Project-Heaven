@@ -8,6 +8,8 @@ Renderer::Renderer(Shader &shader){
 Renderer::~Renderer(){
     //delete quad buffer data 
     glDeleteVertexArrays(1, &this->quadVAO);
+    glDeleteBuffers(1, &this->quadVBO);
+    glDeleteBuffers(1, &this->quadEBO);
 }
 
 //Render the sprite with it's texture
@@ -32,14 +34,13 @@ void Renderer::Draw2D(Texture2D &texture, glm::vec2 position, glm::vec2 size, fl
     texture.Bind();
 
     glBindVertexArray(this->quadVAO);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
 //Set up the quad rendering
 void Renderer::initRenderData(){
-    // configure VAO/VBO
-    unsigned int VBO;
+    // configure VAO/VBO/EBO
     float vertices[] = { 
         // pos      // tex
         1.0f, 1.0f, 1.0f, 1.0f,
@@ -48,15 +49,25 @@ void Renderer::initRenderData(){
         0.0f, 0.0f, 0.0f, 0.0f,
     };
 
-    glGenVertexArrays(1, &this->quadVAO);
-    glGenBuffers(1, &VBO);
+    unsigned int indices[] = {
+        0, 1, 2, 3, 0
+    };
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glGenVertexArrays(1, &this->quadVAO);
+    glGenBuffers(1, &this->quadVBO);
+    glGenBuffers(1, &this->quadEBO);
 
     glBindVertexArray(this->quadVAO);
-    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->quadEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }

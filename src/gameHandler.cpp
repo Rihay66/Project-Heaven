@@ -51,15 +51,15 @@ void gameHandler::init(){
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
     //spawn a bunch of gameobjects
-    for(int i = 0; i < 10000; i++){
+    for(int i = 0; i < 2; i++){
         //decide on texture to put in
         if(i % 2 == 0){
-            pos = glm::vec2(i * 10, i);
+            pos = glm::vec2(i + 200, i);
             GameObject obj = GameObject(pos, defaultSize, ResourceManager::GetTexture("item"));
             //put in list
             objects.push_back(obj);
         }else{
-            pos = glm::vec2(i , i + 10);
+            pos = glm::vec2(i , i + 100);
             GameObject obj = GameObject(pos, defaultSize, ResourceManager::GetTexture("test"));
             //put in list
             objects.push_back(obj);

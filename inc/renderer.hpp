@@ -24,6 +24,8 @@ class Renderer{
         Shader shader;
         //stores data of a quad
         unsigned int quadVAO;
+        unsigned int quadVBO;
+        unsigned int quadEBO;
 
         //initial setup for rendering, setups the rendering of quads and their buffer data
         void initRenderData();
