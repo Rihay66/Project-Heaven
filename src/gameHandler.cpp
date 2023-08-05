@@ -30,11 +30,8 @@ void gameHandler::setControllerState(int i){
 void gameHandler::init(){
     //load all resources like shaders, textures
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
-    //set up projection
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width), 
-        static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
+
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
-    ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
     //load textures
     ResourceManager::LoadTexture("textures/test.png", "test", true);
     ResourceManager::LoadTexture("textures/item.png", "item", true);
@@ -68,7 +65,7 @@ void gameHandler::init(){
 
     std::cout << objects.size() << std::endl;
     
-    pos = glm::vec2(400.0f, 40.0f);
+    pos = glm::vec2(0.0f, -60.0f);
     plr = new Player(pos, defaultSize, ResourceManager::GetTexture("pLayer"), PlayerSpeed);
 }
 

@@ -15,6 +15,10 @@ class Camera{
         const glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
         //delcare projection var
         glm::mat4 projection;
+        glm::mat4 view;
+        glm::mat4 projectionView;
+
+        void calculateProjectionView();
 
         //reference to the camera position
         glm::vec3 position = glm::vec3(0.0f);
