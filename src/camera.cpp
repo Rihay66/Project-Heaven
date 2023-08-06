@@ -15,7 +15,7 @@ Camera::~Camera(){
 
 void Camera::follow(glm::vec2 pos, glm::vec2 size){
     //follow a position
-    this->position = glm::vec3((pos.x + size.x / 2.0f) - this->width / 2.0f, (pos.y + size.y / 2.0f) - this->height / 2.0f, 0.0f);
+    this->position = glm::vec3(((pos.x * size.x) - this->width / 2.0f) + size.x / 2.0f, ((pos.y * size.y) - this->height / 2.0f) + size.y / 2.0f, 0.0f);
     //update shader
     calculateProjectionView();
 
