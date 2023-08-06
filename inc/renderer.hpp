@@ -42,7 +42,7 @@ class Renderer{
         unsigned int quadVBO;
         unsigned int quadEBO;
 
-        const size_t maxQuadCount = 1000;
+        const size_t maxQuadCount = 100000;
         const size_t maxVertexCount = maxQuadCount * 4;
         const size_t maxIndexCount = maxQuadCount * 6;
 

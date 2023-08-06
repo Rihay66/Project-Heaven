@@ -59,13 +59,19 @@ void Renderer::Draw2D(GameObject* obj1, GameObject* obj2, glm::vec2 spriteSize, 
     */
     unsigned int indexCount = 0;
 
-    std::array<Vertex, 1000> vertices; 
+    std::array<Vertex, 100000> vertices; 
     Vertex* buffer = vertices.data();
     
-    buffer = createQuad(buffer, -1.0f, -1.0f, 1.0f);
-    indexCount += 6;
-    buffer = createQuad(buffer, -2.0f, -2.0f, 1.0f);
-    indexCount += 6;
+    //Make a grid of sprites; Count of 10000 sprites
+    for(int y = 0; y < 100; y++){
+        for(int x = 0; x < 100; x++){
+
+            buffer = createQuad(buffer, x, y, 1.0f);
+
+            indexCount += 6;
+        }    
+    }
+
     buffer = createQuad(buffer, obj1->position.x, obj1->position.y, 0.0f);
     indexCount += 6;
 
