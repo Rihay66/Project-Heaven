@@ -12,31 +12,31 @@ Renderer::~Renderer(){
     glDeleteBuffers(1, &this->quadEBO);
 }
 
-static std::array<Vertex, 4> createQuad(float x, float y, float texIndex){
+static Vertex* createQuad(Vertex* target, float x, float y, float texIndex){
     
     float size = 1.0f;
     
-    Vertex v0;
-    v0.position = {x + size, y + size};
-    v0.texCoords = {1.0f, 1.0f};
-    v0.texIndex = texIndex;
+    target->position = {x + size, y + size};
+    target->texCoords = {1.0f, 1.0f};
+    target->texIndex = texIndex;
+    target++;
 
-    Vertex v1;
-    v1.position = {x, y + size};
-    v1.texCoords = {0.0f, 1.0f};
-    v1.texIndex = texIndex;
+    target->position = {x, y + size};
+    target->texCoords = {0.0f, 1.0f};
+    target->texIndex = texIndex;
+    target++;
 
-    Vertex v2;
-    v2.position = {x + size, y};
-    v2.texCoords = {1.0f, 0.0f};
-    v2.texIndex = texIndex;
+    target->position = {x + size, y};
+    target->texCoords = {1.0f, 0.0f};
+    target->texIndex = texIndex;
+    target++;
+    
+    target->position = {x, y};
+    target->texCoords = {0.0f, 0.0f};
+    target->texIndex = texIndex;
+    target++;
 
-    Vertex v3;
-    v3.position = {x, y};
-    v3.texCoords = {0.0f, 0.0f};
-    v3.texIndex = texIndex;
-
-    return {v0, v1, v2, v3};
+    return target;
 }
 
 //Render the sprite with it's texture
@@ -57,17 +57,21 @@ void Renderer::Draw2D(GameObject* obj1, GameObject* obj2, glm::vec2 spriteSize, 
         0.0f, 0.0f, 0.0f, 0.0f, 1.0f
     };
     */
+    unsigned int indexCount = 0;
 
-    auto q1 = createQuad(-1.0f, -1.0f, 1.0f);
-    auto q2 = createQuad(obj1->position.x, obj1->position.y, 0.0f);
-
-    Vertex vertices[8];
-    memcpy(vertices, q1.data(), q1.size() * sizeof(Vertex));
-    memcpy(vertices + q1.size(), q2.data(), q2.size() * sizeof(Vertex));
+    std::array<Vertex, 1000> vertices; 
+    Vertex* buffer = vertices.data();
+    
+    buffer = createQuad(buffer, -1.0f, -1.0f, 1.0f);
+    indexCount += 6;
+    buffer = createQuad(buffer, -2.0f, -2.0f, 1.0f);
+    indexCount += 6;
+    buffer = createQuad(buffer, obj1->position.x, obj1->position.y, 0.0f);
+    indexCount += 6;
 
     //Set dynamic vertex buffer
     glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
     
     //set all quads renderered here to have a set scale passed down from param
     setSpriteSize(spriteSize);
@@ -79,7 +83,7 @@ void Renderer::Draw2D(GameObject* obj1, GameObject* obj2, glm::vec2 spriteSize, 
     glBindTextureUnit(1, obj2->sprite.ID);
 
     glBindVertexArray(this->quadVAO);
-    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 }
 
 //Shader must be used before using this function
@@ -114,10 +118,13 @@ void Renderer::initRenderData(){
         0.0f, 0.0f, 0.0f, 0.0f, 1.0f
     };
     */
+    /*
     unsigned int indices[] = {
         0, 1, 2, 2, 3, 1,
         4, 5, 6, 6, 7, 5
     };
+    */
+
 
     glCreateVertexArrays(1, &this->quadVAO);
     glCreateBuffers(1, &this->quadVBO);
@@ -125,7 +132,7 @@ void Renderer::initRenderData(){
     glBindVertexArray(this->quadVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 1000, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * this->maxVertexCount, nullptr, GL_DYNAMIC_DRAW);
 
     //vertex attribute
     glEnableVertexArrayAttrib(this->quadVBO, 0);
@@ -138,6 +145,22 @@ void Renderer::initRenderData(){
     //texture index attribute
     glEnableVertexArrayAttrib(this->quadVBO, 2);
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, texIndex));
+
+    //indices buffer data
+    unsigned int indices[maxIndexCount];
+    unsigned int offset = 0;
+    for(size_t i = 0; i < maxIndexCount; i += 6){
+        
+        indices[i + 0] = 0 + offset;
+        indices[i + 1] = 1 + offset;
+        indices[i + 2] = 2 + offset;
+
+        indices[i + 3] = 2 + offset;
+        indices[i + 4] = 3 + offset;
+        indices[i + 5] = 1 + offset;
+
+        offset += 4;
+    }
 
     glCreateBuffers(1, &this->quadEBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->quadEBO);

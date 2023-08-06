@@ -31,11 +31,11 @@ void Camera::camInput(float deltaTime, GLFWwindow* &window){
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         //move up
-        position -= movement * up * 2.0f;
+        position -= movement * up * 3.0f;
     }
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
         //move down
-        position += movement * up * 2.0f;
+        position += movement * up * 3.0f;
     }
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
         //move left
