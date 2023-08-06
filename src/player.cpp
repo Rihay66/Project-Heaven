@@ -14,13 +14,13 @@ void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         //move up
-        position -= movement * up * 3.0f;
+        position -= movement * up;
         //set state
         dir = UP;
     }
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
         //move down
-        position += movement * up * 3.0f;
+        position += movement * up;
         //set state
         dir = DOWN;
     }

@@ -1,11 +1,13 @@
-#version 330 core
-in vec2 TexCoords;
+#version 450 core
+in vec2 o_TexCoords;
+in float o_TexIndex;
 out vec4 color;
 
-uniform sampler2D image;
+uniform sampler2D image[2];
 uniform vec3 spriteColor;
 
 void main()
-{    
-    color = vec4(spriteColor, 1.0) * texture(image, TexCoords);
+{   
+    int index = int(o_TexIndex);
+    color = vec4(spriteColor, 1.0) * texture(image[index], o_TexCoords);
 }  

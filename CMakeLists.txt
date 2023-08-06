@@ -51,7 +51,7 @@ Xi
 )
 endif (UNIX)
 
-# Link libs if the detected OS is LINUX
+# Link libs if the detected OS is Windows
 # NOTE was compiled using msys2's w64-x86_64 packages
 if(WIN32)
 

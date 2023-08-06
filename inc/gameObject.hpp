@@ -3,7 +3,8 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include "../inc/renderer.hpp"
+#include "../inc/texture.hpp"
+#include <glm/glm.hpp>
 
 class GameObject{
     public:
@@ -20,9 +21,6 @@ class GameObject{
         //constructor(s)
         GameObject();
         GameObject(glm::vec2 pos, glm::vec2 size, Texture2D sprt, glm::vec3 color = glm::vec3(1.0f));
-
-        //draw sprite
-        virtual void Draw2D(Renderer* &renderer);
 };
 
 #endif

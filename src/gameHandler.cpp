@@ -3,6 +3,7 @@
 Renderer* renderer;
 Camera* camera;
 Player* plr;
+GameObject* obj1;
 
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
@@ -13,6 +14,7 @@ gameHandler::~gameHandler(){
     delete camera;
     delete renderer;
     delete plr;
+    delete obj1;
     ResourceManager::Clear();
 }
 
@@ -31,7 +33,6 @@ void gameHandler::init(){
     //load all resources like shaders, textures
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
 
-    ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     //load textures
     ResourceManager::LoadTexture("textures/test.png", "test", true);
     ResourceManager::LoadTexture("textures/item.png", "item", true);
@@ -39,6 +40,11 @@ void gameHandler::init(){
 
     //set up the renderer
     Shader spriteShader = ResourceManager::GetShader("sprite");
+    spriteShader.Use();
+    auto loc = glGetUniformLocation(spriteShader.ID, "image");
+    int samplers[2] = {0, 1};
+    glUniform1iv(loc, 2, samplers);
+
     renderer = new Renderer(spriteShader);
 
     //set up game objects and camera
@@ -47,26 +53,9 @@ void gameHandler::init(){
     //set up a object
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    //spawn a bunch of gameobjects
-    for(int i = 0; i < 2; i++){
-        //decide on texture to put in
-        if(i % 2 == 0){
-            pos = glm::vec2(i + 200, i);
-            GameObject obj = GameObject(pos, defaultSize, ResourceManager::GetTexture("item"));
-            //put in list
-            objects.push_back(obj);
-        }else{
-            pos = glm::vec2(i , i + 100);
-            GameObject obj = GameObject(pos, defaultSize, ResourceManager::GetTexture("test"));
-            //put in list
-            objects.push_back(obj);
-        }
-    }
-
-    std::cout << objects.size() << std::endl;
-    
-    pos = glm::vec2(0.0f, -60.0f);
+    pos = glm::vec2(0.0f, 0.0f);
     plr = new Player(pos, defaultSize, ResourceManager::GetTexture("pLayer"), PlayerSpeed);
+    obj1 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("item"));
 }
 
 void gameHandler::update(float deltaTime){
@@ -84,9 +73,6 @@ void gameHandler::render(){
     //render stuff regardless of state
 
     //render all objs on the vector objects
-    for(GameObject i : objects){
-        i.Draw2D(renderer);
-    }
 
-    plr->Draw2D(renderer);
+    renderer->Draw2D(plr, obj1, defaultSize);
 }

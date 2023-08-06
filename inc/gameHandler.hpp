@@ -9,11 +9,12 @@
 #include "../inc/resourceManager.hpp"
 #include "../inc/player.hpp"
 #include "../inc/camera.hpp"
+#include "../inc/renderer.hpp"
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
 //define global vars for objects to use
-const float PlayerSpeed(200.0f);
+const float PlayerSpeed(2.0f);
 const glm::vec2 defaultSize(50.0f, 150.0f);
 const glm::vec2 smallSize(40.0f, 120.0f);
 
@@ -41,7 +42,7 @@ class gameHandler{
         void setGameState(int i);
         void setControllerState(int i);
         //Game elements & values
-        std::vector<GameObject> objects;
+        //std::vector<GameObject> objects;
 
         gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle);
         ~gameHandler();
