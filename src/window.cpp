@@ -48,6 +48,8 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
 
     //set up call back to update the opengl window
     glfwSetFramebufferSizeCallback(handle, framebuffer_size_callback);
+    //enable vsync
+    glfwSwapInterval(1);
     //set openGL window size
     glViewport(0, 0, h, w);
 

@@ -59,12 +59,12 @@ void Renderer::Draw2D(GameObject* obj1, GameObject* obj2, glm::vec2 spriteSize, 
     */
     unsigned int indexCount = 0;
 
-    std::array<Vertex, 100000> vertices; 
+    std::array<Vertex, 10000> vertices; 
     Vertex* buffer = vertices.data();
     
     //Make a grid of sprites; Count of 10000 sprites
-    for(int y = 0; y < 100; y++){
-        for(int x = 0; x < 100; x++){
+    for(int y = 0; y < 20; y++){
+        for(int x = 0; x < 20; x++){
 
             buffer = createQuad(buffer, x, y, 1.0f);
 
