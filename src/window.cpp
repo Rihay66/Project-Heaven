@@ -11,6 +11,8 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 static bool isDebug = false;
 static bool pressed = false;
 static bool controllerCheck = false;
+static bool controllerEnable = false;
+static bool inputSwitch = false;
 
 //Instantiate gameHandler object
 gameHandler* game;
@@ -112,12 +114,28 @@ void Window::window_input(){
         //print out that the joystick is connected
         const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
         std::cout << "Controller is connected! ID: " << name << std::endl;
-        Input_State = KMANDCONTROLLER;
         controllerCheck = !controllerCheck;
     }else if(glfwJoystickPresent(GLFW_JOYSTICK_1) == false && controllerCheck){
         std::cout << "Controller is disconnected!" << std::endl;
-        Input_State = KM;
         controllerCheck = !controllerCheck;
+    }
+
+    //enable or disable
+    if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_PRESS && !inputSwitch){
+        //check to enable or disable
+        controllerEnable = !controllerEnable;
+        if(controllerEnable){
+            //switch to use controller
+            std::cout << "MSG: Controller input is enabled!" << std::endl;
+            Input_State = KMANDCONTROLLER;
+        }else{
+            std::cout << "MSG: Controller input is disabled!" << std::endl;
+            Input_State = KM;
+        }
+        inputSwitch = !inputSwitch;
+    }else if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_RELEASE && inputSwitch){
+
+        inputSwitch = !inputSwitch;
     }
 }
 
