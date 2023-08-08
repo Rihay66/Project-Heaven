@@ -16,8 +16,9 @@
 
 //define global vars for objects to use
 const float PlayerSpeed(2.0f);
-const glm::vec2 defaultSize(50.0f, 150.0f);
-const glm::vec2 smallSize(40.0f, 120.0f);
+const float standardSpriteSize(1.0f);
+const glm::vec2 defaultModelSize(50.0f, 150.0f);
+const glm::vec2 smallModelSize(40.0f, 120.0f);
 
 //Define game states
 enum GAMESTATE{

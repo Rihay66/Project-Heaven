@@ -32,13 +32,13 @@ struct Vertex{
 class Renderer{
     public:
         //constructor & desconstructor
-        Renderer(Shader &shader);
+        Renderer(Shader &shader, glm::vec2 spriteSize);
         ~Renderer();
 
         //draw multiple pointer objects in a vector list
-        void Draw2D(std::vector<GameObject*> objs, glm::vec2 spriteSize, glm::vec3 color = glm::vec3(1.0f));
+        void Draw2D(std::vector<GameObject*> objs, glm::vec3 color = glm::vec3(1.0f));
         //draw a singular pointer object
-        void Draw2D(GameObject* obj, glm::vec2 spriteSize, glm::vec3 color = glm::vec3(1.0f));
+        void Draw2D(GameObject* obj, glm::vec3 color = glm::vec3(1.0f));
 
     private:
         Shader shader;
@@ -49,7 +49,8 @@ class Renderer{
 
         //stores the ammount of triangles to render
         unsigned int indexCount;
-        unsigned int lastKnownTextureUnit;
+        int textureIndex;
+        int lastKnownTextureUnit;
 
         const static int maxQuadCount = 10000;
         const static int maxVertexCount = maxQuadCount * 4;

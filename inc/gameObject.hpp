@@ -9,8 +9,9 @@
 class GameObject{
     public:
         //transform reference of the object
-        glm::vec2 position, size;
+        glm::vec2 position;
         glm::vec3 color;
+        float size;
         float rotation;
         //state of the object
         bool destroyed;
@@ -20,7 +21,7 @@ class GameObject{
 
         //constructor(s)
         GameObject();
-        GameObject(glm::vec2 pos, glm::vec2 size, Texture2D sprt, glm::vec3 color = glm::vec3(1.0f));
+        GameObject(glm::vec2 pos, float size, Texture2D sprt, glm::vec3 color = glm::vec3(1.0f));
 };
 
 #endif

@@ -8,7 +8,7 @@ static bool compareByTextureIdPointer(const GameObject* a, const GameObject* b) 
     return a->sprite.ID < b->sprite.ID;
 }
 
-Renderer::Renderer(Shader &shader){
+Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
     this->shader = shader;
 
     //set up shader samples
@@ -25,6 +25,9 @@ Renderer::Renderer(Shader &shader){
 
     glUniform1iv(loc, 32, samplers);
 
+    //set up shader model view
+    setSpriteSize(spriteSize);
+
     this->initRenderData(); //set up rendering of quads
 }
 
@@ -39,9 +42,7 @@ Renderer::~Renderer(){
     delete buffer;
 }
 
-static Vertex* createQuad(Vertex* target, float x, float y, float texIndex){
-    
-    float size = 1.0f;
+static Vertex* createQuad(Vertex* target, float x, float y, float size, float texIndex){
     
     target->position = {x + size, y + size};
     target->texCoords = {1.0f, 1.0f};
@@ -67,7 +68,7 @@ static Vertex* createQuad(Vertex* target, float x, float y, float texIndex){
 }
 
 //render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec2 spriteSize, glm::vec3 color){
+void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
     // prepare transformations
     this->shader.Use();
 
@@ -78,7 +79,7 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec2 spriteSize
     //reset index count
     indexCount = 0;
     //reset texture index
-    int textureIndex = 0;
+    textureIndex = 0;
 
     //init the buffer
     buffer = vertices.data();
@@ -86,9 +87,6 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec2 spriteSize
     //Set dynamic vertex buffer
     glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
-    
-    //set all quads renderered here to have a set scale passed down from param
-    setSpriteSize(spriteSize);
 
     // render textured quad
     this->shader.SetVector3f("spriteColor", color);
@@ -99,7 +97,7 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec2 spriteSize
     //gen tex by cheking objs tex id
     for(int i = 0 ; i < gameObjects.size(); i++){
 
-        buffer = createQuad(buffer, gameObjects[i]->position.x, gameObjects[i]->position.y, textureIndex);
+        buffer = createQuad(buffer, gameObjects[i]->position.x, gameObjects[i]->position.y, gameObjects[i]->size, textureIndex);
 
         //increment the amount of triangles to render
         indexCount += 6;
@@ -120,7 +118,7 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec2 spriteSize
 }
 
 //Render a single object
-void Renderer::Draw2D(GameObject* obj, glm::vec2 spriteSize, glm::vec3 color){
+void Renderer::Draw2D(GameObject* obj, glm::vec3 color){
 
     //prepare shader
     this->shader.Use();
@@ -142,7 +140,7 @@ void Renderer::Draw2D(GameObject* obj, glm::vec2 spriteSize, glm::vec3 color){
     glBindTextureUnit(lastKnownTextureUnit, obj->sprite.ID);
 
     //create the quad
-    buffer = createQuad(buffer, obj->position.x, obj->position.y, lastKnownTextureUnit);
+    buffer = createQuad(buffer, obj->position.x, obj->position.y, obj->size,lastKnownTextureUnit);
 
     //draw
     glBindVertexArray(this->quadVAO);
