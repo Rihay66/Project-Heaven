@@ -4,8 +4,12 @@
 //instantiate pointers and arrays
 Vertex* buffer;
 
-static bool compareByTextureId(const GameObject* a, const GameObject* b) {
+static bool compareByTextureIdPointer(const GameObject* a, const GameObject* b) {
     return a->sprite.ID < b->sprite.ID;
+}
+
+static bool compareByTextureIdNonPointer(const GameObject a, const GameObject b){
+    return a.sprite.ID < b.sprite.ID;
 }
 
 Renderer::Renderer(Shader &shader){
@@ -50,14 +54,14 @@ static Vertex* createQuad(Vertex* target, float x, float y, float texIndex){
     return target;
 }
 
-//Render the sprite with it's texture
+//render multiple objects pointers
 void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec2 spriteSize, glm::vec3 color){
     // prepare transformations
     this->shader.Use();
 
     //sort objects list
     // Reorder objects by texture ID
-    std::sort(gameObjects.begin(), gameObjects.end(), compareByTextureId);
+    std::sort(gameObjects.begin(), gameObjects.end(), compareByTextureIdPointer);
 
     //reset index count
     indexCount = 0;
@@ -96,8 +100,41 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec2 spriteSize
         }
     }
 
+    //set last know texture binding
+    lastKnownTextureUnit = textureIndex;
+
     glBindVertexArray(this->quadVAO);
     glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+}
+
+//Render a single object
+void Renderer::Draw2D(GameObject* obj, glm::vec2 spriteSize, glm::vec3 color){
+
+    //prepare shader
+    this->shader.Use();
+
+    //set up color 
+    this->shader.SetVector3f("spriteColor", color);
+
+    //set up buffer
+    buffer = vertices.data();
+
+    //Set dynamic vertex buffer
+    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
+
+    //increment the last know texture unit
+    lastKnownTextureUnit++;
+
+    //bind the texture
+    glBindTextureUnit(lastKnownTextureUnit, obj->sprite.ID);
+
+    //create the quad
+    buffer = createQuad(buffer, obj->position.x, obj->position.y, lastKnownTextureUnit);
+
+    //draw
+    glBindVertexArray(this->quadVAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
 //Shader must be used before using this function

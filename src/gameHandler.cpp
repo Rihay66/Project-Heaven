@@ -46,6 +46,7 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/test.png", "test", true);
     ResourceManager::LoadTexture("textures/item.png", "item", true);
     ResourceManager::LoadTexture("textures/player.png", "player", true);
+    ResourceManager::LoadTexture("textures/flower.png", "flower", true);
 
     //set up the renderer
     Shader spriteShader = ResourceManager::GetShader("sprite");
@@ -69,18 +70,17 @@ void gameHandler::init(){
     //set up a object
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    pos = glm::vec2(0.0f, 0.0f);
     plr = new Player(pos, defaultSize, ResourceManager::GetTexture("pLayer"), PlayerSpeed);
+    pos = glm::vec2(-1.0f, -1.0f);
     obj1 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("item"));
-    pos = glm::vec2(1.0f, 1.0f);
+    pos = glm::vec2(-2.0f, -2.0f);
     obj2 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("test"));
-    pos = glm:: vec2(2.0f, 2.0f);
-    obj3 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("player"));
+    pos = glm:: vec2(-3.0f, -0.0f);
+    obj3 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("flower"));
 
-    objects.push_back(plr);
-    objects.push_back(obj1);
-    objects.push_back(obj2);
-    objects.push_back(obj3);
+    pObjects.push_back(obj1);
+    pObjects.push_back(obj2);
+    pObjects.push_back(obj3);
 }
 
 void gameHandler::update(float deltaTime){
@@ -89,15 +89,14 @@ void gameHandler::update(float deltaTime){
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, this->window);
     }else if(Game_State == GAME_ACTIVE){
-        camera->follow(plr->position, plr->size);
         plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
+        camera->follow(plr->position, plr->size);
     }
 }
 
 void gameHandler::render(){
     //render stuff regardless of state
-
     //render all objs on the vector objects
-
-    renderer->Draw2D(objects, defaultSize);
+    renderer->Draw2D(plr, defaultSize);
+    renderer->Draw2D(pObjects, defaultSize);
 }
