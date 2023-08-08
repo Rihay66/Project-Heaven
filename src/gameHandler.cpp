@@ -4,6 +4,13 @@ Renderer* renderer;
 Camera* camera;
 Player* plr;
 GameObject* obj1;
+GameObject* obj2;
+GameObject* obj3;
+
+//comparison 
+static bool compareObjs(const GameObject* obj1, const GameObject* obj2){
+    return obj1->sprite.ID == obj2->sprite.ID;
+}
 
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
@@ -15,6 +22,8 @@ gameHandler::~gameHandler(){
     delete renderer;
     delete plr;
     delete obj1;
+    delete obj2;
+    delete obj3;
     ResourceManager::Clear();
 }
 
@@ -42,8 +51,15 @@ void gameHandler::init(){
     Shader spriteShader = ResourceManager::GetShader("sprite");
     spriteShader.Use();
     auto loc = glGetUniformLocation(spriteShader.ID, "image");
-    int samplers[2] = {0, 1};
-    glUniform1iv(loc, 2, samplers);
+    
+    int samplers[32];
+
+    //set up samplers array
+    for(int i = 0; i < 32; i++){
+        samplers[i] = i;
+    }
+
+    glUniform1iv(loc, 32, samplers);
 
     renderer = new Renderer(spriteShader);
 
@@ -56,6 +72,15 @@ void gameHandler::init(){
     pos = glm::vec2(0.0f, 0.0f);
     plr = new Player(pos, defaultSize, ResourceManager::GetTexture("pLayer"), PlayerSpeed);
     obj1 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("item"));
+    pos = glm::vec2(1.0f, 1.0f);
+    obj2 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("test"));
+    pos = glm:: vec2(2.0f, 2.0f);
+    obj3 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("player"));
+
+    objects.push_back(plr);
+    objects.push_back(obj1);
+    objects.push_back(obj2);
+    objects.push_back(obj3);
 }
 
 void gameHandler::update(float deltaTime){
@@ -64,8 +89,8 @@ void gameHandler::update(float deltaTime){
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, this->window);
     }else if(Game_State == GAME_ACTIVE){
-        plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
         camera->follow(plr->position, plr->size);
+        plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
     }
 }
 
@@ -74,5 +99,5 @@ void gameHandler::render(){
 
     //render all objs on the vector objects
 
-    renderer->Draw2D(plr, obj1, defaultSize);
+    renderer->Draw2D(objects, defaultSize);
 }

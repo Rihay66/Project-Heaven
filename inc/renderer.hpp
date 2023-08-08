@@ -3,7 +3,9 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-//testing in making quads
+//include standard lib
+#include <vector>
+#include <algorithm>
 #include <array>
 
 //include math and glad
@@ -33,8 +35,13 @@ class Renderer{
         Renderer(Shader &shader);
         ~Renderer();
 
-        void Draw2D(GameObject* obj1, GameObject* obj2, glm::vec2 spriteSize, glm::vec3 color = glm::vec3(1.0f));
-    
+        //draw multiple objects in a vector list
+        void Draw2D(std::vector<GameObject*> objs, glm::vec2 spriteSize, glm::vec3 color = glm::vec3(1.0f));
+        //draw a singular object
+        void Draw2D(GameObject* obj, glm::vec2 spriteSize, glm::vec3 color = glm::vec3(1.0f));
+        //draw non pointer gameobjects
+        void Draw2D(std::vector<GameObject> objs, glm::vec2 spriteSize, glm::vec3 color = glm::vec3(1.0f));
+
     private:
         Shader shader;
         //stores data of a quad
@@ -42,9 +49,14 @@ class Renderer{
         unsigned int quadVBO;
         unsigned int quadEBO;
 
-        const size_t maxQuadCount = 10000;
-        const size_t maxVertexCount = maxQuadCount * 4;
-        const size_t maxIndexCount = maxQuadCount * 6;
+        //stores the ammount of triangles to render
+        unsigned int indexCount;
+
+        const static int maxQuadCount = 10000;
+        const static int maxVertexCount = maxQuadCount * 4;
+        const static int maxIndexCount = maxQuadCount * 6;
+
+        std::array<Vertex, maxQuadCount> vertices;
 
         //initial setup for rendering, setups the rendering of quads and their buffer data
         void initRenderData();

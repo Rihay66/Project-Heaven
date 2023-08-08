@@ -1,4 +1,12 @@
 #include "../inc/renderer.hpp"
+#include <iostream>
+
+//instantiate pointers and arrays
+Vertex* buffer;
+
+static bool compareByTextureId(const GameObject* a, const GameObject* b) {
+    return a->sprite.ID < b->sprite.ID;
+}
 
 Renderer::Renderer(Shader &shader){
     this->shader = shader;
@@ -10,6 +18,9 @@ Renderer::~Renderer(){
     glDeleteVertexArrays(1, &this->quadVAO);
     glDeleteBuffers(1, &this->quadVBO);
     glDeleteBuffers(1, &this->quadEBO);
+
+    //delete any pointers
+    //delete buffer;
 }
 
 static Vertex* createQuad(Vertex* target, float x, float y, float texIndex){
@@ -40,40 +51,21 @@ static Vertex* createQuad(Vertex* target, float x, float y, float texIndex){
 }
 
 //Render the sprite with it's texture
-void Renderer::Draw2D(GameObject* obj1, GameObject* obj2, glm::vec2 spriteSize, glm::vec3 color){
+void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec2 spriteSize, glm::vec3 color){
     // prepare transformations
     this->shader.Use();
-    /*
-    float vertices[] = { 
-        // pos      // tex      //texture index
-        -1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
-        0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        -1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 
-        1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 0.0f, 0.0f, 1.0f
-    };
-    */
-    unsigned int indexCount = 0;
+    //sort objects list
+    // Reorder objects by texture ID
+    std::sort(gameObjects.begin(), gameObjects.end(), compareByTextureId);
 
-    std::array<Vertex, 10000> vertices; 
-    Vertex* buffer = vertices.data();
-    
-    //Make a grid of sprites; Count of 10000 sprites
-    for(int y = 0; y < 20; y++){
-        for(int x = 0; x < 20; x++){
+    //reset index count
+    indexCount = 0;
+    //reset texture index
+    int textureIndex = 0;
 
-            buffer = createQuad(buffer, x, y, 1.0f);
-
-            indexCount += 6;
-        }    
-    }
-
-    buffer = createQuad(buffer, obj1->position.x, obj1->position.y, 0.0f);
-    indexCount += 6;
+    //init the buffer
+    buffer = vertices.data();
 
     //Set dynamic vertex buffer
     glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
@@ -85,8 +77,24 @@ void Renderer::Draw2D(GameObject* obj1, GameObject* obj2, glm::vec2 spriteSize, 
     // render textured quad
     this->shader.SetVector3f("spriteColor", color);
 
-    glBindTextureUnit(0, obj1->sprite.ID);
-    glBindTextureUnit(1, obj2->sprite.ID);
+    //bind the first tex
+    glBindTextureUnit(textureIndex, gameObjects[0]->sprite.ID);
+
+    //gen tex by cheking objs tex id
+    for(int i = 0 ; i < gameObjects.size(); i++){
+
+        buffer = createQuad(buffer, gameObjects[i]->position.x, gameObjects[i]->position.y, textureIndex);
+
+        //increment the amount of triangles to render
+        indexCount += 6;
+
+        //check for new textures
+        if(i + 1 < gameObjects.size() && gameObjects[i]->sprite.ID != gameObjects[i + 1]->sprite.ID){
+            //increase index
+            textureIndex++;
+            glBindTextureUnit(textureIndex, gameObjects[i + 1]->sprite.ID);
+        }
+    }
 
     glBindVertexArray(this->quadVAO);
     glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
@@ -110,27 +118,6 @@ void Renderer::setSpriteSize(glm::vec2 spriteSize){
 //Set up the quad rendering
 void Renderer::initRenderData(){
     // configure VAO/VBO/EBO
-    /*
-    float vertices[] = { 
-        // pos      // tex      //texture index
-        -1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
-        0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        -1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-
-        1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 0.0f, 0.0f, 1.0f
-    };
-    */
-    /*
-    unsigned int indices[] = {
-        0, 1, 2, 2, 3, 1,
-        4, 5, 6, 6, 7, 5
-    };
-    */
-
 
     glCreateVertexArrays(1, &this->quadVAO);
     glCreateBuffers(1, &this->quadVBO);

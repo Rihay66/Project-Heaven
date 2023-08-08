@@ -3,7 +3,7 @@ in vec2 o_TexCoords;
 in float o_TexIndex;
 out vec4 color;
 
-uniform sampler2D image[2];
+uniform sampler2D image[32];
 uniform vec3 spriteColor;
 
 void main()

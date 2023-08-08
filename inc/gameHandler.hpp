@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 #include "../inc/resourceManager.hpp"
 #include "../inc/player.hpp"
@@ -42,7 +43,7 @@ class gameHandler{
         void setGameState(int i);
         void setControllerState(int i);
         //Game elements & values
-        //std::vector<GameObject> objects;
+        std::vector<GameObject*> objects;
 
         gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle);
         ~gameHandler();
