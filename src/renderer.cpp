@@ -8,12 +8,23 @@ static bool compareByTextureIdPointer(const GameObject* a, const GameObject* b) 
     return a->sprite.ID < b->sprite.ID;
 }
 
-static bool compareByTextureIdNonPointer(const GameObject a, const GameObject b){
-    return a.sprite.ID < b.sprite.ID;
-}
-
 Renderer::Renderer(Shader &shader){
     this->shader = shader;
+
+    //set up shader samples
+    this->shader.Use();
+
+    auto loc = glGetUniformLocation(this->shader.ID, "image");
+    
+    int samplers[32];
+
+    //set up samplers array
+    for(int i = 0; i < 32; i++){
+        samplers[i] = i;
+    }
+
+    glUniform1iv(loc, 32, samplers);
+
     this->initRenderData(); //set up rendering of quads
 }
 
@@ -24,7 +35,8 @@ Renderer::~Renderer(){
     glDeleteBuffers(1, &this->quadEBO);
 
     //delete any pointers
-    //delete buffer;
+    buffer = nullptr;
+    delete buffer;
 }
 
 static Vertex* createQuad(Vertex* target, float x, float y, float texIndex){

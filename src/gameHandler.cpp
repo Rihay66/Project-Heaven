@@ -48,17 +48,6 @@ void gameHandler::init(){
 
     //set up the renderer
     Shader spriteShader = ResourceManager::GetShader("sprite");
-    spriteShader.Use();
-    auto loc = glGetUniformLocation(spriteShader.ID, "image");
-    
-    int samplers[32];
-
-    //set up samplers array
-    for(int i = 0; i < 32; i++){
-        samplers[i] = i;
-    }
-
-    glUniform1iv(loc, 32, samplers);
 
     renderer = new Renderer(spriteShader);
 
@@ -94,7 +83,7 @@ void gameHandler::update(float deltaTime){
 
 void gameHandler::render(){
     //render stuff depending on the state of the game state enum
-    if(Game_State == GAME_ACTIVE){
+    if(Game_State == GAME_ACTIVE || Game_State == GAME_DEBUG){
         renderer->Draw2D(pObjects, defaultSize);
     }
 }
