@@ -19,9 +19,9 @@ const float PlayerSpeed(2.0f);
 const glm::vec2 defaultSize(50.0f, 150.0f);
 const glm::vec2 smallSize(40.0f, 120.0f);
 
- //Define game states
+//Define game states
 enum GAMESTATE{
-    GAME_ACTIVE, GAME_DEBUG
+    GAME_ACTIVE, GAME_DEBUG, GAME_MENU, GAME_CUTSCENE
 };
 //define controller state
 enum CONTROLSSTATE{
@@ -31,13 +31,13 @@ enum CONTROLSSTATE{
 //handler class that manages all objects and also make use of the resource manager
 class gameHandler{
     private:
-
+        //Contain reference of the window size
         unsigned int Width, Height;
         //contain reference of the window
         GLFWwindow* window;
 
     public:
-        //Game state
+        //Game state & input state
         GAMESTATE Game_State;
         CONTROLSSTATE Controller_State;
         void setGameState(int i);

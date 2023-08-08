@@ -7,11 +7,6 @@ GameObject* obj1;
 GameObject* obj2;
 GameObject* obj3;
 
-//comparison 
-static bool compareObjs(const GameObject* obj1, const GameObject* obj2){
-    return obj1->sprite.ID == obj2->sprite.ID;
-}
-
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
 
@@ -25,6 +20,7 @@ gameHandler::~gameHandler(){
     delete obj2;
     delete obj3;
     ResourceManager::Clear();
+    pObjects.clear();
 }
 
 void gameHandler::setGameState(int i){
@@ -36,7 +32,9 @@ void gameHandler::setControllerState(int i){
 }
 
 //TODO: Setup 2d physics
-//TODO: Instanced rendering
+//TODO: Setup sound system
+//TODO: Make texture's ID overwrittable to be able to organize the texture IDs
+//TODO: UI and text
 
 void gameHandler::init(){
     //load all resources like shaders, textures
@@ -67,7 +65,6 @@ void gameHandler::init(){
     //set up game objects and camera
     camera = new Camera(this->Width, this->Height, spriteShader, 150.0f);
 
-    //set up a object
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
     plr = new Player(pos, defaultSize, ResourceManager::GetTexture("pLayer"), PlayerSpeed);
@@ -78,6 +75,7 @@ void gameHandler::init(){
     pos = glm:: vec2(-3.0f, -0.0f);
     obj3 = new GameObject(pos, defaultSize, ResourceManager::GetTexture("flower"));
 
+    pObjects.push_back(plr);
     pObjects.push_back(obj1);
     pObjects.push_back(obj2);
     pObjects.push_back(obj3);
@@ -89,14 +87,14 @@ void gameHandler::update(float deltaTime){
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, this->window);
     }else if(Game_State == GAME_ACTIVE){
-        plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
         camera->follow(plr->position, plr->size);
+        plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
     }
 }
 
 void gameHandler::render(){
-    //render stuff regardless of state
-    //render all objs on the vector objects
-    renderer->Draw2D(plr, defaultSize);
-    renderer->Draw2D(pObjects, defaultSize);
+    //render stuff depending on the state of the game state enum
+    if(Game_State == GAME_ACTIVE){
+        renderer->Draw2D(pObjects, defaultSize);
+    }
 }

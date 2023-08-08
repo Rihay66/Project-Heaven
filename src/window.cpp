@@ -73,6 +73,7 @@ Window::~Window(){
 
 //Handle main window input function
 void Window::window_input(){
+    //TODO: When a menu is created for entering and exiting the game this can be deprecated
     //Check if escape key being pressed to exit
     if(glfwGetKey(handle, GLFW_KEY_ESCAPE) == GLFW_PRESS){
         //set window to close
@@ -120,8 +121,9 @@ void Window::window_input(){
         controllerCheck = !controllerCheck;
     }
 
-    //enable or disable
-    if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_PRESS && !inputSwitch){
+    //enable or disable joystick if it's connected
+    if(controllerCheck){
+        if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_PRESS && !inputSwitch){
         //check to enable or disable
         controllerEnable = !controllerEnable;
         if(controllerEnable){
@@ -133,9 +135,9 @@ void Window::window_input(){
             Input_State = KM;
         }
         inputSwitch = !inputSwitch;
-    }else if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_RELEASE && inputSwitch){
-
-        inputSwitch = !inputSwitch;
+        }else if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_RELEASE && inputSwitch){
+            inputSwitch = !inputSwitch;
+        }
     }
 }
 
