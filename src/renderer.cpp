@@ -133,6 +133,7 @@ void Renderer::Draw2D(GameObject* obj, glm::vec3 color){
     glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
 
+    //TODO: Debug when getting the last know texture unit and find how to fix it
     //increment the last know texture unit
     lastKnownTextureUnit++;
 

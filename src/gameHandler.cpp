@@ -41,10 +41,11 @@ void gameHandler::init(){
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
 
     //load textures
+    //* NOTE: The order of how the textures are load also affects the rendering of objects being either on top or below
     ResourceManager::LoadTexture("textures/test.png", "test", true);
     ResourceManager::LoadTexture("textures/item.png", "item", true);
-    ResourceManager::LoadTexture("textures/player.png", "player", true);
     ResourceManager::LoadTexture("textures/flower.png", "flower", true);
+    ResourceManager::LoadTexture("textures/player.png", "player", true);
 
     //set up the renderer
     Shader spriteShader = ResourceManager::GetShader("sprite");
@@ -68,6 +69,7 @@ void gameHandler::init(){
     pos = glm:: vec2(-3.0f, 0.0f);
     obj3 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("flower"));
 
+    pObjects.push_back(plr);
     pObjects.push_back(obj1);
     pObjects.push_back(obj2);
     pObjects.push_back(obj3);
@@ -87,7 +89,6 @@ void gameHandler::update(float deltaTime){
 void gameHandler::render(){
     //render stuff depending on the state of the game state enum
     if(Game_State == GAME_ACTIVE || Game_State == GAME_DEBUG){
-        renderer->Draw2D(plr);
         renderer->Draw2D(pObjects);
     }
 }
