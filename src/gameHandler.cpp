@@ -50,10 +50,10 @@ void gameHandler::init(){
     //set up the renderer
     Shader spriteShader = ResourceManager::GetShader("sprite");
 
-    renderer = new Renderer(spriteShader, defaultModelSize);
+    renderer = new Renderer(spriteShader, smallModelSize);
 
     //set up game objects and camera
-    camera = new Camera(this->Width, this->Height, spriteShader, 150.0f);
+    camera = new Camera(this->Width, this->Height, spriteShader, 150.0f, 2.0f);
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
@@ -79,10 +79,10 @@ void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
 
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
-        camera->camInput(deltaTime, this->window);
+        camera->camInput(deltaTime, this->window);    
     }else if(Game_State == GAME_ACTIVE){
         plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
-        camera->follow(plr->position, defaultModelSize);
+        camera->follow(plr->position, smallModelSize);
     }
 }
 

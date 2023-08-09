@@ -26,11 +26,16 @@ class Camera{
         Shader shader;
         //reference to the movement speed of the camera
         float speed;
-
+        //reference to the window size
         unsigned int width, height;
-
+        //reference to debug zoom 
+        float zoomAmount;
     public:
-        Camera(unsigned int Width, unsigned int Height, Shader &shader, float cameraSpeed = 1.0f);
+        //Construcotr
+        Camera(unsigned int Width, unsigned int Height, 
+        Shader &shader, float cameraSpeed = 1.0f, float zoomAmount = 1.0f);
+
+        //Destructor
         ~Camera();
 
         //input
@@ -38,6 +43,8 @@ class Camera{
         //follow a position
         void follow(glm::vec2 = glm::vec3(0.0f), glm::vec2 size = glm::vec3(0.0f));
 
+        //reference to a modifiable zoom factor
+        float zoomFactor;
 };
 
 #endif

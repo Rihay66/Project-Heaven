@@ -87,14 +87,10 @@ void Window::window_input(){
         if(isDebug){
             App_State = DEBUG;
             std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
-            //disable vsync
-            glfwSwapInterval(0);
         }
         else{
             App_State = ACTIVE;
             std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
-            //enable vsync
-            glfwSwapInterval(1);
         }
         pressed = !pressed;
     }else if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){

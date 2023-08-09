@@ -26,7 +26,8 @@ Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
     glUniform1iv(loc, 32, samplers);
 
     //set up shader model view
-    setSpriteSize(spriteSize);
+    this->spriteSize = spriteSize;
+    setSpriteSize();
 
     this->initRenderData(); //set up rendering of quads
 }
@@ -69,8 +70,9 @@ static Vertex* createQuad(Vertex* target, float x, float y, float size, float te
 
 //render multiple objects pointers
 void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
-    // prepare transformations
+    // prepare transformations and shader
     this->shader.Use();
+    setSpriteSize();
 
     //sort objects list
     // Reorder objects by texture ID
@@ -120,8 +122,9 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
 //Render a single object
 void Renderer::Draw2D(GameObject* obj, glm::vec3 color){
 
-    //prepare shader
+    //prepare transformations and shader
     this->shader.Use();
+    setSpriteSize();
 
     //set up color 
     this->shader.SetVector3f("spriteColor", color);
@@ -149,7 +152,13 @@ void Renderer::Draw2D(GameObject* obj, glm::vec3 color){
 }
 
 //Shader must be used before using this function
-void Renderer::setSpriteSize(glm::vec2 spriteSize){
+void Renderer::setSpriteSize(){
+
+    //Check if spriteSize is not 0 or a negative
+    if(spriteSize.x <= 1.0f || spriteSize.y <= 5.0f){
+        //set a hard limit
+        spriteSize = glm::vec2(1.0f, 5.0f);
+    }
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)

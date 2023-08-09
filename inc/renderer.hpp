@@ -40,6 +40,9 @@ class Renderer{
         //draw a singular pointer object
         void Draw2D(GameObject* obj, glm::vec3 color = glm::vec3(1.0f));
 
+        //reference to the model size
+        glm::vec2 spriteSize;
+
     private:
         Shader shader;
         //stores data of a quad
@@ -62,7 +65,7 @@ class Renderer{
         void initRenderData();
 
         //Used to set the size of sprites
-        void setSpriteSize(glm::vec2 spriteSize);
+        void setSpriteSize();
 };
 
 #endif
