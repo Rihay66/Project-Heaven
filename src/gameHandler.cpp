@@ -41,7 +41,6 @@ void gameHandler::init(){
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
 
     //load textures
-    //* NOTE: The order of how the textures are load also affects the rendering of objects being either on top or below
     ResourceManager::LoadTexture("textures/test.png", "test", true);
     ResourceManager::LoadTexture("textures/player.png", "player", true);
     ResourceManager::LoadTexture("textures/item.png", "item", true);
@@ -50,7 +49,6 @@ void gameHandler::init(){
     //bind all the textures from first to last
     for(int i = 0; i < ResourceManager::texList.size(); i++){
         //call to bind texture
-        std::cout << ResourceManager::texList[i].ID << std::endl;
         glBindTextureUnit(i, ResourceManager::texList[i].ID);
     }
 
@@ -76,6 +74,7 @@ void gameHandler::init(){
     pos = glm:: vec2(-3.0f, 0.0f);
     obj3 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("flower"));
 
+    //* The order of the objects affects how they're layered
     pObjects.push_back(obj1);
     pObjects.push_back(obj2);
     pObjects.push_back(obj3);
@@ -88,8 +87,8 @@ void gameHandler::update(float deltaTime){
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, this->window);    
     }else if(Game_State == GAME_ACTIVE){
-        plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
         camera->follow(plr->position, smallModelSize);
+        plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
     }
 }
 

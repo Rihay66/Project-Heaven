@@ -13,6 +13,8 @@ static bool pressed = false;
 static bool controllerCheck = false;
 static bool controllerEnable = false;
 static bool inputSwitch = false;
+static bool vSyncSwitch = false;
+static bool vSyncState = false;
 
 //Instantiate gameHandler object
 gameHandler* game;
@@ -74,13 +76,13 @@ Window::~Window(){
 //Handle main window input function
 void Window::window_input(){
     //TODO: When a menu is created for entering and exiting the game this can be deprecated
-    //Check if escape key being pressed to exit
+    //Check if escape key being pressed to exit - button
     if(glfwGetKey(handle, GLFW_KEY_ESCAPE) == GLFW_PRESS){
         //set window to close
         glfwSetWindowShouldClose(handle, true);
     }
 
-    //debug enabler button
+    //debug enabler button - toggle
     if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS && !pressed){
         isDebug = !isDebug;
         //check the isDebug value and set the proper app state
@@ -97,7 +99,7 @@ void Window::window_input(){
         pressed = !pressed;
     }
 
-    //debug line wireframe
+    //debug line wireframe - toggle
     if(isDebug && glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_PRESS){
         //set writeframe
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -119,6 +121,7 @@ void Window::window_input(){
 
     //enable or disable joystick if it's connected
     if(controllerCheck){
+        //toggle
         if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_PRESS && !inputSwitch){
         //check to enable or disable
         controllerEnable = !controllerEnable;
@@ -133,6 +136,24 @@ void Window::window_input(){
         inputSwitch = !inputSwitch;
         }else if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_RELEASE && inputSwitch){
             inputSwitch = !inputSwitch;
+        }
+    }
+
+    //check to enable or disable vsync - toggle
+    if(isDebug){
+        if(glfwGetKey(handle, GLFW_KEY_V) == GLFW_PRESS && !vSyncSwitch){
+            vSyncState = !vSyncState;
+            //check to disable or enable vsync
+            if(vSyncState){
+                //disable 
+                glfwSwapInterval(0);
+            }else{
+                glfwSwapInterval(1);
+            }
+            std::cout << "V-Sync: " << vSyncState << std::endl;
+            vSyncSwitch = !vSyncSwitch;
+        }else if(glfwGetKey(handle, GLFW_KEY_V) == GLFW_RELEASE && vSyncSwitch){
+            vSyncSwitch = !vSyncSwitch;
         }
     }
 }
