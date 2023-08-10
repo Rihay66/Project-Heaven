@@ -4,10 +4,6 @@
 //instantiate pointers and arrays
 Vertex* buffer;
 
-static bool compareByTextureIdPointer(const GameObject* a, const GameObject* b) {
-    return a->sprite.ID < b->sprite.ID;
-}
-
 Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
     this->shader = shader;
 
@@ -74,14 +70,8 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
     this->shader.Use();
     setSpriteSize();
 
-    //sort objects list
-    // Reorder objects by texture ID
-    std::sort(gameObjects.begin(), gameObjects.end(), compareByTextureIdPointer);
-
     //reset index count
     indexCount = 0;
-    //reset texture index
-    textureIndex = 0;
 
     //init the buffer
     buffer = vertices.data();
@@ -93,33 +83,20 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
     // render textured quad
     this->shader.SetVector3f("spriteColor", color);
 
-    //bind the first tex
-    glBindTextureUnit(textureIndex, gameObjects[0]->sprite.ID);
-
     //gen tex by cheking objs tex id
     for(int i = 0 ; i < gameObjects.size(); i++){
 
-        buffer = createQuad(buffer, gameObjects[i]->position.x, gameObjects[i]->position.y, gameObjects[i]->size, textureIndex);
+        buffer = createQuad(buffer, gameObjects[i]->position.x, gameObjects[i]->position.y, gameObjects[i]->size, gameObjects[i]->textureIndex);
 
         //increment the amount of triangles to render
         indexCount += 6;
-
-        //check for new textures
-        if(i + 1 < gameObjects.size() && gameObjects[i]->sprite.ID != gameObjects[i + 1]->sprite.ID){
-            //increase index
-            textureIndex++;
-            glBindTextureUnit(textureIndex, gameObjects[i + 1]->sprite.ID);
-        }
     }
-
-    //set last know texture binding
-    lastKnownTextureUnit = textureIndex;
 
     glBindVertexArray(this->quadVAO);
     glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 }
 
-//Render a single object
+//Render a single object, do note it will not play well with rendering a list of objects as there can be texture layering issues
 void Renderer::Draw2D(GameObject* obj, glm::vec3 color){
 
     //prepare transformations and shader
@@ -136,15 +113,8 @@ void Renderer::Draw2D(GameObject* obj, glm::vec3 color){
     glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
 
-    //TODO: Debug when getting the last know texture unit and find how to fix it
-    //increment the last know texture unit
-    lastKnownTextureUnit++;
-
-    //bind the texture
-    glBindTextureUnit(lastKnownTextureUnit, obj->sprite.ID);
-
     //create the quad
-    buffer = createQuad(buffer, obj->position.x, obj->position.y, obj->size,lastKnownTextureUnit);
+    buffer = createQuad(buffer, obj->position.x, obj->position.y, obj->size, obj->textureIndex);
 
     //draw
     glBindVertexArray(this->quadVAO);

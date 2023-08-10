@@ -5,6 +5,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "../glad/glad.h"
 
@@ -28,6 +29,7 @@ public:
     // resource storage
     static std::map<std::string, Shader>    Shaders;
     static std::map<std::string, Texture2D> Textures;
+    static std::vector<Texture2D> texList;
     // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
     static Shader    LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
     // retrieves a stored sader
@@ -36,6 +38,8 @@ public:
     static Texture2D LoadTexture(const char *file, std::string name, bool alpha = false);
     // retrieves a stored texture
     static Texture2D GetTexture(std::string name);
+    //retrieves a stored texture on the texList vector
+    static int GetTextureIndex(std::string name);
     // properly de-allocates all loaded resources
     static void      Clear();
 private:

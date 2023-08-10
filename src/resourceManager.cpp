@@ -11,6 +11,7 @@
 // Instantiate static variables
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
+std::vector<Texture2D>              ResourceManager::texList;
 
 static std::string checkFileName(std::string str){
 
@@ -49,6 +50,8 @@ Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool 
 {
     name = checkFileName(name);
     Textures[name] = loadTextureFromFile(file, alpha);
+    //Add texture to list
+    texList.push_back(Textures[name]);
     return Textures[name];
 }
 
@@ -56,6 +59,24 @@ Texture2D ResourceManager::GetTexture(std::string name)
 {
     name = checkFileName(name);
     return Textures[name];
+}
+
+int ResourceManager::GetTextureIndex(std::string name){
+
+    name = checkFileName(name);
+    int id = Textures[name].ID;
+
+    for(int i = 0; i < texList.size(); i++){
+        //check for id on the list and return it's location by iteration 
+        if(texList[i].ID == id){
+            //exit out and return 
+            return i;
+        }
+    }
+
+    //Error the texture couldn't be found
+    std::cout << "ERROR: Couldn't find texture: " << name << ", in storage!" << std::endl; 
+    return -1;
 }
 
 void ResourceManager::Clear()
@@ -66,6 +87,9 @@ void ResourceManager::Clear()
     // (properly) delete all textures
     for (auto iter : Textures)
         glDeleteTextures(1, &iter.second.ID);
+
+    //Claer out the texture vector
+    texList.clear();
 }
 
 Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile)

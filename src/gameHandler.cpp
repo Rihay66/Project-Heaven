@@ -43,9 +43,16 @@ void gameHandler::init(){
     //load textures
     //* NOTE: The order of how the textures are load also affects the rendering of objects being either on top or below
     ResourceManager::LoadTexture("textures/test.png", "test", true);
+    ResourceManager::LoadTexture("textures/player.png", "player", true);
     ResourceManager::LoadTexture("textures/item.png", "item", true);
     ResourceManager::LoadTexture("textures/flower.png", "flower", true);
-    ResourceManager::LoadTexture("textures/player.png", "player", true);
+
+    //bind all the textures from first to last
+    for(int i = 0; i < ResourceManager::texList.size(); i++){
+        //call to bind texture
+        std::cout << ResourceManager::texList[i].ID << std::endl;
+        glBindTextureUnit(i, ResourceManager::texList[i].ID);
+    }
 
     //set up the renderer
     Shader spriteShader = ResourceManager::GetShader("sprite");
@@ -57,22 +64,22 @@ void gameHandler::init(){
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTexture("pLayer"), PlayerSpeed);
+    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("pLayer"), PlayerSpeed);
     
     //set the player to be collidable
     plr->collidable = true;
     
     pos = glm::vec2(-1.0f, -1.0f);
-    obj1 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("item"));
+    obj1 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("item"));
     pos = glm::vec2(-2.0f, -2.0f);
-    obj2 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("test"));
+    obj2 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("test"));
     pos = glm:: vec2(-3.0f, 0.0f);
-    obj3 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("flower"));
+    obj3 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("flower"));
 
-    pObjects.push_back(plr);
     pObjects.push_back(obj1);
     pObjects.push_back(obj2);
     pObjects.push_back(obj3);
+    pObjects.push_back(plr);
 }
 
 void gameHandler::update(float deltaTime){

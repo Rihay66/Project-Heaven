@@ -52,8 +52,6 @@ class Renderer{
 
         //stores the ammount of triangles to render
         unsigned int indexCount;
-        int textureIndex;
-        int lastKnownTextureUnit;
 
         const static int maxQuadCount = 10000;
         const static int maxVertexCount = maxQuadCount * 4;

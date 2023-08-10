@@ -26,7 +26,7 @@ class Player : public GameObject{
 
         //constructors
         Player();
-        Player(glm::vec2 pos, float siz, Texture2D sprt, float speed = 1.0f, glm::vec3 clr = glm::vec3(1.0f));
+        Player(glm::vec2 pos, float siz, int sprt, float speed = 1.0f, glm::vec3 clr = glm::vec3(1.0f));
 
         //input function
         void playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone);
