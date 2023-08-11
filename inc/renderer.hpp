@@ -53,7 +53,7 @@ class Renderer{
         //stores the ammount of triangles to render
         unsigned int indexCount;
 
-        const static int maxQuadCount = 10000;
+        const static int maxQuadCount = 30000;
         const static int maxVertexCount = maxQuadCount * 4;
         const static int maxIndexCount = maxQuadCount * 6;
 

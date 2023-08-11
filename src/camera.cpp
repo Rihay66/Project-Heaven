@@ -77,7 +77,7 @@ void Camera::camInput(float deltaTime, GLFWwindow* &window){
 
 void Camera::calculateProjectionView()
 {
-    this->projection = glm::ortho(0.0f + zoomFactor, static_cast<float>(this->width) - zoomFactor, 
+    this->projection = glm::ortho(0.0f + zoomFactor / 2, static_cast<float>(this->width) - zoomFactor / 2, 
         static_cast<float>(this->height) - zoomFactor, 0.0f + zoomFactor, -1.0f, 1.0f);
 
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), this->position) * glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1));

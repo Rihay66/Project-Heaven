@@ -3,9 +3,6 @@
 Renderer* renderer;
 Camera* camera;
 Player* plr;
-GameObject* obj1;
-GameObject* obj2;
-GameObject* obj3;
 
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
@@ -16,9 +13,6 @@ gameHandler::~gameHandler(){
     delete camera;
     delete renderer;
     delete plr;
-    delete obj1;
-    delete obj2;
-    delete obj3;
     ResourceManager::Clear();
     pObjects.clear();
 }
@@ -66,19 +60,23 @@ void gameHandler::init(){
     
     //set the player to be collidable
     plr->collidable = true;
-    
-    pos = glm::vec2(-1.0f, -1.0f);
-    obj1 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("item"));
-    pos = glm::vec2(-2.0f, -2.0f);
-    obj2 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("test"));
-    pos = glm:: vec2(-3.0f, 0.0f);
-    obj3 = new GameObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("flower"));
 
     //* The order of the objects affects how they're layered
-    pObjects.push_back(obj1);
-    pObjects.push_back(obj2);
-    pObjects.push_back(obj3);
+
+    //Creates objects and stores them in to the pObjects vector
+    for(int y = 0; y < 75; y++){
+        for(int x = 0; x < 75; x++){
+            pos = glm::vec2(x, y);
+            GameObject* temp = new GameObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("item"));
+
+            //add to list
+            pObjects.push_back(temp);
+        }
+    }
+
     pObjects.push_back(plr);
+
+    std::cout << "object size: " << pObjects.size() << std::endl;
 }
 
 void gameHandler::update(float deltaTime){
