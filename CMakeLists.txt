@@ -16,6 +16,7 @@ src/gameHandler.cpp
 src/camera.cpp
 src/gameObject.cpp
 src/player.cpp
+src/rigidbodyObject.cpp
 glad/glad.c
 glad/glad.h
 inc/camera.hpp
@@ -23,6 +24,7 @@ inc/player.hpp
 inc/gameObject.hpp
 inc/window.hpp
 inc/gameHandler.hpp
+inc/rigidbodyObject.hpp
 inc/renderer.hpp
 inc/texture.hpp
 inc/stb_image.h

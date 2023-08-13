@@ -25,9 +25,9 @@ void gameHandler::setControllerState(int i){
     Controller_State = (CONTROLSSTATE)i;
 }
 
-//TODO: Setup own 2D hysucs using BSP and AABB
+//TODO: Fix the rendering order for different object list and single objects
+//TODO: Setup box 2d
 //TODO: Setup sound system
-//TODO: Make texture's ID overwrittable to be able to organize the texture IDs
 //TODO: UI and text
 
 void gameHandler::init(){
@@ -57,9 +57,6 @@ void gameHandler::init(){
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
     plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("pLayer"), PlayerSpeed);
-    
-    //set the player to be collidable
-    plr->collidable = true;
 
     //* The order of the objects affects how they're layered
 

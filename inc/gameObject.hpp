@@ -13,14 +13,10 @@ class GameObject{
         glm::vec3 color;
         float size;
         float rotation;
-        //state of the object
-        bool destroyed;
-        bool collidable;
         //reference to the texture
         int textureIndex;
 
         //constructor(s)
-        GameObject();
         GameObject(glm::vec2 pos, float size, int sprt, glm::vec3 color = glm::vec3(1.0f));
 };
 

@@ -1,10 +1,7 @@
 #include "../inc/player.hpp"
 
-Player::Player() : speed(0.0f), dir(UP){}
-
-Player::Player(glm::vec2 pos, float siz, int sprt, float spd, glm::vec3 color) : GameObject(pos, siz, sprt, color), speed(spd), dir(DOWN){
+Player::Player(glm::vec2 pos, float siz, int sprt, float spd, glm::vec3 color) : physicsObject(pos, siz, sprt, color), speed(spd), dir(DOWN){
     //set any non static var from gameobject class
-    this->collidable = true;
 }
 
 void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone){ 

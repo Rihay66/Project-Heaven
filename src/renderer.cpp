@@ -67,7 +67,6 @@ static Vertex* createQuad(Vertex* target, float x, float y, float size, float te
 //render multiple objects pointers
 void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
     // prepare transformations and shader
-    this->shader.Use();
     setSpriteSize();
 
     //reset index count
@@ -100,7 +99,6 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
 void Renderer::Draw2D(GameObject* obj, glm::vec3 color){
 
     //prepare transformations and shader
-    this->shader.Use();
     setSpriteSize();
 
     //set up color 

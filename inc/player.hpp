@@ -3,7 +3,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-#include "../inc/gameObject.hpp"
+#include "../inc/rigidbodyObject.hpp"
 #include <GLFW/glfw3.h>
 
 //future use for changing sprite
@@ -12,7 +12,7 @@ enum Direction{
 };
 
 //Player class with inheritence from GameObject
-class Player : public GameObject{
+class Player : public physicsObject{
     public:
         //declare const vars
         const glm::vec2 up = glm::vec2(0.0f, 1.0f);
@@ -25,7 +25,6 @@ class Player : public GameObject{
         float speed;
 
         //constructors
-        Player();
         Player(glm::vec2 pos, float siz, int sprt, float speed = 1.0f, glm::vec3 clr = glm::vec3(1.0f));
 
         //input function
