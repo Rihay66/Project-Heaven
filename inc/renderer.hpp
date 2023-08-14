@@ -29,6 +29,10 @@ struct Vertex{
     float texIndex;
 };
 
+struct RendererStats{
+    int quadCount = 0, drawCount = 0;
+};
+
 class Renderer{
     public:
         //constructor & desconstructor
@@ -37,33 +41,49 @@ class Renderer{
 
         //draw multiple pointer objects in a vector list
         void Draw2D(std::vector<GameObject*> objs, glm::vec3 color = glm::vec3(1.0f));
-        //draw a singular pointer object
-        void Draw2D(GameObject* obj, glm::vec3 color = glm::vec3(1.0f));
 
         //reference to the model size
         glm::vec2 spriteSize;
 
+        //contain reference to amont of quads and amount of draw calls
+        RendererStats stats;
+
     private:
+        //stores data of a passed in shader
         Shader shader;
         //stores data of a quad
         unsigned int quadVAO;
         unsigned int quadVBO;
         unsigned int quadEBO;
 
+        //stores the quad buffer
+        Vertex* quadBuffer = nullptr;
+        Vertex* quadBufferPtr = nullptr;  
+
         //stores the ammount of triangles to render
         unsigned int indexCount;
 
-        const static int maxQuadCount = 30000;
+        const static int maxQuadCount = 10000;
         const static int maxVertexCount = maxQuadCount * 4;
         const static int maxIndexCount = maxQuadCount * 6;
-
-        std::array<Vertex, maxQuadCount> vertices;
 
         //initial setup for rendering, setups the rendering of quads and their buffer data
         void initRenderData();
 
         //Used to set the size of sprites
         void setSpriteSize();
+
+        //used to draw a quad
+        void createQuad(glm::vec2 pos, float size, float texIndex);
+
+        //Used to set and unset the vertex buffers
+        void beginBatch();
+        void endBatch();
+
+        //Used to tell opengl to render the triangles
+        void flush();
+
+        const void resetStats();
 };
 
 #endif

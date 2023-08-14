@@ -1,8 +1,10 @@
 #include "../inc/renderer.hpp"
 #include <iostream>
 
-//instantiate pointers and arrays
-Vertex* buffer;
+const void Renderer::resetStats(){
+    this->stats.quadCount = 0;
+    this->stats.drawCount = 0;
+}
 
 Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
     this->shader = shader;
@@ -35,8 +37,9 @@ Renderer::~Renderer(){
     glDeleteBuffers(1, &this->quadEBO);
 
     //delete any pointers
-    buffer = nullptr;
-    delete buffer;
+    delete[] this->quadBuffer;
+    this->quadBufferPtr = nullptr;
+    delete this->quadBufferPtr;
 }
 
 static Vertex* createQuad(Vertex* target, float x, float y, float size, float texIndex){
@@ -64,59 +67,59 @@ static Vertex* createQuad(Vertex* target, float x, float y, float size, float te
     return target;
 }
 
+void Renderer::createQuad(glm::vec2 pos, float size, float texIndex){
+
+    //check if not over the index count
+    if(this->indexCount >= this->maxIndexCount){
+        this->endBatch();
+        this->flush();
+        this->beginBatch();
+    }
+
+    quadBufferPtr->position = {pos.x + size, pos.y + size};
+    quadBufferPtr->texCoords = {1.0f, 1.0f};
+    quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr++;
+
+    quadBufferPtr->position = {pos.x, pos.y + size};
+    quadBufferPtr->texCoords = {0.0f, 1.0f};
+    quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr++;
+
+    quadBufferPtr->position = {pos.x + size, pos.y};
+    quadBufferPtr->texCoords = {1.0f, 0.0f};
+    quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr++;
+    
+    quadBufferPtr->position = {pos.x, pos.y};
+    quadBufferPtr->texCoords = {0.0f, 0.0f};
+    quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr++;
+
+    this->indexCount += 6;
+    this->stats.quadCount++;
+}
+
 //render multiple objects pointers
 void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
     // prepare transformations and shader
     setSpriteSize();
 
-    //reset index count
-    indexCount = 0;
-
     //init the buffer
-    buffer = vertices.data();
-
-    //Set dynamic vertex buffer
-    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
-
+    this->resetStats();
+    this->beginBatch();
     // render textured quad
     this->shader.SetVector3f("spriteColor", color);
 
     //gen tex by cheking objs tex id
     for(int i = 0 ; i < gameObjects.size(); i++){
-
-        buffer = createQuad(buffer, gameObjects[i]->position.x, gameObjects[i]->position.y, gameObjects[i]->size, gameObjects[i]->textureIndex);
-
-        //increment the amount of triangles to render
-        indexCount += 6;
+        createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->textureIndex);
     }
 
-    glBindVertexArray(this->quadVAO);
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-}
-
-//Render a single object, do note it will not play well with rendering a list of objects as there can be texture layering issues
-void Renderer::Draw2D(GameObject* obj, glm::vec3 color){
-
-    //prepare transformations and shader
-    setSpriteSize();
-
-    //set up color 
-    this->shader.SetVector3f("spriteColor", color);
-
-    //set up buffer
-    buffer = vertices.data();
-
     //Set dynamic vertex buffer
-    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
-
-    //create the quad
-    buffer = createQuad(buffer, obj->position.x, obj->position.y, obj->size, obj->textureIndex);
-
+    this->endBatch();
     //draw
-    glBindVertexArray(this->quadVAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    this->flush();
 }
 
 //Shader must be used before using this function
@@ -142,8 +145,14 @@ void Renderer::setSpriteSize(){
 
 //Set up the quad rendering
 void Renderer::initRenderData(){
-    // configure VAO/VBO/EBO
 
+    // configure buffer
+    if(this->quadBuffer != nullptr)
+        exit(-1);
+
+    this->quadBuffer = new Vertex[this->maxVertexCount];
+
+    // configure VAO/VBO/EBO
     glCreateVertexArrays(1, &this->quadVAO);
     glCreateBuffers(1, &this->quadVBO);
 
@@ -183,4 +192,24 @@ void Renderer::initRenderData(){
     glCreateBuffers(1, &this->quadEBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->quadEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+}
+
+void Renderer::beginBatch(){
+    this->quadBufferPtr = quadBuffer;
+}
+
+void Renderer::endBatch(){
+    GLsizeiptr size = (uint8_t*)this->quadBufferPtr - (uint8_t*)this->quadBuffer;
+    //set up dynamic buffer
+    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, quadBuffer);
+}
+
+void Renderer::flush(){
+    glBindVertexArray(this->quadVAO);
+    glDrawElements(GL_TRIANGLES, this->indexCount, GL_UNSIGNED_INT, nullptr);
+    this->stats.drawCount++;
+
+    //reset index count 
+    this->indexCount = 0;
 }
