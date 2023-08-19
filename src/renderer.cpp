@@ -1,5 +1,4 @@
 #include "../inc/renderer.hpp"
-#include <iostream>
 
 const void Renderer::resetStats(){
     this->stats.quadCount = 0;

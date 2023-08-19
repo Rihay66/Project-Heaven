@@ -6,7 +6,6 @@
 //include standard lib
 #include <vector>
 #include <algorithm>
-#include <array>
 
 //include math and glad
 #include "../glad/glad.h"
