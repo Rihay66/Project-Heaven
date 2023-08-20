@@ -6,11 +6,6 @@
 #include "../inc/rigidbodyObject.hpp"
 #include <GLFW/glfw3.h>
 
-//future use for changing sprite
-enum Direction{
-    UP, DOWN, LEFT, RIGHT
-};
-
 //Player class with inheritence from GameObject
 class Player : public physicsObject{
     public:
@@ -25,7 +20,7 @@ class Player : public physicsObject{
         float speed;
 
         //constructors
-        Player(glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, glm::vec3 clr = glm::vec3(1.0f));
+        Player(glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
 
         //input function
         void playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone);

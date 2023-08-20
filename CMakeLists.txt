@@ -16,10 +16,12 @@ src/gameHandler.cpp
 src/camera.cpp
 src/gameObject.cpp
 src/player.cpp
+src/physics.cpp
 src/rigidbodyObject.cpp
 glad/glad.c
 glad/glad.h
 inc/camera.hpp
+inc/physics.hpp
 inc/player.hpp
 inc/gameObject.hpp
 inc/window.hpp

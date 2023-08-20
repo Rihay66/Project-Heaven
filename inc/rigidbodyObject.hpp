@@ -5,24 +5,26 @@
 
 #include "../inc/gameObject.hpp"
 
-//declare components
-struct Rigidbody{
-
+//future use for changing sprite 
+//* used for physics detection
+enum Direction{
+    UP, DOWN, LEFT, RIGHT
 };
 
-struct BoxCollider{
-
-};
-
-//TODO: Move the components to be private in the class
 class physicsObject : public GameObject{
     public:
-        //reference to structs
-
+        //reference to state of the object
+        //Used to check if object is enabled and when disabled is automatically removed from game
+        bool isDestroyed; 
+        //Used to check 
+        bool isTrigger;
 
         //constructor(s)
-        physicsObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec3 color = glm::vec3(1.0f));
+        physicsObject(glm::vec2 pos, glm::vec2 siz, int sprt, bool destroyed = false, bool trigger = false, glm::vec3 color = glm::vec3(1.0f));
 
+        //Used to define any function to do when this object is triggered
+        //* Used only when 'isTrigger' is enabled
+        virtual void triggerCollision(){}
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "../inc/player.hpp"
 
-Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, glm::vec3 color) : physicsObject(pos, siz, sprt, color), speed(spd), dir(DOWN){
+Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, bool destroyed, glm::vec3 color) : physicsObject(pos, siz, sprt, destroyed, false, color), speed(spd), dir(DOWN){
     //set any non static var from gameobject class
 }
 
