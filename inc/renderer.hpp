@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef RENDERER_HPP
+#define RENDERER_HPP
 
 //include standard lib
 #include <vector>

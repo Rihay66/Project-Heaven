@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef RIGIDBODYOBJECT_H
-#define RIGIDBODYOBJECT_H
+#ifndef RIGIDBODYOBJECT_HPP
+#define RIGIDBODYOBJECT_HPP
 
 #include "../inc/gameObject.hpp"
 
@@ -10,6 +10,8 @@
 enum Direction{
     UP, DOWN, LEFT, RIGHT
 };
+
+//TODO: Make box collider component to define the collider size and offset from the gameobject's position and size
 
 class physicsObject : public GameObject{
     public:
@@ -20,7 +22,7 @@ class physicsObject : public GameObject{
         bool isTrigger;
 
         //constructor(s)
-        physicsObject(glm::vec2 pos, glm::vec2 siz, int sprt, bool destroyed = false, bool trigger = false, glm::vec3 color = glm::vec3(1.0f));
+        physicsObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec3 color = glm::vec3(1.0f), bool destroyed = false, bool trigger = false);
 
         //Used to define any function to do when this object is triggered
         //* Used only when 'isTrigger' is enabled

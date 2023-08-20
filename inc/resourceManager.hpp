@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef RESOURCEMANAGER_H
-#define RESOURCEMANAGER_H
+#ifndef RESOURCEMANAGER_HPP
+#define RESOURCEMANAGER_HPP
 
 #include <map>
 #include <string>

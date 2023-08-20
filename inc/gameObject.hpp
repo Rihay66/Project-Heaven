@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+#ifndef GAMEOBJECT_HPP
+#define GAMEOBJECT_HPP
 
 #include "../inc/texture.hpp"
 #include <glm/glm.hpp>

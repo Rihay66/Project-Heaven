@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
 #include "../inc/rigidbodyObject.hpp"
 #include <GLFW/glfw3.h>

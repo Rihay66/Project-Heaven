@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef GAMEHANDLER_H
-#define GAMEHANDLER_H
+#ifndef GAMEHANDLER_HPP
+#define GAMEHANDLER_HPP
 
 #include <iostream>
 #include <vector>

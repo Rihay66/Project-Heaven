@@ -60,7 +60,7 @@ void gameHandler::init(){
     
     plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("pLayer"), PlayerSpeed);
 
-
+    /*
     //Creates objects and stores them in to the pObjects vector
     for(int y = 0; y < 75; y++){
         for(int x = 0; x < 75; x++){
@@ -71,11 +71,11 @@ void gameHandler::init(){
             pObjects.push_back(temp);
         }
     }
-
+    */
 
     pos = glm::vec2(-5.0f, -5.0f);
 
-    GameObject* temp = new GameObject(pos, standardSpriteSize + glm::vec2(5.0f, 0.0f), ResourceManager::GetTextureIndex("default"), glm::vec3(0.6f, 0.0f, 0.3f));
+    physicsObject* temp = new physicsObject(pos, standardSpriteSize + glm::vec2(5.0f, 0.0f), ResourceManager::GetTextureIndex("default"), glm::vec3(0.6f, 0.0f, 0.3f));
 
     pObjects.push_back(temp);
 
@@ -93,6 +93,8 @@ void gameHandler::update(float deltaTime){
         plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
         camera->follow(plr->position, smallModelSize);
     }
+
+    //* Do physics here
 }
 
 void gameHandler::render(){
