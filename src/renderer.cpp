@@ -41,32 +41,7 @@ Renderer::~Renderer(){
     delete this->quadBufferPtr;
 }
 
-static Vertex* createQuad(Vertex* target, float x, float y, float size, float texIndex){
-    
-    target->position = {x + size, y + size};
-    target->texCoords = {1.0f, 1.0f};
-    target->texIndex = texIndex;
-    target++;
-
-    target->position = {x, y + size};
-    target->texCoords = {0.0f, 1.0f};
-    target->texIndex = texIndex;
-    target++;
-
-    target->position = {x + size, y};
-    target->texCoords = {1.0f, 0.0f};
-    target->texIndex = texIndex;
-    target++;
-    
-    target->position = {x, y};
-    target->texCoords = {0.0f, 0.0f};
-    target->texIndex = texIndex;
-    target++;
-
-    return target;
-}
-
-void Renderer::createQuad(glm::vec2 pos, float size, float texIndex){
+void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float texIndex, glm::vec3 color){
 
     //check if not over the index count
     if(this->indexCount >= this->maxIndexCount){
@@ -75,24 +50,28 @@ void Renderer::createQuad(glm::vec2 pos, float size, float texIndex){
         this->beginBatch();
     }
 
-    quadBufferPtr->position = {pos.x + size, pos.y + size};
+    quadBufferPtr->position = {pos.x + size.x, pos.y + size.y};
     quadBufferPtr->texCoords = {1.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
 
-    quadBufferPtr->position = {pos.x, pos.y + size};
+    quadBufferPtr->position = {pos.x, pos.y + size.y};
     quadBufferPtr->texCoords = {0.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
 
-    quadBufferPtr->position = {pos.x + size, pos.y};
+    quadBufferPtr->position = {pos.x + size.x, pos.y};
     quadBufferPtr->texCoords = {1.0f, 0.0f};
     quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
     
     quadBufferPtr->position = {pos.x, pos.y};
     quadBufferPtr->texCoords = {0.0f, 0.0f};
     quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
 
     this->indexCount += 6;
@@ -100,19 +79,17 @@ void Renderer::createQuad(glm::vec2 pos, float size, float texIndex){
 }
 
 //render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
+void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
     // prepare transformations and shader
     setSpriteSize();
 
     //init the buffer
     this->resetStats();
     this->beginBatch();
-    // render textured quad
-    this->shader.SetVector3f("spriteColor", color);
 
     //gen tex by cheking objs tex id
     for(int i = 0 ; i < gameObjects.size(); i++){
-        createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->textureIndex);
+        createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->textureIndex, gameObjects[i]->color);
     }
 
     //Set dynamic vertex buffer
@@ -171,6 +148,10 @@ void Renderer::initRenderData(){
     //texture index attribute
     glEnableVertexArrayAttrib(this->quadVBO, 2);
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, texIndex));
+
+    //color attribute
+    glEnableVertexArrayAttrib(this->quadVBO, 3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, color));
 
     //indices buffer data
     unsigned int indices[maxIndexCount];

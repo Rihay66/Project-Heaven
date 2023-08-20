@@ -39,6 +39,7 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/player.png", "player", true);
     ResourceManager::LoadTexture("textures/item.png", "item", true);
     ResourceManager::LoadTexture("textures/flower.png", "flower", true);
+    ResourceManager::LoadTexture("textures/default.png", "default", true);
 
     //bind all the textures from first to last
     for(int i = 0; i < ResourceManager::texList.size(); i++){
@@ -51,6 +52,7 @@ void gameHandler::init(){
 
     renderer = new Renderer(spriteShader, smallModelSize);
 
+    //* The order of the objects affects how they're layered
     //set up game objects and camera
     camera = new Camera(this->Width, this->Height, spriteShader, 150.0f, 5.0f);
 
@@ -58,7 +60,6 @@ void gameHandler::init(){
     
     plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("pLayer"), PlayerSpeed);
 
-    //* The order of the objects affects how they're layered
 
     //Creates objects and stores them in to the pObjects vector
     for(int y = 0; y < 75; y++){
@@ -70,6 +71,13 @@ void gameHandler::init(){
             pObjects.push_back(temp);
         }
     }
+
+
+    pos = glm::vec2(-5.0f, -5.0f);
+
+    GameObject* temp = new GameObject(pos, standardSpriteSize + glm::vec2(5.0f, 0.0f), ResourceManager::GetTextureIndex("default"), glm::vec3(0.6f, 0.0f, 0.3f));
+
+    pObjects.push_back(temp);
 
     pObjects.push_back(plr);
 

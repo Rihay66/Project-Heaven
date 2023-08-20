@@ -21,11 +21,16 @@ struct vec2{
     float x, y;
 };
 
+struct vec3{
+    float x, y, z;
+};
+
 //data struct for holding vertex info
 struct Vertex{ 
     vec2 position;
     vec2 texCoords;
     float texIndex;
+    vec3 color;
 };
 
 struct RendererStats{
@@ -39,7 +44,7 @@ class Renderer{
         ~Renderer();
 
         //draw multiple pointer objects in a vector list
-        void Draw2D(std::vector<GameObject*> objs, glm::vec3 color = glm::vec3(1.0f));
+        void Draw2D(std::vector<GameObject*> objs);
 
         //reference to the model size
         glm::vec2 spriteSize;
@@ -73,7 +78,7 @@ class Renderer{
         void setSpriteSize();
 
         //used to draw a quad
-        void createQuad(glm::vec2 pos, float size, float texIndex);
+        void createQuad(glm::vec2 pos, glm::vec2 size, float texIndex, glm::vec3 color);
 
         //Used to set and unset the vertex buffers
         void beginBatch();

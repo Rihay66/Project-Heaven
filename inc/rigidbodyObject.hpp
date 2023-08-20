@@ -21,7 +21,7 @@ class physicsObject : public GameObject{
 
 
         //constructor(s)
-        physicsObject(glm::vec2 pos, float siz, int sprt, glm::vec3 color = glm::vec3(1.0f));
+        physicsObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec3 color = glm::vec3(1.0f));
 
 };
 
