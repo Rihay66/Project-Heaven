@@ -13,6 +13,7 @@ gameHandler::~gameHandler(){
     delete camera;
     delete renderer;
     delete plr;
+    delete phys;
     ResourceManager::Clear();
     pObjects.clear();
 }
@@ -73,13 +74,19 @@ void gameHandler::init(){
     }
     */
 
-    pos = glm::vec2(-5.0f, -5.0f);
+    pos = glm::vec2(-5.0f, -1.2f);
 
     physicsObject* temp = new physicsObject(pos, standardSpriteSize + glm::vec2(5.0f, 0.0f), ResourceManager::GetTextureIndex("default"), glm::vec3(0.6f, 0.0f, 0.3f));
 
+    //Add to render objects
     pObjects.push_back(temp);
-
     pObjects.push_back(plr);
+
+    phys = new Physics();
+
+    //Add physics objtect to physics class, EXCEPT the player
+    phys->pObjs.push_back(temp);
+
 
     std::cout << "object size: " << pObjects.size() << std::endl;
 }
@@ -95,6 +102,7 @@ void gameHandler::update(float deltaTime){
     }
 
     //* Do physics here
+    phys->CheckCollisions(*plr);
 }
 
 void gameHandler::render(){

@@ -51,5 +51,7 @@ int main(){
 	//delete any memory
 	delete window;
 
+	printf("Exiting...\n");
+
 	return 0;
 }

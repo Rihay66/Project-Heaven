@@ -4,10 +4,10 @@
 #define GAMEHANDLER_HPP
 
 #include <iostream>
-#include <vector>
 #include <algorithm>
 
 #include "../inc/resourceManager.hpp"
+#include "../inc/physics.hpp"
 #include "../inc/player.hpp"
 #include "../inc/camera.hpp"
 #include "../inc/renderer.hpp"
@@ -36,6 +36,8 @@ class gameHandler{
         unsigned int Width, Height;
         //contain reference of the window
         GLFWwindow* window;
+        //contain physics 
+        Physics* phys;
 
     public:
         //Game state & input state
