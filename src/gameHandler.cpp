@@ -41,6 +41,7 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/item.png", "item", true);
     ResourceManager::LoadTexture("textures/flower.png", "flower", true);
     ResourceManager::LoadTexture("textures/default.png", "default", true);
+    ResourceManager::LoadTexture("textures/transparent.png", "transparent", true);
 
     //bind all the textures from first to last
     for(int i = 0; i < ResourceManager::texList.size(); i++){
@@ -74,9 +75,9 @@ void gameHandler::init(){
     }
     */
 
-    pos = glm::vec2(-5.0f, -1.2f);
+    pos = glm::vec2(-5.0f, -8.0f);
 
-    physicsObject* temp = new physicsObject(pos, standardSpriteSize + glm::vec2(5.0f, 0.0f), ResourceManager::GetTextureIndex("default"), glm::vec3(0.6f, 0.0f, 0.3f));
+    physicsObject* temp = new physicsObject(pos, standardSpriteSize + glm::vec2(5.0f, 5.0f), ResourceManager::GetTextureIndex("transparent"), glm::vec3(0.6f, 0.0f, 0.3f));
 
     //Add to render objects
     pObjects.push_back(temp);

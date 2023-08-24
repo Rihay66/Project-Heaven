@@ -5,11 +5,17 @@
 
 #include <iostream>
 #include <vector>
+#include <math.h>
 
 #include "../inc/rigidbodyObject.hpp"
 
 class Physics{
     public:
+        struct OverlapInfo{
+            float yOverlap;
+            float xOverlap; 
+        };
+
         //List of all rigidbodies
         std::vector<physicsObject*> pObjs;
 
@@ -25,8 +31,7 @@ class Physics{
         //Simple check for aabb collision check
         bool aabbCollision(physicsObject &a, physicsObject &b);
         //Calculate magnitude of the collision to offset the player's positiion
-        float calcCollisionXMagnitude(physicsObject &a, physicsObject &b);
-        float calcCollisionYMagnitude(physicsObject &a, physicsObject &b);
+        OverlapInfo calcCollisionMagnitude(physicsObject &a, physicsObject &b);
 };
 
 #endif

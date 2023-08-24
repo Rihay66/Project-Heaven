@@ -13,9 +13,6 @@ class Player : public physicsObject{
         const glm::vec2 up = glm::vec2(0.0f, 1.0f);
         const glm::vec2 right = glm::vec2(1.0f, 0.0f);
 
-        //declare direction enum
-        Direction dir;
-
         //movement
         float speed;
 

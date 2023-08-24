@@ -5,17 +5,20 @@
 
 #include "../inc/gameObject.hpp"
 
-//future use for changing sprite 
-//* used for physics detection
-enum Direction{
-    UP, DOWN, LEFT, RIGHT
-};
-
 //TODO: Make box collider component to define the collider size and offset from the gameobject's position and size
 
 class physicsObject : public GameObject{
     public:
         //reference to state of the object
+        //future use for changing sprite 
+        //* used for physics detection
+        enum Direction{
+            UP, DOWN, LEFT, RIGHT
+        };
+
+        //Declare direction of the object
+        Direction dir;
+
         //Used to check if object is enabled and when disabled is automatically removed from game
         bool isDestroyed; 
         //Used to check 
