@@ -24,12 +24,16 @@ void Physics::CheckCollisions(physicsObject &plr){
                 //Check if the magnitude is positive or negative then properly offset the player
                     
                 //Make a visualizer to show the offset
-                plr.position.y += overlap.yOverlap;
-                //plr.position.x += overlap.xOverlap;
+                
+                //debug
+                std::cout << "Player X: " << plr.position.x << " | Y: " << plr.position.y << "\n";
+                std::cout << "Y direction offset: " << overlap.yOverlap << "\n";
+                //determine direction to properly set the offset
+                plr.position.y = overlap.yOverlap;
+                plr.position.x = overlap.xOverlap;
                     
                 //debug
-                std::cout << "Y direction offset: " << overlap.yOverlap << std::endl;
-                
+                //std::cout << "Player X: " << plr.position.x << " | Y: " << plr.position.y << "\n";
 
             }
         }
@@ -53,13 +57,23 @@ Physics::OverlapInfo Physics::calcCollisionMagnitude(physicsObject &a, physicsOb
     OverlapInfo overlap;
 
     //Get X axis magnitude
-    float x = (((a.position.x + a.size.x) - (b.position.x + b.size.x)) / (a.size.x + b.size.x)) / ((b.size.x * 2.0f) + a.size.x * 2.0f);
+    float x = (((a.position.x + a.size.x) - (b.position.x + b.size.x)) / (a.size.x + b.size.x * 2.0f));
     //Get Y axis magnitude
-    float y = (((a.position.y + a.size.y) - (b.position.y + b.size.y)) / (a.size.y + b.size.y)) / ((b.size.y * 2.0f) + a.size.y * 2.0f);
+    float y = (((a.position.y + a.size.y) - (b.position.y + b.size.y)) / ((a.size.y + b.size.y * 2.0f)));
+
+    //TODO: Check when the value 
 
     //store magnitudes into overlap struct
-    overlap.xOverlap = x;
-    overlap.yOverlap = y;
+    overlap.xOverlap = x + a.position.x;
+    overlap.yOverlap = y + a.position.y;
+
+    if(overlap.yOverlap < a.position.y){
+        overlap.yOverlap = (y / b.size.y * 2.0f) + a.position.y;
+    }
+
+    if(overlap.xOverlap < a.position.x){
+        overlap.xOverlap = (x / b.size.x * 2.0f) + a.position.x;
+    }
 
     return overlap;
 }

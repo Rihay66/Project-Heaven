@@ -60,7 +60,7 @@ void gameHandler::init(){
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("pLayer"), PlayerSpeed);
+    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("transparent"), PlayerSpeed, false, glm::vec3(0.5f, 0.5f, 0.5f));
 
     /*
     //Creates objects and stores them in to the pObjects vector
@@ -75,9 +75,9 @@ void gameHandler::init(){
     }
     */
 
-    pos = glm::vec2(-5.0f, -8.0f);
+    pos = glm::vec2(-5.0f, -4.0f);
 
-    physicsObject* temp = new physicsObject(pos, standardSpriteSize + glm::vec2(5.0f, 5.0f), ResourceManager::GetTextureIndex("transparent"), glm::vec3(0.6f, 0.0f, 0.3f));
+    physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("transparent"), glm::vec3(0.6f, 0.0f, 0.3f));
 
     //Add to render objects
     pObjects.push_back(temp);
@@ -95,6 +95,9 @@ void gameHandler::init(){
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
 
+    //* Do physics here
+    phys->CheckCollisions(*plr);
+
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, this->window);    
     }else if(Game_State == GAME_ACTIVE){
@@ -102,8 +105,6 @@ void gameHandler::update(float deltaTime){
         camera->follow(plr->position, smallModelSize);
     }
 
-    //* Do physics here
-    phys->CheckCollisions(*plr);
 }
 
 void gameHandler::render(){
