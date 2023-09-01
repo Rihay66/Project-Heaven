@@ -10,28 +10,25 @@
 #include "../inc/rigidbodyObject.hpp"
 
 class Physics{
-    public:
-        struct OverlapInfo{
-            float yOverlap;
-            float xOverlap; 
-        };
+    private:
+        //List of different rigidbody's with either a trigger or non trigger flag
+        std::vector<physicsObject*> triggerObjs;
+        std::vector<physicsObject*> rigidbodyObjs;
 
+    public:
         //List of all rigidbodies
         std::vector<physicsObject*> pObjs;
-
-        //player collision offset
-        const float playerOffset = 1.0f;
 
         //constructors / destructors
         Physics();
         ~Physics();
+        //Init function that is used after adding all pObjs
+        void init(glm::vec2 gravity = glm::vec2(0.0f, 9.81f));
 
         //check all physics object and check the player's collision
         void CheckCollisions(physicsObject &plr);
         //Simple check for aabb collision check
         bool aabbCollision(physicsObject &a, physicsObject &b);
-        //Calculate magnitude of the collision to offset the player's positiion
-        OverlapInfo calcCollisionMagnitude(physicsObject &a, physicsObject &b);
 };
 
 #endif

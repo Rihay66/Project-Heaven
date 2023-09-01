@@ -75,9 +75,9 @@ void gameHandler::init(){
     }
     */
 
-    pos = glm::vec2(-5.0f, -4.0f);
+    pos = glm::vec2(-5.0f, -6.0f);
 
-    physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("transparent"), glm::vec3(0.6f, 0.0f, 0.3f));
+    physicsObject* temp = new physicsObject(pos, standardSpriteSize + glm::vec2(2.0f, 2.0f), ResourceManager::GetTextureIndex("transparent"), glm::vec3(0.6f, 0.0f, 0.3f));
 
     //Add to render objects
     pObjects.push_back(temp);
@@ -88,6 +88,8 @@ void gameHandler::init(){
     //Add physics objtect to physics class, EXCEPT the player
     phys->pObjs.push_back(temp);
 
+    //Init the physics system
+    phys->init();
 
     std::cout << "object size: " << pObjects.size() << std::endl;
 }
