@@ -10,10 +10,14 @@ Physics::~Physics(){
     pObjs.clear();
     rigidbodyObjs.clear();
     triggerObjs.clear();
+
+    world = nullptr;
+    delete world;
 }
 
 void Physics::init(glm::vec2 gravity){
     //Set up box 2d world
+    world = new b2World({0.0f, 0.0f});
 
     //Check if there is an empty list of rigidbodies
     if(pObjs.size() <= 0){
@@ -27,6 +31,23 @@ void Physics::init(glm::vec2 gravity){
             triggerObjs.push_back(obj);
         else
             rigidbodyObjs.push_back(obj);
+    }
+
+    //Loop through list of rigidbodies and add them to the box2d world
+    for(physicsObject* obj : rigidbodyObjs){
+
+        //set up rigidbody and boxcollider
+        b2BodyDef bodyDef;
+        bodyDef.type = RbToB2Types(obj->rb.Type);
+        bodyDef.position.Set(obj->position.x, obj->position.y);
+        bodyDef.angle = obj->rotation;
+
+        //create body
+        b2Body* body = world->CreateBody(&bodyDef);
+        body->SetFixedRotation(obj->rb.fixedRotation);
+        obj->rb.runtimeBody = body;
+
+        //set up box collider
     }
 
 }

@@ -5,7 +5,39 @@
 
 #include "../inc/gameObject.hpp"
 
-//TODO: Make box collider component to define the collider size and offset from the gameobject's position and size
+//TODO: Make box collider component to define the collider size and offset from the gameobject's position and 
+
+enum class BodyType {Static = 0, Dynamic, Kinematic };
+
+//physics components
+struct Rigidbody{
+    BodyType Type = BodyType::Static;
+    bool fixedRotation = false;
+
+    //storage for runtime
+    void* runtimeBody = nullptr;
+    //Constructors
+    Rigidbody() = default;
+    Rigidbody(const Rigidbody&) = default;
+};
+
+struct BoxCollider
+{
+    glm::vec2 offset = {0.0f, 0.0f};
+    glm::vec2 size = {0.5f, 0.5f};
+
+    float density = 1.0f;
+    float friction = 0.5f;
+    float restitution = 0.0f;
+    float restitutionThreshold = 0.5f;
+
+    //storage for runtime
+    void* runtimeBody = nullptr;
+
+    BoxCollider() = default;
+    BoxCollider(const BoxCollider&) = default;
+
+};
 
 class physicsObject : public GameObject{
     public:
@@ -18,6 +50,11 @@ class physicsObject : public GameObject{
 
         //Declare direction of the object
         Direction dir;
+
+        //Declare Rigidbody
+        Rigidbody rb;
+        //declare BoxCollider
+        BoxCollider collider;
 
         //Used to check if object is enabled and when disabled is automatically removed from game
         bool isDestroyed; 

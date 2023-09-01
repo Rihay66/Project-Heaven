@@ -52,6 +52,7 @@ X11
 Xrandr
 pthread
 Xi
+box2d
 )
 endif (UNIX)
 
@@ -65,6 +66,7 @@ target_link_libraries(project-heaven
 glfw3
 OpenGL::GL
 OpenGL::GLU
+box2d
 )
 
 endif(WIN32)

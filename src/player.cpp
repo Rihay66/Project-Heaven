@@ -1,12 +1,18 @@
 #include "../inc/player.hpp"
 
 Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, bool destroyed, glm::vec3 color) : physicsObject(pos, siz, sprt, color, destroyed, false), speed(spd){
-    //set any non static var from gameobject class
+    //set any non static var from gameobject or rigidbody class
+    
+    //set up default rb
+    rb.Type = BodyType::Dynamic;
+    rb.fixedRotation = true;
 }
 
 void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone){ 
     //move the player
     float movement = this->speed * deltaTime;
+
+    //TODO: Replace the movement with box2d way of moving dynamic objects
 
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
