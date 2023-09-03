@@ -17,7 +17,7 @@ Physics::~Physics(){
 
 void Physics::init(glm::vec2 gravity){
     //Set up box 2d world
-    world = new b2World({0.0f, 0.0f});
+    world = new b2World({gravity.x, gravity.y});
 
     //Check if there is an empty list of rigidbodies
     if(pObjs.size() <= 0){
@@ -48,18 +48,40 @@ void Physics::init(glm::vec2 gravity){
         obj->rb.runtimeBody = body;
 
         //set up box collider
+        b2PolygonShape boxShape;
+        boxShape.SetAsBox(obj->collider.size.x * obj->size.y, obj->collider.size.y * obj->size.y);
+
+        //set up physics material
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &boxShape;
+        fixtureDef.density = obj->collider.density;
+        fixtureDef.friction = obj->collider.friction;
+        fixtureDef.restitution = obj->collider.restitution;
+        fixtureDef.restitutionThreshold = obj->collider.restitutionThreshold;
+        body->CreateFixture(&fixtureDef);
     }
 
 }
 
 //TODO: When a physics object is destroyed remove from list
-void Physics::CheckCollisions(physicsObject &plr){
+void Physics::CheckCollisions(float deltaTime){
 
     //Check rigidbodies
+    world->Step(deltaTime, velocityIterations, positionIterations);
     for(physicsObject* obj : rigidbodyObjs){
-        
+        //retrieve the body from each rigidbody
+        b2Body* body = (b2Body*)obj->rb.runtimeBody;
+        const b2Vec2 position = body->GetPosition();
+
+        //update each rigidbody their position
+        obj->position.x = position.x;
+        obj->position.y = position.y;
+        obj->rotation = body->GetAngle();
     }
 
+    //Check if player is available
+   
+/*
     //Check for triggers
     for(physicsObject* obj : triggerObjs){
         //Check every physics object with the player
@@ -70,6 +92,7 @@ void Physics::CheckCollisions(physicsObject &plr){
             }
         }
     }
+*/
 }
 
 bool Physics::aabbCollision(physicsObject &a, physicsObject &b){

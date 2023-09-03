@@ -29,6 +29,9 @@ class Physics{
 
         //reference to physics world
         b2World* world = nullptr;
+        //physics iteration values
+        const int32_t velocityIterations = 6;
+        const int32_t positionIterations = 2;
 
         //constructors / destructors
         Physics();
@@ -37,7 +40,7 @@ class Physics{
         void init(glm::vec2 gravity = glm::vec2(0.0f, 9.81f));
 
         //check all physics object and check the player's collision
-        void CheckCollisions(physicsObject &plr);
+        void CheckCollisions(float deltaTime);
         //Simple check for aabb collision check
         bool aabbCollision(physicsObject &a, physicsObject &b);
 

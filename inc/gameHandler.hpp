@@ -46,7 +46,7 @@ class gameHandler{
         void setGameState(int i);
         void setControllerState(int i);
         //Game elements & values
-        std::vector<GameObject*> pObjects;
+        std::vector<GameObject*> renderList;
 
         gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle);
         ~gameHandler();
