@@ -2,7 +2,7 @@
 
 Renderer* renderer;
 Camera* camera;
-//Player* plr;
+Player* plr;
 
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
@@ -42,6 +42,7 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/flower.png", "flower", true);
     ResourceManager::LoadTexture("textures/default.png", "default", true);
     ResourceManager::LoadTexture("textures/transparent.png", "transparent", true);
+    ResourceManager::LoadTexture("textures/porm.png", "porm", true);
 
     //bind all the textures from first to last
     for(int i = 0; i < ResourceManager::texList.size(); i++){
@@ -60,7 +61,8 @@ void gameHandler::init(){
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    //plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("transparent"), PlayerSpeed, false, glm::vec3(0.5f, 0.5f, 0.5f));
+    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("transparent"), PlayerSpeed, false, glm::vec3(0.5f, 0.5f, 0.5f));
+
 
     /*
     //Creates objects and stores them in to the pObjects vector
@@ -80,11 +82,12 @@ void gameHandler::init(){
     physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("test"));
 
     pos = glm::vec2(0.0f);
-    physicsObject* test = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("player"));
+    physicsObject* test = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("item"));
 
     pos = glm::vec2(-1.0f, -4.0f);
-    physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(1.0f), ResourceManager::GetTextureIndex("transparent"));
+    physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(5.0f, 1.0f), ResourceManager::GetTextureIndex("transparent"));
     ground->collider.offset = glm::vec2(0.5f);
+
     //Change rb type
     temp->rb.Type = BodyType::Dynamic;
     test->rb.Type = BodyType::Dynamic;

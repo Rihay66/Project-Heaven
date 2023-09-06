@@ -4,8 +4,16 @@ Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, bool destroyed
     //set any non static var from gameobject or rigidbody class
     
     //set up default rb
-    rb.Type = BodyType::Dynamic;
-    rb.fixedRotation = true;
+    this->rb.Type = BodyType::Dynamic;
+    this->rb.fixedRotation = true;
+
+    //Get rb runtime body
+    this->body = (b2BodyDef*)rb.runtimeBody;
+}
+
+Player::~Player(){
+    //delete any pointers
+    delete body;
 }
 
 void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone){ 
