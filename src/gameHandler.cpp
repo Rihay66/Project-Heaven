@@ -75,23 +75,30 @@ void gameHandler::init(){
     }
     */
 
-    pos = glm::vec2(0.0f, 0.0f);
+    pos = glm::vec2(-0.5f, 2.0f);
 
     physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("test"));
 
-    pos = glm::vec2(0.0f, -4.0f);
+    pos = glm::vec2(0.0f);
+    physicsObject* test = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("player"));
+
+    pos = glm::vec2(-1.0f, -4.0f);
     physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(1.0f), ResourceManager::GetTextureIndex("transparent"));
+    ground->collider.offset = glm::vec2(0.5f);
     //Change rb type
     temp->rb.Type = BodyType::Dynamic;
+    test->rb.Type = BodyType::Dynamic;
 
     //Add to render objects
     renderList.push_back(ground);
     renderList.push_back(temp);
+    renderList.push_back(test);
 
     phys = new Physics();
 
     //Add physics objtect to physics class, EXCEPT the player
     phys->pObjs.push_back(temp);
+    phys->pObjs.push_back(test);
     phys->pObjs.push_back(ground);
 
     //Init the physics system

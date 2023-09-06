@@ -49,7 +49,7 @@ void Physics::init(glm::vec2 gravity){
 
         //set up box collider
         b2PolygonShape boxShape;
-        boxShape.SetAsBox(obj->collider.size.x * obj->size.y, obj->collider.size.y * obj->size.y);
+        boxShape.SetAsBox(obj->collider.size.x * obj->size.y, obj->collider.size.y * obj->size.y, {obj->collider.offset.x, obj->collider.offset.y}, 0.0f);
 
         //set up physics material
         b2FixtureDef fixtureDef;

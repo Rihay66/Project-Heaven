@@ -51,25 +51,25 @@ void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float texIndex, glm::ve
     }
 
     quadBufferPtr->position = {pos.x + size.x, pos.y + size.y};
-    quadBufferPtr->texCoords = {1.0f, 1.0f};
+    quadBufferPtr->texCoords = {0.0f, 0.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
 
     quadBufferPtr->position = {pos.x, pos.y + size.y};
-    quadBufferPtr->texCoords = {0.0f, 1.0f};
+    quadBufferPtr->texCoords = {1.0f, 0.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
 
     quadBufferPtr->position = {pos.x + size.x, pos.y};
-    quadBufferPtr->texCoords = {1.0f, 0.0f};
+    quadBufferPtr->texCoords = {0.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
     
     quadBufferPtr->position = {pos.x, pos.y};
-    quadBufferPtr->texCoords = {0.0f, 0.0f};
+    quadBufferPtr->texCoords = {1.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
