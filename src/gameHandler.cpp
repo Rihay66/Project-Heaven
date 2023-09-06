@@ -61,7 +61,7 @@ void gameHandler::init(){
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("transparent"), PlayerSpeed, false, glm::vec3(0.5f, 0.5f, 0.5f));
+    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("player"), PlayerSpeed, false);
 
 
     /*
@@ -96,6 +96,7 @@ void gameHandler::init(){
     renderList.push_back(ground);
     renderList.push_back(temp);
     renderList.push_back(test);
+    renderList.push_back(plr);
 
     phys = new Physics();
 
@@ -103,9 +104,10 @@ void gameHandler::init(){
     phys->pObjs.push_back(temp);
     phys->pObjs.push_back(test);
     phys->pObjs.push_back(ground);
+    phys->pObjs.push_back(plr);
 
     //Init the physics system
-    phys->init(glm::vec2(0.0f, -9.81f));
+    phys->init(glm::vec2(0.0f, 0.0f));
 
     std::cout << "object size: " << renderList.size() << std::endl;
 }

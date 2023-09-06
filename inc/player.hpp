@@ -11,11 +11,15 @@
 class Player : public physicsObject{
     public:
         //reference to the rigidbody runtime body
-        b2BodyDef* body = nullptr;
+        b2Body* body = nullptr;
 
         //declare const vars
-        const glm::vec2 up = glm::vec2(0.0f, 1.0f);
-        const glm::vec2 right = glm::vec2(1.0f, 0.0f);
+        //glm dir
+        const glm::vec2 glmUp = glm::vec2(0.0f, 1.0f);
+        const glm::vec2 glmRight = glm::vec2(1.0f, 0.0f);
+        //box2D dir
+        const b2Vec2 b2Up = {0.0f, 1.0f};
+        const b2Vec2 b2Right = {1.0f, 0.0f};
 
         //movement
         float speed;

@@ -8,12 +8,12 @@ Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, bool destroyed
     this->rb.fixedRotation = true;
 
     //Get rb runtime body
-    this->body = (b2BodyDef*)rb.runtimeBody;
+    this->body = (b2Body*)rb.runtimeBody;
 }
 
 Player::~Player(){
     //delete any pointers
-    delete body;
+    //delete body;
 }
 
 void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone){ 
@@ -21,33 +21,34 @@ void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController
     float movement = this->speed * deltaTime;
 
     //TODO: Replace the movement with box2d way of moving dynamic objects
+    //TODO: get box 2d transform then add it with the movemenr * direction?
 
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         //move up
-        position += movement * up;
+        //position += movement * up;
         //set state
         dir = UP;
     }
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
         //move down
-        position -= movement * up;
+        //position -= movement * up;
         //set state
         dir = DOWN;
     }
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
         //move left
-        position -= movement * right;
+        //position -= movement * right;
         //set state
         dir = LEFT;
     }
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
         //move right
-        position += movement * right;
+        //position += movement * right;
         //set state
         dir = RIGHT;
     }
-
+/*
     if(isController && glfwJoystickPresent(GLFW_JOYSTICK_1) == true){
         int axesCount;
         //use axes for movement
@@ -79,4 +80,5 @@ void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController
             dir = DOWN;
         }
     }
+*/
 }
