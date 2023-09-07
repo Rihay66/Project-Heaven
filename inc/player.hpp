@@ -4,15 +4,15 @@
 #define PLAYER_HPP
 
 #include "../inc/rigidbodyObject.hpp"
-#include <box2d/b2_body.h>
 #include <GLFW/glfw3.h>
 
 //Player class with inheritence from GameObject
 class Player : public physicsObject{
-    public:
-        //reference to the rigidbody runtime body
-        b2Body* body = nullptr;
+    private:
+        //reference to the window
+        GLFWwindow* window;
 
+    public:
         //declare const vars
         //glm dir
         const glm::vec2 glmUp = glm::vec2(0.0f, 1.0f);
@@ -23,13 +23,20 @@ class Player : public physicsObject{
 
         //movement
         float speed;
+        //controller enable
+        bool isController;
+        //controller joystick deadzone
+        float controllerDeadZone;
+
+        //deltatime
+        float currentDeltaTime = 1.0f;
 
         //constructor / desctructor
-        Player(glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
+        Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
         ~Player();
 
         //input function
-        void playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone);
+        b2Body* physicBody();
 };
 
 #endif // __PLAYER_H__

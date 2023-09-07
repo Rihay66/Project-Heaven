@@ -15,7 +15,7 @@
 #include <GLFW/glfw3.h>
 
 //define global vars for objects to use
-const float PlayerSpeed(2.0f);
+const float PlayerSpeed(5.0f);
 const glm::vec2 standardSpriteSize(1.0f, 1.0f);
 const glm::vec2 defaultModelSize(50.0f, 150.0f);
 const glm::vec2 smallModelSize(40.0f, 120.0f);

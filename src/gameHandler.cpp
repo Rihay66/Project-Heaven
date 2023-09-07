@@ -61,7 +61,7 @@ void gameHandler::init(){
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("player"), PlayerSpeed, false);
+    plr = new Player(window, pos, standardSpriteSize, ResourceManager::GetTextureIndex("player"), PlayerSpeed, 0.2f);
 
 
     /*
@@ -77,14 +77,14 @@ void gameHandler::init(){
     }
     */
 
-    pos = glm::vec2(-1.0f, 2.0f);
+    pos = glm::vec2(-1.1f, 2.0f);
 
     physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("test"));
 
     pos = glm::vec2(0.0f);
     physicsObject* test = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("item"));
 
-    pos = glm::vec2(-1.0f, -4.0f);
+    pos = glm::vec2(-2.5f, -4.0f);
     physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(5.0f, 1.0f), ResourceManager::GetTextureIndex("transparent"));
 
     //Change rb type
@@ -106,7 +106,7 @@ void gameHandler::init(){
     phys->pObjs.push_back(plr);
 
     //Init the physics system
-    phys->init(glm::vec2(0.0f, -9.81f));
+    phys->init(glm::vec2(0.0f, 0.0f));
 
     std::cout << "object size: " << renderList.size() << std::endl;
 }
@@ -114,15 +114,20 @@ void gameHandler::init(){
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
 
-    //* Do physics here
-    phys->CheckCollisions(deltaTime);
-
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, this->window);    
     }else if(Game_State == GAME_ACTIVE){
-        //plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
-        camera->follow(glm::vec2(0.0f, 0.0f), smallModelSize);
+        camera->follow(plr->position, smallModelSize);
     }
+
+    if(Controller_State == CONTROLSSTATE::KEYBOARDMOUSE){
+        plr->isController = false;
+    }else if(Controller_State == CONTROLSSTATE::KMCONTROLLER){
+        plr->isController = true;
+    }
+
+    //* Do physics here
+    phys->CheckCollisions(deltaTime);
 
 }
 

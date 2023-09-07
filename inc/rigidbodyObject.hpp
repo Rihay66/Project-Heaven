@@ -4,8 +4,7 @@
 #define RIGIDBODYOBJECT_HPP
 
 #include "../inc/gameObject.hpp"
-
-//TODO: Make box collider component to define the collider size and offset from the gameobject's position and 
+#include <box2d/b2_body.h>
 
 enum class BodyType {Static = 0, Dynamic, Kinematic };
 
@@ -34,9 +33,9 @@ struct BoxCollider
     //storage for runtime
     void* runtimeBody = nullptr;
 
+    //constructors
     BoxCollider() = default;
     BoxCollider(const BoxCollider&) = default;
-
 };
 
 class physicsObject : public GameObject{
@@ -67,6 +66,9 @@ class physicsObject : public GameObject{
         //Used to define any function to do when this object is triggered
         //* Used only when 'isTrigger' is enabled
         virtual void triggerCollision(){}
+
+        //Used to define to make changes to the b2 body and returns b2Body*
+        virtual b2Body* physicBody(){return (b2Body*)rb.runtimeBody;}
 };
 
 #endif

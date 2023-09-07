@@ -70,7 +70,9 @@ void Physics::CheckCollisions(float deltaTime){
     world->Step(deltaTime, velocityIterations, positionIterations);
     for(physicsObject* obj : rigidbodyObjs){
         //retrieve the body from each rigidbody
-        b2Body* body = (b2Body*)obj->rb.runtimeBody;
+        b2Body* body = obj->physicBody();
+
+        //Check for any changed 
         const b2Vec2 position = body->GetPosition();
 
         //update each rigidbody their position
