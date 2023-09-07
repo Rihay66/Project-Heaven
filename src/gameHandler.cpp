@@ -77,7 +77,7 @@ void gameHandler::init(){
     }
     */
 
-    pos = glm::vec2(-0.5f, 2.0f);
+    pos = glm::vec2(-1.0f, 2.0f);
 
     physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("test"));
 
@@ -86,7 +86,6 @@ void gameHandler::init(){
 
     pos = glm::vec2(-1.0f, -4.0f);
     physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(5.0f, 1.0f), ResourceManager::GetTextureIndex("transparent"));
-    ground->collider.offset = glm::vec2(0.5f);
 
     //Change rb type
     temp->rb.Type = BodyType::Dynamic;
@@ -107,7 +106,7 @@ void gameHandler::init(){
     phys->pObjs.push_back(plr);
 
     //Init the physics system
-    phys->init(glm::vec2(0.0f, 0.0f));
+    phys->init(glm::vec2(0.0f, -9.81f));
 
     std::cout << "object size: " << renderList.size() << std::endl;
 }

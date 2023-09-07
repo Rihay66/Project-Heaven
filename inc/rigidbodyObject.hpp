@@ -12,7 +12,7 @@ enum class BodyType {Static = 0, Dynamic, Kinematic };
 //physics components
 struct Rigidbody{
     BodyType Type = BodyType::Static;
-    bool fixedRotation = false;
+    bool fixedRotation = true;
 
     //storage for runtime
     void* runtimeBody = nullptr;
