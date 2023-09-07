@@ -16,13 +16,17 @@ src/gameHandler.cpp
 src/camera.cpp
 src/gameObject.cpp
 src/player.cpp
+src/physics.cpp
+src/rigidbodyObject.cpp
 glad/glad.c
 glad/glad.h
 inc/camera.hpp
+inc/physics.hpp
 inc/player.hpp
 inc/gameObject.hpp
 inc/window.hpp
 inc/gameHandler.hpp
+inc/rigidbodyObject.hpp
 inc/renderer.hpp
 inc/texture.hpp
 inc/stb_image.h
@@ -48,6 +52,7 @@ X11
 Xrandr
 pthread
 Xi
+box2d
 )
 endif (UNIX)
 
@@ -61,6 +66,7 @@ target_link_libraries(project-heaven
 glfw3
 OpenGL::GL
 OpenGL::GLU
+box2d
 )
 
 endif(WIN32)

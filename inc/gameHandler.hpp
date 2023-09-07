@@ -1,13 +1,13 @@
 #pragma once
 
-#ifndef GAMEHANDLER_H
-#define GAMEHANDLER_H
+#ifndef GAMEHANDLER_HPP
+#define GAMEHANDLER_HPP
 
 #include <iostream>
-#include <vector>
 #include <algorithm>
 
 #include "../inc/resourceManager.hpp"
+#include "../inc/physics.hpp"
 #include "../inc/player.hpp"
 #include "../inc/camera.hpp"
 #include "../inc/renderer.hpp"
@@ -15,8 +15,8 @@
 #include <GLFW/glfw3.h>
 
 //define global vars for objects to use
-const float PlayerSpeed(2.0f);
-const float standardSpriteSize(1.0f);
+const float PlayerSpeed(5.0f);
+const glm::vec2 standardSpriteSize(1.0f, 1.0f);
 const glm::vec2 defaultModelSize(50.0f, 150.0f);
 const glm::vec2 smallModelSize(40.0f, 120.0f);
 
@@ -36,6 +36,8 @@ class gameHandler{
         unsigned int Width, Height;
         //contain reference of the window
         GLFWwindow* window;
+        //contain physics 
+        Physics* phys;
 
     public:
         //Game state & input state
@@ -44,7 +46,7 @@ class gameHandler{
         void setGameState(int i);
         void setControllerState(int i);
         //Game elements & values
-        std::vector<GameObject*> pObjects;
+        std::vector<GameObject*> renderList;
 
         gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle);
         ~gameHandler();

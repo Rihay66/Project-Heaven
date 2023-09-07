@@ -12,9 +12,10 @@ gameHandler::~gameHandler(){
     //delete any pointers and clear resources (eg ResourceManager)
     delete camera;
     delete renderer;
-    delete plr;
+    //delete plr;
+    delete phys;
     ResourceManager::Clear();
-    pObjects.clear();
+    renderList.clear();
 }
 
 void gameHandler::setGameState(int i){
@@ -25,9 +26,9 @@ void gameHandler::setControllerState(int i){
     Controller_State = (CONTROLSSTATE)i;
 }
 
-//TODO: Setup own 2D hysucs using BSP and AABB
+//TODO: Fix the rendering order for different object list and single objects
+//TODO: Setup box 2d
 //TODO: Setup sound system
-//TODO: Make texture's ID overwrittable to be able to organize the texture IDs
 //TODO: UI and text
 
 void gameHandler::init(){
@@ -39,6 +40,9 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/player.png", "player", true);
     ResourceManager::LoadTexture("textures/item.png", "item", true);
     ResourceManager::LoadTexture("textures/flower.png", "flower", true);
+    ResourceManager::LoadTexture("textures/default.png", "default", true);
+    ResourceManager::LoadTexture("textures/transparent.png", "transparent", true);
+    ResourceManager::LoadTexture("textures/porm.png", "porm", true);
 
     //bind all the textures from first to last
     for(int i = 0; i < ResourceManager::texList.size(); i++){
@@ -51,18 +55,16 @@ void gameHandler::init(){
 
     renderer = new Renderer(spriteShader, smallModelSize);
 
+    //* The order of the objects affects how they're layered
     //set up game objects and camera
-    camera = new Camera(this->Width, this->Height, spriteShader, 150.0f, 2.0f);
+    camera = new Camera(this->Width, this->Height, spriteShader, 150.0f, 5.0f);
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTextureIndex("pLayer"), PlayerSpeed);
-    
-    //set the player to be collidable
-    plr->collidable = true;
+    plr = new Player(window, pos, standardSpriteSize, ResourceManager::GetTextureIndex("player"), PlayerSpeed, 0.2f);
 
-    //* The order of the objects affects how they're layered
 
+    /*
     //Creates objects and stores them in to the pObjects vector
     for(int y = 0; y < 75; y++){
         for(int x = 0; x < 75; x++){
@@ -73,10 +75,40 @@ void gameHandler::init(){
             pObjects.push_back(temp);
         }
     }
+    */
 
-    pObjects.push_back(plr);
+    pos = glm::vec2(-1.1f, 2.0f);
 
-    std::cout << "object size: " << pObjects.size() << std::endl;
+    physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("test"));
+
+    pos = glm::vec2(0.0f);
+    physicsObject* test = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("item"));
+
+    pos = glm::vec2(-2.5f, -4.0f);
+    physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(5.0f, 1.0f), ResourceManager::GetTextureIndex("transparent"));
+
+    //Change rb type
+    temp->rb.Type = BodyType::Dynamic;
+    test->rb.Type = BodyType::Dynamic;
+
+    //Add to render objects
+    renderList.push_back(ground);
+    renderList.push_back(temp);
+    renderList.push_back(test);
+    renderList.push_back(plr);
+
+    phys = new Physics();
+
+    //Add physics objtect to physics class, EXCEPT the player
+    phys->pObjs.push_back(temp);
+    phys->pObjs.push_back(test);
+    phys->pObjs.push_back(ground);
+    phys->pObjs.push_back(plr);
+
+    //Init the physics system
+    phys->init(glm::vec2(0.0f, 0.0f));
+
+    std::cout << "object size: " << renderList.size() << std::endl;
 }
 
 void gameHandler::update(float deltaTime){
@@ -86,13 +118,22 @@ void gameHandler::update(float deltaTime){
         camera->camInput(deltaTime, this->window);    
     }else if(Game_State == GAME_ACTIVE){
         camera->follow(plr->position, smallModelSize);
-        plr->playerInput(deltaTime, this->window, this->Controller_State, 0.2f);
     }
+
+    if(Controller_State == CONTROLSSTATE::KEYBOARDMOUSE){
+        plr->isController = false;
+    }else if(Controller_State == CONTROLSSTATE::KMCONTROLLER){
+        plr->isController = true;
+    }
+
+    //* Do physics here
+    phys->CheckCollisions(deltaTime);
+
 }
 
 void gameHandler::render(){
     //render stuff depending on the state of the game state enum
     if(Game_State == GAME_ACTIVE || Game_State == GAME_DEBUG){
-        renderer->Draw2D(pObjects);
+        renderer->Draw2D(renderList);
     }
 }

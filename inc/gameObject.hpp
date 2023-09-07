@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+#ifndef GAMEOBJECT_HPP
+#define GAMEOBJECT_HPP
 
 #include "../inc/texture.hpp"
 #include <glm/glm.hpp>
@@ -11,17 +11,13 @@ class GameObject{
         //transform reference of the object
         glm::vec2 position;
         glm::vec3 color;
-        float size;
+        glm::vec2 size;
         float rotation;
-        //state of the object
-        bool destroyed;
-        bool collidable;
         //reference to the texture
         int textureIndex;
 
         //constructor(s)
-        GameObject();
-        GameObject(glm::vec2 pos, float size, int sprt, glm::vec3 color = glm::vec3(1.0f));
+        GameObject(glm::vec2 pos, glm::vec2 size, int sprt, glm::vec3 color = glm::vec3(1.0f));
 };
 
 #endif

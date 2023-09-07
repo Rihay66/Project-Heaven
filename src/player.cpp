@@ -1,38 +1,54 @@
 #include "../inc/player.hpp"
 
-Player::Player() : speed(0.0f), dir(UP){}
-
-Player::Player(glm::vec2 pos, float siz, int sprt, float spd, glm::vec3 color) : GameObject(pos, siz, sprt, color), speed(spd), dir(DOWN){
-    //set any non static var from gameobject class
-    this->collidable = true;
+Player::Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzone, bool destroyed, glm::vec3 color) : 
+physicsObject(pos, siz, sprt, color, destroyed, false), speed(spd), window(handle), controllerDeadZone(cDeadzone), isController(false){
+    //set any non static var from gameobject or rigidbody class
+    
+    //set up default rb
+    this->rb.Type = BodyType::Dynamic;
+    this->rb.fixedRotation = true;
 }
 
-void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone){ 
+Player::~Player(){
+    //delete any pointers
+    //delete body;
+}
+
+b2Body* Player::physicBody(){
+    
+    b2Body* body = (b2Body*)rb.runtimeBody;
     //move the player
-    float movement = this->speed * deltaTime;
+    float movement = this->speed * currentDeltaTime;
+
+    //TODO: Replace the movement with box2d way of moving dynamic objects
+    //TODO: set box 2d transform by getting the transform + movement * dir
 
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         //move up
-        position -= movement * up;
+        //position += movement * up;
+        body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
         //set state
         dir = UP;
     }
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
         //move down
-        position += movement * up;
+        //position -= movement * up;
+        body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
         //set state
         dir = DOWN;
     }
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
         //move left
-        position -= movement * right;
+        //position -= movement * right;
+        body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
         //set state
         dir = LEFT;
     }
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
         //move right
-        position += movement * right;
+        //position += movement * right;
+        body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);
         //set state
         dir = RIGHT;
     }
@@ -45,27 +61,29 @@ void Player::playerInput(float deltaTime, GLFWwindow* &window, bool isController
         //input for movement
         if(axes[0] < -controllerDeadZone){ //left
             //move left
-            position -= movement * right;
+            body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
             //set state
             dir = LEFT;
         }
         if(axes[0] > controllerDeadZone){ //right
             //move right
-            position += movement * right;
+            body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);
             //set state
             dir = RIGHT;
         }
         if(axes[1] < -controllerDeadZone){ //up
             //move up
-            position -= movement * up;
+            body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
             //set state
             dir = UP;
         }  
         if(axes[1] > controllerDeadZone){ //down
             //move down
-            position += movement * up;
+            body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
             //set state
             dir = DOWN;
         }
     }
+
+    return body;
 }

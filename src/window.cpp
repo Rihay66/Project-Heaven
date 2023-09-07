@@ -69,7 +69,6 @@ Window::~Window(){
     //delete any pointers
     delete game;
 
-    printf("Exiting...\n");
     glfwTerminate();
 }
 

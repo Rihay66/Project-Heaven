@@ -39,11 +39,11 @@ void Camera::camInput(float deltaTime, GLFWwindow* &window){
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         //move up
-        position -= movement * up * 3.0f;
+        position += movement * up * 3.0f;
     }
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
         //move down
-        position += movement * up * 3.0f;
+        position -= movement * up * 3.0f;
     }
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
         //move left
@@ -78,7 +78,7 @@ void Camera::camInput(float deltaTime, GLFWwindow* &window){
 void Camera::calculateProjectionView()
 {
     this->projection = glm::ortho(0.0f + zoomFactor / 2, static_cast<float>(this->width) - zoomFactor / 2, 
-        static_cast<float>(this->height) - zoomFactor, 0.0f + zoomFactor, -1.0f, 1.0f);
+        0.0f + zoomFactor, static_cast<float>(this->height) - zoomFactor, -1.0f, 1.0f);
 
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), this->position) * glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1));
 

@@ -1,35 +1,42 @@
 #pragma once
 
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
-#include "../inc/gameObject.hpp"
+#include "../inc/rigidbodyObject.hpp"
 #include <GLFW/glfw3.h>
 
-//future use for changing sprite
-enum Direction{
-    UP, DOWN, LEFT, RIGHT
-};
-
 //Player class with inheritence from GameObject
-class Player : public GameObject{
+class Player : public physicsObject{
+    private:
+        //reference to the window
+        GLFWwindow* window;
+
     public:
         //declare const vars
-        const glm::vec2 up = glm::vec2(0.0f, 1.0f);
-        const glm::vec2 right = glm::vec2(1.0f, 0.0f);
-
-        //declare direction enum
-        Direction dir;
+        //glm dir
+        const glm::vec2 glmUp = glm::vec2(0.0f, 1.0f);
+        const glm::vec2 glmRight = glm::vec2(1.0f, 0.0f);
+        //box2D dir
+        const b2Vec2 b2Up = {0.0f, 1.0f};
+        const b2Vec2 b2Right = {1.0f, 0.0f};
 
         //movement
         float speed;
+        //controller enable
+        bool isController;
+        //controller joystick deadzone
+        float controllerDeadZone;
 
-        //constructors
-        Player();
-        Player(glm::vec2 pos, float siz, int sprt, float speed = 1.0f, glm::vec3 clr = glm::vec3(1.0f));
+        //deltatime
+        float currentDeltaTime = 1.0f;
+
+        //constructor / desctructor
+        Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
+        ~Player();
 
         //input function
-        void playerInput(float deltaTime, GLFWwindow* &window, bool isController, float controllerDeadZone);
+        b2Body* physicBody();
 };
 
 #endif // __PLAYER_H__

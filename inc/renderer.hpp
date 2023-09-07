@@ -1,12 +1,11 @@
 #pragma once
 
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef RENDERER_HPP
+#define RENDERER_HPP
 
 //include standard lib
 #include <vector>
 #include <algorithm>
-#include <array>
 
 //include math and glad
 #include "../glad/glad.h"
@@ -22,11 +21,20 @@ struct vec2{
     float x, y;
 };
 
+struct vec3{
+    float x, y, z;
+};
+
 //data struct for holding vertex info
 struct Vertex{ 
     vec2 position;
     vec2 texCoords;
     float texIndex;
+    vec3 color;
+};
+
+struct RendererStats{
+    int quadCount = 0, drawCount = 0;
 };
 
 class Renderer{
@@ -36,34 +44,50 @@ class Renderer{
         ~Renderer();
 
         //draw multiple pointer objects in a vector list
-        void Draw2D(std::vector<GameObject*> objs, glm::vec3 color = glm::vec3(1.0f));
-        //draw a singular pointer object
-        void Draw2D(GameObject* obj, glm::vec3 color = glm::vec3(1.0f));
+        void Draw2D(std::vector<GameObject*> objs);
 
         //reference to the model size
         glm::vec2 spriteSize;
 
+        //contain reference to amont of quads and amount of draw calls
+        RendererStats stats;
+
     private:
+        //stores data of a passed in shader
         Shader shader;
         //stores data of a quad
         unsigned int quadVAO;
         unsigned int quadVBO;
         unsigned int quadEBO;
 
+        //stores the quad buffer
+        Vertex* quadBuffer = nullptr;
+        Vertex* quadBufferPtr = nullptr;  
+
         //stores the ammount of triangles to render
         unsigned int indexCount;
 
-        const static int maxQuadCount = 30000;
+        const static int maxQuadCount = 10000;
         const static int maxVertexCount = maxQuadCount * 4;
         const static int maxIndexCount = maxQuadCount * 6;
-
-        std::array<Vertex, maxQuadCount> vertices;
 
         //initial setup for rendering, setups the rendering of quads and their buffer data
         void initRenderData();
 
         //Used to set the size of sprites
         void setSpriteSize();
+
+        //used to draw a quad
+        void createQuad(glm::vec2 pos, glm::vec2 size, float texIndex, glm::vec3 color);
+
+        //Used to set and unset the vertex buffers
+        void beginBatch();
+        void endBatch();
+
+        //Used to tell opengl to render the triangles
+        void flush();
+
+        const void resetStats();
 };
 
 #endif

@@ -1,8 +1,9 @@
 #include "../inc/renderer.hpp"
-#include <iostream>
 
-//instantiate pointers and arrays
-Vertex* buffer;
+const void Renderer::resetStats(){
+    this->stats.quadCount = 0;
+    this->stats.drawCount = 0;
+}
 
 Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
     this->shader = shader;
@@ -35,90 +36,66 @@ Renderer::~Renderer(){
     glDeleteBuffers(1, &this->quadEBO);
 
     //delete any pointers
-    buffer = nullptr;
-    delete buffer;
+    delete[] this->quadBuffer;
+    this->quadBufferPtr = nullptr;
+    delete this->quadBufferPtr;
 }
 
-static Vertex* createQuad(Vertex* target, float x, float y, float size, float texIndex){
+void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float texIndex, glm::vec3 color){
+
+    //check if not over the index count
+    if(this->indexCount >= this->maxIndexCount){
+        this->endBatch();
+        this->flush();
+        this->beginBatch();
+    }
+
+    quadBufferPtr->position = {pos.x + size.x, pos.y + size.y};
+    quadBufferPtr->texCoords = {0.0f, 0.0f};
+    quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr->color = {color.x, color.y, color.z};
+    quadBufferPtr++;
+
+    quadBufferPtr->position = {pos.x, pos.y + size.y};
+    quadBufferPtr->texCoords = {1.0f, 0.0f};
+    quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr->color = {color.x, color.y, color.z};
+    quadBufferPtr++;
+
+    quadBufferPtr->position = {pos.x + size.x, pos.y};
+    quadBufferPtr->texCoords = {0.0f, 1.0f};
+    quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr->color = {color.x, color.y, color.z};
+    quadBufferPtr++;
     
-    target->position = {x + size, y + size};
-    target->texCoords = {1.0f, 1.0f};
-    target->texIndex = texIndex;
-    target++;
+    quadBufferPtr->position = {pos.x, pos.y};
+    quadBufferPtr->texCoords = {1.0f, 1.0f};
+    quadBufferPtr->texIndex = texIndex;
+    quadBufferPtr->color = {color.x, color.y, color.z};
+    quadBufferPtr++;
 
-    target->position = {x, y + size};
-    target->texCoords = {0.0f, 1.0f};
-    target->texIndex = texIndex;
-    target++;
-
-    target->position = {x + size, y};
-    target->texCoords = {1.0f, 0.0f};
-    target->texIndex = texIndex;
-    target++;
-    
-    target->position = {x, y};
-    target->texCoords = {0.0f, 0.0f};
-    target->texIndex = texIndex;
-    target++;
-
-    return target;
+    this->indexCount += 6;
+    this->stats.quadCount++;
 }
 
 //render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject*> gameObjects, glm::vec3 color){
+void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
     // prepare transformations and shader
-    this->shader.Use();
     setSpriteSize();
 
-    //reset index count
-    indexCount = 0;
-
     //init the buffer
-    buffer = vertices.data();
-
-    //Set dynamic vertex buffer
-    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
-
-    // render textured quad
-    this->shader.SetVector3f("spriteColor", color);
+    this->resetStats();
+    this->beginBatch();
 
     //gen tex by cheking objs tex id
     for(int i = 0 ; i < gameObjects.size(); i++){
-
-        buffer = createQuad(buffer, gameObjects[i]->position.x, gameObjects[i]->position.y, gameObjects[i]->size, gameObjects[i]->textureIndex);
-
-        //increment the amount of triangles to render
-        indexCount += 6;
+        createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->textureIndex, gameObjects[i]->color);
     }
 
-    glBindVertexArray(this->quadVAO);
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-}
-
-//Render a single object, do note it will not play well with rendering a list of objects as there can be texture layering issues
-void Renderer::Draw2D(GameObject* obj, glm::vec3 color){
-
-    //prepare transformations and shader
-    this->shader.Use();
-    setSpriteSize();
-
-    //set up color 
-    this->shader.SetVector3f("spriteColor", color);
-
-    //set up buffer
-    buffer = vertices.data();
-
     //Set dynamic vertex buffer
-    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
-
-    //create the quad
-    buffer = createQuad(buffer, obj->position.x, obj->position.y, obj->size, obj->textureIndex);
-
+    this->endBatch();
     //draw
-    glBindVertexArray(this->quadVAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    this->flush();
 }
 
 //Shader must be used before using this function
@@ -144,8 +121,14 @@ void Renderer::setSpriteSize(){
 
 //Set up the quad rendering
 void Renderer::initRenderData(){
-    // configure VAO/VBO/EBO
 
+    // configure buffer
+    if(this->quadBuffer != nullptr)
+        exit(-1);
+
+    this->quadBuffer = new Vertex[this->maxVertexCount];
+
+    // configure VAO/VBO/EBO
     glCreateVertexArrays(1, &this->quadVAO);
     glCreateBuffers(1, &this->quadVBO);
 
@@ -166,6 +149,10 @@ void Renderer::initRenderData(){
     glEnableVertexArrayAttrib(this->quadVBO, 2);
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, texIndex));
 
+    //color attribute
+    glEnableVertexArrayAttrib(this->quadVBO, 3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, color));
+
     //indices buffer data
     unsigned int indices[maxIndexCount];
     unsigned int offset = 0;
@@ -185,4 +172,24 @@ void Renderer::initRenderData(){
     glCreateBuffers(1, &this->quadEBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->quadEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+}
+
+void Renderer::beginBatch(){
+    this->quadBufferPtr = quadBuffer;
+}
+
+void Renderer::endBatch(){
+    GLsizeiptr size = (uint8_t*)this->quadBufferPtr - (uint8_t*)this->quadBuffer;
+    //set up dynamic buffer
+    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, quadBuffer);
+}
+
+void Renderer::flush(){
+    glBindVertexArray(this->quadVAO);
+    glDrawElements(GL_TRIANGLES, this->indexCount, GL_UNSIGNED_INT, nullptr);
+    this->stats.drawCount++;
+
+    //reset index count 
+    this->indexCount = 0;
 }
