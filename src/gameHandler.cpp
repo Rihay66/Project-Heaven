@@ -106,7 +106,7 @@ void gameHandler::init(){
     phys->pObjs.push_back(plr);
 
     //Init the physics system
-    phys->init(glm::vec2(0.0f, 0.0f));
+    phys->init(glm::vec2(0.0f, -9.81f));
 
     std::cout << "object size: " << renderList.size() << std::endl;
 }
