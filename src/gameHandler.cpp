@@ -81,7 +81,7 @@ void gameHandler::init(){
 
     physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("test"));
 
-    pos = glm::vec2(0.0f);
+    pos = glm::vec2(1.0f);
     physicsObject* test = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("item"));
 
     pos = glm::vec2(-2.5f, -4.0f);
@@ -91,6 +91,10 @@ void gameHandler::init(){
     temp->rb.Type = BodyType::Dynamic;
     test->rb.Type = BodyType::Dynamic;
 
+    //Change params of objs
+    ground->collider.friction = 8.0f;
+    test->collider.size = glm::vec2(0.35f,0.45f);
+
     //Add to render objects
     renderList.push_back(ground);
     renderList.push_back(temp);
@@ -99,7 +103,7 @@ void gameHandler::init(){
 
     phys = new Physics();
 
-    //Add physics objtect to physics class, EXCEPT the player
+    //Add physics objtect to physics class
     phys->pObjs.push_back(temp);
     phys->pObjs.push_back(test);
     phys->pObjs.push_back(ground);

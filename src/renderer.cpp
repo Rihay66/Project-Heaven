@@ -100,7 +100,7 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
 
 //Shader must be used before using this function
 void Renderer::setSpriteSize(){
-
+    //TODO: Remove this function and merge it with createQuad()
     //Check if spriteSize is not 0 or a negative
     if(spriteSize.x <= 1.0f || spriteSize.y <= 5.0f){
         //set a hard limit

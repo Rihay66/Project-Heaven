@@ -8,6 +8,11 @@
 
 class GameObject{
     public:
+        //future use for changing sprite 
+        enum Direction{
+            UP, DOWN, LEFT, RIGHT
+        };
+
         //transform reference of the object
         glm::vec2 position;
         glm::vec3 color;

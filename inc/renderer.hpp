@@ -16,21 +16,12 @@
 #include "../inc/gameObject.hpp"
 #include "../inc/shader.hpp"
 
-//data struct for holding 2 vertex positions
-struct vec2{
-    float x, y;
-};
-
-struct vec3{
-    float x, y, z;
-};
-
 //data struct for holding vertex info
 struct Vertex{ 
-    vec2 position;
-    vec2 texCoords;
+    glm::vec2 position;
+    glm::vec2 texCoords;
     float texIndex;
-    vec3 color;
+    glm::vec3 color;
 };
 
 struct RendererStats{

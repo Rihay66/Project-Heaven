@@ -40,13 +40,6 @@ struct BoxCollider
 
 class physicsObject : public GameObject{
     public:
-        //reference to state of the object
-        //future use for changing sprite 
-        //* used for physics detection
-        enum Direction{
-            UP, DOWN, LEFT, RIGHT
-        };
-
         //Declare direction of the object
         Direction dir;
 
