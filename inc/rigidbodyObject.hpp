@@ -11,7 +11,7 @@ enum class BodyType {Static = 0, Dynamic, Kinematic };
 //physics components
 struct Rigidbody{
     BodyType Type = BodyType::Static;
-    bool fixedRotation = true;
+    bool fixedRotation = false;
 
     //storage for runtime
     void* runtimeBody = nullptr;
@@ -24,6 +24,7 @@ struct BoxCollider
 {
     glm::vec2 offset = {0.0f, 0.0f};
     glm::vec2 size = {0.5f, 0.5f};
+    float rotationOffset = 0.0f;
 
     float density = 1.0f;
     float friction = 0.5f;

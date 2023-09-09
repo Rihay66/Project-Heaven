@@ -13,7 +13,7 @@ uniform mat4 projectionView;
 
 void main()
 {
-    gl_Position = projectionView * transform * vec4(vertex, 0.0, 1.0);
+    gl_Position = projectionView * vec4(vertex, 0.0, 1.0);
     o_TexCoords = texCoords;
     o_TexIndex = texIndex;
     o_spriteColor = color;

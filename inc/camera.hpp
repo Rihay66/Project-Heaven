@@ -18,6 +18,7 @@ class Camera{
         glm::mat4 view;
         glm::mat4 projectionView;
 
+        //Does multiplication of the view and projection to create the ProjectionView
         void calculateProjectionView();
 
         //reference to the camera position

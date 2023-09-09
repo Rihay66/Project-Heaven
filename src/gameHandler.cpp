@@ -80,6 +80,7 @@ void gameHandler::init(){
     pos = glm::vec2(-1.1f, 2.0f);
 
     physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("test"));
+    temp->rotation = 45.0f;
 
     pos = glm::vec2(1.0f);
     physicsObject* test = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("item"));
@@ -94,6 +95,7 @@ void gameHandler::init(){
     //Change params of objs
     ground->collider.friction = 8.0f;
     test->collider.size = glm::vec2(0.35f,0.45f);
+    test->collider.rotationOffset = 45.0f;
 
     //Add to render objects
     renderList.push_back(ground);
@@ -118,6 +120,9 @@ void gameHandler::init(){
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
 
+    //* Do physics here
+    phys->CheckCollisions(deltaTime);
+
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
         camera->camInput(deltaTime, this->window);    
     }else if(Game_State == GAME_ACTIVE){
@@ -129,9 +134,6 @@ void gameHandler::update(float deltaTime){
     }else if(Controller_State == CONTROLSSTATE::KMCONTROLLER){
         plr->isController = true;
     }
-
-    //* Do physics here
-    phys->CheckCollisions(deltaTime);
 
 }
 

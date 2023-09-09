@@ -24,7 +24,12 @@ Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
 
     //set up shader model view
     this->spriteSize = spriteSize;
-    setSpriteSize();
+
+    //set up quad vertex positions
+    quadVertexPositions[0] = {1.0f, 1.0f, 0.0f, 1.0f};
+    quadVertexPositions[1] = {0.0f, 1.0f, 0.0f, 1.0f};
+    quadVertexPositions[2] = {1.0f, 0.0f, 0.0f, 1.0f};
+    quadVertexPositions[3] = {0.0f, 0.0f, 0.0f, 1.0f};
 
     this->initRenderData(); //set up rendering of quads
 }
@@ -41,7 +46,7 @@ Renderer::~Renderer(){
     delete this->quadBufferPtr;
 }
 
-void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float texIndex, glm::vec3 color){
+void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float texIndex, glm::vec3 color){
 
     //check if not over the index count
     if(this->indexCount >= this->maxIndexCount){
@@ -50,25 +55,30 @@ void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float texIndex, glm::ve
         this->beginBatch();
     }
 
-    quadBufferPtr->position = {pos.x + size.x, pos.y + size.y};
+    //create model transform
+    glm::mat4 transform  = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0.0f))
+    * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
+    * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
+
+    quadBufferPtr->position = (transform * quadVertexPositions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {0.0f, 0.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
 
-    quadBufferPtr->position = {pos.x, pos.y + size.y};
+    quadBufferPtr->position =  (transform * quadVertexPositions[1]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {1.0f, 0.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
 
-    quadBufferPtr->position = {pos.x + size.x, pos.y};
+    quadBufferPtr->position = (transform * quadVertexPositions[2]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {0.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = {color.x, color.y, color.z};
     quadBufferPtr++;
     
-    quadBufferPtr->position = {pos.x, pos.y};
+    quadBufferPtr->position = (transform * quadVertexPositions[3]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {1.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = {color.x, color.y, color.z};
@@ -80,8 +90,6 @@ void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float texIndex, glm::ve
 
 //render multiple objects pointers
 void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
-    // prepare transformations and shader
-    setSpriteSize();
 
     //init the buffer
     this->resetStats();
@@ -89,34 +97,13 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
 
     //gen tex by cheking objs tex id
     for(int i = 0 ; i < gameObjects.size(); i++){
-        createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->textureIndex, gameObjects[i]->color);
+        createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color);
     }
 
     //Set dynamic vertex buffer
     this->endBatch();
     //draw
     this->flush();
-}
-
-//Shader must be used before using this function
-void Renderer::setSpriteSize(){
-    //TODO: Remove this function and merge it with createQuad()
-    //Check if spriteSize is not 0 or a negative
-    if(spriteSize.x <= 1.0f || spriteSize.y <= 5.0f){
-        //set a hard limit
-        spriteSize = glm::vec2(1.0f, 5.0f);
-    }
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-    model = glm::translate(model, glm::vec3(0.5f * spriteSize.x, 0.5f * spriteSize.y, 0.0f)); // move origin of rotation to center of quad
-    model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
-    model = glm::translate(model, glm::vec3(-0.5f * spriteSize.x, -0.5f * spriteSize.y, 0.0f)); // move origin back
-
-    model = glm::scale(model, glm::vec3(spriteSize.x, spriteSize.y, 1.0f)); // last scale
-    
-    this->shader.SetMatrix4("transform", model);
 }
 
 //Set up the quad rendering

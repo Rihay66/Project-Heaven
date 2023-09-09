@@ -62,14 +62,14 @@ class Renderer{
         const static int maxVertexCount = maxQuadCount * 4;
         const static int maxIndexCount = maxQuadCount * 6;
 
+        //Used to store vertex pos
+        glm::vec4 quadVertexPositions[4];
+
         //initial setup for rendering, setups the rendering of quads and their buffer data
         void initRenderData();
 
-        //Used to set the size of sprites
-        void setSpriteSize();
-
         //used to draw a quad
-        void createQuad(glm::vec2 pos, glm::vec2 size, float texIndex, glm::vec3 color);
+        void createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float texIndex, glm::vec3 color);
 
         //Used to set and unset the vertex buffers
         void beginBatch();
