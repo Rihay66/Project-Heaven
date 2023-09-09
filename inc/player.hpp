@@ -31,6 +31,9 @@ class Player : public physicsObject{
         //deltatime
         float currentDeltaTime = 1.0f;
 
+        //Used to check for debug mode
+        bool isDebug = false;
+
         //constructor / desctructor
         Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
         ~Player();

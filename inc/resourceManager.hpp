@@ -36,10 +36,8 @@ public:
     static Shader    GetShader(std::string name);
     // loads (and generates) a texture from file
     static Texture2D LoadTexture(const char *file, std::string name, bool alpha = false);
-    // retrieves a stored texture
-    static Texture2D GetTexture(std::string name);
     //retrieves a stored texture on the texList vector
-    static int GetTextureIndex(std::string name);
+    static int GetTexture(std::string name);
     // properly de-allocates all loaded resources
     static void      Clear();
 private:

@@ -7,6 +7,8 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
+//TODO: Move this camera to be it's own object and have a camera controller that includes all the input
+
 //Camera class
 class Camera{
     private:

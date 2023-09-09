@@ -17,11 +17,13 @@ Player::~Player(){
 b2Body* Player::physicBody(){
     
     b2Body* body = (b2Body*)rb.runtimeBody;
+
+    //Stop any movement when debug is enabled
+    if(isDebug)
+        return body;
+
     //move the player
     float movement = this->speed * currentDeltaTime;
-
-    //TODO: Replace the movement with box2d way of moving dynamic objects
-    //TODO: set box 2d transform by getting the transform + movement * dir
 
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){

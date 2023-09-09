@@ -1,9 +1,6 @@
 #include "../inc/physics.hpp"
 
-//TODO: Implement Box 2D
-
-Physics::Physics(){
-}
+Physics::Physics(){}
 
 Physics::~Physics(){
     //delete any pointer 
@@ -60,7 +57,6 @@ void Physics::init(glm::vec2 gravity){
         fixtureDef.restitutionThreshold = obj->collider.restitutionThreshold;
         body->CreateFixture(&fixtureDef);
     }
-
 }
 
 //TODO: When a physics object is destroyed remove from list
@@ -80,23 +76,9 @@ void Physics::CheckCollisions(float deltaTime){
         obj->position.y = position.y;
         obj->rotation = body->GetAngle();
     }
-
-    //Check if player is available
-   
-/*
-    //Check for triggers
-    for(physicsObject* obj : triggerObjs){
-        //Check every physics object with the player
-        if(!obj->isDestroyed){
-            if(aabbCollision(plr, *obj)){
-                //Execture any code from the trigger
-                obj->triggerCollision();
-            }
-        }
-    }
-*/
 }
 
+//TODO: Make a tag system for physics objects and also make approprite functions similar to unity C#
 bool Physics::aabbCollision(physicsObject &a, physicsObject &b){
     // collision x-axis?
     bool collisionX = a.position.x + a.size.x >= b.position.x &&

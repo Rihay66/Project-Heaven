@@ -10,7 +10,7 @@ enum class BodyType {Static = 0, Dynamic, Kinematic };
 
 //physics components
 struct Rigidbody{
-    BodyType Type = BodyType::Static;
+    BodyType Type = BodyType::Dynamic;
     bool fixedRotation = false;
 
     //storage for runtime

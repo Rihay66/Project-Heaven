@@ -6,6 +6,8 @@
 #include "../inc/texture.hpp"
 #include <glm/glm.hpp>
 
+//TODO: Make a tag system for base game objects and have a global storage of the tag only for gameobjects and deriving classes
+
 class GameObject{
     public:
         //future use for changing sprite 

@@ -55,13 +55,7 @@ Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool 
     return Textures[name];
 }
 
-Texture2D ResourceManager::GetTexture(std::string name)
-{
-    name = checkFileName(name);
-    return Textures[name];
-}
-
-int ResourceManager::GetTextureIndex(std::string name){
+int ResourceManager::GetTexture(std::string name){
 
     name = checkFileName(name);
     int id = Textures[name].ID;
