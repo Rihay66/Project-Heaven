@@ -107,6 +107,7 @@ void gameHandler::init(){
 
     //Change params of objs
     ground->collider.friction = 8.0f;
+    crate->collider.density = 5.0f;
 
     //Add to render objects
     renderList.push_back(ground);
@@ -150,6 +151,7 @@ void gameHandler::update(float deltaTime){
         plr->isDebug = false;
     }
 
+    //Check the controller state and change the player isDebug boolean
     if(Controller_State == CONTROLSSTATE::KEYBOARDMOUSE){
         plr->isController = false;
     }else if(Controller_State == CONTROLSSTATE::KMCONTROLLER){
