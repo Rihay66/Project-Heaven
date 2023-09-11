@@ -32,7 +32,6 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, false); //disable resizing the screen
-    glfwWindowHint(GLFW_SAMPLES, 4); //GLFW enable 4x msaa sampling
 
     //create the window and check for errors
     handle = glfwCreateWindow(h, w, name, NULL, NULL);
@@ -60,7 +59,6 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
 
     //set up rendering for 2D
     glEnable(GL_BLEND);
-    glEnable(GL_MULTISAMPLE); //GLAD enable 4x msaa sampling
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     std::cout << "window successfully created" << std::endl;

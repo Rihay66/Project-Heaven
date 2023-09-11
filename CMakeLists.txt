@@ -38,10 +38,26 @@ file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/t
 
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
 
+# We need a CMAKE_DIR with some code to find external dependencies
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
+#OpenGL
+find_package(OpenGL REQUIRED)
+
+#GLM
+find_package(GLM REQUIRED)
+message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
+
+#GLFW
+find_package(GLFW3 REQUIRED)
+message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIR}")
+
+#box2d
+find_package(BOX2D REQUIRED)
+message(STATUS "Found BOX2D in ${BOX2D_INCLUDE_DIR}")
+
 # Link libs if the detected OS is LINUX
 if(UNIX)
-
-find_package(OpenGL REQUIRED)
 
 target_link_libraries(project-heaven 
 glfw 
@@ -60,13 +76,21 @@ endif (UNIX)
 # NOTE was compiled using msys2's w64-x86_64 packages
 if(WIN32)
 
-find_package(OpenGL REQUIRED)
+set(LIBS glfw3 opengl32 box2d)
+
+# Define the include DIRs
+include_directories(
+	"${CMAKE_SOURCE_DIR}/src"
+	"${CMAKE_SOURCE_DIR}/include"
+)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		"${PROJECT_SOURCE_DIR}/dlls"
+		$<TARGET_FILE_DIR:${PROJECT_NAME}>)
 
 target_link_libraries(project-heaven 
-glfw3
-OpenGL::GL
-OpenGL::GLU
-box2d
+${LIBS}
 )
 
 endif(WIN32)
