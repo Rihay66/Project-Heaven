@@ -41,23 +41,10 @@ file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/sh
 # We need a CMAKE_DIR with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-#OpenGL
-find_package(OpenGL REQUIRED)
-
-#GLM
-find_package(GLM REQUIRED)
-message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
-
-#GLFW
-find_package(GLFW3 REQUIRED)
-message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIR}")
-
-#box2d
-find_package(BOX2D REQUIRED)
-message(STATUS "Found BOX2D in ${BOX2D_INCLUDE_DIR}")
-
 # Link libs if the detected OS is LINUX
 if(UNIX)
+
+find_package(OpenGL REQUIRED)
 
 target_link_libraries(project-heaven 
 glfw 
@@ -75,6 +62,21 @@ endif (UNIX)
 # Link libs if the detected OS is Windows
 # NOTE was compiled using msys2's w64-x86_64 packages
 if(WIN32)
+
+#OpenGL
+find_package(OpenGL REQUIRED)
+
+#GLM
+find_package(GLM REQUIRED)
+message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
+
+#GLFW
+find_package(GLFW3 REQUIRED)
+message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIR}")
+
+#box2d
+find_package(BOX2D REQUIRED)
+message(STATUS "Found BOX2D in ${BOX2D_INCLUDE_DIR}")
 
 set(LIBS glfw3 opengl32 box2d)
 
