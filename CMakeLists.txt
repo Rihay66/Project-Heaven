@@ -3,36 +3,25 @@ project(project-heaven VERSION 0.0.1 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
 #include all files
+# Add source files
+file(GLOB_RECURSE SOURCE_FILES 
+	${CMAKE_SOURCE_DIR}/src/*.c
+	${CMAKE_SOURCE_DIR}/src/*.cpp)
+
+# Add header files
+file(GLOB_RECURSE HEADER_FILES 
+	${CMAKE_SOURCE_DIR}/inc/*.h
+	${CMAKE_SOURCE_DIR}/inc/*.hpp)
+
+#include all files
 # TODO auto get source files and header files from /inc and /src
 add_executable(project-heaven 
-src/main.cpp
-src/window.cpp
-src/renderer.cpp
-src/texture.cpp
-src/shader.cpp
-src/stb_image.cpp
-src/resourceManager.cpp
-src/gameHandler.cpp
-src/camera.cpp
-src/gameObject.cpp
-src/player.cpp
-src/physics.cpp
-src/rigidbodyObject.cpp
 glad/glad.c
 glad/glad.h
-inc/camera.hpp
-inc/physics.hpp
-inc/player.hpp
-inc/gameObject.hpp
-inc/window.hpp
-inc/gameHandler.hpp
-inc/rigidbodyObject.hpp
-inc/renderer.hpp
-inc/texture.hpp
-inc/stb_image.h
-inc/shader.hpp
-inc/resourceManager.hpp
+${HEADER_FILES} 
+${SOURCE_FILES}
 )
+
 # Create folders and thier sub files for runtime loading
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)
 
@@ -79,12 +68,6 @@ find_package(BOX2D REQUIRED)
 message(STATUS "Found BOX2D in ${BOX2D_INCLUDE_DIR}")
 
 set(LIBS glfw3 opengl32 box2d)
-
-# Define the include DIRs
-include_directories(
-	"${CMAKE_SOURCE_DIR}/src"
-	"${CMAKE_SOURCE_DIR}/include"
-)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
