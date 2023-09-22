@@ -13,11 +13,12 @@ file(GLOB_RECURSE HEADER_FILES
 	${CMAKE_SOURCE_DIR}/inc/*.h
 	${CMAKE_SOURCE_DIR}/inc/*.hpp)
 
+# Get engine files
+
+
 #include all files
-# TODO auto get source files and header files from /inc and /src
 add_executable(project-heaven 
-glad/glad.c
-glad/glad.h
+
 ${HEADER_FILES} 
 ${SOURCE_FILES}
 )

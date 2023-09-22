@@ -6,7 +6,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "../inc/resourceManager.hpp"
+#include "../Heaven-Engine/inc/resourceSys/resourceManager.hpp"
 #include "../inc/physics.hpp"
 #include "../inc/player.hpp"
 #include "../inc/camera.hpp"

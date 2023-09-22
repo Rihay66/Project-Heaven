@@ -8,6 +8,8 @@
 #include "../glad/glad.h"
 #include <GLFW/glfw3.h>
 
+//TODO: MOVE TO SDL
+
 //define window states
 enum APP_STATE{
     ACTIVE, DEBUG
