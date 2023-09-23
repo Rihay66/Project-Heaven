@@ -3,7 +3,7 @@
 #ifndef RIGIDBODYOBJECT_HPP
 #define RIGIDBODYOBJECT_HPP
 
-#include "../inc/gameObject.hpp"
+#include <gameObjs/gameObject.hpp>
 #include <box2d/b2_body.h>
 
 enum class BodyType {Static = 0, Dynamic, Kinematic };

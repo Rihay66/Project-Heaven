@@ -1,4 +1,4 @@
-#include "../inc/resourceManager.hpp"
+#include <resourceSys/resourceManager.hpp>
 
 #include <algorithm>
 #include <string>
@@ -6,7 +6,7 @@
 #include <sstream>
 #include <fstream>
 
-#include "../inc/stb_image.h"
+#include <resourceSys/stb_image.h>
 
 // Instantiate static variables
 std::map<std::string, Texture2D>    ResourceManager::Textures;

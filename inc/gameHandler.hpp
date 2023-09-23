@@ -6,11 +6,11 @@
 #include <iostream>
 #include <algorithm>
 
-#include "../Heaven-Engine/inc/resourceSys/resourceManager.hpp"
-#include "../inc/physics.hpp"
+#include <resourceSys/resourceManager.hpp>
+#include <engine/physics.hpp>
 #include "../inc/player.hpp"
-#include "../inc/camera.hpp"
-#include "../inc/renderer.hpp"
+#include <orthoCam/camera.hpp>
+#include <engine/renderer.hpp>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 

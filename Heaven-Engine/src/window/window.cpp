@@ -1,6 +1,5 @@
-#include "../inc/window.hpp"
+#include <window/window.hpp>
 
-#include "../inc/gameHandler.hpp"
 
 //Callback func
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height){
@@ -15,9 +14,6 @@ static bool controllerEnable = false;
 static bool inputSwitch = false;
 static bool vSyncSwitch = false;
 static bool vSyncState = false;
-
-//Instantiate gameHandler object
-gameHandler* game;
 
 //Window constructor, intializes GLFW and GLAD then creates a window with the passed parameters
 Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE), Input_State(KM), width(0), height(0){
@@ -67,7 +63,6 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
 //Destructor
 Window::~Window(){
     //delete any pointers
-    delete game;
 
     glfwTerminate();
 }
@@ -160,23 +155,20 @@ void Window::window_input(){
 //initialization
 void Window::init(){
     //Here goes the initial processing of shaders, textues, and objects
-    game = new gameHandler(width, height, handle);
-    game->init();
+
 }
 
 //updating
 void Window::update(){
     //update any variables like moving objects or updating input
     //* NOTE: that any object that needs input will need to have reference to the window handleas a parameter to be passed down
-    game->update(DeltaTime);
-    game->setGameState(App_State);
-    game->setControllerState(Input_State);
+
 }
 
 //rendering
 void Window::render(){
     //here update visually the objects, shaders, textures, etc
-    game->render();
+
 }
 
 //Frames

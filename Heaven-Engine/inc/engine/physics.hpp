@@ -7,7 +7,7 @@
 #include <vector>
 #include <math.h>
 
-#include "../inc/rigidbodyObject.hpp"
+#include <gameObjs/rigidbodyObject.hpp>
 
 //include box2d lib
 #include <box2d/b2_world.h>

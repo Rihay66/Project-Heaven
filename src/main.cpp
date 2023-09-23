@@ -1,4 +1,4 @@
-#include "../inc/window.hpp"
+#include <window/window.hpp>
 
 const unsigned int WIDTH = 1280, HEIGHT = 720;
 

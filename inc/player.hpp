@@ -3,7 +3,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "../Heaven-Engine/inc/gameObjs/rigidbodyObject.hpp"
+#include <gameObjs/rigidbodyObject.hpp>
 #include <GLFW/glfw3.h>
 
 //Player class with inheritence from GameObject

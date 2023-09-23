@@ -13,12 +13,8 @@ file(GLOB_RECURSE HEADER_FILES
 	${CMAKE_SOURCE_DIR}/inc/*.h
 	${CMAKE_SOURCE_DIR}/inc/*.hpp)
 
-# Get engine files
-
-
 #include all files
 add_executable(project-heaven 
-
 ${HEADER_FILES} 
 ${SOURCE_FILES}
 )
@@ -28,55 +24,23 @@ file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/t
 
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
 
-# We need a CMAKE_DIR with some code to find external dependencies
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
-
 # Link libs if the detected OS is LINUX
 if(UNIX)
 
-find_package(OpenGL REQUIRED)
+# Add the path to your engine library's CMake configuration files
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}Heaven-Engine/build/CMakeFiles/Export/a58a60f24887ba09385dfba63e9906cb)
 
-target_link_libraries(project-heaven 
-glfw 
-OpenGL::GL
-Xxf86vm
-OpenGL::GLU
-X11
-Xrandr
-pthread
-Xi
-box2d
-)
+find_package(Heaven-Engine REQUIRED)
+
+find_package(glfw3 REQUIRED)
+
+target_link_libraries(project-heaven PRIVATE Heaven-Engine glfw)
+
 endif (UNIX)
 
 # Link libs if the detected OS is Windows
 # NOTE was compiled using msys2's w64-x86_64 packages
 if(WIN32)
 
-#OpenGL
-find_package(OpenGL REQUIRED)
-
-#GLM
-find_package(GLM REQUIRED)
-message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
-
-#GLFW
-find_package(GLFW3 REQUIRED)
-message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIR}")
-
-#box2d
-find_package(BOX2D REQUIRED)
-message(STATUS "Found BOX2D in ${BOX2D_INCLUDE_DIR}")
-
-set(LIBS glfw3 opengl32 box2d)
-
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_directory
-		"${PROJECT_SOURCE_DIR}/dlls"
-		$<TARGET_FILE_DIR:${PROJECT_NAME}>)
-
-target_link_libraries(project-heaven 
-${LIBS}
-)
 
 endif(WIN32)

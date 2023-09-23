@@ -7,10 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "../glad/glad.h"
-
-#include "../inc/texture.hpp"
-#include "../inc/shader.hpp"
+#include <resourceSys/texture.hpp>
+#include <resourceSys/shader.hpp>
 
 
 // A static singleton ResourceManager class that hosts several

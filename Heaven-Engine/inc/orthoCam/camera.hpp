@@ -3,7 +3,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include "../inc/shader.hpp"
+#include <resourceSys/shader.hpp>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 

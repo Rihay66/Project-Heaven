@@ -3,7 +3,7 @@
 #ifndef GAMEOBJECT_HPP
 #define GAMEOBJECT_HPP
 
-#include "../inc/texture.hpp"
+#include <resourceSys/texture.hpp>
 #include <glm/glm.hpp>
 
 //TODO: Make a tag system for base game objects and have a global storage of the tag only for gameobjects and deriving classes

@@ -8,13 +8,13 @@
 #include <algorithm>
 
 //include math and glad
-#include "../glad/glad.h"
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 //include shader and texture classes
-#include "../inc/gameObject.hpp"
-#include "../inc/shader.hpp"
+#include <gameObjs/gameObject.hpp>
+#include <resourceSys/shader.hpp>
 
 //data struct for holding vertex info
 struct Vertex{ 

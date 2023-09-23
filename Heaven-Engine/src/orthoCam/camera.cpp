@@ -1,4 +1,4 @@
-#include "../inc/camera.hpp"
+#include <orthoCam/camera.hpp>
 
 Camera::Camera(unsigned int Width, unsigned int Height, Shader &shader, float cameraSpeed, float zoomAmount) : speed(cameraSpeed), zoomAmount(zoomAmount),width(Width), height(Height), zoomFactor(0){
     this->shader = shader;
