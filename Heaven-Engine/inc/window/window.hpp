@@ -43,10 +43,10 @@ class Window{
         //destructor
         ~Window();
         //Primary window input
-        void window_input();
-        void init(); //used to call classes that handle the loading of shaders, textures, and objects
-        void update();
-        void render();
+        virtual void window_input();
+        virtual void init(); //used to call classes that handle the loading of shaders, textures, and objects
+        virtual void update();
+        virtual void render();
         //frame profiling
         void getFrameTime();
 };

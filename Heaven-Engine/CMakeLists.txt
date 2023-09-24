@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.15.0)
 project(Heaven-Engine VERSION 0.0.3 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
@@ -54,19 +54,25 @@ find_package(glm REQUIRED)
 #Find BOX2D
 find_package(glfw3 REQUIRED)
 
+if(glfw3_FOUND)
+    message(STATUS "GLFW found. Version: ${glfw3_VERSION}")
+else()
+    message(FATAL_ERROR "GLFW not found.")
+endif()
+
 #Find GLFW
 find_package(box2d REQUIRED)
 
-#put together all necessary libs into one variable
-set(LIBS glm glfw OpenGL box2d)
-
-#Get Xorg dependencies into one variable
-set(Xorg Xxf86vm X11 Xrandr pthread Xi)
+ # Put together all necessary libs into one variable
+ set(LIBS OpenGL glm box2d glfw)
+    
+ # Get Xorg dependencies into one variable
+ set(Xorg Xxf86vm X11 Xrandr pthread Xi)
 
 #Make copies of the libraries .so files
 
 # Link against OpenGL and GLM
-target_link_libraries(Heaven-Engine PRIVATE ${LIBS} ${Xorg})
+target_link_libraries(Heaven-Engine PUBLIC ${LIBS} ${Xorg})
 
 endif(UNIX)
 
@@ -105,13 +111,13 @@ set_target_properties(Heaven-Engine PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/lib"
 )
 
-
-
 # Install the library and CMake configuration files
 install(TARGETS ${PROJECT_NAME} EXPORT Heaven-EngineConfig
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	)
 
 # Specify the destination folder for header files within the build directory
 set(INCLUDE_DEST_DIR "${CMAKE_BINARY_DIR}/include")
@@ -119,20 +125,9 @@ set(INCLUDE_DEST_DIR "${CMAKE_BINARY_DIR}/include")
 # Copy header files to the specified build directory using 'file(COPY ...)'
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/inc/
     DESTINATION ${INCLUDE_DEST_DIR})
-
-# Install the CMake configuration file
-install(EXPORT Heaven-EngineConfig
-    DESTINATION share/Heaven-Engine/cmake)
-
-# Create the CMake configuration version file
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/Heaven-EngineConfigVersion.cmake
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY SameMajorVersion)
-
-# Install the CMake configuration version file
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Heaven-EngineConfigVersion.cmake
-    DESTINATION share/Heaven-Engine/cmake)
-
+    
+    # Configure the package and specify the export destination
+    install(EXPORT Heaven-EngineConfig
+        DESTINATION share/cmake/Heaven-Engine
+    )
 export(TARGETS ${PROJECT_NAME} FILE Heaven-Engine.cmake)

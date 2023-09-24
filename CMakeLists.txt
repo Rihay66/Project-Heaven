@@ -28,9 +28,13 @@ file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/sh
 if(UNIX)
 
 # Add the path to your engine library's CMake configuration files
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}Heaven-Engine/build/CMakeFiles/Export/a58a60f24887ba09385dfba63e9906cb)
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}Heaven-Engine/build/export/)
 
-find_package(Heaven-Engine REQUIRED)
+add_library(Heaven-Engine SHARED IMPORTED)
+set_target_properties(Heaven-Engine PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libHeaven-Engine.so
+    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
+)
 
 find_package(glfw3 REQUIRED)
 
