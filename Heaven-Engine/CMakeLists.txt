@@ -3,7 +3,7 @@ project(Heaven-Engine VERSION 0.0.3 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
 # Set the install prefix to the build folder's lib directory
-set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/lib")
+set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 
 #Add macro
 include(GNUInstallDirs)
@@ -57,12 +57,6 @@ find_package(glm REQUIRED)
 #Find BOX2D
 find_package(glfw3 REQUIRED)
 
-if(glfw3_FOUND)
-    message(STATUS "GLFW found. Version: ${glfw3_VERSION}")
-else()
-    message(FATAL_ERROR "GLFW not found.")
-endif()
-
 #Find GLFW
 find_package(box2d REQUIRED)
 
@@ -107,12 +101,6 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 		$<TARGET_FILE_DIR:${PROJECT_NAME}>)
 
 endif(WIN32)
-# Set the library output directory to 'lib' inside the build directory
-set_target_properties(Heaven-Engine PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-    LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/lib"
-    LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/lib"
-)
 
 # Install the library and CMake configuration files
 install(TARGETS ${PROJECT_NAME} EXPORT Heaven-EngineConfig
