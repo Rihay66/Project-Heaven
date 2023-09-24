@@ -1,11 +1,11 @@
-#include <window/window.hpp>
+#include "../inc/gameWindow.hpp"
 
 const unsigned int WIDTH = 1280, HEIGHT = 720;
 
 int main(){
 	
 	//create window
-	Window* window = new Window(WIDTH, HEIGHT, "Project-Heaven");
+	GameWindow* window = new GameWindow(WIDTH, HEIGHT, "Project-Heaven");
 
 	//init resources from files and load classes
 	window->init();

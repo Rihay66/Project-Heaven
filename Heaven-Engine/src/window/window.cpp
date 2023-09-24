@@ -63,7 +63,6 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
 //Destructor
 Window::~Window(){
     //delete any pointers
-
     glfwTerminate();
 }
 

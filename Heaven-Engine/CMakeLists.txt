@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.15.0)
 project(Heaven-Engine VERSION 0.0.3 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
+# Set the install prefix to the build folder's lib directory
+set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/lib")
+
 #Add macro
 include(GNUInstallDirs)
 
@@ -119,15 +122,13 @@ install(TARGETS ${PROJECT_NAME} EXPORT Heaven-EngineConfig
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 	)
 
-# Specify the destination folder for header files within the build directory
-set(INCLUDE_DEST_DIR "${CMAKE_BINARY_DIR}/include")
-
-# Copy header files to the specified build directory using 'file(COPY ...)'
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/inc/
-    DESTINATION ${INCLUDE_DEST_DIR})
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc
+    DESTINATION "${CMAKE_BINARY_DIR}"
+)
     
-    # Configure the package and specify the export destination
-    install(EXPORT Heaven-EngineConfig
-        DESTINATION share/cmake/Heaven-Engine
-    )
+# Configure the package and specify the export destination
+install(EXPORT Heaven-EngineConfig
+    DESTINATION ${CMAKE_BINARY_DIR}
+)
 export(TARGETS ${PROJECT_NAME} FILE Heaven-Engine.cmake)
