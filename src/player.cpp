@@ -26,28 +26,28 @@ b2Body* Player::physicBody(){
     float movement = this->speed * currentDeltaTime;
 
     //input for movement
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
         //move up
         //position += movement * up;
         body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
         //set state
         dir = UP;
     }
-    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS  || glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
         //move down
         //position -= movement * up;
         body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
         //set state
         dir = DOWN;
     }
-    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS  || glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
         //move left
         //position -= movement * right;
         body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
         //set state
         dir = LEFT;
     }
-    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS  || glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
         //move right
         //position += movement * right;
         body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);

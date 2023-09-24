@@ -94,12 +94,6 @@ set(LIBS glfw3 opengl32 box2d)
 # Link against OpenGL and GLM
 target_link_libraries(Heaven-Engine PRIVATE ${LIBS})
 
-#Copy all the dlls into the build folder
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_directory
-		"${PROJECT_SOURCE_DIR}/dlls"
-		$<TARGET_FILE_DIR:${PROJECT_NAME}>)
-
 endif(WIN32)
 
 # Install the library and CMake configuration files
@@ -111,8 +105,8 @@ install(TARGETS ${PROJECT_NAME} EXPORT Heaven-EngineConfig
 	)
 
 install(
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc
-    DESTINATION "${CMAKE_BINARY_DIR}"
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc/
+    DESTINATION "${CMAKE_BINARY_DIR}/include"
 )
     
 # Configure the package and specify the export destination
