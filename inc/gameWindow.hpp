@@ -4,7 +4,6 @@
 #define GAMEWINDOW_HPP
 
 #include <window/window.hpp>
-#include <GLFW/glfw3.h>
 #include "../inc/gameHandler.hpp"
 
 

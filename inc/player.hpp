@@ -4,13 +4,11 @@
 #define PLAYER_HPP
 
 #include <gameObjs/rigidbodyObject.hpp>
-#include <GLFW/glfw3.h>
 
 //Player class with inheritence from GameObject
 class Player : public physicsObject{
     private:
         //reference to the window
-        GLFWwindow* window;
 
     public:
         //declare const vars
@@ -35,7 +33,7 @@ class Player : public physicsObject{
         bool isDebug = false;
 
         //constructor / desctructor
-        Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
+        Player(glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
         ~Player();
 
         //input function

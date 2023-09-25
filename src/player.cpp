@@ -1,7 +1,7 @@
 #include "../inc/player.hpp"
 
-Player::Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzone, bool destroyed, glm::vec3 color) : 
-physicsObject(pos, siz, sprt, color, destroyed, false), speed(spd), window(handle), controllerDeadZone(cDeadzone), isController(false){
+Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzone, bool destroyed, glm::vec3 color) : 
+physicsObject(pos, siz, sprt, color, destroyed, false), speed(spd), controllerDeadZone(cDeadzone), isController(false){
     //set any non static var from gameobject or rigidbody class
     
     //set up default rb
@@ -22,6 +22,7 @@ b2Body* Player::physicBody(){
     if(isDebug)
         return body;
 
+    /*
     //move the player
     float movement = this->speed * currentDeltaTime;
 
@@ -86,6 +87,7 @@ b2Body* Player::physicBody(){
             dir = DOWN;
         }
     }
+    */
 
     return body;
 }

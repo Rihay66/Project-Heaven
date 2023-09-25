@@ -5,14 +5,14 @@ Camera* camera;
 Player* plr;
 
 //constructor
-gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
+gameHandler::gameHandler(unsigned int width, unsigned int height) : Width(width), Height(height) {}
 
 //destructor
 gameHandler::~gameHandler(){
     //delete any pointers and clear resources (eg ResourceManager)
     delete camera;
     delete renderer;
-    //delete plr;
+    delete plr;
     delete phys;
     ResourceManager::Clear();
     renderList.clear();
@@ -60,7 +60,7 @@ void gameHandler::init(){
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    plr = new Player(window, pos, standardSpriteSize, ResourceManager::GetTexture("player"), PlayerSpeed, 0.2f);
+    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTexture("player"), PlayerSpeed, 0.2f);
 
 
     /*
@@ -144,7 +144,7 @@ void gameHandler::update(float deltaTime){
     phys->CheckCollisions(deltaTime);
 
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
-        camera->camInput(deltaTime, this->window);    
+        camera->camInput(deltaTime);    
         plr->isDebug = true;
     }else if(Game_State == GAME_ACTIVE){
         camera->follow(plr->position, smallModelSize);

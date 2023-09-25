@@ -1,11 +1,5 @@
 #include <window/window.hpp>
 
-
-//Callback func
-static void framebuffer_size_callback(GLFWwindow* window, int width, int height){
-    glViewport(0, 0, width, height);
-}
-
 //static vars
 static bool isDebug = false;
 static bool pressed = false;
@@ -15,6 +9,12 @@ static bool inputSwitch = false;
 static bool vSyncSwitch = false;
 static bool vSyncState = false;
 
+//Used to display sdl errors and exit with an error
+static void sdl_die(const char * message) {
+  fprintf(stderr, "%s: %s\n", message, SDL_GetError());
+  exit(2);
+}
+
 //Window constructor, intializes GLFW and GLAD then creates a window with the passed parameters
 Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE), Input_State(KM), width(0), height(0){
 
@@ -22,40 +22,49 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     width = w;
     height = h;
 
-    //init GLFW
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, false); //disable resizing the screen
+    //init SDL
+    // Initialize SDL 
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+        sdl_die("Couldn't initialize SDL");
+    
+    atexit (SDL_Quit);
+    SDL_GL_LoadLibrary(NULL); // Default OpenGL is fine.
 
-    //create the window and check for errors
-    handle = glfwCreateWindow(h, w, name, NULL, NULL);
-    if(!handle){
-        std::cout << "Failed to create window!" << std::endl;
-        glfwTerminate();
-        exit(-1);
-    }
+    // Request an OpenGL 4.5 context (should be core)
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+    // Also request a depth buffer
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    //create window
-    glfwMakeContextCurrent(handle);
+    //Init the widnow 
+    this->window =SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
+    //Check if window was initialized
+    if (window == nullptr) 
+        sdl_die("Couldn't set video mode");
 
-    //load glad
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
+    //Create OpenGL context for GLAD and SDL to talk to each other
+    glContext = SDL_GL_CreateContext(window);
+    if (glContext == NULL) 
+        sdl_die("Failed to create OpenGL context");
+
+    //Init GLAD
+    if(!gladLoadGLLoader(SDL_GL_GetProcAddress)){
         std::cout << "Failed to init GLAD!" << std::endl;
         exit(-1);
     }
+    // Use v-sync
+    SDL_GL_SetSwapInterval(1);
 
-    //set up call back to update the opengl window
-    glfwSetFramebufferSizeCallback(handle, framebuffer_size_callback);
-    //enable vsync
-    glfwSwapInterval(1);
     //set openGL window size
     glViewport(0, 0, h, w);
 
     //set up rendering for 2D
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // Disable depth test and face culling.
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
 
     std::cout << "window successfully created" << std::endl;
 }
@@ -63,11 +72,14 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
 //Destructor
 Window::~Window(){
     //delete any pointers
-    glfwTerminate();
+    SDL_GL_DeleteContext(glContext);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
 //Handle main window input function
 void Window::window_input(){
+    /*
     //TODO: When a menu is created for entering and exiting the game this can be deprecated
     //Check if escape key being pressed to exit - button
     if(glfwGetKey(handle, GLFW_KEY_ESCAPE) == GLFW_PRESS){
@@ -149,6 +161,17 @@ void Window::window_input(){
             vSyncSwitch = !vSyncSwitch;
         }
     }
+    */
+   //Use Event and get input
+    if(eventHandle.type == SDL_KEYDOWN){ //Check if there's a key being pressed
+        if(eventHandle.key.keysym.sym == SDLK_ESCAPE){//Check if the key was the escape key
+            //Exit from the app
+            this->quit = true;
+        }
+    }else if(eventHandle.type == SDL_QUIT){
+        //Check for Window exit button event
+        this->quit = true;
+    }
 }
 
 //initialization
@@ -172,6 +195,7 @@ void Window::render(){
 
 //Frames
 void Window::getFrameTime(){
+    /*
     this->currentTime = glfwGetTime();
     this->timeDiff = this->currentTime - this->prevTime;
     this->counter++;
@@ -185,4 +209,5 @@ void Window::getFrameTime(){
         this->prevTime = this->currentTime;
         this->counter = 0;
     }
+    */
 }

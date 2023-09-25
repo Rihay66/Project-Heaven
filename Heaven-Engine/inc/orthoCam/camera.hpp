@@ -5,7 +5,6 @@
 
 #include <resourceSys/shader.hpp>
 #include <glm/glm.hpp>
-#include <GLFW/glfw3.h>
 
 //TODO: Move this camera to be it's own object and have a camera controller that includes all the input
 
@@ -42,7 +41,7 @@ class Camera{
         ~Camera();
 
         //input
-        void camInput(float deltaTime, GLFWwindow* &window);
+        void camInput(float deltaTime);
         //follow a position
         void follow(glm::vec2 = glm::vec3(0.0f), glm::vec2 size = glm::vec3(0.0f));
 

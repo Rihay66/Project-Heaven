@@ -36,9 +36,9 @@ set_target_properties(Heaven-Engine PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
 )
 
-find_package(glfw3 REQUIRED)
+find_package(SDL2 REQUIRED)
 
-target_link_libraries(project-heaven PRIVATE Heaven-Engine glfw)
+target_link_libraries(project-heaven PRIVATE Heaven-Engine ${SDL2_LIBRARIES})
 
 endif (UNIX)
 
@@ -52,9 +52,7 @@ set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
 #Get the engine library
 find_package(Heaven-Engine REQUIRED)
 
-find_package(glfw3 REQUIRED)
-
-target_link_libraries(project-heaven PRIVATE Heaven-Engine glfw)
+target_link_libraries(project-heaven PRIVATE Heaven-Engine)
 
 # Define the source and destination paths for the DLL of the Heaven Engine
 set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.dll")

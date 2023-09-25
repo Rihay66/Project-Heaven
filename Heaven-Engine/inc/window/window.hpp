@@ -4,9 +4,11 @@
 #define WINDOW_HPP
 
 #include <iostream>
+#include <assert.h>
 #include <unistd.h>
+#include <SDL2/SDL.h>
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+
 
 //TODO: MOVE TO SDL
 
@@ -29,7 +31,13 @@ class Window{
         unsigned int counter = 0;
 
     public:
-        GLFWwindow* handle;
+        //Loop flag
+        bool quit = false;
+        //Window handle and context
+        SDL_Window* window = nullptr;
+        SDL_GLContext glContext;
+        //Reference to the SDL event (Used to get input)
+        SDL_Event eventHandle;
         //delta time variable for updating input, physics, and kind of movement
         float DeltaTime;
         //variable that can be set through input

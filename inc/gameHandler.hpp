@@ -12,7 +12,6 @@
 #include <orthoCam/camera.hpp>
 #include <engine/renderer.hpp>
 #include <glm/glm.hpp>
-#include <GLFW/glfw3.h>
 
 //define global vars for objects to use
 const float PlayerSpeed(5.0f);
@@ -34,8 +33,7 @@ class gameHandler{
     private:
         //Contain reference of the window size
         unsigned int Width, Height;
-        //contain reference of the window
-        GLFWwindow* window;
+
         //contain physics 
         Physics* phys;
         //contain renderer
@@ -50,7 +48,7 @@ class gameHandler{
         //Game elements & values
         std::vector<GameObject*> renderList;
 
-        gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle);
+        gameHandler(unsigned int width, unsigned int height);
         ~gameHandler();
 
         void init(); //intializes game (loads all shaders/textures/levels/gameobjects/camera/etc)

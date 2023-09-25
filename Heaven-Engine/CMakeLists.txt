@@ -55,20 +55,20 @@ find_package(OpenGL REQUIRED)
 find_package(glm REQUIRED)
 
 #Find BOX2D
-find_package(glfw3 REQUIRED)
+find_package(SDL2 REQUIRED)
 
 #Find GLFW
 find_package(box2d REQUIRED)
 
  # Put together all necessary libs into one variable
- set(LIBS OpenGL glm box2d glfw)
+ set(LIBS OpenGL glm box2d ${SDL2_LIBRARIES})
     
  # Get Xorg dependencies into one variable
  set(Xorg Xxf86vm X11 Xrandr pthread Xi)
 
-#Make copies of the libraries .so files
-
-# Link against OpenGL and GLM
+#Grab SDL dirs
+target_link_directories(Heaven-Engine PUBLIC ${SDL2_INCLUDE_DIRS})
+# Link against all libraries used
 target_link_libraries(Heaven-Engine PUBLIC ${LIBS} ${Xorg})
 
 endif(UNIX)
@@ -84,12 +84,12 @@ find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
 
 #GLFW
-find_package(GLFW3 REQUIRED)
+find_package(SDL2 REQUIRED)
 
 #box2d
 find_package(BOX2D REQUIRED)
 
-set(LIBS glfw3 opengl32 box2d)
+set(LIBS sdl2 opengl32 box2d)
 
 # Link against OpenGL and GLM
 target_link_libraries(Heaven-Engine PRIVATE ${LIBS})

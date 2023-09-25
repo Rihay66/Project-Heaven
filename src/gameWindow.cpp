@@ -9,7 +9,7 @@ GameWindow::~GameWindow(){
 }
 
 void GameWindow::init(){
-    game = new gameHandler(width, height, handle);
+    game = new gameHandler(width, height);
     game->init();
 }
 

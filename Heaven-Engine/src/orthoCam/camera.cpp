@@ -27,42 +27,11 @@ void Camera::follow(glm::vec2 pos, glm::vec2 size){
 }
 
 //TODO: Add a zoom input using the scroll wheel
-void Camera::camInput(float deltaTime, GLFWwindow* &window){
+void Camera::camInput(float deltaTime){
 
     float movement = speed * deltaTime;
 
     //input for increase movement while holding key
-    if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
-        movement *= 3.0f;
-    }
-
-    //input for movement
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-        //move up
-        position += movement * up * 3.0f;
-    }
-    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-        //move down
-        position -= movement * up * 3.0f;
-    }
-    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-        //move left
-        position -= movement * right;
-    }
-    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-        //move right
-        position += movement * right;
-    }
-
-    //input for zooming in
-    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
-        //zoom in 
-        zoomFactor += zoomAmount;
-    }
-    if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
-        //zoom out
-        zoomFactor -= zoomAmount;
-    }
 
     //Check to make sure zoom is only for zooming out and not to zoom
     if(zoomFactor >= 0.0f)

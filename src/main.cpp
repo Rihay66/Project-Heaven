@@ -11,23 +11,23 @@ int main(){
 	window->init();
 
 	//set up vars for calculating delta time
-	float deltaTime = 0, lastFrame = 0, currentFrame = 0;
+	float deltaTime = 0;
+	Uint32 mTicksCount;
+	int w, h;
 	
 	//update loop
-	while(!glfwWindowShouldClose(window->handle)){
+	while(!window->quit){
 
 		//calculate delta time
-		currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
+		deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
+		mTicksCount = SDL_GetTicks();
+
 		//pass delta time to the window
 		window->DeltaTime = deltaTime;
 
 		//Get a frame time for performance profiling
 		window->getFrameTime();
 		
-		//check for glfw events
-		glfwPollEvents();
 		//TODO: Multithreading the input and update and having rendering on it's own thread
 		//check for main window input
 		window->window_input();
@@ -36,6 +36,9 @@ int main(){
 		window->update();
 
 		//Render background
+		//update gl viewport
+		SDL_GetWindowSize(window->window, &w, &h);
+		glViewport(0, 0, w, h);
 		glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -43,7 +46,7 @@ int main(){
 		window->render();
 
 		//swap buffers
-		glfwSwapBuffers(window->handle);
+		SDL_GL_SwapWindow(window->window);
 		//avoid cpu idle
 		usleep(1);
 	}
