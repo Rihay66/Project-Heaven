@@ -26,12 +26,22 @@ void Camera::follow(glm::vec2 pos, glm::vec2 size){
     this->shader.SetMatrix4("projectionView", this->projectionView);
 }
 
-//TODO: Add a zoom input using the scroll wheel
 void Camera::camInput(float deltaTime){
 
-    float movement = speed * deltaTime;
+    float movement = speed;
 
-    //input for increase movement while holding key
+    //input for movement
+    if(eventHandle.key.keysym.sym == SDLK_w){
+        //move up
+        this->position += glm::vec3(0, movement, 0);
+    }
+    if(eventHandle.key.keysym.sym == SDLK_s){
+        //move down
+        this->position -= glm::vec3(0, movement, 0);
+    }
+
+
+    //input for zoom
 
     //Check to make sure zoom is only for zooming out and not to zoom
     if(zoomFactor >= 0.0f)

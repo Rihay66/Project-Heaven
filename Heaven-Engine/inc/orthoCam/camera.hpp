@@ -4,6 +4,7 @@
 #define CAMERA_HPP
 
 #include <resourceSys/shader.hpp>
+#include <SDL2/SDL_events.h>
 #include <glm/glm.hpp>
 
 //TODO: Move this camera to be it's own object and have a camera controller that includes all the input
@@ -33,6 +34,9 @@ class Camera{
         //reference to debug zoom 
         float zoomAmount;
     public:
+        //Reference to the SDL event, meant to be replaced
+        SDL_Event eventHandle;
+
         //Construcotr
         Camera(unsigned int Width, unsigned int Height, 
         Shader &shader, float cameraSpeed = 1.0f, float zoomAmount = 1.0f);

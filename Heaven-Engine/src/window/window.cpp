@@ -169,6 +169,19 @@ void Window::window_input(){
             //Exit from the app
             this->quit = true;
         }
+        //Check if the ` was pressed to enable to disable debug
+        if(eventHandle.key.keysym.sym == SDLK_BACKQUOTE){
+            isDebug = !isDebug;
+
+            if(isDebug){
+                App_State = DEBUG;
+                std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
+            }
+            else{
+                App_State = ACTIVE;
+                std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
+            }
+        }
     }else if(eventHandle.type == SDL_QUIT){
         //Check for Window exit button event
         this->quit = true;

@@ -1,51 +1,63 @@
 #include "../inc/player.hpp"
 
-Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzone, bool destroyed, glm::vec3 color) : 
-physicsObject(pos, siz, sprt, color, destroyed, false), speed(spd), controllerDeadZone(cDeadzone), isController(false){
-    //set any non static var from gameobject or rigidbody class
-    
-    //set up default rb
+Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzone, bool destroyed, glm::vec3 color) : physicsObject(pos, siz, sprt, color, destroyed, false), speed(spd), controllerDeadZone(cDeadzone), isController(false)
+{
+    // set any non static var from gameobject or rigidbody class
+
+    // set up default rb
     this->rb.Type = BodyType::Dynamic;
     this->rb.fixedRotation = true;
 }
 
-Player::~Player(){
-    //delete any pointers
-    //delete body;
+Player::~Player()
+{
+    // delete any pointers
+    // delete body;
 }
 
-b2Body* Player::physicBody(){
-    
-    b2Body* body = (b2Body*)rb.runtimeBody;
+b2Body *Player::physicBody()
+{
 
-    //Stop any movement when debug is enabled
-    if(isDebug)
+    b2Body *body = (b2Body *)rb.runtimeBody;
+
+    // Stop any movement when debug is enabled
+    if (isDebug)
         return body;
 
-    
-    //move the player
-    //Check if a key being pressed
-    float movement = this->speed;
+    // move the player
+    // Check if a key being pressed
+    float movement = this->speed * deltatime;
 
-    if(eventHandle.key.keysym.sym == SDLK_w){
-        //Move Up
-        body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
-        dir = UP;
-    }
-    if(eventHandle.key.keysym.sym == SDLK_s){
-        //Move Down
-        body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
-        dir = DOWN;
-    }
-    if(eventHandle.key.keysym.sym == SDLK_a){
-        //Move Left
-        body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
-        dir = LEFT;
-    }
-    if(eventHandle.key.keysym.sym == SDLK_d){
-        //Move Right
-        body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);
-        dir = RIGHT;
+    if (eventHandle.type == SDL_KEYDOWN && eventHandle.key.repeat == 0)
+    {
+        if (eventHandle.key.keysym.sym == SDLK_w)
+        {
+            // Move Up
+            body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
+            dir = UP;
+            printf("UP\n");
+        }
+        if (eventHandle.key.keysym.sym == SDLK_s)
+        {
+            // Move Down
+            body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
+            dir = DOWN;
+            printf("DOWN\n");
+        }
+        if (eventHandle.key.keysym.sym == SDLK_a)
+        {
+            // Move Left
+            body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
+            dir = LEFT;
+            printf("LEFT\n");
+        }
+        if (eventHandle.key.keysym.sym == SDLK_d)
+        {
+            // Move Right
+            body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);
+            dir = RIGHT;
+            printf("RIGHT\n");
+        }
     }
     /*
     //input for movement
@@ -101,7 +113,7 @@ b2Body* Player::physicBody(){
             body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
             //set state
             dir = UP;
-        }  
+        }
         if(axes[1] > controllerDeadZone){ //down
             //move down
             body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);

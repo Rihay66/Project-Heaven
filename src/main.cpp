@@ -11,23 +11,13 @@ int main(){
 	window->init();
 
 	//set up vars for calculating delta time
-	//set up vars for calculating delta time
-	float deltaTime = 0;
-	Uint32 mTicksCount = 0;
+	float deltaTime = 1.0f / 60.0f;
 	int w, h;
+	//Set delta time
+	window->DeltaTime = deltaTime;
 	
 	//update loop
 	while(!window->quit){
-
-		//calculate delta time
-		// Wait until 16ms has elapsed since last frame
-   		while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16));
-
-   		// Delta time is the difference in ticks from last frame
-   		// (converted to seconds)
-   		deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
-		// Update tick counts (for next frame)
-   		mTicksCount = SDL_GetTicks();
 
 		//Get event
 		SDL_PollEvent(&window->eventHandle);
