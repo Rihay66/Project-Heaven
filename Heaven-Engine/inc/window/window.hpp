@@ -36,7 +36,7 @@ class Window{
         //Window handle and context
         SDL_Window* window = nullptr;
         SDL_GLContext glContext;
-        //Reference to the SDL event (Used to get input)
+        //Used to store and get events from SDL
         SDL_Event eventHandle;
         //delta time variable for updating input, physics, and kind of movement
         float DeltaTime;

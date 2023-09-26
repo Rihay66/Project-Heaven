@@ -14,7 +14,7 @@
 #include <glm/glm.hpp>
 
 //define global vars for objects to use
-const float PlayerSpeed(5.0f);
+const float PlayerSpeed(50.0f);
 const glm::vec2 standardSpriteSize(1.0f, 1.0f);
 const glm::vec2 defaultModelSize(50.0f, 150.0f);
 const glm::vec2 smallModelSize(40.0f, 120.0f);
@@ -40,6 +40,8 @@ class gameHandler{
         Renderer* renderer;
 
     public:
+        //Reference to the SDL even handle
+        SDL_Event eventHandle;
         //Game state & input state
         GAMESTATE Game_State;
         CONTROLSSTATE Controller_State;

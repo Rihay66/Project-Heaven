@@ -4,12 +4,10 @@
 #define PLAYER_HPP
 
 #include <gameObjs/rigidbodyObject.hpp>
+#include <SDL2/SDL_events.h>
 
 //Player class with inheritence from GameObject
 class Player : public physicsObject{
-    private:
-        //reference to the window
-
     public:
         //declare const vars
         //glm dir
@@ -18,6 +16,12 @@ class Player : public physicsObject{
         //box2D dir
         const b2Vec2 b2Up = {0.0f, 1.0f};
         const b2Vec2 b2Right = {1.0f, 0.0f};
+
+        //reference to the SDL event, meant to be replaced 
+        SDL_Event eventHandle;
+
+        //Reference to the deltatime, meant to be replaced
+        float deltatime = 0;
 
         //movement
         float speed;

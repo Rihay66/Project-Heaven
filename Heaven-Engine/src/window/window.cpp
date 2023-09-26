@@ -38,7 +38,7 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     //Init the widnow 
-    this->window =SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
+    this->window =SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, height, width, SDL_WINDOW_OPENGL);
     //Check if window was initialized
     if (window == nullptr) 
         sdl_die("Couldn't set video mode");
@@ -56,8 +56,8 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     // Use v-sync
     SDL_GL_SetSwapInterval(1);
 
-    //set openGL window size
-    glViewport(0, 0, h, w);
+    SDL_GetWindowSize(window, &w, &h);
+	glViewport(0, 0, w, h);
 
     //set up rendering for 2D
     glEnable(GL_BLEND);
@@ -162,6 +162,7 @@ void Window::window_input(){
         }
     }
     */
+
    //Use Event and get input
     if(eventHandle.type == SDL_KEYDOWN){ //Check if there's a key being pressed
         if(eventHandle.key.keysym.sym == SDLK_ESCAPE){//Check if the key was the escape key

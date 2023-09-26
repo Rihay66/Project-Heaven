@@ -22,10 +22,32 @@ b2Body* Player::physicBody(){
     if(isDebug)
         return body;
 
-    /*
+    
     //move the player
-    float movement = this->speed * currentDeltaTime;
+    //Check if a key being pressed
+    float movement = this->speed;
 
+    if(eventHandle.key.keysym.sym == SDLK_w){
+        //Move Up
+        body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
+        dir = UP;
+    }
+    if(eventHandle.key.keysym.sym == SDLK_s){
+        //Move Down
+        body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
+        dir = DOWN;
+    }
+    if(eventHandle.key.keysym.sym == SDLK_a){
+        //Move Left
+        body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
+        dir = LEFT;
+    }
+    if(eventHandle.key.keysym.sym == SDLK_d){
+        //Move Right
+        body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);
+        dir = RIGHT;
+    }
+    /*
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
         //move up

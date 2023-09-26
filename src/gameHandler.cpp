@@ -139,6 +139,8 @@ void gameHandler::init(){
 
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
+    plr->eventHandle = this->eventHandle;
+    plr->deltatime = deltaTime;
 
     //* Do physics here
     phys->CheckCollisions(deltaTime);

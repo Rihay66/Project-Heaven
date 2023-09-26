@@ -11,22 +11,32 @@ int main(){
 	window->init();
 
 	//set up vars for calculating delta time
+	//set up vars for calculating delta time
 	float deltaTime = 0;
-	Uint32 mTicksCount;
+	Uint32 mTicksCount = 0;
 	int w, h;
 	
 	//update loop
 	while(!window->quit){
 
 		//calculate delta time
-		deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
-		mTicksCount = SDL_GetTicks();
+		// Wait until 16ms has elapsed since last frame
+   		while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16));
+
+   		// Delta time is the difference in ticks from last frame
+   		// (converted to seconds)
+   		deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
+		// Update tick counts (for next frame)
+   		mTicksCount = SDL_GetTicks();
+
+		//Get event
+		SDL_PollEvent(&window->eventHandle);
 
 		//pass delta time to the window
 		window->DeltaTime = deltaTime;
 
 		//Get a frame time for performance profiling
-		window->getFrameTime();
+		//window->getFrameTime();
 		
 		//TODO: Multithreading the input and update and having rendering on it's own thread
 		//check for main window input
@@ -37,8 +47,8 @@ int main(){
 
 		//Render background
 		//update gl viewport
-		SDL_GetWindowSize(window->window, &w, &h);
-		glViewport(0, 0, w, h);
+
+		//Clear color buffer
 		glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
