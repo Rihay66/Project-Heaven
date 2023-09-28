@@ -40,6 +40,16 @@ find_package(SDL2 REQUIRED)
 
 target_link_libraries(project-heaven PRIVATE Heaven-Engine ${SDL2_LIBRARIES})
 
+# Define the source and destination paths for the DLL of the Heaven Engine
+set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.so")
+set(ENGINE_DLL_DEST "${CMAKE_BINARY_DIR}")
+
+# Use file(COPY ...) to copy the DLL
+file(COPY "${ENGINE_DLL_SOURCE}" DESTINATION "${ENGINE_DLL_DEST}")
+
+# Make sure your external project knows where to find the copied DLL
+add_definitions(-DHEAVEN_ENGINE_DLL_PATH="${ENGINE_DLL_DEST}")
+
 endif (UNIX)
 
 # Link libs if the detected OS is Windows

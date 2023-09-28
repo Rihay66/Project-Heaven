@@ -145,7 +145,7 @@ void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
     plr->deltatime = deltaTime;
 
-    //* Do physics here
+    //* Do physics here and player input
     phys->CheckCollisions(deltaTime);
 
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
