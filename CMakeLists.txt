@@ -61,8 +61,10 @@ set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
 
 #Get the engine library
 find_package(Heaven-Engine REQUIRED)
+#Get SDL
+find_package(SDL2 REQUIRED)
 
-target_link_libraries(project-heaven PRIVATE Heaven-Engine)
+target_link_libraries(project-heaven PRIVATE Heaven-Engine ${SDL2_LIBRARIES})
 
 # Define the source and destination paths for the DLL of the Heaven Engine
 set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.dll")

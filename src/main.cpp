@@ -2,7 +2,7 @@
 
 const unsigned int WIDTH = 1280, HEIGHT = 720;
 
-int main(){
+int main(int argc, char* argv[]){
 	
 	//create window
 	GameWindow* window = new GameWindow(WIDTH, HEIGHT, "Project-Heaven");

@@ -89,7 +89,11 @@ find_package(SDL2 REQUIRED)
 #box2d
 find_package(BOX2D REQUIRED)
 
-set(LIBS sdl2 opengl32 box2d)
+# Put together all necessary libs into one variable
+set(LIBS opengl32 glm box2d ${SDL2_LIBRARIES})
+
+#Grab SDL dirs
+target_link_directories(Heaven-Engine PUBLIC ${SDL2_INCLUDE_DIRS})
 
 # Link against OpenGL and GLM
 target_link_libraries(Heaven-Engine PRIVATE ${LIBS})
