@@ -4,7 +4,7 @@
 #define PLAYER_HPP
 
 #include <gameObjs/rigidbodyObject.hpp>
-#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keyboard.h>
 
 //Player class with inheritence from GameObject
 class Player : public physicsObject{
@@ -16,9 +16,6 @@ class Player : public physicsObject{
         //box2D dir
         const b2Vec2 b2Up = {0.0f, 1.0f};
         const b2Vec2 b2Right = {1.0f, 0.0f};
-
-        //reference to the SDL event, meant to be replaced 
-        SDL_Event eventHandle;
 
         //Reference to the deltatime, meant to be replaced
         float deltatime = 0;
@@ -36,11 +33,14 @@ class Player : public physicsObject{
         //Used to check for debug mode
         bool isDebug = false;
 
+        //keyboard states
+        const Uint8* state;
+
         //constructor / desctructor
         Player(glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
         ~Player();
 
-        //input function
+        //edit and use Box2D virtual function before physics update
         b2Body* physicBody();
 };
 

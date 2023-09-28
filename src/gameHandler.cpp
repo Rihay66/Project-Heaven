@@ -29,6 +29,10 @@ void gameHandler::setControllerState(int i){
 //TODO: Setup sound system
 //TODO: UI and text
 
+//* These are for later on
+//TODO: Make a input handler class
+//TODO: Make a gameObject tag system
+
 void gameHandler::init(){
     //load all resources like shaders, textures
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
@@ -139,13 +143,13 @@ void gameHandler::init(){
 
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
-    plr->eventHandle = this->eventHandle;
     plr->deltatime = deltaTime;
 
     //* Do physics here
     phys->CheckCollisions(deltaTime);
 
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
+        //update event
         camera->camInput(deltaTime);    
         plr->isDebug = true;
     }else if(Game_State == GAME_ACTIVE){

@@ -28,37 +28,27 @@ b2Body *Player::physicBody()
     // Check if a key being pressed
     float movement = this->speed * deltatime;
 
-    if (eventHandle.type == SDL_KEYDOWN && eventHandle.key.repeat == 0)
-    {
-        if (eventHandle.key.keysym.sym == SDLK_w)
-        {
-            // Move Up
-            body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
-            dir = UP;
-            printf("UP\n");
-        }
-        if (eventHandle.key.keysym.sym == SDLK_s)
-        {
-            // Move Down
-            body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
-            dir = DOWN;
-            printf("DOWN\n");
-        }
-        if (eventHandle.key.keysym.sym == SDLK_a)
-        {
-            // Move Left
-            body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
-            dir = LEFT;
-            printf("LEFT\n");
-        }
-        if (eventHandle.key.keysym.sym == SDLK_d)
-        {
-            // Move Right
-            body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);
-            dir = RIGHT;
-            printf("RIGHT\n");
-        }
+    //Get keyboard states
+    state = SDL_GetKeyboardState(NULL);
+
+    //Update physics according to direction
+    if(state[SDL_SCANCODE_W] > 0 || state[SDL_SCANCODE_UP] > 0){
+        //move up
+        body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
     }
+    if(state[SDL_SCANCODE_S] > 0 || state[SDL_SCANCODE_DOWN] > 0){
+        //move down
+        body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
+    }
+    if(state[SDL_SCANCODE_A] > 0 || state[SDL_SCANCODE_LEFT] > 0){
+        //move left
+        body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
+    }
+    if(state[SDL_SCANCODE_D] > 0 || state[SDL_SCANCODE_RIGHT] > 0){
+        //move right
+        body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);
+    }
+    
     /*
     //input for movement
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){

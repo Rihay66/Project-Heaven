@@ -40,8 +40,6 @@ class gameHandler{
         Renderer* renderer;
 
     public:
-        //Reference to the SDL even handle
-        SDL_Event eventHandle;
         //Game state & input state
         GAMESTATE Game_State;
         CONTROLSSTATE Controller_State;

@@ -37,7 +37,7 @@ class Physics{
         Physics();
         ~Physics();
         //Init function that is used after adding all pObjs
-        void init(glm::vec2 gravity = glm::vec2(0.0f, 9.81f));
+        void init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
 
         //check all physics object and check the player's collision
         void CheckCollisions(float deltaTime);

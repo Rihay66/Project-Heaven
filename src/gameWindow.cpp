@@ -14,7 +14,6 @@ void GameWindow::init(){
 }
 
 void GameWindow::update(){
-    game->eventHandle = this->eventHandle;
     game->update(DeltaTime);
     game->setGameState(App_State);
     game->setControllerState(Input_State);

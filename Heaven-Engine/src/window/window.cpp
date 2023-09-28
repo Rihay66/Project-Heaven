@@ -24,7 +24,7 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
 
     //init SDL
     // Initialize SDL 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
         sdl_die("Couldn't initialize SDL");
     
     atexit (SDL_Quit);
@@ -185,6 +185,18 @@ void Window::window_input(){
     }else if(eventHandle.type == SDL_QUIT){
         //Check for Window exit button event
         this->quit = true;
+    }
+
+    //Check for joysticks if available
+    if(SDL_NumJoysticks() > 0){
+        //Loop and get controllers
+        for(int i=0; i < 4; i++ ) 
+        {
+            if(controllerNames[i] != SDL_JoystickNameForIndex(i)){
+                printf("%s : CONNECTED!\n", SDL_JoystickNameForIndex(i));
+                controllerNames[i] = SDL_JoystickNameForIndex(i);
+            }    
+        }
     }
 }
 

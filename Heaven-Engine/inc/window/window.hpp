@@ -9,9 +9,6 @@
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
 
-
-//TODO: MOVE TO SDL
-
 //define window states
 enum APP_STATE{
     ACTIVE, DEBUG
@@ -45,6 +42,8 @@ class Window{
         INPUT_STATE Input_State;
         //variable storing window size
         unsigned int width, height;
+        //Store known controller names
+        const char* controllerNames[4];
 
         //constructor and also init shader, textures, etc...
         Window(int w, int h, const char* name);

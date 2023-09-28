@@ -28,20 +28,44 @@ void Camera::follow(glm::vec2 pos, glm::vec2 size){
 
 void Camera::camInput(float deltaTime){
 
-    float movement = speed;
+    float movement = speed * deltaTime;
+
+    //update keyboard state
+    state = SDL_GetKeyboardState(NULL);
+
+    //input for increase movement
+    if(state[SDL_SCANCODE_LSHIFT] > 0){
+        //move up
+        movement *= 3.0f;
+    }
 
     //input for movement
-    if(eventHandle.key.keysym.sym == SDLK_w){
+    if(state[SDL_SCANCODE_W] > 0){
         //move up
-        this->position += glm::vec3(0, movement, 0);
+        this->position += movement * up * 3.0f;
     }
-    if(eventHandle.key.keysym.sym == SDLK_s){
+    if(state[SDL_SCANCODE_S] > 0){
         //move down
-        this->position -= glm::vec3(0, movement, 0);
+        this->position -= movement * up * 3.0f;
     }
-
+    if(state[SDL_SCANCODE_A] > 0){
+        //move down
+        this->position -= movement * right;
+    }
+    if(state[SDL_SCANCODE_D] > 0){
+        //move down
+        this->position += movement * right;
+    }
 
     //input for zoom
+    if(state[SDL_SCANCODE_UP] > 0){
+        //zoom in
+        zoomFactor += zoomAmount;
+    }
+    if(state[SDL_SCANCODE_DOWN] > 0){
+        //zoom out
+        zoomFactor -= zoomAmount;
+    }
 
     //Check to make sure zoom is only for zooming out and not to zoom
     if(zoomFactor >= 0.0f)

@@ -22,9 +22,6 @@ int main(){
 		//Get event
 		SDL_PollEvent(&window->eventHandle);
 
-		//pass delta time to the window
-		window->DeltaTime = deltaTime;
-
 		//Get a frame time for performance profiling
 		//window->getFrameTime();
 		
