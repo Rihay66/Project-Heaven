@@ -10,11 +10,8 @@ int main(int argc, char* argv[]){
 	//init resources from files and load classes
 	window->init();
 
-	//set up vars for calculating delta time
-	float deltaTime = 1.0f / 60.0f;
-	int w, h;
-	//Set delta time
-	window->DeltaTime = deltaTime;
+	//set up static delta time
+	window->DeltaTime = 1.0f / 60.0f;
 	//Set up vars for perfomance counters
 	Uint64 start, end;
 	
@@ -24,9 +21,6 @@ int main(int argc, char* argv[]){
 
 		//Get event
 		SDL_PollEvent(&window->eventHandle);
-
-		//Get a frame time for performance profiling
-		//window->getFrameTime();
 		
 		//TODO: Multithreading the input and update and having rendering on it's own thread
 		//check for main window input
@@ -36,10 +30,8 @@ int main(int argc, char* argv[]){
 		window->update();
 
 		//Render background
-		//update gl viewport
-
-		//Clear color buffer
 		glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
+		//Clear color buffer
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//draw or render
@@ -50,6 +42,7 @@ int main(int argc, char* argv[]){
 
 		end = SDL_GetPerformanceCounter();
 
+		//Calculate frametime
 		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
 		//*Will not use this function in the future
 		//window->getFrameTime(elapsed);

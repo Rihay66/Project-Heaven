@@ -105,10 +105,14 @@ void Window::window_input(){
 
         //When a controller is found, then enable it as the first controller
         if(controllerCheck && eventHandle.key.keysym.sym == SDLK_TAB){
-            //Enable SDL event joystick h
+            //Enable SDL event joystick handle
+            SDL_JoystickEventState(SDL_ENABLE);
 
             if(!controllerEnable){
                 //Open controller joystick
+                joystick = SDL_JoystickOpen(0);
+                printf("MSG: Contro\n");
+            }else{
                 
             }
         }
@@ -129,6 +133,9 @@ void Window::window_input(){
                 controllerCheck = true;
             }    
         }
+    }else{
+        //Disable controller enable flag
+        controllerCheck = false;
     }
 }
 
