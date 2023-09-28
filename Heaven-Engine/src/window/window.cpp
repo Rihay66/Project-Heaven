@@ -72,6 +72,10 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
 //Destructor
 Window::~Window(){
     //delete any pointers
+    if(joystick != nullptr){
+        SDL_JoystickClose(joystick);
+    }
+
     SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -79,90 +83,6 @@ Window::~Window(){
 
 //Handle main window input function
 void Window::window_input(){
-    /*
-    //TODO: When a menu is created for entering and exiting the game this can be deprecated
-    //Check if escape key being pressed to exit - button
-    if(glfwGetKey(handle, GLFW_KEY_ESCAPE) == GLFW_PRESS){
-        //set window to close
-        glfwSetWindowShouldClose(handle, true);
-    }
-
-    //debug enabler button - toggle
-    if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS && !pressed){
-        isDebug = !isDebug;
-        //check the isDebug value and set the proper app state
-        if(isDebug){
-            App_State = DEBUG;
-            std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
-        }
-        else{
-            App_State = ACTIVE;
-            std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
-        }
-        pressed = !pressed;
-    }else if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){
-        pressed = !pressed;
-    }
-
-    //debug line wireframe - toggle
-    if(isDebug && glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_PRESS){
-        //set writeframe
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }else{
-        //stop wireframe
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-
-    //check for joystick
-    if(glfwJoystickPresent(GLFW_JOYSTICK_1) == true && !controllerCheck){
-        //print out that the joystick is connected
-        const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
-        std::cout << "Controller is connected! ID: " << name << std::endl;
-        controllerCheck = !controllerCheck;
-    }else if(glfwJoystickPresent(GLFW_JOYSTICK_1) == false && controllerCheck){
-        std::cout << "Controller is disconnected!" << std::endl;
-        controllerCheck = !controllerCheck;
-    }
-
-    //enable or disable joystick if it's connected
-    if(controllerCheck){
-        //toggle
-        if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_PRESS && !inputSwitch){
-        //check to enable or disable
-        controllerEnable = !controllerEnable;
-        if(controllerEnable){
-            //switch to use controller
-            std::cout << "MSG: Controller input is enabled!" << std::endl;
-            Input_State = KMANDCONTROLLER;
-        }else{
-            std::cout << "MSG: Controller input is disabled!" << std::endl;
-            Input_State = KM;
-        }
-        inputSwitch = !inputSwitch;
-        }else if(glfwGetKey(handle, GLFW_KEY_TAB) == GLFW_RELEASE && inputSwitch){
-            inputSwitch = !inputSwitch;
-        }
-    }
-
-    //check to enable or disable vsync - toggle
-    if(isDebug){
-        if(glfwGetKey(handle, GLFW_KEY_V) == GLFW_PRESS && !vSyncSwitch){
-            vSyncState = !vSyncState;
-            //check to disable or enable vsync
-            if(vSyncState){
-                //disable 
-                glfwSwapInterval(0);
-            }else{
-                glfwSwapInterval(1);
-            }
-            std::cout << "V-Sync: " << vSyncState << std::endl;
-            vSyncSwitch = !vSyncSwitch;
-        }else if(glfwGetKey(handle, GLFW_KEY_V) == GLFW_RELEASE && vSyncSwitch){
-            vSyncSwitch = !vSyncSwitch;
-        }
-    }
-    */
-
    //Use Event and get input
     if(eventHandle.type == SDL_KEYDOWN){ //Check if there's a key being pressed
         if(eventHandle.key.keysym.sym == SDLK_ESCAPE){//Check if the key was the escape key
@@ -182,6 +102,17 @@ void Window::window_input(){
                 std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
             }
         }
+
+        //When a controller is found, then enable it as the first controller
+        if(controllerCheck && eventHandle.key.keysym.sym == SDLK_TAB){
+            //Enable SDL event joystick h
+
+            if(!controllerEnable){
+                //Open controller joystick
+                
+            }
+        }
+
     }else if(eventHandle.type == SDL_QUIT){
         //Check for Window exit button event
         this->quit = true;
@@ -190,11 +121,12 @@ void Window::window_input(){
     //Check for joysticks if available
     if(SDL_NumJoysticks() > 0){
         //Loop and get controllers
-        for(int i=0; i < 4; i++ ) 
+        for(int i=0; i < sizeof(controllerNames) / sizeof(controllerNames[0]); i++ ) 
         {
             if(controllerNames[i] != SDL_JoystickNameForIndex(i)){
                 printf("%s : CONNECTED!\n", SDL_JoystickNameForIndex(i));
                 controllerNames[i] = SDL_JoystickNameForIndex(i);
+                controllerCheck = true;
             }    
         }
     }

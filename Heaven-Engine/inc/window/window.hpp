@@ -35,6 +35,12 @@ class Window{
         SDL_GLContext glContext;
         //Used to store and get events from SDL
         SDL_Event eventHandle;
+        /* Used to store reference of the SDLjoystick
+        * Must be used as referenced pointer and not a new pointer! 
+        
+        */
+       SDL_Joystick* joystick = nullptr;
+
         //delta time variable for updating input, physics, and kind of movement
         float DeltaTime;
         //variable that can be set through input
