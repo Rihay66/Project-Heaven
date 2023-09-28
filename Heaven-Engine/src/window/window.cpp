@@ -220,7 +220,7 @@ void Window::render(){
 }
 
 //Frames
-void Window::getFrameTime(){
+void Window::getFrameTime(float count){
     /*
     this->currentTime = glfwGetTime();
     this->timeDiff = this->currentTime - this->prevTime;
@@ -236,4 +236,10 @@ void Window::getFrameTime(){
         this->counter = 0;
     }
     */
+   std::string FPS = std::to_string(1.0f/count);
+   std::string ms = std::to_string(count);
+   std::string newTitle = "Project-Heaven - " + FPS + "FPS / " + ms + "ms";
+
+   //Set up title
+   SDL_SetWindowTitle(this->window, newTitle.c_str());
 }

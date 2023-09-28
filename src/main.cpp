@@ -15,9 +15,12 @@ int main(){
 	int w, h;
 	//Set delta time
 	window->DeltaTime = deltaTime;
+	//Set up vars for perfomance counters
+	Uint64 start, end;
 	
 	//update loop
 	while(!window->quit){
+		start = SDL_GetPerformanceCounter();
 
 		//Get event
 		SDL_PollEvent(&window->eventHandle);
@@ -44,6 +47,13 @@ int main(){
 
 		//swap buffers
 		SDL_GL_SwapWindow(window->window);
+
+		end = SDL_GetPerformanceCounter();
+
+		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
+		//*Will not use this function in the future
+		//window->getFrameTime(elapsed);
+
 		//avoid cpu idle
 		usleep(1);
 	}

@@ -55,7 +55,7 @@ class Window{
         virtual void update();
         virtual void render();
         //frame profiling
-        void getFrameTime();
+        void getFrameTime(float count);
 };
 
 #endif
