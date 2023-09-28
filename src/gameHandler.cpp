@@ -16,6 +16,10 @@ gameHandler::~gameHandler(){
     delete phys;
     ResourceManager::Clear();
     renderList.clear();
+    //remove controller
+    if(this->joystick != nullptr){
+        SDL_GameControllerClose(this->joystick);
+    }
 }
 
 void gameHandler::setGameState(int i){
@@ -64,8 +68,7 @@ void gameHandler::init(){
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTexture("player"), PlayerSpeed, 0.2f);
-
+    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTexture("player"), PlayerSpeed, 2000.0f);
 
     /*
     //Creates objects and stores them in to the pObjects vector
@@ -138,12 +141,18 @@ void gameHandler::init(){
     //Init the physics system
     phys->init(glm::vec2(0.0f, 0.0f));
 
-    std::cout << "object size: " << renderList.size() << std::endl;
+    std::cout << "objects being rendered size: " << renderList.size() << std::endl;
 }
 
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
     plr->deltatime = deltaTime;
+
+    //Check if game does have a joystick available
+    if(this->joystick != nullptr && plr->joystick == nullptr){
+        //then give the joystick reference to the player
+        plr->joystick = this->joystick;
+    }
 
     //* Do physics here and player input
     phys->CheckCollisions(deltaTime);

@@ -40,6 +40,9 @@ class gameHandler{
         Renderer* renderer;
 
     public:
+        //Contain reference to joystick
+        SDL_GameController* joystick = nullptr;
+
         //Game state & input state
         GAMESTATE Game_State;
         CONTROLSSTATE Controller_State;

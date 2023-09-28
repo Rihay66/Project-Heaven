@@ -14,6 +14,10 @@ void GameWindow::init(){
 }
 
 void GameWindow::update(){
+    if(game->joystick == nullptr){
+        game->joystick = this->joystick;
+    }
+
     game->update(DeltaTime);
     game->setGameState(App_State);
     game->setControllerState(Input_State);

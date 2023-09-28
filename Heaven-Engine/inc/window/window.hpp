@@ -39,7 +39,7 @@ class Window{
         * Must be used as referenced pointer and not a new pointer! 
         
         */
-       SDL_Joystick* joystick = nullptr;
+       SDL_GameController* joystick = nullptr;
 
         //delta time variable for updating input, physics, and kind of movement
         float DeltaTime;

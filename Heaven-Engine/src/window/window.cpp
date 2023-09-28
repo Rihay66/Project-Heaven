@@ -24,7 +24,7 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
 
     //init SDL
     // Initialize SDL 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
         sdl_die("Couldn't initialize SDL");
     
     atexit (SDL_Quit);
@@ -56,6 +56,9 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     // Use v-sync
     SDL_GL_SetSwapInterval(1);
 
+    //Enable SDL event joystick handle
+    SDL_GameControllerEventState(SDL_ENABLE);
+
     SDL_GetWindowSize(window, &w, &h);
 	glViewport(0, 0, w, h);
 
@@ -73,7 +76,7 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
 Window::~Window(){
     //delete any pointers
     if(joystick != nullptr){
-        SDL_JoystickClose(joystick);
+        SDL_GameControllerClose(joystick);
     }
 
     SDL_GL_DeleteContext(glContext);
@@ -102,19 +105,22 @@ void Window::window_input(){
                 std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
             }
         }
-
+        //TODO: Move from joystick to gamecontroller
         //When a controller is found, then enable it as the first controller
         if(controllerCheck && eventHandle.key.keysym.sym == SDLK_TAB){
-            //Enable SDL event joystick handle
-            SDL_JoystickEventState(SDL_ENABLE);
-
             if(!controllerEnable){
                 //Open controller joystick
-                joystick = SDL_JoystickOpen(0);
-                printf("MSG: Contro\n");
+                joystick = SDL_GameControllerOpen(0);
+                Input_State = KMANDCONTROLLER;
+                printf("MSG: Controller Input Enabled!\n");
             }else{
-                
+                //Close
+                SDL_GameControllerClose(joystick);
+                Input_State = KM;
+                printf("MSG: Controller Input Disabled!\n");
             }
+
+            controllerEnable = !controllerEnable;
         }
 
     }else if(eventHandle.type == SDL_QUIT){
@@ -127,9 +133,9 @@ void Window::window_input(){
         //Loop and get controllers
         for(int i=0; i < sizeof(controllerNames) / sizeof(controllerNames[0]); i++ ) 
         {
-            if(controllerNames[i] != SDL_JoystickNameForIndex(i)){
-                printf("%s : CONNECTED!\n", SDL_JoystickNameForIndex(i));
-                controllerNames[i] = SDL_JoystickNameForIndex(i);
+            if(controllerNames[i] != SDL_GameControllerNameForIndex(i)){
+                printf("%s : CONNECTED!\n", SDL_GameControllerNameForIndex(i));
+                controllerNames[i] = SDL_GameControllerNameForIndex(i);
                 controllerCheck = true;
             }    
         }

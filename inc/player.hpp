@@ -4,6 +4,7 @@
 #define PLAYER_HPP
 
 #include <gameObjs/rigidbodyObject.hpp>
+#include <SDL2/SDL_gamecontroller.h>
 #include <SDL2/SDL_keyboard.h>
 
 //Player class with inheritence from GameObject
@@ -35,6 +36,9 @@ class Player : public physicsObject{
 
         //keyboard states
         const Uint8* state;
+
+        //Stored reference to the SDL joystick
+        SDL_GameController* joystick = nullptr;
 
         //constructor / desctructor
         Player(glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
