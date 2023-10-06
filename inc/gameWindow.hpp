@@ -16,6 +16,7 @@ class GameWindow : public Window{
         ~GameWindow();
 
         void init();
+        void input();
         void update();
         void render();
 };

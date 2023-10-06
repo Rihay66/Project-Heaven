@@ -4,6 +4,8 @@ cmake_policy(SET CMP0072 NEW)
 
 # Set the install prefix to the build folder's lib directory
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
+# Create lib folder
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 #Add macro
 include(GNUInstallDirs)
@@ -100,21 +102,33 @@ target_link_libraries(Heaven-Engine PRIVATE ${LIBS})
 
 endif(WIN32)
 
+
 # Install the library and CMake configuration files
 install(TARGETS ${PROJECT_NAME} EXPORT Heaven-EngineConfig
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-	)
+ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc/
     DESTINATION "${CMAKE_BINARY_DIR}/include"
-)
+    )
     
 # Configure the package and specify the export destination
 install(EXPORT Heaven-EngineConfig
     DESTINATION ${CMAKE_BINARY_DIR}
-)
+    )
+
 export(TARGETS ${PROJECT_NAME} FILE Heaven-Engine.cmake)
+
+# Copy the SDL libraries to be included in the build 
+foreach(SDL2_LIB ${SDL2_LIBRARIES})
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:${SDL2_LIB}> # Copy one SDL2 library at a time
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>/lib/ # Destination directory
+    )
+endforeach()

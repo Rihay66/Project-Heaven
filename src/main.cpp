@@ -19,12 +19,10 @@ int main(int argc, char* argv[]){
 	while(!window->quit){
 		start = SDL_GetPerformanceCounter();
 
-		//Get event
-		SDL_PollEvent(&window->eventHandle);
+		//Get event which will grab sdl events and input
+		window->getEvents();
 		
 		//TODO: Multithreading the input and update and having rendering on it's own thread
-		//check for main window input
-		window->window_input();
 
 		//update any input, values, objects, loading etc..
 		window->update();

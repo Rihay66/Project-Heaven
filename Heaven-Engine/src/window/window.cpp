@@ -84,103 +84,108 @@ Window::~Window(){
     SDL_Quit();
 }
 
-//Handle main window input function
-void Window::window_input(){
-   //Use Event and get input
-    if(eventHandle.type == SDL_KEYDOWN){ //Check if there's a key being pressed
-        if(eventHandle.key.keysym.sym == SDLK_ESCAPE){//Check if the key was the escape key
-            //Exit from the app
+void Window::getEvents(){
+    //This function must be called once inside a loop
+
+    // Stantard base event handling
+
+    // Get events from SDL
+    while (SDL_PollEvent(&this->eventHandle))
+    {
+
+        // Stantard base event handling
+
+        // Use Event and get input
+        if (eventHandle.type == SDL_KEYDOWN){ // Check if there's a key being pressed
+            if (eventHandle.key.keysym.sym == SDLK_ESCAPE){ // Check if the key was the escape key
+                // Exit from the app
+                this->quit = true;
+            }
+            // Check if the ` was pressed to enable to disable debug
+            if (eventHandle.key.keysym.sym == SDLK_BACKQUOTE){
+                isDebug = !isDebug;
+
+                if (isDebug){
+                    App_State = DEBUG;
+                    std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
+                }
+                else{
+                    App_State = ACTIVE;
+                    std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
+                }
+            }
+            // TODO: Move from joystick to gamecontroller
+            // When a controller is found, then enable it as the first controller
+            if (controllerCheck && eventHandle.key.keysym.sym == SDLK_TAB){
+                if (!controllerEnable){
+                    // Open controller joystick
+                    joystick = SDL_GameControllerOpen(0);
+                    Input_State = KMANDCONTROLLER;
+                    printf("MSG: Controller Input Enabled!\n");
+                }
+                else{
+                    // Close
+                    SDL_GameControllerClose(joystick);
+                    Input_State = KM;
+                    printf("MSG: Controller Input Disabled!\n");
+                }
+
+                controllerEnable = !controllerEnable;
+            }
+        }
+        else if (eventHandle.type == SDL_QUIT){
+            // Check for Window exit button event
             this->quit = true;
         }
-        //Check if the ` was pressed to enable to disable debug
-        if(eventHandle.key.keysym.sym == SDLK_BACKQUOTE){
-            isDebug = !isDebug;
 
-            if(isDebug){
-                App_State = DEBUG;
-                std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
-            }
-            else{
-                App_State = ACTIVE;
-                std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
+        // Check for joysticks if available
+        if (SDL_NumJoysticks() > 0){
+            // Loop and get controllers
+            for (int i = 0; i < sizeof(controllerNames) / sizeof(controllerNames[0]); i++){
+                if (controllerNames[i] != SDL_GameControllerNameForIndex(i)){
+                    printf("%s : CONNECTED!\n", SDL_GameControllerNameForIndex(i));
+                    controllerNames[i] = SDL_GameControllerNameForIndex(i);
+                    controllerCheck = true;
+                }
             }
         }
-        //TODO: Move from joystick to gamecontroller
-        //When a controller is found, then enable it as the first controller
-        if(controllerCheck && eventHandle.key.keysym.sym == SDLK_TAB){
-            if(!controllerEnable){
-                //Open controller joystick
-                joystick = SDL_GameControllerOpen(0);
-                Input_State = KMANDCONTROLLER;
-                printf("MSG: Controller Input Enabled!\n");
-            }else{
-                //Close
-                SDL_GameControllerClose(joystick);
-                Input_State = KM;
-                printf("MSG: Controller Input Disabled!\n");
-            }
-
-            controllerEnable = !controllerEnable;
+        else{
+            // Disable controller enable flag
+            controllerCheck = false;
         }
 
-    }else if(eventHandle.type == SDL_QUIT){
-        //Check for Window exit button event
-        this->quit = true;
+        // Call virtual method for additional input
+        this->input();
+
+        //Exit out of handling events
+        break;
     }
+}
 
-    //Check for joysticks if available
-    if(SDL_NumJoysticks() > 0){
-        //Loop and get controllers
-        for(int i=0; i < sizeof(controllerNames) / sizeof(controllerNames[0]); i++ ) 
-        {
-            if(controllerNames[i] != SDL_GameControllerNameForIndex(i)){
-                printf("%s : CONNECTED!\n", SDL_GameControllerNameForIndex(i));
-                controllerNames[i] = SDL_GameControllerNameForIndex(i);
-                controllerCheck = true;
-            }    
-        }
-    }else{
-        //Disable controller enable flag
-        controllerCheck = false;
-    }
+//Handle main window input function
+void Window::input(){
+    //Here goes additional input that is within SDL event handling and getEvent() loop
+    //Can be overwritten 
 }
 
 //initialization
 void Window::init(){
     //Here goes the initial processing of shaders, textues, and objects
-
 }
 
 //updating
 void Window::update(){
     //update any variables like moving objects or updating input
     //* NOTE: that any object that needs input will need to have reference to the window handleas a parameter to be passed down
-
 }
 
 //rendering
 void Window::render(){
     //here update visually the objects, shaders, textures, etc
-
 }
 
 //Frames
 void Window::getFrameTime(float count){
-    /*
-    this->currentTime = glfwGetTime();
-    this->timeDiff = this->currentTime - this->prevTime;
-    this->counter++;
-    if(this->timeDiff >= 1.0 / 30.0){
-        //display frame per second & frame time
-        std::string FPS = std::to_string((1.0 / this->timeDiff) * this->counter);
-        std::string ms = std::to_string((this->timeDiff / this->counter) * 1000);
-        //set up title
-        std::string newTitle = "Project-Heaven - " + FPS + "FPS / " + ms + "ms";
-        glfwSetWindowTitle(this->handle, newTitle.c_str());
-        this->prevTime = this->currentTime;
-        this->counter = 0;
-    }
-    */
    std::string FPS = std::to_string(1.0f/count);
    std::string ms = std::to_string(count);
    std::string newTitle = "Project-Heaven - " + FPS + "FPS / " + ms + "ms";

@@ -30,6 +30,7 @@ b2Body *Player::physicBody(){
 
     // Check for controller is enabled and check for input
     if (isController && joystick != nullptr){
+        SDL_GameControllerUpdate();
         if (SDL_GameControllerGetAxis(joystick, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX) > controllerDeadZone){
             printf("Right\n");
         }

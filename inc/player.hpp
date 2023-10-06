@@ -5,6 +5,7 @@
 
 #include <gameObjs/rigidbodyObject.hpp>
 #include <SDL2/SDL_gamecontroller.h>
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keyboard.h>
 
 //Player class with inheritence from GameObject

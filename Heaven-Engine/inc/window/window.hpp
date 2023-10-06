@@ -39,7 +39,7 @@ class Window{
         * Must be used as referenced pointer and not a new pointer! 
         
         */
-       SDL_GameController* joystick = nullptr;
+        SDL_GameController* joystick = nullptr;
 
         //delta time variable for updating input, physics, and kind of movement
         float DeltaTime;
@@ -56,7 +56,8 @@ class Window{
         //destructor
         ~Window();
         //Primary window input
-        virtual void window_input();
+        void getEvents();
+        virtual void input();
         virtual void init(); //used to call classes that handle the loading of shaders, textures, and objects
         virtual void update();
         virtual void render();

@@ -13,6 +13,11 @@ void GameWindow::init(){
     game->init();
 }
 
+void GameWindow::input(){
+    //Add additional input
+    
+}
+
 void GameWindow::update(){
     if(game->joystick == nullptr){
         game->joystick = this->joystick;

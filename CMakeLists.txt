@@ -44,7 +44,7 @@ target_link_libraries(project-heaven PRIVATE Heaven-Engine ${SDL2_LIBRARIES})
 set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.so")
 set(ENGINE_DLL_DEST "${CMAKE_BINARY_DIR}")
 
-# Use file(COPY ...) to copy the DLL
+# Use file(COPY ...) to copy the SO
 file(COPY "${ENGINE_DLL_SOURCE}" DESTINATION "${ENGINE_DLL_DEST}")
 
 # Make sure your external project knows where to find the copied DLL
