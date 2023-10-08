@@ -30,8 +30,9 @@ class Window{
     public:
         //Loop flag
         bool quit = false;
-        //Window handle and context
+        //Window handle
         SDL_Window* window = nullptr;
+        //Opengl Context
         SDL_GLContext glContext;
         //Used to store and get events from SDL
         SDL_Event eventHandle;
@@ -55,12 +56,16 @@ class Window{
         Window(int w, int h, const char* name);
         //destructor
         ~Window();
-        //Primary window input
+        //used to get SDL events and input checks
         void getEvents();
-        virtual void input();
+        //used as a forward of getEvents() to add additional input or event checks
+        virtual void input(SDL_Event handle);
+
         virtual void init(); //used to call classes that handle the loading of shaders, textures, and objects
-        virtual void update();
-        virtual void render();
+        
+        virtual void update(); //used to update logic, custom events, and other
+        
+        virtual void render(); //used to render things on the screen
         //frame profiling
         void getFrameTime(float count);
 };

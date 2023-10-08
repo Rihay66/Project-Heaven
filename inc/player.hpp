@@ -35,8 +35,8 @@ class Player : public physicsObject{
         //Used to check for debug mode
         bool isDebug = false;
 
-        //keyboard states
-        const Uint8* state;
+        //movement flags
+        bool moveFlags[4];
 
         //Stored reference to the SDL joystick
         SDL_GameController* joystick = nullptr;
@@ -44,6 +44,10 @@ class Player : public physicsObject{
         //constructor / desctructor
         Player(glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
         ~Player();
+
+        //Event handle
+        void checkInput(SDL_Event handle);
+        void checkExitInput(SDL_Event handle);
 
         //edit and use Box2D virtual function before physics update
         b2Body* physicBody();

@@ -15,10 +15,10 @@ class GameWindow : public Window{
         GameWindow(int w, int h, const char* name);
         ~GameWindow();
 
-        void init();
-        void input();
-        void update();
-        void render();
+        void init() override;
+        void input(SDL_Event handle) override;
+        void update() override;
+        void render() override;
 };
 
 #endif

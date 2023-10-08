@@ -6,6 +6,11 @@ Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzon
     // set up default rb
     this->rb.Type = BodyType::Dynamic;
     this->rb.fixedRotation = true;
+
+    // set up default movement flags
+    for(int i = 0; i < sizeof(moveFlags) / sizeof(moveFlags[0]); i++){
+        moveFlags[i] = false;
+    }
 }
 
 Player::~Player(){
@@ -13,6 +18,63 @@ Player::~Player(){
     // Remove controller
     if (this->joystick != nullptr){
         SDL_GameControllerClose(joystick);
+    }
+}
+
+//Check for input
+void Player::checkInput(SDL_Event handle){
+    switch (handle.key.keysym.sym)
+    {
+    case SDLK_w:
+        //move up
+        moveFlags[0] = true;
+        break;
+
+    case SDLK_s:
+        //move down
+        moveFlags[1] = true;
+        break;
+
+    case SDLK_d:
+        //move right
+        moveFlags[2] = true;
+        break;
+
+    case SDLK_a:
+        //move left
+        moveFlags[3] = true;
+        break;
+
+    default:
+        break;
+    }
+}
+
+//Check for no input, to reset certain values
+void Player::checkExitInput(SDL_Event handle){
+    switch(handle.key.keysym.sym){
+        case SDLK_w:
+            //stop moving up
+            moveFlags[0] = false;
+            break;
+
+        case SDLK_s:
+            //stop moving down
+            moveFlags[1] = false;
+            break;
+
+        case SDLK_d:
+            //stop moving right
+            moveFlags[2] = false;
+            break;
+
+        case SDLK_a:
+            //stop moving left
+            moveFlags[3] = false;
+            break;
+
+        default:
+            break;
     }
 }
 
@@ -24,45 +86,26 @@ b2Body *Player::physicBody(){
     if (isDebug)
         return body;
 
-    // move the player
-    // Check if a key being pressed
+    //Move the player
+    //Calculate movement aoccrding to speed and deltatime
     float movement = this->speed * deltatime;
 
-    // Check for controller is enabled and check for input
-    if (isController && joystick != nullptr){
-        SDL_GameControllerUpdate();
-        if (SDL_GameControllerGetAxis(joystick, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX) > controllerDeadZone){
-            printf("Right\n");
-        }
-        if (SDL_GameControllerGetAxis(joystick, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX) < -controllerDeadZone){
-            printf("Left\n");
-        }
+    //Check for movement flags
+    if(moveFlags[0]){
+        // move up
+        body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
     }
-    else if(!isController){
-        //Get key board states
-        state = SDL_GetKeyboardState(NULL);
-
-        // Update physics according to direction
-        if (state[SDL_SCANCODE_W] > 0 || state[SDL_SCANCODE_UP] > 0)
-        {
-            // move up
-            body->ApplyForce({0.0f, movement}, body->GetWorldCenter(), true);
-        }
-        if (state[SDL_SCANCODE_S] > 0 || state[SDL_SCANCODE_DOWN] > 0)
-        {
-            // move down
-            body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
-        }
-        if (state[SDL_SCANCODE_A] > 0 || state[SDL_SCANCODE_LEFT] > 0)
-        {
-            // move left
-            body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
-        }
-        if (state[SDL_SCANCODE_D] > 0 || state[SDL_SCANCODE_RIGHT] > 0)
-        {
-            // move right
-            body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);
-        }
+    if(moveFlags[1]){
+        // move down
+        body->ApplyForce({0.0f, -movement}, body->GetWorldCenter(), true);
+    }
+    if(moveFlags[2]){
+        // move right
+        body->ApplyForce({movement, 0.0f}, body->GetWorldCenter(), true);
+    }
+    if(moveFlags[3]){
+        // move left
+        body->ApplyForce({-movement, 0.0f}, body->GetWorldCenter(), true);
     }
 
     return body;

@@ -144,6 +144,31 @@ void gameHandler::init(){
     std::cout << "objects being rendered size: " << renderList.size() << std::endl;
 }
 
+void gameHandler::events(SDL_Event eventHandle){
+    //Check for both when a key is pressed and not pressed
+    //pass the event to objects when necessary to do input
+    switch (eventHandle.type)
+    {
+    case SDL_KEYDOWN:
+        //When a key is down then check which key
+        //Then do appropriate result of the input
+
+        //Check player event and input
+        plr->checkInput(eventHandle);
+        break;
+    case SDL_KEYUP:
+        //When a key is up then check which key
+        //Then do appropriate result of no input
+
+        //check for player letting go of input
+        plr->checkExitInput(eventHandle);
+        break;
+    default:
+        break;
+    }
+
+}
+
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
     plr->deltatime = deltaTime;

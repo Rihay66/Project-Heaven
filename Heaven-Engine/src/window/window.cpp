@@ -2,12 +2,9 @@
 
 //static vars
 static bool isDebug = false;
-static bool pressed = false;
 static bool controllerCheck = false;
 static bool controllerEnable = false;
 static bool inputSwitch = false;
-static bool vSyncSwitch = false;
-static bool vSyncState = false;
 
 //Used to display sdl errors and exit with an error
 static void sdl_die(const char * message) {
@@ -86,60 +83,12 @@ Window::~Window(){
 
 void Window::getEvents(){
     //This function must be called once inside a loop
-
-    // Stantard base event handling
-
     // Get events from SDL
     while (SDL_PollEvent(&this->eventHandle))
     {
-
         // Stantard base event handling
-
-        // Use Event and get input
-        if (eventHandle.type == SDL_KEYDOWN){ // Check if there's a key being pressed
-            if (eventHandle.key.keysym.sym == SDLK_ESCAPE){ // Check if the key was the escape key
-                // Exit from the app
-                this->quit = true;
-            }
-            // Check if the ` was pressed to enable to disable debug
-            if (eventHandle.key.keysym.sym == SDLK_BACKQUOTE){
-                isDebug = !isDebug;
-
-                if (isDebug){
-                    App_State = DEBUG;
-                    std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
-                }
-                else{
-                    App_State = ACTIVE;
-                    std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
-                }
-            }
-            // TODO: Move from joystick to gamecontroller
-            // When a controller is found, then enable it as the first controller
-            if (controllerCheck && eventHandle.key.keysym.sym == SDLK_TAB){
-                if (!controllerEnable){
-                    // Open controller joystick
-                    joystick = SDL_GameControllerOpen(0);
-                    Input_State = KMANDCONTROLLER;
-                    printf("MSG: Controller Input Enabled!\n");
-                }
-                else{
-                    // Close
-                    SDL_GameControllerClose(joystick);
-                    Input_State = KM;
-                    printf("MSG: Controller Input Disabled!\n");
-                }
-
-                controllerEnable = !controllerEnable;
-            }
-        }
-        else if (eventHandle.type == SDL_QUIT){
-            // Check for Window exit button event
-            this->quit = true;
-        }
-
         // Check for joysticks if available
-        if (SDL_NumJoysticks() > 0){
+        if (SDL_NumJoysticks() > 0 && !controllerCheck){
             // Loop and get controllers
             for (int i = 0; i < sizeof(controllerNames) / sizeof(controllerNames[0]); i++){
                 if (controllerNames[i] != SDL_GameControllerNameForIndex(i)){
@@ -154,8 +103,63 @@ void Window::getEvents(){
             controllerCheck = false;
         }
 
+        // Use Event and get input
+        switch (eventHandle.type)
+        {
+        case SDL_QUIT:
+            //Check for Window exit button event
+            //Set quit flag to true to be used to exit out of application
+            this->quit = true;
+            //Exit out of whole function
+            return;
+        case SDL_KEYDOWN:
+            //Check for which key was pressed
+            switch (eventHandle.key.keysym.sym)
+            {
+            case SDLK_ESCAPE: //Check if escape was pressed
+                //Set quit flag to be true to be used to exit out of application
+                this->quit = true;
+                //Exit out of whole function
+                return;
+            case SDLK_BACKQUOTE: //Check if the ` was pressed
+                //Enable or disable debug mode
+                isDebug = !isDebug;
+
+                //Check for isDebug flag and
+                if(isDebug){
+                    App_State = DEBUG;
+                    std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
+                }else{
+                    App_State = ACTIVE;
+                    std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
+                }
+            case SDLK_TAB: //Check if TAB was pressed
+                //*NOTE: When a controller is found, for now enable it as first controller
+                if(controllerCheck){
+                    //Enable or disable the controllerEnable Flag
+                    controllerEnable = !controllerEnable;
+                    if(controllerEnable){
+                        // Open controller joystick and switch input mode
+                        joystick = SDL_GameControllerOpen(0);
+                        Input_State = KMANDCONTROLLER;
+                        printf("MSG: Controller Input Enabled!\n");
+                    }else{
+                        // Close joystick and switch input mode
+                        SDL_GameControllerClose(joystick);
+                        Input_State = KM;
+                        printf("MSG: Controller Input Disabled!\n");
+                    }
+                }
+            default:
+                break;
+            }
+            break;
+        default:
+            break;
+        }
+
         // Call virtual method for additional input
-        this->input();
+        this->input(this->eventHandle);
 
         //Exit out of handling events
         break;
@@ -163,7 +167,7 @@ void Window::getEvents(){
 }
 
 //Handle main window input function
-void Window::input(){
+void Window::input(SDL_Event handle){
     //Here goes additional input that is within SDL event handling and getEvent() loop
     //Can be overwritten 
 }

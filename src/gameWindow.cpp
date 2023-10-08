@@ -13,9 +13,9 @@ void GameWindow::init(){
     game->init();
 }
 
-void GameWindow::input(){
+void GameWindow::input(SDL_Event handle){
     //Add additional input
-    
+    game->events(this->eventHandle);
 }
 
 void GameWindow::update(){

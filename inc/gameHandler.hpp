@@ -14,6 +14,7 @@
 #include <glm/glm.hpp>
 
 //define global vars for objects to use
+
 const float PlayerSpeed(150.0f);
 const glm::vec2 standardSpriteSize(1.0f, 1.0f);
 const glm::vec2 defaultModelSize(50.0f, 150.0f);
@@ -55,8 +56,9 @@ class gameHandler{
         ~gameHandler();
 
         void init(); //intializes game (loads all shaders/textures/levels/gameobjects/camera/etc)
-        void update(float deltaTime);
-        void render();
+        void events(SDL_Event event); //passes the event to objects to check for input
+        void update(float deltaTime); //update game logic as well pass deltatime for other objects to use
+        void render(); //grab elements and render them on the screen
 };
 
 #endif
