@@ -102,6 +102,12 @@ void Window::getEvents(){
         else if(SDL_NumJoysticks() <= 0 && controllerCheck){
             // Disable controller enable flag
             printf("MSG: All Controllers were disconnected\n");
+            //Ignore any controller event, will do the same as disabling it
+            SDL_GameControllerEventState(SDL_IGNORE);
+            //Try to clear memory of the joystick
+            if(joystick != nullptr){
+                SDL_GameControllerClose(joystick);
+            }
             controllerCheck = false;
         }
 
