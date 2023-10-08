@@ -4,7 +4,6 @@
 static bool isDebug = false;
 static bool controllerCheck = false;
 static bool controllerEnable = false;
-static bool inputSwitch = false;
 
 //Used to display sdl errors and exit with an error
 static void sdl_die(const char * message) {
@@ -53,9 +52,6 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     // Use v-sync
     SDL_GL_SetSwapInterval(1);
 
-    //Enable SDL event joystick handle
-    SDL_GameControllerEventState(SDL_ENABLE);
-
     SDL_GetWindowSize(window, &w, &h);
 	glViewport(0, 0, w, h);
 
@@ -67,6 +63,11 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     glDisable(GL_CULL_FACE);
 
     std::cout << "window successfully created" << std::endl;
+
+    //Check if there are no controllers connected to inform user or dev
+    if(SDL_NumJoysticks() <= 0)
+        printf("MSG: No Controllers detected!\n");
+    
 }
 
 //Destructor
@@ -98,8 +99,9 @@ void Window::getEvents(){
                 }
             }
         }
-        else{
+        else if(SDL_NumJoysticks() <= 0 && controllerCheck){
             // Disable controller enable flag
+            printf("MSG: All Controllers were disconnected\n");
             controllerCheck = false;
         }
 
@@ -139,17 +141,22 @@ void Window::getEvents(){
                     //Enable or disable the controllerEnable Flag
                     controllerEnable = !controllerEnable;
                     if(controllerEnable){
+                        //Enable checking for controller events
+                        SDL_GameControllerEventState(SDL_ENABLE);
                         // Open controller joystick and switch input mode
                         joystick = SDL_GameControllerOpen(0);
                         Input_State = KMANDCONTROLLER;
                         printf("MSG: Controller Input Enabled!\n");
                     }else{
+                        //Ignore checking for controller events
+                        SDL_GameControllerEventState(SDL_IGNORE);
                         // Close joystick and switch input mode
                         SDL_GameControllerClose(joystick);
                         Input_State = KM;
                         printf("MSG: Controller Input Disabled!\n");
                     }
                 }
+                break;
             default:
                 break;
             }

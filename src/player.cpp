@@ -15,10 +15,6 @@ Player::Player(glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzon
 
 Player::~Player(){
     // delete any pointers
-    // Remove controller
-    if (this->joystick != nullptr){
-        SDL_GameControllerClose(joystick);
-    }
 }
 
 //Check for input

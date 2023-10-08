@@ -19,10 +19,6 @@ void GameWindow::input(SDL_Event handle){
 }
 
 void GameWindow::update(){
-    if(game->joystick == nullptr){
-        game->joystick = this->joystick;
-    }
-
     game->update(DeltaTime);
     game->setGameState(App_State);
     game->setControllerState(Input_State);

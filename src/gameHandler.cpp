@@ -16,10 +16,6 @@ gameHandler::~gameHandler(){
     delete phys;
     ResourceManager::Clear();
     renderList.clear();
-    //remove controller
-    if(this->joystick != nullptr){
-        SDL_GameControllerClose(this->joystick);
-    }
 }
 
 void gameHandler::setGameState(int i){
@@ -163,21 +159,32 @@ void gameHandler::events(SDL_Event eventHandle){
         //check for player letting go of input
         plr->checkExitInput(eventHandle);
         break;
+    //*NOTE: Below are joystick input checks, that only are enabled when
+    //*a controller is enabled
+    case SDL_JOYBUTTONDOWN:
+        
+        //When a gamepad button is being pressed check for which button
+        //Then do appropriate result of the input
+
+        break;
+    case SDL_JOYBUTTONUP:
+        //When a gamepad button is NOT being pressed check for which button
+        //Then do appropriate result of no input
+
+        break;
+    case SDL_JOYAXISMOTION:
+        //When theres gamepad joystick motion
+        
+        break;
+
     default:
         break;
     }
-
 }
 
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
     plr->deltatime = deltaTime;
-
-    //Check if game does have a joystick available
-    if(this->joystick != nullptr && plr->joystick == nullptr){
-        //then give the joystick reference to the player
-        plr->joystick = this->joystick;
-    }
 
     //* Do physics here and player input
     phys->CheckCollisions(deltaTime);
