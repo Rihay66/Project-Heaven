@@ -2,13 +2,12 @@
 
 //static vars
 static bool isDebug = false;
+static bool pressed = false;
 static bool controllerCheck = false;
-static bool controllerEnable = false;
 
-//Used to display sdl errors and exit with an error
-static void sdl_die(const char * message) {
-  fprintf(stderr, "%s: %s\n", message, SDL_GetError());
-  exit(2);
+//Callback func
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height){
+    glViewport(0, 0, width, height);
 }
 
 //Window constructor, intializes GLFW and GLAD then creates a window with the passed parameters
@@ -18,169 +17,91 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     width = w;
     height = h;
 
-    //init SDL
-    // Initialize SDL 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
-        sdl_die("Couldn't initialize SDL");
-    
-    atexit (SDL_Quit);
-    SDL_GL_LoadLibrary(NULL); // Default OpenGL is fine.
+    //init GLFW
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, false); //disable resizing the screen
 
-    // Request an OpenGL 4.5 context (should be core)
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
-    // Also request a depth buffer
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    //create the window and check for errors
+    handle = glfwCreateWindow(h, w, name, NULL, NULL);
+    if(!handle){
+        std::cout << "Failed to create window!" << std::endl;
+        glfwTerminate();
+        exit(-1);
+    }
 
-    //Init the widnow 
-    this->window =SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, height, width, SDL_WINDOW_OPENGL);
-    //Check if window was initialized
-    if (window == nullptr) 
-        sdl_die("Couldn't set video mode");
+    //create window
+    glfwMakeContextCurrent(handle);
 
-    //Create OpenGL context for GLAD and SDL to talk to each other
-    glContext = SDL_GL_CreateContext(window);
-    if (glContext == NULL) 
-        sdl_die("Failed to create OpenGL context");
-
-    //Init GLAD
-    if(!gladLoadGLLoader(SDL_GL_GetProcAddress)){
+    //load glad
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
         std::cout << "Failed to init GLAD!" << std::endl;
         exit(-1);
     }
-    // Use v-sync
-    SDL_GL_SetSwapInterval(1);
 
-    SDL_GetWindowSize(window, &w, &h);
-	glViewport(0, 0, w, h);
+    //set up call back to update the opengl window
+    glfwSetFramebufferSizeCallback(handle, framebuffer_size_callback);
+    //enable vsync
+    glfwSwapInterval(1);
+    //set openGL window size
+    glViewport(0, 0, h, w);
 
     //set up rendering for 2D
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // Disable depth test and face culling.
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
 
     std::cout << "window successfully created" << std::endl;
-
-    //Check if there are no controllers connected to inform user or dev
-    if(SDL_NumJoysticks() <= 0)
-        printf("MSG: No Controllers detected!\n");
     
 }
 
 //Destructor
 Window::~Window(){
     //delete any pointers
-    if(joystick != nullptr){
-        SDL_GameControllerClose(joystick);
-    }
-
-    SDL_GL_DeleteContext(glContext);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    glfwTerminate();
 }
 
-void Window::getEvents(){
-    //This function must be called once inside a loop
-    // Get events from SDL
-    while (SDL_PollEvent(&this->eventHandle))
-    {
-        // Stantard base event handling
-        // Check for joysticks if available
-        if (SDL_NumJoysticks() > 0 && !controllerCheck){
-            // Loop and get controllers
-            for (int i = 0; i < sizeof(controllerNames) / sizeof(controllerNames[0]); i++){
-                if (controllerNames[i] != SDL_GameControllerNameForIndex(i)){
-                    printf("%s : CONNECTED!\n", SDL_GameControllerNameForIndex(i));
-                    controllerNames[i] = SDL_GameControllerNameForIndex(i);
-                    controllerCheck = true;
-                }
-            }
+void Window::getInput(){
+
+    //debug enabler button - toggle
+    if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS && !pressed){
+        isDebug = !isDebug;
+        //check the isDebug value and set the proper app state
+        if(isDebug){
+            App_State = DEBUG;
+            std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
         }
-        else if(SDL_NumJoysticks() <= 0 && controllerCheck){
-            // Disable controller enable flag
-            printf("MSG: All Controllers were disconnected\n");
-            //Ignore any controller event, will do the same as disabling it
-            SDL_GameControllerEventState(SDL_IGNORE);
-            //Try to clear memory of the joystick
-            if(joystick != nullptr){
-                SDL_GameControllerClose(joystick);
-            }
-            controllerCheck = false;
+        else{
+            App_State = ACTIVE;
+            std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
         }
-
-        // Use Event and get input
-        switch (eventHandle.type)
-        {
-        case SDL_QUIT:
-            //Check for Window exit button event
-            //Set quit flag to true to be used to exit out of application
-            this->quit = true;
-            //Exit out of whole function
-            return;
-        case SDL_KEYDOWN:
-            //Check for which key was pressed
-            switch (eventHandle.key.keysym.sym)
-            {
-            case SDLK_ESCAPE: //Check if escape was pressed
-                //Set quit flag to be true to be used to exit out of application
-                this->quit = true;
-                //Exit out of whole function
-                return;
-            case SDLK_BACKQUOTE: //Check if the ` was pressed
-                //Enable or disable debug mode
-                isDebug = !isDebug;
-
-                //Check for isDebug flag and
-                if(isDebug){
-                    App_State = DEBUG;
-                    std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
-                }else{
-                    App_State = ACTIVE;
-                    std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
-                }
-            case SDLK_TAB: //Check if TAB was pressed
-                //*NOTE: When a controller is found, for now enable it as first controller
-                if(controllerCheck){
-                    //Enable or disable the controllerEnable Flag
-                    controllerEnable = !controllerEnable;
-                    if(controllerEnable){
-                        //Enable checking for controller events
-                        SDL_GameControllerEventState(SDL_ENABLE);
-                        // Open controller joystick and switch input mode
-                        joystick = SDL_GameControllerOpen(0);
-                        Input_State = KMANDCONTROLLER;
-                        printf("MSG: Controller Input Enabled!\n");
-                    }else{
-                        //Ignore checking for controller events
-                        SDL_GameControllerEventState(SDL_IGNORE);
-                        // Close joystick and switch input mode
-                        SDL_GameControllerClose(joystick);
-                        Input_State = KM;
-                        printf("MSG: Controller Input Disabled!\n");
-                    }
-                }
-                break;
-            default:
-                break;
-            }
-            break;
-        default:
-            break;
-        }
-
-        // Call virtual method for additional input
-        this->input(this->eventHandle);
-
-        //Exit out of handling events
-        break;
+        pressed = !pressed;
+    }else if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){
+        pressed = !pressed;
     }
+
+    //check for joystick
+    if(glfwJoystickPresent(GLFW_JOYSTICK_1) == true && !controllerCheck){
+        //print out that the joystick is connected
+        const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+        std::cout << "Controller is connected! ID: " << name << std::endl;
+        std::cout << "MSG: Controller input is enabled!" << std::endl;
+        Input_State = KMANDCONTROLLER;
+        controllerCheck = !controllerCheck;
+    }else if(glfwJoystickPresent(GLFW_JOYSTICK_1) == false && controllerCheck){
+        std::cout << "Controller is disconnected!" << std::endl;
+        std::cout << "MSG: Controller input is disabled!" << std::endl;
+        Input_State = KM;
+        controllerCheck = !controllerCheck;
+    }
+
+    //Call additional input
+    this->input();
 }
 
 //Handle main window input function
-void Window::input(SDL_Event handle){
+void Window::input(){
     //Here goes additional input that is within SDL event handling and getEvent() loop
     //Can be overwritten 
 }
@@ -202,11 +123,19 @@ void Window::render(){
 }
 
 //Frames
-void Window::getFrameTime(float count){
-   std::string FPS = std::to_string(1.0f/count);
-   std::string ms = std::to_string(count);
-   std::string newTitle = "Project-Heaven - " + FPS + "FPS / " + ms + "ms";
-
-   //Set up title
-   SDL_SetWindowTitle(this->window, newTitle.c_str());
+void Window::getFrameTime(){
+    //TODO: Move getting the frame time to be using the engine's UI renderer and not GLFW
+    this->currentTime = glfwGetTime();
+    this->timeDiff = this->currentTime - this->prevTime;
+    this->counter++;
+    if(this->timeDiff >= 1.0 / 30.0){
+        //display frame per second & frame time
+        std::string FPS = std::to_string((1.0 / this->timeDiff) * this->counter);
+        std::string ms = std::to_string((this->timeDiff / this->counter) * 1000);
+        //set up title
+        std::string newTitle = "Project-Heaven - " + FPS + "FPS / " + ms + "ms";
+        glfwSetWindowTitle(this->handle, newTitle.c_str());
+        this->prevTime = this->currentTime;
+        this->counter = 0;
+    }
 }

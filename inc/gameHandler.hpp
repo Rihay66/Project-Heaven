@@ -14,8 +14,7 @@
 #include <glm/glm.hpp>
 
 //define global vars for objects to use
-
-const float PlayerSpeed(150.0f);
+const float PlayerSpeed(5.0f);
 const glm::vec2 standardSpriteSize(1.0f, 1.0f);
 const glm::vec2 defaultModelSize(50.0f, 150.0f);
 const glm::vec2 smallModelSize(40.0f, 120.0f);
@@ -34,7 +33,8 @@ class gameHandler{
     private:
         //Contain reference of the window size
         unsigned int Width, Height;
-
+        //contain reference of the window
+        GLFWwindow* window;
         //contain physics 
         Physics* phys;
         //contain renderer
@@ -49,13 +49,12 @@ class gameHandler{
         //Game elements & values
         std::vector<GameObject*> renderList;
 
-        gameHandler(unsigned int width, unsigned int height);
+        gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle);
         ~gameHandler();
 
         void init(); //intializes game (loads all shaders/textures/levels/gameobjects/camera/etc)
-        void events(SDL_Event event); //passes the event to objects to check for input
-        void update(float deltaTime); //update game logic as well pass deltatime for other objects to use
-        void render(); //grab elements and render them on the screen
+        void update(float deltaTime);
+        void render();
 };
 
 #endif

@@ -4,12 +4,13 @@
 #define PLAYER_HPP
 
 #include <gameObjs/rigidbodyObject.hpp>
-#include <SDL2/SDL_gamecontroller.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_keyboard.h>
+#include <GLFW/glfw3.h>
 
 //Player class with inheritence from GameObject
 class Player : public physicsObject{
+    private:
+        //reference to the window
+        GLFWwindow* window;
     public:
         //declare const vars
         //glm dir
@@ -35,16 +36,9 @@ class Player : public physicsObject{
         //Used to check for debug mode
         bool isDebug = false;
 
-        //movement flags
-        bool moveFlags[4];
-
         //constructor / desctructor
-        Player(glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
+        Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
         ~Player();
-
-        //Event handle
-        void checkInput(SDL_Event handle);
-        void checkExitInput(SDL_Event handle);
 
         //edit and use Box2D virtual function before physics update
         b2Body* physicBody();

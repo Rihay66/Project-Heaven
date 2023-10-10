@@ -4,10 +4,9 @@
 #define WINDOW_HPP
 
 #include <iostream>
-#include <assert.h>
 #include <unistd.h>
-#include <SDL2/SDL.h>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 //define window states
 enum APP_STATE{
@@ -28,20 +27,8 @@ class Window{
         unsigned int counter = 0;
 
     public:
-        //Loop flag
-        bool quit = false;
         //Window handle
-        SDL_Window* window = nullptr;
-        //Opengl Context
-        SDL_GLContext glContext;
-        //Used to store and get events from SDL
-        SDL_Event eventHandle;
-        /* Used to store reference of the SDLjoystick
-        * Must be used as referenced pointer and not a new pointer! 
-        
-        */
-        SDL_GameController* joystick = nullptr;
-
+        GLFWwindow* handle;
         //delta time variable for updating input, physics, and kind of movement
         float DeltaTime;
         //variable that can be set through input
@@ -49,25 +36,23 @@ class Window{
         INPUT_STATE Input_State;
         //variable storing window size
         unsigned int width, height;
-        //Store known controller names
-        const char* controllerNames[4];
 
         //constructor and also init shader, textures, etc...
         Window(int w, int h, const char* name);
         //destructor
         ~Window();
-        //used to get SDL events and input checks
-        void getEvents();
-        //used as a forward of getEvents() to add additional input or event checks
-        virtual void input(SDL_Event handle);
+        //used to get Engine base input
+        void getInput();
+        //used as a forward of getInput() to add additional input or event checks
+        virtual void input();
 
         virtual void init(); //used to call classes that handle the loading of shaders, textures, and objects
         
         virtual void update(); //used to update logic, custom events, and other
         
         virtual void render(); //used to render things on the screen
-        //frame profiling
-        void getFrameTime(float count);
+        
+        void getFrameTime(); //frame profiling
 };
 
 #endif

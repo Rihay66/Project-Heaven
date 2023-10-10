@@ -19,9 +19,8 @@ ${HEADER_FILES}
 ${SOURCE_FILES}
 )
 
-# Create folders and thier sub files for runtime loading
+#Create folders and their sub files for runtime loading
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)
-
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
 
 # Link libs if the detected OS is LINUX
@@ -36,9 +35,7 @@ set_target_properties(Heaven-Engine PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
 )
 
-find_package(SDL2 REQUIRED)
-
-target_link_libraries(project-heaven PRIVATE Heaven-Engine ${SDL2_LIBRARIES})
+target_link_libraries(project-heaven PRIVATE Heaven-Engine ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libglfw.so.3.3)
 
 # Define the source and destination paths for the DLL of the Heaven Engine
 set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.so")
@@ -61,10 +58,10 @@ set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
 
 #Get the engine library
 find_package(Heaven-Engine REQUIRED)
-#Get SDL
-find_package(SDL2 REQUIRED)
+#Get GLFW
+find_package(GLFW3 REQUIRED)
 
-target_link_libraries(project-heaven PRIVATE Heaven-Engine ${SDL2_LIBRARIES})
+target_link_libraries(project-heaven PRIVATE Heaven-Engine glfw3)
 
 # Define the source and destination paths for the DLL of the Heaven Engine
 set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.dll")

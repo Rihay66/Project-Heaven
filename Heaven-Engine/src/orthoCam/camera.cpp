@@ -26,43 +26,40 @@ void Camera::follow(glm::vec2 pos, glm::vec2 size){
     this->shader.SetMatrix4("projectionView", this->projectionView);
 }
 
-void Camera::camInput(float deltaTime){
+//TODO: Add a zoom input using the scroll wheel
+void Camera::camInput(float deltaTime, GLFWwindow* &window){
 
     float movement = speed * deltaTime;
 
-    //update keyboard state
-    state = SDL_GetKeyboardState(NULL);
-
-    //input for increase movement
-    if(state[SDL_SCANCODE_LSHIFT] > 0){
-        //move up
+    //input for increase movement while holding key
+    if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
         movement *= 3.0f;
     }
 
     //input for movement
-    if(state[SDL_SCANCODE_W] > 0){
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         //move up
-        this->position += movement * up * 3.0f;
+        position += movement * up * 3.0f;
     }
-    if(state[SDL_SCANCODE_S] > 0){
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
         //move down
-        this->position -= movement * up * 3.0f;
+        position -= movement * up * 3.0f;
     }
-    if(state[SDL_SCANCODE_A] > 0){
-        //move down
-        this->position -= movement * right;
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+        //move left
+        position -= movement * right;
     }
-    if(state[SDL_SCANCODE_D] > 0){
-        //move down
-        this->position += movement * right;
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+        //move right
+        position += movement * right;
     }
 
-    //input for zoom
-    if(state[SDL_SCANCODE_UP] > 0){
-        //zoom in
+    //input for zooming in
+    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
+        //zoom in 
         zoomFactor += zoomAmount;
     }
-    if(state[SDL_SCANCODE_DOWN] > 0){
+    if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
         //zoom out
         zoomFactor -= zoomAmount;
     }

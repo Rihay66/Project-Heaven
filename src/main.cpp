@@ -10,41 +10,36 @@ int main(int argc, char* argv[]){
 	//init resources from files and load classes
 	window->init();
 
-	//set up static delta time
-	window->DeltaTime = 1.0f / 60.0f;
-	//Set up vars for perfomance counters
-	Uint64 start, end;
+	//set up vars for calculating delta time
+	float deltaTime = 0, lastFrame = 0, currentFrame = 0;
 	
 	//update loop
-	while(!window->quit){
-		start = SDL_GetPerformanceCounter();
+	while(!glfwWindowShouldClose(window->handle)){
 
-		//Get event which will grab sdl events and input
-		window->getEvents();
+		//calculate delta time
+		currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		//pass delta time to the window
+		window->DeltaTime = deltaTime;
 		
-		//TODO: Multithreading the input and update and having rendering on it's own thread
+		//check for glfw events
+		glfwPollEvents();
+		//check for main window input
+		window->getInput();
 
 		//update any input, values, objects, loading etc..
 		window->update();
 
 		//Render background
 		glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
-		//Clear color buffer
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//draw or render
 		window->render();
 
 		//swap buffers
-		SDL_GL_SwapWindow(window->window);
-
-		end = SDL_GetPerformanceCounter();
-
-		//Calculate frametime
-		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
-		//*Will not use this function in the future
-		//window->getFrameTime(elapsed);
-
+		glfwSwapBuffers(window->handle);
 		//avoid cpu idle
 		usleep(1);
 	}

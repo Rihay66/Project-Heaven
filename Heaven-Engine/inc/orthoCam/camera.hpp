@@ -4,8 +4,8 @@
 #define CAMERA_HPP
 
 #include <resourceSys/shader.hpp>
-#include <SDL2/SDL_keyboard.h>
 #include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
 
 //TODO: Move this camera to be it's own object and have a camera controller that includes all the input
 
@@ -33,10 +33,8 @@ class Camera{
         unsigned int width, height;
         //reference to debug zoom 
         float zoomAmount;
-        //reference to the sdl keyboard state
-        const Uint8* state;
     public:
-        //Constructor
+        //Construcotr
         Camera(unsigned int Width, unsigned int Height, 
         Shader &shader, float cameraSpeed = 1.0f, float zoomAmount = 1.0f);
 
@@ -44,7 +42,7 @@ class Camera{
         ~Camera();
 
         //input
-        void camInput(float deltaTime);
+        void camInput(float deltaTime, GLFWwindow* &window);
         //follow a position
         void follow(glm::vec2 = glm::vec3(0.0f), glm::vec2 size = glm::vec3(0.0f));
 

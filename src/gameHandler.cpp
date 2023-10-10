@@ -5,14 +5,14 @@ Camera* camera;
 Player* plr;
 
 //constructor
-gameHandler::gameHandler(unsigned int width, unsigned int height) : Width(width), Height(height) {}
+gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
 
 //destructor
 gameHandler::~gameHandler(){
     //delete any pointers and clear resources (eg ResourceManager)
     delete camera;
     delete renderer;
-    delete plr;
+    //delete plr;
     delete phys;
     ResourceManager::Clear();
     renderList.clear();
@@ -28,10 +28,6 @@ void gameHandler::setControllerState(int i){
 
 //TODO: Setup sound system
 //TODO: UI and text
-
-//* These are for later on
-//TODO: Make a input handler class
-//TODO: Make a gameObject tag system
 
 void gameHandler::init(){
     //load all resources like shaders, textures
@@ -64,7 +60,8 @@ void gameHandler::init(){
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
-    plr = new Player(pos, standardSpriteSize, ResourceManager::GetTexture("player"), PlayerSpeed, 2000.0f);
+    plr = new Player(window, pos, standardSpriteSize, ResourceManager::GetTexture("player"), PlayerSpeed, 0.2f);
+
 
     /*
     //Creates objects and stores them in to the pObjects vector
@@ -137,61 +134,17 @@ void gameHandler::init(){
     //Init the physics system
     phys->init(glm::vec2(0.0f, 0.0f));
 
-    std::cout << "objects being rendered size: " << renderList.size() << std::endl;
-}
-
-void gameHandler::events(SDL_Event eventHandle){
-    //Check for both when a key is pressed and not pressed
-    //pass the event to objects when necessary to do input
-    switch (eventHandle.type)
-    {
-    case SDL_KEYDOWN:
-        //When a key is down then check which key
-        //Then do appropriate result of the input
-
-        //Check player event and input
-        plr->checkInput(eventHandle);
-        break;
-    case SDL_KEYUP:
-        //When a key is up then check which key
-        //Then do appropriate result of no input
-
-        //check for player letting go of input
-        plr->checkExitInput(eventHandle);
-        break;
-    //*NOTE: Below are joystick input checks, that only are enabled when
-    //*a controller is enabled
-    case SDL_JOYBUTTONDOWN:
-        
-        //When a gamepad button is being pressed check for which button
-        //Then do appropriate result of the input
-
-        break;
-    case SDL_JOYBUTTONUP:
-        //When a gamepad button is NOT being pressed check for which button
-        //Then do appropriate result of no input
-
-        break;
-    case SDL_JOYAXISMOTION:
-        //When theres gamepad joystick motion
-        
-        break;
-
-    default:
-        break;
-    }
+    std::cout << "object size: " << renderList.size() << std::endl;
 }
 
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
-    plr->deltatime = deltaTime;
 
-    //* Do physics here and player input
+    //* Do physics here
     phys->CheckCollisions(deltaTime);
 
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
-        //update event
-        camera->camInput(deltaTime);    
+        camera->camInput(deltaTime, this->window);    
         plr->isDebug = true;
     }else if(Game_State == GAME_ACTIVE){
         camera->follow(plr->position, smallModelSize);

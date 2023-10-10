@@ -16,7 +16,7 @@ class GameWindow : public Window{
         ~GameWindow();
 
         void init() override;
-        void input(SDL_Event handle) override;
+        void input() override;
         void update() override;
         void render() override;
 };
