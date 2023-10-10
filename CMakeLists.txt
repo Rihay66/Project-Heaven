@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15.0)
-project(project-heaven VERSION 0.0.1 LANGUAGES C CXX)
+project(project-heaven VERSION 0.0.8 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
 #include all files
@@ -29,23 +29,28 @@ if(UNIX)
 # Add the path to your engine library's CMake configuration files
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}Heaven-Engine/build)
 
+#Make reference to the Heaven-Engine's library and it's include folder
 add_library(Heaven-Engine SHARED IMPORTED)
 set_target_properties(Heaven-Engine PROPERTIES
     IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libHeaven-Engine.so
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
 )
+#Make a reference to the Heaven-Engine's glfw lib 
+set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libglfw.so.3.3)
 
-target_link_libraries(project-heaven PRIVATE Heaven-Engine ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libglfw.so.3.3)
+#Link libraries to compile with
+target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw})
 
 # Define the source and destination paths for the DLL of the Heaven Engine
-set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.so")
-set(ENGINE_DLL_DEST "${CMAKE_BINARY_DIR}")
+set(ENGINE_SO_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.so")
+set(SO_DEST "${CMAKE_BINARY_DIR}")
 
 # Use file(COPY ...) to copy the SO
-file(COPY "${ENGINE_DLL_SOURCE}" DESTINATION "${ENGINE_DLL_DEST}")
+file(COPY "${ENGINE_SO_SOURCE}" DESTINATION "${SO_DEST}")
+file(COPY ${local-glfw} DESTINATION ${SO_DEST})
 
-# Make sure your external project knows where to find the copied DLL
-add_definitions(-DHEAVEN_ENGINE_DLL_PATH="${ENGINE_DLL_DEST}")
+# Make sure your external project knows where to find the copied SOs
+add_definitions(-DHEAVEN_ENGINE_SO_PATH="${SO_DEST}")
 
 endif (UNIX)
 
