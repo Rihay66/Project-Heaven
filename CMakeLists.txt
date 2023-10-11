@@ -63,19 +63,20 @@ set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
 
 #Get the engine library
 find_package(Heaven-Engine REQUIRED)
-#Get GLFW
-find_package(GLFW3 REQUIRED)
+#Make a reference to the Heaven-Engine's glfw lib 
+set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/glfw3.dll)
 
-target_link_libraries(project-heaven PRIVATE Heaven-Engine glfw3)
+target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw})
 
 # Define the source and destination paths for the DLL of the Heaven Engine
 set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.dll")
-set(ENGINE_DLL_DEST "${CMAKE_BINARY_DIR}")
+set(DLL_DEST "${CMAKE_BINARY_DIR}")
 
 # Use file(COPY ...) to copy the DLL
-file(COPY "${ENGINE_DLL_SOURCE}" DESTINATION "${ENGINE_DLL_DEST}")
+file(COPY "${ENGINE_DLL_SOURCE}" DESTINATION "${DLL_DEST}")
+file(COPY ${local-glfw} DESTINATION ${DLL_DEST})
 
 # Make sure your external project knows where to find the copied DLL
-add_definitions(-DHEAVEN_ENGINE_DLL_PATH="${ENGINE_DLL_DEST}")
+add_definitions(-DHEAVEN_ENGINE_DLL_PATH="${DLL_DEST}")
 
 endif(WIN32)
