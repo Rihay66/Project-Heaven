@@ -1,9 +1,10 @@
 #include <engine/sound.hpp>
 
 //Instatiate static resources
-std::map<std::string, sf::SoundBuffer> SoundEngine::Sounds;
 
-static std::string checkFileName(std::string str){
+std::map<std::string, sf::SoundBuffer> SoundEngine::SoundBuffers;
+
+static std::string checkName(std::string str){
 
     // Checking if string contains special character
     for(int i=0;i<str.length();i++)
@@ -23,28 +24,18 @@ static std::string checkFileName(std::string str){
     return str;
 }
 
-//Constructor
-SoundEngine::SoundEngine(){
-
-}
-
-//Destructor
-SoundEngine::~SoundEngine(){
-
-}
-
-sf::SoundBuffer SoundEngine::loadSound(const std::string filename, std::string name){
+sf::SoundBuffer SoundEngine::loadSoundBuffer(const std::string filename, std::string name){
 
     //Check if name doesn't have any special characters and set to be all lowercase
-    name = checkFileName(name);
+    name = checkName(name);
 
     //*load a sound and have it stored in the static resources
 
     //Instantiate sound buffer with it's name
-    Sounds[name];
+    SoundBuffers[name];
 
     //Load a sound and check for error
-    if(!Sounds[name].loadFromFile(filename)){
+    if(!SoundBuffers[name].loadFromFile(filename)){
         
         std::cout << "ERROR: Couldn't load sound file!\n";
 
@@ -52,12 +43,12 @@ sf::SoundBuffer SoundEngine::loadSound(const std::string filename, std::string n
         exit(-1);
     }
 
-    return Sounds[name];
+    return SoundBuffers[name];
 }
 
-sf::SoundBuffer SoundEngine::getSound(std::string name){
+sf::SoundBuffer& SoundEngine::getSoundBuffer(std::string name){
 
     //Check if name doesn't have any special characters and set to be all lowercase
-    name = checkFileName(name);
-    return Sounds[name];
+    name = checkName(name);
+    return SoundBuffers[name];
 }

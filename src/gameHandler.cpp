@@ -1,8 +1,9 @@
 #include "../inc/gameHandler.hpp"
 
-//Create obj
+//Create game related objs
 Camera* camera;
 Player* plr;
+SoundSource* ss;
 
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
@@ -14,7 +15,12 @@ gameHandler::~gameHandler(){
     delete renderer;
     delete plr;
     delete phys;
+    //Set sound engine to a null address
+    soundEng = nullptr;
     delete soundEng;
+    //Set sound source to a null address
+    ss = nullptr;
+    delete ss;
     ResourceManager::Clear();
     renderList.clear();
 }
@@ -43,6 +49,16 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/transparent.png", "transparent", true);
     ResourceManager::LoadTexture("textures/crate.png", "crate",true);
     ResourceManager::LoadTexture("textures/porm.png", "porm", true);
+
+    //Init sound engine
+    soundEng = new SoundEngine();
+    //Load sound buffers
+    soundEng->loadSoundBuffer("sounds/metalpipe.wav", "sound");
+
+    //Create a sound source for testing
+    ss = new SoundSource();
+    //load sound
+    ss->loadSound(soundEng->getSoundBuffer("sound"), "test");
 
     //bind all the textures from first to last
     for(int i = 0; i < ResourceManager::texList.size(); i++){

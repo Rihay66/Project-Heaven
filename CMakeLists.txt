@@ -22,6 +22,7 @@ ${SOURCE_FILES}
 #Create folders and their sub files for runtime loading
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
+file(CREATE_LINK "${PROJECT_SOURCE_DIR}/sounds" "${CMAKE_BINARY_DIR}/sounds" SYMBOLIC)
 
 # Link libs if the detected OS is LINUX
 if(UNIX)

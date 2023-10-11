@@ -8,6 +8,7 @@
 
 #include <resourceSys/resourceManager.hpp>
 #include <engine/sound.hpp>
+#include <gameObjs/soundListener.hpp>
 #include <engine/physics.hpp>
 #include "../inc/player.hpp"
 #include <orthoCam/camera.hpp>

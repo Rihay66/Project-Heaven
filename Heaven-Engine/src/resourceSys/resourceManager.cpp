@@ -13,7 +13,7 @@ std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
 std::vector<Texture2D>              ResourceManager::texList;
 
-static std::string checkFileName(std::string str){
+static std::string checkName(std::string str){
 
     // Checking if string contains special character
     for(int i=0;i<str.length();i++)
@@ -35,20 +35,20 @@ static std::string checkFileName(std::string str){
 
 Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name)
 {
-    name = checkFileName(name);
+    name = checkName(name);
     Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
     return Shaders[name];
 }
 
 Shader ResourceManager::GetShader(std::string name)
 {
-    name = checkFileName(name);
+    name = checkName(name);
     return Shaders[name];
 }
 
 Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool alpha)
 {
-    name = checkFileName(name);
+    name = checkName(name);
     Textures[name] = loadTextureFromFile(file, alpha);
     //Add texture to list
     texList.push_back(Textures[name]);
@@ -57,7 +57,7 @@ Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool 
 
 int ResourceManager::GetTexture(std::string name){
 
-    name = checkFileName(name);
+    name = checkName(name);
     int id = Textures[name].ID;
 
     for(int i = 0; i < texList.size(); i++){
