@@ -12,8 +12,9 @@ gameHandler::~gameHandler(){
     //delete any pointers and clear resources (eg ResourceManager)
     delete camera;
     delete renderer;
-    //delete plr;
+    delete plr;
     delete phys;
+    delete soundEng;
     ResourceManager::Clear();
     renderList.clear();
 }

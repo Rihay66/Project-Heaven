@@ -62,11 +62,14 @@ find_package(glfw3 REQUIRED)
 #Find GLFW
 find_package(box2d REQUIRED)
 
+#Find SFML
+find_package(SFML COMPONENTS audio REQUIRED)
+
 #Put together all necessary libs into one variable
-set(LIBS OpenGL glm box2d glfw)
+set(LIBS OpenGL glm box2d glfw sfml-audio)
     
 #Get Xorg dependencies into one variable
-set(Xorg Xxf86vm X11 Xrandr pthread Xi)
+set(Xorg Xxf86vm X11 Xrandr pthread Xi openal udev ogg vorbis vorbisenc vorbisfile)
 
 #Grab SDL dirs
 target_link_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
@@ -127,5 +130,13 @@ add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:glfw>
+    ${CMAKE_BINARY_DIR}/lib
+)
+
+#Copy SFML audio's SO/DLL files to the "lib folder"
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:sfml-audio> # Use the actual target name from SFML
     ${CMAKE_BINARY_DIR}/lib
 )

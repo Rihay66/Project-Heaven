@@ -15,7 +15,7 @@ std::vector<Texture2D>              ResourceManager::texList;
 
 static std::string checkFileName(std::string str){
 
-    // Checking if string contians special character
+    // Checking if string contains special character
     for(int i=0;i<str.length();i++)
     {
         if ((str[i]>=48 && str[i]<=57)||(str[i]>=65 && str[i]<=90)||(str[i]>=97 && str[i]<=122))

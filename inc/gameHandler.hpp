@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include <resourceSys/resourceManager.hpp>
+#include <engine/sound.hpp>
 #include <engine/physics.hpp>
 #include "../inc/player.hpp"
 #include <orthoCam/camera.hpp>
@@ -39,6 +40,8 @@ class gameHandler{
         Physics* phys;
         //contain renderer
         Renderer* renderer;
+        //contain sound Engine
+        SoundEngine* soundEng;
 
     public:
         //Game state & input state

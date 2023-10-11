@@ -37,9 +37,11 @@ set_target_properties(Heaven-Engine PROPERTIES
 )
 #Make a reference to the Heaven-Engine's glfw lib 
 set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libglfw.so.3.3)
+#Make a reference to the Heaven-Engine's sfml-audio lib
+set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libsfml-audio.so.2.6.0)
 
 #Link libraries to compile with
-target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw})
+target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw} ${local-audio})
 
 # Define the source and destination paths for the DLL of the Heaven Engine
 set(ENGINE_SO_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.so")
@@ -48,6 +50,7 @@ set(SO_DEST "${CMAKE_BINARY_DIR}")
 # Use file(COPY ...) to copy the SO
 file(COPY "${ENGINE_SO_SOURCE}" DESTINATION "${SO_DEST}")
 file(COPY ${local-glfw} DESTINATION ${SO_DEST})
+file(COPY ${local-audio} DESTINATION ${SO_DEST})
 
 # Make sure your external project knows where to find the copied SOs
 add_definitions(-DHEAVEN_ENGINE_SO_PATH="${SO_DEST}")
