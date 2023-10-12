@@ -50,6 +50,9 @@ target_include_directories(Heaven-Engine PUBLIC
 #*LINUX version of finding the dependencies
 if(UNIX)
 
+#Set SFML libs to be static 
+set(SFML_STATIC_LIBRARIES TRUE)
+
 #Find OpenGL package
 find_package(OpenGL REQUIRED)
 
@@ -81,6 +84,10 @@ endif(UNIX)
 #*WINDOWS version of finding the dependencies
 if(WIN32)
 
+
+#Set SFML libs to be static 
+set(SFML_STATIC_LIBRARIES TRUE)
+
 #OpenGL
 find_package(OpenGL REQUIRED)
 
@@ -93,8 +100,15 @@ find_package(GLFW3 REQUIRED)
 #box2d
 find_package(BOX2D REQUIRED)
 
+#Find threads
+find_package(Threads REQUIRED)
+option(CMAKE_USE_WIN32_THREADS_INIT "using WIN32 threads" ON)
+
+#Find SFML
+find_package(SFML COMPONENTS audio REQUIRED)
+
 #Put together all necessary libs into one variable
-set(LIBS opengl32 glm box2d glfw3)
+set(LIBS opengl32 glm box2d glfw3 sfml-audio Threads::Threads)
 
 #Grab GLFW headers
 target_link_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIR})

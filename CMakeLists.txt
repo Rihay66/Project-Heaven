@@ -69,8 +69,10 @@ set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
 find_package(Heaven-Engine REQUIRED)
 #Make a reference to the Heaven-Engine's glfw lib 
 set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/glfw3.dll)
+#Make a reference to the Heaven-Engine's sfml-audio lib
+set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libsfml-audio-s.a)
 
-target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw})
+target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw} ${local-audio})
 
 # Define the source and destination paths for the DLL of the Heaven Engine
 set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.dll")
@@ -79,6 +81,7 @@ set(DLL_DEST "${CMAKE_BINARY_DIR}")
 # Use file(COPY ...) to copy the DLL
 file(COPY "${ENGINE_DLL_SOURCE}" DESTINATION "${DLL_DEST}")
 file(COPY ${local-glfw} DESTINATION ${DLL_DEST})
+file(COPY ${local-audio} DESTINATION ${DLL_DEST})
 
 # Make sure your external project knows where to find the copied DLL
 add_definitions(-DHEAVEN_ENGINE_DLL_PATH="${DLL_DEST}")

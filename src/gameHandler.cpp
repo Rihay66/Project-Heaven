@@ -15,12 +15,12 @@ gameHandler::~gameHandler(){
     delete renderer;
     delete plr;
     delete phys;
-    //Set sound engine to a null address
-    soundEng = nullptr;
-    delete soundEng;
     //Set sound source to a null address
     ss = nullptr;
     delete ss;
+    //Set sound engine to a null address
+    soundEng = nullptr;
+    delete soundEng;
     ResourceManager::Clear();
     renderList.clear();
 }
@@ -59,6 +59,8 @@ void gameHandler::init(){
     ss = new SoundSource();
     //load sound
     ss->loadSound(soundEng->getSoundBuffer("sound"), "test");
+    //play sound
+    ss->play("test");
 
     //bind all the textures from first to last
     for(int i = 0; i < ResourceManager::texList.size(); i++){

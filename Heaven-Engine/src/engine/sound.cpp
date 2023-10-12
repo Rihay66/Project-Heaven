@@ -1,9 +1,5 @@
 #include <engine/sound.hpp>
 
-//Instatiate static resources
-
-std::map<std::string, sf::SoundBuffer> SoundEngine::SoundBuffers;
-
 static std::string checkName(std::string str){
 
     // Checking if string contains special character
@@ -24,7 +20,23 @@ static std::string checkName(std::string str){
     return str;
 }
 
-sf::SoundBuffer SoundEngine::loadSoundBuffer(const std::string filename, std::string name){
+SoundEngine::SoundEngine(){
+
+}
+
+SoundEngine::~SoundEngine(){
+    //Manually delete the buffers
+    try{
+        for(auto iter : SoundBuffers){
+            iter.second.~SoundBuffer();
+        }
+    }
+    catch(std::exception& e){
+        std::cout << "ERROR: " << e.what() << "\n";
+    }
+}
+
+sf::SoundBuffer& SoundEngine::loadSoundBuffer(const std::string filename, std::string name){
 
     //Check if name doesn't have any special characters and set to be all lowercase
     name = checkName(name);
