@@ -50,9 +50,6 @@ target_include_directories(Heaven-Engine PUBLIC
 #*LINUX version of finding the dependencies
 if(UNIX)
 
-#Set SFML libs to be static 
-set(SFML_STATIC_LIBRARIES TRUE)
-
 #Find OpenGL package
 find_package(OpenGL REQUIRED)
 

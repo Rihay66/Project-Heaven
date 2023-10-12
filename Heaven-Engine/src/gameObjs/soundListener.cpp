@@ -11,7 +11,7 @@ static std::string checkName(std::string str){
         if ((str[i]>=48 && str[i]<=57)||(str[i]>=65 && str[i]<=90)||(str[i]>=97 && str[i]<=122))
             continue;
         else
-            std::cout << "ERROR: No special characters when setting or getting of either Shader or Texture! STR: \"" << str << "\""<< std::endl;
+            std::cout << "ERROR: No special characters when setting or getting a sound! STR: \"" << str << "\""<< std::endl;
             exit(-1); //When a special character is found then stop the program
     }
 
@@ -24,7 +24,7 @@ static std::string checkName(std::string str){
 }
 
 //Constructor
-SoundSource::SoundSource(){}
+SoundSource::SoundSource(float vol, glm::vec3 pos) : volume(vol), position(pos){}
 
 //Destructor
 SoundSource::~SoundSource(){
@@ -58,12 +58,74 @@ void SoundSource::pause(std::string name){
     //check the name
     name = checkName(name);
 
+    //Pause the sound
+    Sounds[name].pause();
 }
 
 void SoundSource::stop(std::string name){
     //check the name
     name = checkName(name);
 
+    //*NOTE: Stopping the sound rewinds it back to it's start
     //Stop the sound
     Sounds[name].stop();
+}
+
+void SoundSource::setPos(glm::vec3 pos, std::string name){
+    //Check the name
+    name = checkName(name);
+
+    //Set local pos 
+    this->position = pos;
+
+    //Set a sound's position
+    Sounds[name].setPosition(pos.x, pos.y, pos.z);
+}
+
+void SoundSource::setRelativeToListener(bool flag, std::string name){
+    //Check the name
+    name = checkName(name);
+
+    //Set a sound's relativity to the listener
+    Sounds[name].setRelativeToListener(flag);
+}
+
+void SoundSource::setVolume(float amount, std::string name){
+    //Check the name 
+    name = checkName(name);
+
+    //Set a sound's volume
+    Sounds[name].setVolume(amount);
+}
+
+void SoundSource::setLoopFlag(bool flag, std::string name){
+    //Check the name
+    name = checkName(name);
+
+    //Set a sound's loop flag
+    Sounds[name].setLoop(flag);
+}
+
+void SoundSource::setPitch(float amount, std::string name){
+    //Check the name
+    name = checkName(name);
+
+    //Set a sound's pitch 
+    Sounds[name].setPitch(amount);
+}
+
+void SoundSource::setMinDistance(float amount, std::string name){
+    //Check the name
+    name = checkName(name);
+
+    //Set distace from listener, must be above 1 to be 
+    Sounds[name].setMinDistance(amount);
+}
+
+void SoundSource::setAttenuation(float amount, std::string name){
+    //Check the name
+    name = checkName(name);
+
+    //Set attenuation of the sound
+    Sounds[name].setAttenuation(amount);
 }

@@ -8,7 +8,7 @@ static std::string checkName(std::string str){
         if ((str[i]>=48 && str[i]<=57)||(str[i]>=65 && str[i]<=90)||(str[i]>=97 && str[i]<=122))
             continue;
         else
-            std::cout << "ERROR: No special characters when setting or getting of either Shader or Texture! STR: \"" << str << "\""<< std::endl;
+            std::cout << "ERROR: No special characters when setting or getting a sound buffer! STR: \"" << str << "\""<< std::endl;
             exit(-1); //When a special character is found then stop the program
     }
 

@@ -81,20 +81,6 @@ void gameHandler::init(){
     
     plr = new Player(window, pos, standardSpriteSize, ResourceManager::GetTexture("player"), PlayerSpeed, 0.2f);
 
-
-    /*
-    //Creates objects and stores them in to the pObjects vector
-    for(int y = 0; y < 75; y++){
-        for(int x = 0; x < 75; x++){
-            pos = glm::vec2(x, y);
-            GameObject* temp = new GameObject(pos, standardSpriteSize, ResourceManager::GetTextureIndex("item"));
-
-            //add to list
-            pObjects.push_back(temp);
-        }
-    }
-    */
-
     pos = glm::vec2(-1.1f, 2.0f);
 
     physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTexture("test"));
