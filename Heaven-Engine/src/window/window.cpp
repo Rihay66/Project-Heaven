@@ -82,14 +82,14 @@ void Window::getInput(){
     }
 
     //check for joystick
-    if(glfwJoystickPresent(GLFW_JOYSTICK_1) == true && !controllerCheck){
+    if(glfwJoystickPresent(GLFW_JOYSTICK_1) == GLFW_TRUE && !controllerCheck){
         //print out that the joystick is connected
         const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
         std::cout << "Controller is connected! ID: " << name << std::endl;
         std::cout << "MSG: Controller input is enabled!" << std::endl;
         Input_State = KMANDCONTROLLER;
         controllerCheck = !controllerCheck;
-    }else if(glfwJoystickPresent(GLFW_JOYSTICK_1) == false && controllerCheck){
+    }else if(glfwJoystickPresent(GLFW_JOYSTICK_1) == GLFW_FALSE && controllerCheck){
         std::cout << "Controller is disconnected!" << std::endl;
         std::cout << "MSG: Controller input is disabled!" << std::endl;
         Input_State = KM;
@@ -120,22 +120,4 @@ void Window::update(){
 //rendering
 void Window::render(){
     //here update visually the objects, shaders, textures, etc
-}
-
-//Frames
-void Window::getFrameTime(){
-    //TODO: Move getting the frame time to be using the engine's UI renderer and not GLFW
-    this->currentTime = glfwGetTime();
-    this->timeDiff = this->currentTime - this->prevTime;
-    this->counter++;
-    if(this->timeDiff >= 1.0 / 30.0){
-        //display frame per second & frame time
-        std::string FPS = std::to_string((1.0 / this->timeDiff) * this->counter);
-        std::string ms = std::to_string((this->timeDiff / this->counter) * 1000);
-        //set up title
-        std::string newTitle = "Project-Heaven - " + FPS + "FPS / " + ms + "ms";
-        glfwSetWindowTitle(this->handle, newTitle.c_str());
-        this->prevTime = this->currentTime;
-        this->counter = 0;
-    }
 }

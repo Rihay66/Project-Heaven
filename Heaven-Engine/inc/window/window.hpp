@@ -4,7 +4,6 @@
 #define WINDOW_HPP
 
 #include <iostream>
-#include <unistd.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -51,8 +50,6 @@ class Window{
         virtual void update(); //used to update logic, custom events, and other
         
         virtual void render(); //used to render things on the screen
-        
-        void getFrameTime(); //frame profiling
 };
 
 #endif
