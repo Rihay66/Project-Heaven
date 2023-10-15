@@ -53,14 +53,12 @@ void gameHandler::init(){
     //Init sound engine
     soundEng = new SoundEngine();
     //Load sound buffers
-    soundEng->loadSoundBuffer("sounds/metalpipe.wav", "sound");
+    soundEng->loadSoundBuffer("sounds/Vine-boom.wav", "sound");
 
     //Create a sound source for testing
     ss = new SoundSource();
     //load sound
     ss->loadSound(soundEng->getSoundBuffer("sound"), "test");
-    //play sound
-    ss->play("test");
 
     //bind all the textures from first to last
     for(int i = 0; i < ResourceManager::texList.size(); i++){
@@ -154,6 +152,10 @@ void gameHandler::update(float deltaTime){
     }else if(Game_State == GAME_ACTIVE){
         camera->follow(plr->position, smallModelSize);
         plr->isDebug = false;
+    }
+
+    if(glfwGetKey(this->window, GLFW_KEY_SPACE) == GLFW_PRESS){
+        ss->play("test");
     }
 
     //Check the controller state and change the player isDebug boolean

@@ -56,6 +56,7 @@ void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float t
     }
 
     //create model transform
+    //TODO: Fix the rotation to be centered and not be rotate at the first indice
     glm::mat4 transform  = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0.0f))
     * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
     * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
@@ -173,6 +174,7 @@ void Renderer::endBatch(){
 }
 
 void Renderer::flush(){
+    //TODO: Change to Triangle strip, i.e 6 vertices to 4 vertices
     glBindVertexArray(this->quadVAO);
     glDrawElements(GL_TRIANGLES, this->indexCount, GL_UNSIGNED_INT, nullptr);
     this->stats.drawCount++;

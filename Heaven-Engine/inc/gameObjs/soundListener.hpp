@@ -35,7 +35,7 @@ class SoundSource{
         ~SoundSource();
         
         //Load a sound buffer along with a name
-        void loadSound(sf::SoundBuffer&, std::string name);
+        void loadSound(sf::SoundBuffer&, std::string name, bool loop = false);
 
         //*NOTE: For these functions to be used, be sure to load the sound along with it's set name
         //Get a sound from resource and play it

@@ -34,7 +34,7 @@ SoundSource::~SoundSource(){
     }
 }
 
-void SoundSource::loadSound(sf::SoundBuffer& buffer, std::string name){
+void SoundSource::loadSound(sf::SoundBuffer& buffer, std::string name, bool loop){
     //check the name
     name = checkName(name);
     
@@ -43,7 +43,9 @@ void SoundSource::loadSound(sf::SoundBuffer& buffer, std::string name){
 
     //Add the buffer to the sound
     Sounds[name].setBuffer(buffer);
-    
+
+    //Set loop flag, Default is falsse
+    Sounds[name].setLoop(loop);
 }
 
 void SoundSource::play(std::string name){
