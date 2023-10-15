@@ -19,13 +19,13 @@ ${HEADER_FILES}
 ${SOURCE_FILES}
 )
 
+# Link libs if the detected OS is LINUX
+if(UNIX)
+
 #Create folders and their sub files for runtime loading
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
 file(CREATE_LINK "${PROJECT_SOURCE_DIR}/sounds" "${CMAKE_BINARY_DIR}/sounds" SYMBOLIC)
-
-# Link libs if the detected OS is LINUX
-if(UNIX)
 
 # Add the path to your engine library's CMake configuration files
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}Heaven-Engine/build)
@@ -68,20 +68,42 @@ set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
 
 if(MSVC)
 
-#Get the engine library
-add_library(Heaven-Engine SHARED IMPORTED)
-set_target_properties(Heaven-Engine PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine.dll
-    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
-)
+#Create a directory
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 
-#Make a reference to the Heaven-Engine's sfml-audio lib
-set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/sfml-audio-2.dll)
+#Create folders and their sub files for runtime loading
+file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/Release/textures" SYMBOLIC)
+file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/Release/shaders" SYMBOLIC)
+file(CREATE_LINK "${PROJECT_SOURCE_DIR}/sounds" "${CMAKE_BINARY_DIR}/Release/sounds" SYMBOLIC)
+
+#Get the engine library
+find_package(Heaven-Engine REQUIRED)
+
+#GLM
+find_package(GLM CONFIG REQUIRED)
+
+#GLFW
+find_package(GLFW3 REQUIRED REQUIRED)
+
+#box2d
+find_package(BOX2D REQUIRED)
+
+#Find SFML
+find_package(SFML COMPONENTS audio REQUIRED)
+
+target_include_directories(project-heaven PUBLIC glm::glm glfw box2d::box2d)
+
+target_link_libraries(project-heaven PUBLIC Heaven-Engine glm::glm glfw box2d::box2d sfml-audio)
 
 # Define the source and destination paths for the DLL of the Heaven Engine
-set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine.dll")
+set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine.lib")
 
 else(MSVC)
+
+#Create folders and their sub files for runtime loading
+file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)
+file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
+file(CREATE_LINK "${PROJECT_SOURCE_DIR}/sounds" "${CMAKE_BINARY_DIR}/sounds" SYMBOLIC)
 
 #Get the engine library
 find_package(Heaven-Engine REQUIRED)
@@ -92,13 +114,13 @@ set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libsfml-audi
 # Define the source and destination paths for the DLL of the Heaven Engine
 set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.dll")
 
-endif(MSVC)
-
 #Make a reference to the Heaven-Engine's glfw lib 
 set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/glfw3.dll)
 
+target_link_libraries(project-heaven PUBLIC Heaven-Engine ${local-glfw} ${local-audio})
 
-target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw} ${local-audio})
+endif(MSVC)
+
 
 set(DLL_DEST "${CMAKE_BINARY_DIR}")
 

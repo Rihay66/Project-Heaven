@@ -37,6 +37,11 @@ file(GLOB_RECURSE GLAD
 #Include directory for your engine's headers
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
+#Find all dependecies needed to compile
+
+#*LINUX version of finding the dependencies
+if(UNIX)
+
 #Create the library
 add_library(Heaven-Engine SHARED ${ENGINE} ${GAMEOBJS} ${ORTHOCAM} ${RESOURCESYS} ${GLAD} ${WINDOW})
 
@@ -44,11 +49,6 @@ add_library(Heaven-Engine SHARED ${ENGINE} ${GAMEOBJS} ${ORTHOCAM} ${RESOURCESYS
 target_include_directories(Heaven-Engine PUBLIC
     $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include>)
-
-#Find all dependecies needed to compile
-
-#*LINUX version of finding the dependencies
-if(UNIX)
 
 #Find OpenGL package
 find_package(OpenGL REQUIRED)
@@ -101,20 +101,36 @@ find_package(SFML COMPONENTS audio REQUIRED)
 
 if(MSVC)
 
+#Create the library
+add_library(Heaven-Engine STATIC ${ENGINE} ${GAMEOBJS} ${ORTHOCAM} ${RESOURCESYS} ${GLAD} ${WINDOW})
+
+#Include directories for header files
+target_include_directories(Heaven-Engine PUBLIC
+    $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
+    $<INSTALL_INTERFACE:include>)
+
 #Put together all necessary libs into one variable
 set(LIBS opengl32 glm::glm box2d::box2d glfw sfml-audio)
 
+target_include_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS})
+
 else(MSVC)
+
+#Create the library
+add_library(Heaven-Engine SHARED ${ENGINE} ${GAMEOBJS} ${ORTHOCAM} ${RESOURCESYS} ${GLAD} ${WINDOW})
+
+#Include directories for header files
+target_include_directories(Heaven-Engine PUBLIC
+    $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
+    $<INSTALL_INTERFACE:include>)
 
 #Put together all necessary libs into one variable
 set(LIBS opengl32 glm box2d glfw sfml-audio)
 
 endif(MSVC)
-#Grab GLFW headers
-target_link_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
 
 #Link against OpenGL and GLM
-target_link_libraries(Heaven-Engine PRIVATE ${LIBS})
+target_link_libraries(Heaven-Engine PUBLIC ${LIBS})
 
 endif(WIN32)
 
