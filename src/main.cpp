@@ -40,8 +40,6 @@ int main(int argc, char* argv[]){
 
 		//swap buffers
 		glfwSwapBuffers(window->handle);
-		//avoid cpu idle
-		usleep(1);
 	}
 
 	//delete any memory

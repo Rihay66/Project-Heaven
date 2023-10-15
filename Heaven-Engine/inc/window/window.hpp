@@ -4,6 +4,13 @@
 #define WINDOW_HPP
 
 #include <iostream>
+//Check platform
+#ifdef __unix__ //Linux platform
+    #include <unistd.h>
+#elif defined(_WIN32) || defined(WIN32) //WIndows platform
+    #include <windows.h>
+#endif
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

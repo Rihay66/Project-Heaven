@@ -99,9 +99,17 @@ find_package(BOX2D REQUIRED)
 #Find SFML
 find_package(SFML COMPONENTS audio REQUIRED)
 
+if(MSVC)
+
 #Put together all necessary libs into one variable
 set(LIBS opengl32 glm::glm box2d::box2d glfw sfml-audio)
 
+else(MSVC)
+
+#Put together all necessary libs into one variable
+set(LIBS opengl32 glm box2d glfw sfml-audio)
+
+endif(MSVC)
 #Grab GLFW headers
 target_link_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
 

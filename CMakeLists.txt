@@ -65,6 +65,9 @@ if(WIN32)
 # Specify the path to Heaven-EngineConfig.cmake
 set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
 
+
+if(MSVC)
+
 #Get the engine library
 add_library(Heaven-Engine SHARED IMPORTED)
 set_target_properties(Heaven-Engine PROPERTIES
@@ -72,15 +75,31 @@ set_target_properties(Heaven-Engine PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
 )
 
-#Make a reference to the Heaven-Engine's glfw lib 
-set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/glfw3.dll)
 #Make a reference to the Heaven-Engine's sfml-audio lib
 set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/sfml-audio-2.dll)
 
-target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw} ${local-audio})
-
 # Define the source and destination paths for the DLL of the Heaven Engine
 set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine.dll")
+
+else(MSVC)
+
+#Get the engine library
+find_package(Heaven-Engine REQUIRED)
+
+#Make a reference to the Heaven-Engine's sfml-audio lib
+set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libsfml-audio-s.a)
+
+# Define the source and destination paths for the DLL of the Heaven Engine
+set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.dll")
+
+endif(MSVC)
+
+#Make a reference to the Heaven-Engine's glfw lib 
+set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/glfw3.dll)
+
+
+target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw} ${local-audio})
+
 set(DLL_DEST "${CMAKE_BINARY_DIR}")
 
 # Use file(COPY ...) to copy the DLL
