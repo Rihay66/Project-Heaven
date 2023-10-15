@@ -55,7 +55,7 @@ b2Body* Player::physicBody(){
         dir = RIGHT;
     }
 
-    if(isController && glfwJoystickPresent(GLFW_JOYSTICK_1) == true){
+    if(isController && glfwJoystickPresent(GLFW_JOYSTICK_1) == GLFW_TRUE){
         int axesCount;
         //use axes for movement
         const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);

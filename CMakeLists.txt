@@ -72,6 +72,7 @@ if(MSVC)
 
 set(BUILD_SHARED_LIBS ON)
 
+#VC CODE
 #Create a directory
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release/textures)
@@ -82,6 +83,17 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release/sounds)
 file(COPY "${PROJECT_SOURCE_DIR}/textures" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
 file(COPY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
 file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_BINARY_DIR}/Release")
+
+#VS 2022
+#Create directory
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/textures)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/shaders)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/sounds)
+
+#Create folders and their sub files for runtime loading
+file(COPY "${PROJECT_SOURCE_DIR}/textures" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_BINARY_DIR}")
 
 #Get the engine library
 find_package(Heaven-Engine-s REQUIRED)
@@ -103,11 +115,11 @@ target_include_directories(project-heaven PUBLIC glm::glm glfw box2d::box2d)
 target_link_libraries(project-heaven PUBLIC Heaven-Engine-s glm::glm glfw box2d::box2d sfml-audio)
 
 # Define the source and destination paths for the DLL of the Heaven Engine
-set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine.dll")
+set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Heaven-Engine.dll")
 # Define the path box2d from the Heaven-Engine
 set(local-box2d )
 
-set(DLL_DEST "${CMAKE_BINARY_DIR}/Release")
+set(DLL_DEST "${CMAKE_BINARY_DIR}")
 
 file(COPY ${local-box2d} DESTINATION ${DLL_DEST})
 
