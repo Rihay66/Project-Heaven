@@ -23,9 +23,9 @@ ${SOURCE_FILES}
 if(UNIX)
 
 #Create folders and their sub files for runtime loading
-file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)
-file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
-file(CREATE_LINK "${PROJECT_SOURCE_DIR}/sounds" "${CMAKE_BINARY_DIR}/sounds" SYMBOLIC)
+file(COPY "${PROJECT_SOURCE_DIR}/textures" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 # Add the path to your engine library's CMake configuration files
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}Heaven-Engine/build)
@@ -62,22 +62,29 @@ endif (UNIX)
 # NOTE was compiled using msys2's w64-x86_64 packages
 if(WIN32)
 
+# Specify the path to Heaven-Engine-sConfig.cmake
+set(Heaven-Engine-s_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
+
 # Specify the path to Heaven-EngineConfig.cmake
 set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
 
-
 if(MSVC)
+
+set(BUILD_SHARED_LIBS ON)
 
 #Create a directory
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release/textures)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release/shaders)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release/sounds)
 
 #Create folders and their sub files for runtime loading
-file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/Release/textures" SYMBOLIC)
-file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/Release/shaders" SYMBOLIC)
-file(CREATE_LINK "${PROJECT_SOURCE_DIR}/sounds" "${CMAKE_BINARY_DIR}/Release/sounds" SYMBOLIC)
+file(COPY "${PROJECT_SOURCE_DIR}/textures" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
+file(COPY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
+file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_BINARY_DIR}/Release")
 
 #Get the engine library
-find_package(Heaven-Engine REQUIRED)
+find_package(Heaven-Engine-s REQUIRED)
 
 #GLM
 find_package(GLM CONFIG REQUIRED)
@@ -86,24 +93,30 @@ find_package(GLM CONFIG REQUIRED)
 find_package(GLFW3 REQUIRED REQUIRED)
 
 #box2d
-find_package(BOX2D REQUIRED)
+find_package(BOX2D CONFIG REQUIRED)
 
 #Find SFML
 find_package(SFML COMPONENTS audio REQUIRED)
 
 target_include_directories(project-heaven PUBLIC glm::glm glfw box2d::box2d)
 
-target_link_libraries(project-heaven PUBLIC Heaven-Engine glm::glm glfw box2d::box2d sfml-audio)
+target_link_libraries(project-heaven PUBLIC Heaven-Engine-s glm::glm glfw box2d::box2d sfml-audio)
 
 # Define the source and destination paths for the DLL of the Heaven Engine
-set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine.lib")
+set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine.dll")
+# Define the path box2d from the Heaven-Engine
+set(local-box2d )
+
+set(DLL_DEST "${CMAKE_BINARY_DIR}/Release")
+
+file(COPY ${local-box2d} DESTINATION ${DLL_DEST})
 
 else(MSVC)
 
 #Create folders and their sub files for runtime loading
-file(CREATE_LINK "${PROJECT_SOURCE_DIR}/textures" "${CMAKE_CURRENT_BINARY_DIR}/textures" SYMBOLIC)
-file(CREATE_LINK "${PROJECT_SOURCE_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders" SYMBOLIC)
-file(CREATE_LINK "${PROJECT_SOURCE_DIR}/sounds" "${CMAKE_BINARY_DIR}/sounds" SYMBOLIC)
+file(COPY "${PROJECT_SOURCE_DIR}/textures" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 #Get the engine library
 find_package(Heaven-Engine REQUIRED)
@@ -119,10 +132,9 @@ set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/glfw3.dll)
 
 target_link_libraries(project-heaven PUBLIC Heaven-Engine ${local-glfw} ${local-audio})
 
-endif(MSVC)
-
-
 set(DLL_DEST "${CMAKE_BINARY_DIR}")
+
+endif(MSVC)
 
 # Use file(COPY ...) to copy the DLL
 file(COPY "${ENGINE_DLL_SOURCE}" DESTINATION "${DLL_DEST}")
