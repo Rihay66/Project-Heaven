@@ -4,6 +4,8 @@
 Camera* camera;
 Player* plr;
 SoundSource* ss;
+//Test object
+GameObject* render_test;
 
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
@@ -14,6 +16,7 @@ gameHandler::~gameHandler(){
     delete camera;
     delete renderer;
     delete plr;
+    delete render_test;
     delete phys;
     //Set sound source to a null address
     ss = nullptr;
@@ -87,20 +90,24 @@ void gameHandler::init(){
     pos = glm::vec2(1.0f);
     physicsObject* test = new physicsObject(pos, standardSpriteSize + glm::vec2(1.0f, 0.0f), ResourceManager::GetTexture("transparent"), glm::vec3(0.1f, 0.7f, 0.1f));
 
-    pos = glm::vec2(-5.0f, -4.0f);
-    physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(10.0f, 0.0f), ResourceManager::GetTexture("default"));
+    pos = glm::vec2(-4.0f, -4.0f);
+    physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(12.0f, 0.0f), ResourceManager::GetTexture("default"));
 
-    pos = glm::vec2(-5.0f, 5.0f);
-    physicsObject* roof = new physicsObject(pos, standardSpriteSize + glm::vec2(10.0f, 0.0f), ResourceManager::GetTexture("default"));
+    pos = glm::vec2(-4.0f, 5.0f);
+    physicsObject* roof = new physicsObject(pos, standardSpriteSize + glm::vec2(12.0f, 0.0f), ResourceManager::GetTexture("default"));
 
-    pos = glm::vec2(5.0f, -3.0f);
-    physicsObject* wall = new physicsObject(pos, standardSpriteSize + glm::vec2(0.0f, 8.0f), ResourceManager::GetTexture("default"));
+    pos = glm::vec2(3.0f, 0.5f);
+    physicsObject* wall = new physicsObject(pos, standardSpriteSize + glm::vec2(0.0f, 9.0f), ResourceManager::GetTexture("default"));
 
-    pos = glm::vec2(-2.5f, 0.0f);
+    pos = glm::vec2(-2.0f, 0.0f);
     physicsObject* platform = new physicsObject(pos, standardSpriteSize + glm::vec2(1.0f, -0.5f), ResourceManager::GetTexture("default"));
 
     pos = glm::vec2(-2.5f, -2.0f);
     physicsObject* crate = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTexture("crate"));
+
+    //Make a test object to draw seperately from the list
+    pos = glm::vec2(-3.5f, 0.0f);
+    render_test = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("item"));
 
     //Change rb type
     ground->rb.Type = BodyType::Static;
@@ -143,6 +150,9 @@ void gameHandler::init(){
 void gameHandler::update(float deltaTime){
     //update values and check for physics and other things
 
+    //rotate the "render_test"
+    render_test->rotation += 5.0f * deltaTime;
+
     //* Do physics here
     phys->CheckCollisions(deltaTime);
 
@@ -170,6 +180,9 @@ void gameHandler::update(float deltaTime){
 void gameHandler::render(){
     //render stuff depending on the state of the game state enum
     if(Game_State == GAME_ACTIVE || Game_State == GAME_DEBUG){
+        //Render a list of objects
         renderer->Draw2D(renderList);
+        //Draw a single object
+        renderer->Draw2D(render_test);
     }
 }

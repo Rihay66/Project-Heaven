@@ -37,6 +37,9 @@ class Renderer{
         //draw multiple pointer objects in a vector list
         void Draw2D(std::vector<GameObject*> objs);
 
+        //Draw a single pointer object
+        void Draw2D(GameObject* obj);
+
         //reference to the model size
         glm::vec2 spriteSize;
 

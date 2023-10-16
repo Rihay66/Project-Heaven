@@ -26,10 +26,10 @@ Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
     this->spriteSize = spriteSize;
 
     //set up quad vertex positions
-    quadVertexPositions[0] = {1.0f, 1.0f, 0.0f, 1.0f};
-    quadVertexPositions[1] = {0.0f, 1.0f, 0.0f, 1.0f};
-    quadVertexPositions[2] = {1.0f, 0.0f, 0.0f, 1.0f};
-    quadVertexPositions[3] = {0.0f, 0.0f, 0.0f, 1.0f};
+    quadVertexPositions[0] = {0.5f, 0.5f, 0.0f, 1.0f};
+    quadVertexPositions[1] = {-0.5f, 0.5f, 0.0f, 1.0f};
+    quadVertexPositions[2] = {0.5f, -0.5f, 0.0f, 1.0f};
+    quadVertexPositions[3] = {-0.5f, -0.5f, 0.0f, 1.0f};
 
     this->initRenderData(); //set up rendering of quads
 }
@@ -96,9 +96,9 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
     this->resetStats();
     this->beginBatch();
 
-    //gen tex by cheking objs tex id
+    //Loop through objects and add to batch
     for(int i = 0 ; i < gameObjects.size(); i++){
-        createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color);
+        this->createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color);
     }
 
     //Set dynamic vertex buffer
@@ -106,6 +106,21 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
     //draw
     this->flush();
 }
+
+//render a single object pointer
+void Renderer::Draw2D(GameObject* obj){
+    //init the buffer
+    this->resetStats();
+    this->beginBatch();
+
+    //add a single object to the batch
+    this->createQuad(obj->position, obj->size, obj->rotation, obj->textureIndex, obj->color);
+
+    //Set dynamic vertex buffer
+    this->endBatch();
+    //draw
+    this->flush();
+} 
 
 //Set up the quad rendering
 void Renderer::initRenderData(){
@@ -144,6 +159,7 @@ void Renderer::initRenderData(){
     //indices buffer data
     unsigned int indices[maxIndexCount];
     unsigned int offset = 0;
+    //TODO: Modify this to be 4 indices
     for(size_t i = 0; i < maxIndexCount; i += 6){
         
         indices[i + 0] = 0 + offset;
