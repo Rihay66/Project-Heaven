@@ -1,7 +1,7 @@
 #include "../inc/gameHandler.hpp"
 
 //Create game related objs
-Camera* camera;
+CameraController* camera;
 Player* plr;
 SoundSource* ss;
 //Test object
@@ -76,7 +76,7 @@ void gameHandler::init(){
 
     //* The order of the objects affects how they're layered
     //set up game objects and camera
-    camera = new Camera(this->Width, this->Height, spriteShader, 150.0f, 5.0f);
+    camera = new CameraController(this->Width, this->Height, this->window, spriteShader, 150.0f, 5.0f);
 
     glm::vec2 pos = glm::vec2(0.0f, 0.0f);
     
@@ -157,10 +157,10 @@ void gameHandler::update(float deltaTime){
     phys->CheckCollisions(deltaTime);
 
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
-        camera->camInput(deltaTime, this->window);    
+        camera->inputMovement(deltaTime);    
         plr->isDebug = true;
     }else if(Game_State == GAME_ACTIVE){
-        camera->follow(plr->position, smallModelSize);
+        camera->followPos(plr->position, smallModelSize);
         plr->isDebug = false;
     }
 
