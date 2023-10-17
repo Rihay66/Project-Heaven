@@ -1,6 +1,6 @@
 #include "../inc/player.hpp"
 
-Player::Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzone, bool destroyed, glm::vec3 color) : 
+Player::Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzone, bool destroyed, glm::vec4 color) : 
 physicsObject(pos, siz, sprt, color, destroyed, false), speed(spd), window(handle), controllerDeadZone(cDeadzone), isController(false){
     //set any non static var from gameobject or rigidbody class
     

@@ -110,12 +110,14 @@ find_package(BOX2D CONFIG REQUIRED)
 #Find SFML
 find_package(SFML COMPONENTS audio REQUIRED)
 
-target_include_directories(project-heaven PUBLIC glm::glm glfw box2d::box2d)
+#Find Freetype
+find_package(Freetype REQUIRED)
 
+target_include_directories(project-heaven PUBLIC glm::glm glfw box2d::box2d Freetype::Freetype)
 target_link_libraries(project-heaven PUBLIC Heaven-Engine-s glm::glm glfw box2d::box2d sfml-audio)
 
 # Define the source and destination paths for the DLL of the Heaven Engine
-set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Heaven-Engine.dll")
+set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine-s.lib")
 # Define the path box2d from the Heaven-Engine
 set(local-box2d )
 

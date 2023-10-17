@@ -21,7 +21,7 @@ struct Vertex{
     glm::vec2 position;
     glm::vec2 texCoords;
     float texIndex;
-    glm::vec3 color;
+    glm::vec4 color;
 };
 
 struct RendererStats{
@@ -72,7 +72,7 @@ class Renderer{
         void initRenderData();
 
         //used to draw a quad
-        void createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float texIndex, glm::vec3 color);
+        void createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float texIndex, glm::vec4 color);
 
         //Used to set and unset the vertex buffers
         void beginBatch();

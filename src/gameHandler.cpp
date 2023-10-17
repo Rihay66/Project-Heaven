@@ -36,7 +36,6 @@ void gameHandler::setControllerState(int i){
     Controller_State = (CONTROLSSTATE)i;
 }
 
-//TODO: Setup sound system
 //TODO: UI and text
 
 void gameHandler::init(){
@@ -88,7 +87,7 @@ void gameHandler::init(){
     temp->rotation = 45.0f;
 
     pos = glm::vec2(1.0f);
-    physicsObject* test = new physicsObject(pos, standardSpriteSize + glm::vec2(1.0f, 0.0f), ResourceManager::GetTexture("transparent"), glm::vec3(0.1f, 0.7f, 0.1f));
+    physicsObject* test = new physicsObject(pos, standardSpriteSize + glm::vec2(1.0f, 0.0f), ResourceManager::GetTexture("transparent"), glm::vec4(0.1f, 0.7f, 0.1f, 1.0f));
 
     pos = glm::vec2(-4.0f, -4.0f);
     physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(12.0f, 0.0f), ResourceManager::GetTexture("default"));
@@ -107,7 +106,7 @@ void gameHandler::init(){
 
     //Make a test object to draw seperately from the list
     pos = glm::vec2(-4.5f, 0.5f);
-    render_test = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("item"));
+    render_test = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("item"), glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
 
     //Change rb type
     ground->rb.Type = BodyType::Static;
@@ -129,6 +128,7 @@ void gameHandler::init(){
     renderList.push_back(crate);
     renderList.push_back(plr);
 
+    //Init physics system
     phys = new Physics();
 
     //Add physics objtect to physics class

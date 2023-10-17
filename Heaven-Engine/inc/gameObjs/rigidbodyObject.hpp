@@ -55,7 +55,7 @@ class physicsObject : public GameObject{
         bool isTrigger;
 
         //constructor(s)
-        physicsObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec3 color = glm::vec3(1.0f), bool destroyed = false, bool trigger = false);
+        physicsObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec4 color = glm::vec4(1.0f), bool destroyed = false, bool trigger = false);
 
         //Used to define any function to do when this object is triggered
         //* Used only when 'isTrigger' is enabled

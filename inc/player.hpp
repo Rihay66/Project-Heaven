@@ -37,7 +37,7 @@ class Player : public physicsObject{
         bool isDebug = false;
 
         //constructor / desctructor
-        Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec3 clr = glm::vec3(1.0f));
+        Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float speed = 1.0f, float conDeadzone = 0.0f, bool destroyed = false, glm::vec4 clr = glm::vec4(1.0f));
         ~Player();
 
         //edit and use Box2D virtual function before physics update

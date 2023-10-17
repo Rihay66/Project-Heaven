@@ -46,7 +46,7 @@ Renderer::~Renderer(){
     delete this->quadBufferPtr;
 }
 
-void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float texIndex, glm::vec3 color){
+void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float texIndex, glm::vec4 color){
 
     //check if not over the index count
     if(this->indexCount >= this->maxIndexCount){
@@ -63,25 +63,25 @@ void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float t
     quadBufferPtr->position = (transform * quadVertexPositions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {0.0f, 0.0f};
     quadBufferPtr->texIndex = texIndex;
-    quadBufferPtr->color = {color.x, color.y, color.z};
+    quadBufferPtr->color = color;
     quadBufferPtr++;
 
     quadBufferPtr->position =  (transform * quadVertexPositions[1]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {1.0f, 0.0f};
     quadBufferPtr->texIndex = texIndex;
-    quadBufferPtr->color = {color.x, color.y, color.z};
+    quadBufferPtr->color = color;
     quadBufferPtr++;
 
     quadBufferPtr->position = (transform * quadVertexPositions[2]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {0.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
-    quadBufferPtr->color = {color.x, color.y, color.z};
+    quadBufferPtr->color = color;
     quadBufferPtr++;
     
     quadBufferPtr->position = (transform * quadVertexPositions[3]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {1.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
-    quadBufferPtr->color = {color.x, color.y, color.z};
+    quadBufferPtr->color = color;
     quadBufferPtr++;
 
     this->indexCount += 6;
@@ -153,12 +153,11 @@ void Renderer::initRenderData(){
 
     //color attribute
     glEnableVertexArrayAttrib(this->quadVBO, 3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, color));
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, color));
 
     //indices buffer data
     unsigned int indices[maxIndexCount];
     unsigned int offset = 0;
-    //TODO: Modify this to be 4 indices
     for(size_t i = 0; i < maxIndexCount; i += 6){
         
         indices[i + 0] = 0 + offset;
@@ -189,7 +188,6 @@ void Renderer::endBatch(){
 }
 
 void Renderer::flush(){
-    //TODO: Change to Triangle strip, i.e 6 vertices to 4 vertices
     glBindVertexArray(this->quadVAO);
     glDrawElements(GL_TRIANGLES, this->indexCount, GL_UNSIGNED_INT, nullptr);
     this->stats.drawCount++;

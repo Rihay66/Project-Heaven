@@ -2,11 +2,11 @@
 layout (location = 0) in vec2 vertex; // <vec2 position, vec2 texCoords>
 layout (location = 1) in vec2 texCoords;
 layout (location = 2) in float texIndex;
-layout (location = 3) in vec3 color;
+layout (location = 3) in vec4 color;
 
 out vec2 o_TexCoords;
 out float o_TexIndex;
-out vec3 o_spriteColor;
+out vec4 o_spriteColor;
 
 uniform mat4 transform;
 uniform mat4 projectionView;

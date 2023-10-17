@@ -17,14 +17,14 @@ class GameObject{
 
         //transform reference of the object
         glm::vec2 position;
-        glm::vec3 color;
+        glm::vec4 color;
         glm::vec2 size;
         float rotation;
         //reference to the texture
         int textureIndex;
 
         //constructor(s)
-        GameObject(glm::vec2 pos, glm::vec2 size, int sprt, glm::vec3 color = glm::vec3(1.0f));
+        GameObject(glm::vec2 pos, glm::vec2 size, int sprt, glm::vec4 color = glm::vec4(1.0f));
 };
 
 #endif

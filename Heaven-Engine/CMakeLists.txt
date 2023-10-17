@@ -105,9 +105,12 @@ if(WIN32)
     # Find SFML
     find_package(SFML COMPONENTS audio REQUIRED)
 
+    # Find Freetype
+    find_package(Freetype REQUIRED)
+
     if(MSVC)
         # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm::glm box2d::box2d glfw sfml-audio)
+        set(LIBS opengl32 glm::glm box2d::box2d glfw sfml-audio Freetype::Freetype)
 
         # Grab GLFW headers
         target_link_directories(Heaven-Engine PUBLIC ${GLFW_INCLUDE_DIR})
@@ -119,7 +122,7 @@ if(WIN32)
 
     else(MSVC)
         # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm box2d glfw sfml-audio)
+        set(LIBS opengl32 glm box2d glfw sfml-audio Freetype::Freetype)
 
         # Grab GLFW headers
         target_link_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
