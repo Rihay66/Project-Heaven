@@ -30,7 +30,8 @@ file(GLOB_RECURSE WINDOW
     ${CMAKE_SOURCE_DIR}/src/window/*.cpp)
 
 file(GLOB_RECURSE GLAD
-    ${CMAKE_SOURCE_DIR}/inc/glad/*.c)
+    ${CMAKE_SOURCE_DIR}/src/glad/*.c
+    ${CMAKE_SOURCE_DIR}/src/glad/*.cpp)
 
 # Include directory for your engine's headers
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
