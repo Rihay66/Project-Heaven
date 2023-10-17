@@ -67,8 +67,11 @@ if(UNIX)
     # Find SFML
     find_package(SFML COMPONENTS audio REQUIRED)
 
+    # Find FreeType2
+    find_package(Freetype REQUIRED)
+
     # Put together all necessary libs into one variable
-    set(LIBS OpenGL glm box2d glfw sfml-audio)
+    set(LIBS OpenGL glm box2d glfw sfml-audio Freetype::Freetype)
 
     # Get Xorg dependencies into one variable
     set(Xorg Xxf86vm X11 Xrandr pthread Xi openal udev ogg vorbis vorbisenc vorbisfile)

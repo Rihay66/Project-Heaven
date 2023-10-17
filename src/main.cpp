@@ -1,6 +1,6 @@
 #include "../inc/gameWindow.hpp"
 
-const unsigned int WIDTH = 1280, HEIGHT = 720;
+const unsigned int WIDTH = 960, HEIGHT = 540;
 
 int main(int argc, char* argv[]){
 	

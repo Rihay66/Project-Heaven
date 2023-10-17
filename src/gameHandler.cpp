@@ -106,7 +106,7 @@ void gameHandler::init(){
     physicsObject* crate = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTexture("crate"));
 
     //Make a test object to draw seperately from the list
-    pos = glm::vec2(-3.5f, 0.0f);
+    pos = glm::vec2(-4.5f, 0.5f);
     render_test = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("item"));
 
     //Change rb type
