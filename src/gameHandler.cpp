@@ -52,6 +52,9 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/crate.png", "crate",true);
     ResourceManager::LoadTexture("textures/porm.png", "porm", true);
 
+    //Bind the textures that were loaded
+    ResourceManager::BindTextures();
+
     //Init sound engine
     soundEng = new SoundEngine();
     //Load sound buffers
@@ -61,12 +64,6 @@ void gameHandler::init(){
     ss = new SoundSource();
     //load sound
     ss->loadSound(soundEng->getSoundBuffer("sound"), "test");
-
-    //bind all the textures from first to last
-    for(int i = 0; i < ResourceManager::texList.size(); i++){
-        //call to bind texture
-        glBindTextureUnit(i, ResourceManager::texList[i].ID);
-    }
 
     //set up the renderer
     Shader spriteShader = ResourceManager::GetShader("sprite");

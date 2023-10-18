@@ -24,6 +24,7 @@
 class ResourceManager
 {
 public:
+
     // resource storage
     static std::map<std::string, Shader>    Shaders;
     static std::map<std::string, Texture2D> Textures;
@@ -34,8 +35,10 @@ public:
     static Shader    GetShader(std::string name);
     // loads (and generates) a texture from file
     static Texture2D LoadTexture(const char *file, std::string name, bool alpha = false);
-    //retrieves a stored texture on the texList vector
-    static int GetTexture(std::string name);
+    //  retrieves a stored texture on the texList vector
+    static int       GetTexture(std::string name);
+    //  binds all textures from the texList to be used by OpenGL
+    static bool      BindTextures();
     // properly de-allocates all loaded resources
     static void      Clear();
 private:

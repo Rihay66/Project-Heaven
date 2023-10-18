@@ -57,13 +57,19 @@ Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool 
 
 int ResourceManager::GetTexture(std::string name){
 
+    //*NOTE: The check is used to prevent using this function when no texture was binded to OpenGL
+    if(texList.size() <= 0){
+        std::cout << "ERROR: No textures were binded to OpenGL!" << std::endl;
+        return -1;
+    }
+
     name = checkName(name);
     int id = Textures[name].ID;
 
     for(int i = 0; i < texList.size(); i++){
         //check for id on the list and return it's location by iteration 
         if(texList[i].ID == id){
-            //exit out and return 
+            //exit out and return texture index
             return i;
         }
     }
@@ -71,6 +77,29 @@ int ResourceManager::GetTexture(std::string name){
     //Error the texture couldn't be found
     std::cout << "ERROR: Couldn't find texture: " << name << ", in storage!" << std::endl; 
     return -1;
+}
+
+bool ResourceManager::BindTextures(){
+
+    //Check if the texure list is not zero
+    if(texList.size() <= 0){
+        std::cout << "ERROR: No textures were loaded!" << std::endl;
+        return false;
+    }
+
+    //bind all the textures from first to last
+    for(int i = 0; i < texList.size(); i++){
+        //call to bind texture by their ID
+        glBindTextureUnit(i, texList[i].ID);
+    }
+
+    //Check OpenGL errors
+    if(glGetError() != GL_NO_ERROR){
+        std::cout << "ERROR: An error occured during binding texures, ERROR Code: " << glGetError() << std::endl;
+        return false;
+    }
+
+    return true;
 }
 
 void ResourceManager::Clear()
