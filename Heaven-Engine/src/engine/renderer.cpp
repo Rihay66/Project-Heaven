@@ -13,14 +13,14 @@ Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
 
     auto loc = glGetUniformLocation(this->shader.ID, "image");
     
-    int samplers[128];
+    int samplers[32];
 
     //set up samplers array
-    for(int i = 0; i < 128; i++){
+    for(int i = 0; i < 32; i++){
         samplers[i] = i;
     }
 
-    glUniform1iv(loc, 128, samplers);
+    glUniform1iv(loc, 32, samplers);
 
     //set up shader model view
     this->spriteSize = spriteSize;

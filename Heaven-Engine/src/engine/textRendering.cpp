@@ -26,14 +26,14 @@ TextRenderer::TextRenderer(unsigned int width, unsigned int height,
     //Configure texture indexing
     auto loc = glGetUniformLocation(this->textShader.ID, "text");
     
-    int samplers[128];
+    int samplers[64];
 
     //set up samplers array
-    for(int i = 0; i < 128; i++){
+    for(int i = 0; i < 64; i++){
         samplers[i] = i;
     }
 
-    glUniform1iv(loc, 128, samplers);
+    glUniform1iv(loc, 64, samplers);
 
     //Configure VAO/VBO/EBO for positioning and texturing
     initTextRenderingData();

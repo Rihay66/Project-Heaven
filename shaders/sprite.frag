@@ -4,7 +4,7 @@ in vec4 o_spriteColor;
 in float o_TexIndex;
 out vec4 color;
 
-uniform sampler2D image[128];
+uniform sampler2D image[32];
 
 void main()
 {   
