@@ -19,10 +19,33 @@ struct Character {
     unsigned int Advance;   // horizontal offset to advance to next glyph
 };
 
+// Hold character information which contains relative information from a character
+struct Vertex {
+    glm::vec2 position;
+    glm::vec2 texCoords;
+    float texIndex;
+};
+
 class TextRenderer{
     private:
-        //Store render states
-        unsigned int VAO, VBO;
+       //stores data of a quad
+        unsigned int quadVAO;
+        unsigned int quadVBO;
+        unsigned int quadEBO;
+
+        //stores the quad buffer
+        Vertex* quadBuffer = nullptr;
+        Vertex* quadBufferPtr = nullptr;  
+
+        //stores the ammount of triangles to render
+        unsigned int indexCount;
+
+        const static int maxQuadCount = 10000;
+        const static int maxVertexCount = maxQuadCount * 4;
+        const static int maxIndexCount = maxQuadCount * 6;
+
+        //initial setup of the rendering data
+        void initTextRenderingData();
 
     public:
         //Hold a map of pre-compiled characters
@@ -32,7 +55,7 @@ class TextRenderer{
         Shader textShader;
 
         //Constructor       
-        TextRenderer(unsigned int width, unsigned int height);
+        TextRenderer(unsigned int width, unsigned int height, const char* vShaderFile, const char* fShaderFile);
         //Destructor
         ~TextRenderer();
 
