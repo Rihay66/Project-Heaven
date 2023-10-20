@@ -24,20 +24,19 @@
 class ResourceManager
 {
 public:
-
     // resource storage
     static std::map<std::string, Shader>    Shaders;
     static std::map<std::string, Texture2D> Textures;
-    static std::vector<Texture2D> texList;
+    static std::vector<Texture2D>           texList;
     // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
     static Shader    LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
     // retrieves a stored sader
     static Shader    GetShader(std::string name);
     // loads (and generates) a texture from file
     static Texture2D LoadTexture(const char *file, std::string name, bool alpha = false);
-    //  retrieves a stored texture on the texList vector
+    // retrieves a stored texture on the texList vector
     static int       GetTexture(std::string name);
-    //  binds all textures from the texList to be used by OpenGL
+    // binds all textures from the texList to be used by OpenGL
     static bool      BindTextures();
     // properly de-allocates all loaded resources
     static void      Clear();

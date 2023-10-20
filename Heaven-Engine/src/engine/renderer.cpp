@@ -177,7 +177,11 @@ void Renderer::initRenderData(){
 }
 
 void Renderer::beginBatch(){
+    //Set buffer pointer
     this->quadBufferPtr = quadBuffer;
+
+    //Call shader usage
+    this->shader.Use();
 }
 
 void Renderer::endBatch(){

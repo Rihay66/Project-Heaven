@@ -15,6 +15,7 @@ gameHandler::~gameHandler(){
     //delete any pointers and clear resources (eg ResourceManager)
     delete camera;
     delete renderer;
+    delete textRenderer;
     delete plr;
     delete render_test;
     delete phys;
@@ -42,6 +43,10 @@ void gameHandler::init(){
     //load all resources like shaders, textures
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
 
+    //Set up the text renderer
+    textRenderer = new TextRenderer(this->Width, this->Height,"shaders/text.vs", "shaders/text.frag");
+    //load a font
+    textRenderer->loadFont("fonts/FreeSans.ttf", 12);
     //load textures
     ResourceManager::LoadTexture("textures/test.png", "test", true);
     ResourceManager::LoadTexture("textures/player.png", "player", true);
@@ -67,8 +72,8 @@ void gameHandler::init(){
 
     //set up the renderer
     Shader spriteShader = ResourceManager::GetShader("sprite");
-
     renderer = new Renderer(spriteShader, smallModelSize);
+
 
     //* The order of the objects affects how they're layered
     //set up game objects and camera

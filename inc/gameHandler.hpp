@@ -13,6 +13,7 @@
 #include "../inc/player.hpp"
 #include <orthoCam/orthoCameraController.hpp>
 #include <engine/renderer.hpp>
+#include <engine/textRenderer.hpp>
 #include <glm/glm.hpp>
 
 //define global vars for objects to use
@@ -41,6 +42,8 @@ class gameHandler{
         Physics* phys;
         //contain renderer
         Renderer* renderer;
+        //contain text renderer
+        TextRenderer* textRenderer;
         //contain sound Engine
         SoundEngine* soundEng;
 

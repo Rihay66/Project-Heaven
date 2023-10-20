@@ -33,21 +33,18 @@ static std::string checkName(std::string str){
     return str;
 }
 
-Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name)
-{
+Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name){
     name = checkName(name);
     Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
     return Shaders[name];
 }
 
-Shader ResourceManager::GetShader(std::string name)
-{
+Shader ResourceManager::GetShader(std::string name){
     name = checkName(name);
     return Shaders[name];
 }
 
-Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool alpha)
-{
+Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool alpha){
     name = checkName(name);
     Textures[name] = loadTextureFromFile(file, alpha);
     //Add texture to list
@@ -94,16 +91,16 @@ bool ResourceManager::BindTextures(){
     }
 
     //Check OpenGL errors
-    if(glGetError() != GL_NO_ERROR){
-        std::cout << "ERROR: An error occured during binding texures, ERROR Code: " << glGetError() << std::endl;
+    int errorCode = glGetError();
+    if(errorCode != GL_NO_ERROR){
+        std::cout << "Warning: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
         return false;
     }
 
     return true;
 }
 
-void ResourceManager::Clear()
-{
+void ResourceManager::Clear(){
     // (properly) delete all shaders	
     for (auto iter : Shaders)
         glDeleteProgram(iter.second.ID);
@@ -115,8 +112,7 @@ void ResourceManager::Clear()
     texList.clear();
 }
 
-Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile)
-{
+Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile){
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
@@ -169,8 +165,7 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
     return shader;
 }
 
-Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha)
-{
+Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha){
     // create texture object
     Texture2D texture;
     if (alpha)

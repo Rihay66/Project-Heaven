@@ -3,7 +3,9 @@
 #ifndef TEXTRENDERING_HPP
 #define TEXTRENDERING_HPP
 
-#include <map>
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -11,45 +13,61 @@
 #include <resourceSys/shader.hpp>
 #include <resourceSys/texture.hpp>
 
-// Holds all state information relevant to a character as loaded using FreeType
-struct Character {
-    unsigned int TextureID; // ID handle of the glyph texture
-    glm::ivec2   Size;      // size of glyph
-    glm::ivec2   Bearing;   // offset from baseline to left/top of glyph
-    unsigned int Advance;   // horizontal offset to advance to next glyph
-};
+// Maximum texture width
+#define MAXATLASWIDTH 1024
 
-// Hold character information which contains relative information from a character
-struct Vertex {
+struct CharacterVertex{
     glm::vec2 position;
     glm::vec2 texCoords;
-    float texIndex;
+};
+
+struct Characters{
+    float ax; // advance.x
+    float ay; // advance.y
+
+    float bw; // bitmap.width;
+    float bh; // bitmap.height;
+
+    float bl; // bitmap_left;
+    float bt; // bitmap_top;
+
+    float tx; // x offset of glyph in texture coordinates
+    float ty; // y offset of glyph in texture coordinates
 };
 
 class TextRenderer{
     private:
-       //stores data of a quad
+        //Contain the texture id
+        unsigned int textureID;
+
+        //Create a array of 128 characters
+        Characters c[128];
+
+        //stores data of a quad
         unsigned int quadVAO;
         unsigned int quadVBO;
-        unsigned int quadEBO;
 
         //stores the quad buffer
-        Vertex* quadBuffer = nullptr;
-        Vertex* quadBufferPtr = nullptr;  
+        CharacterVertex* quadBuffer = nullptr;
+        CharacterVertex* quadBufferPtr = nullptr;  
 
         //stores the ammount of triangles to render
-        unsigned int indexCount;
+        unsigned int vertexCount;
 
         const static int maxQuadCount = 10000;
-        const static int maxVertexCount = maxQuadCount * 4;
-        const static int maxIndexCount = maxQuadCount * 6;
+        const static int maxVertexCount = maxQuadCount * 6;
 
         //initial setup of the rendering data
         void initTextRenderingData();
 
+        //Used to set and unset the vertex buffers
+        void beginBatch();
+        void endBatch();
+
+        //Used to tell opengl to render the triangles
+        void flush();
+
     public:
-        //Hold a map of pre-compiled characters
-        std::map<char, Character> Characters;
 
         //Shader used for text rendering
         Shader textShader;
@@ -59,10 +77,8 @@ class TextRenderer{
         //Destructor
         ~TextRenderer();
 
-        void loadFont(std::string filename, unsigned int fontSize);
-        
-
-
+        int loadFont(const char* filename, unsigned int fontSize);
+        void drawText(const char* text, glm::vec2 position, float scale, glm::vec4 color = glm::vec4(0.0f));
 };
 
 #endif
