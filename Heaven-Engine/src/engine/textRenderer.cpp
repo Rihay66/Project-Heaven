@@ -1,5 +1,3 @@
-#define NOMINMAX
-
 #include <engine/textRenderer.hpp>
 #include <resourceSys/resourceManager.hpp>
 
@@ -44,28 +42,27 @@ TextRenderer::~TextRenderer(){
     delete this->quadBufferPtr;
 }
 
-int TextRenderer::loadFont(const char* filename, unsigned int fontsize){
-
+bool TextRenderer::loadFont(const char* filename, unsigned int fontsize){
     //declare local var that stores atlas rows
     unsigned int roww = 0;
 	unsigned int rowh = 0;
     //declare local var that stores atlas width and height
-    int w = 0;
-    int h = 0;
+    unsigned int w = 0;
+    unsigned int h = 0;
 
     //Use free type to load font and set font size
     FT_Library ft;
     /* Initialize the FreeType2 library */
 	if (FT_Init_FreeType(&ft)){
         std::cout << "ERROR: Couldn't load Freetype!" << std::endl;
-        return -1;
+        return false;
 	}
 
     FT_Face face;
     /* Load a font */
 	if (FT_New_Face(ft, filename, 0, &face)){
 		std::cout << "ERROR: Couldn't load Fonb!" << std::endl;
-        return -1;
+        return false;
 	}
 
     //Set up texture atlas and set up the characters
@@ -82,21 +79,22 @@ int TextRenderer::loadFont(const char* filename, unsigned int fontsize){
             continue;
         }
         if (roww + g->bitmap.width + 1 >= MAXATLASWIDTH){
-            w = __max(w, roww);
+            w = std::max(w, roww);
             h += rowh;
             roww = 0;
             rowh = 0;
         }
         roww += g->bitmap.width + 1;
-        rowh = __max(rowh, g->bitmap.rows);
+        rowh = std::max(rowh, g->bitmap.rows);
     }
 
     //Set atlas size in width and height
-    w = __max(w, roww);
+    w = std::max(w, roww);
     h += rowh;
 
     /* Create a texture that will be used to hold all ASCII glyphs */
-    //glActiveTexture(GL_TEXTURE0);
+    //! This sets this texture to be at 32th textures, any texture binded at the 32th will cause texture conflicts
+    glActiveTexture(GL_TEXTURE31);
     glGenTextures(1, &this->textureID);
     glBindTexture(GL_TEXTURE_2D, this->textureID);
 
@@ -148,9 +146,6 @@ int TextRenderer::loadFont(const char* filename, unsigned int fontsize){
         ox += g->bitmap.width + 1;
     }
 
-    // unbind texture
-    //glBindTexture(GL_TEXTURE_2D, 0);
-
     printf("MSG: Generated a %d x %d (%d kb) texture atlas\n", w, h, w * h / 1024);
 
     //Free Freetype resources
@@ -158,12 +153,27 @@ int TextRenderer::loadFont(const char* filename, unsigned int fontsize){
     FT_Done_FreeType(ft);
     //Succesfully managed to load the font
     std::cout << "MSG: Text Font loaded succesfully!\n";
-    return 0;
+    return true;
+}
+
+void TextRenderer::createTextQuad(const char* character, glm::vec2 pos, float scale, glm::vec4 color){
+
 }
 
 void TextRenderer::drawText(const char* text, glm::vec2 position, float scale, glm::vec4 color){
     //init the buffer
     this->beginBatch();
+
+    //Set shader configs
+    this->textShader.SetInteger("text", 31);
+
+    //Loop through each characer and generate text buffer
+    
+
+    //Set dynamic vertex buffer
+    this->endBatch();
+    //Draw the text
+    this->flush();
 }
 
 void TextRenderer::initTextRenderingData(){

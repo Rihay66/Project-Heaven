@@ -11,7 +11,7 @@
 // Instantiate static variables
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
-std::vector<Texture2D>              ResourceManager::texList;
+std::vector<unsigned int>              ResourceManager::texIDList;
 
 static std::string checkName(std::string str){
 
@@ -48,24 +48,24 @@ Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool 
     name = checkName(name);
     Textures[name] = loadTextureFromFile(file, alpha);
     //Add texture to list
-    texList.push_back(Textures[name]);
+    texIDList.push_back(Textures[name].ID);
     return Textures[name];
 }
 
 int ResourceManager::GetTexture(std::string name){
 
     //*NOTE: The check is used to prevent using this function when no texture was binded to OpenGL
-    if(texList.size() <= 0){
+    if(texIDList.size() <= 0){
         std::cout << "ERROR: No textures were binded to OpenGL!" << std::endl;
         return -1;
     }
 
     name = checkName(name);
-    int id = Textures[name].ID;
+    unsigned int id = Textures[name].ID;
 
-    for(int i = 0; i < texList.size(); i++){
+    for(int i = 0; i < texIDList.size(); i++){
         //check for id on the list and return it's location by iteration 
-        if(texList[i].ID == id){
+        if(texIDList[i] == id){
             //exit out and return texture index
             return i;
         }
@@ -79,15 +79,15 @@ int ResourceManager::GetTexture(std::string name){
 bool ResourceManager::BindTextures(){
 
     //Check if the texure list is not zero
-    if(texList.size() <= 0){
+    if(texIDList.size() <= 0){
         std::cout << "ERROR: No textures were loaded!" << std::endl;
         return false;
     }
 
     //bind all the textures from first to last
-    for(int i = 0; i < texList.size(); i++){
+    for(int i = 0; i < texIDList.size(); i++){
         //call to bind texture by their ID
-        glBindTextureUnit(i, texList[i].ID);
+        glBindTextureUnit(i, texIDList[i]);
     }
 
     //Check OpenGL errors
@@ -109,7 +109,7 @@ void ResourceManager::Clear(){
         glDeleteTextures(1, &iter.second.ID);
 
     //Claer out the texture vector
-    texList.clear();
+    texIDList.clear();
 }
 
 Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile){

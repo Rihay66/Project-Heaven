@@ -4,8 +4,6 @@
 #define TEXTRENDERING_HPP
 
 #include <algorithm>
-#include <cmath>
-#include <cstdlib>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -76,8 +74,13 @@ class TextRenderer{
         TextRenderer(unsigned int width, unsigned int height, const char* vShaderFile, const char* fShaderFile);
         //Destructor
         ~TextRenderer();
+        
+        //Create text quad
+        void createTextQuad(const char* character, glm::vec2 pos, float scale, glm::vec4 color);
 
-        int loadFont(const char* filename, unsigned int fontSize);
+        //Load a font and sets a font size for the speicified font, returns false for error and returns true for success
+        bool loadFont(const char* filename, unsigned int fontSize);
+        //Draws text along with 
         void drawText(const char* text, glm::vec2 position, float scale, glm::vec4 color = glm::vec4(0.0f));
 };
 

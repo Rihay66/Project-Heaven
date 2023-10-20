@@ -45,20 +45,21 @@ void gameHandler::init(){
 
     //Set up the text renderer
     textRenderer = new TextRenderer(this->Width, this->Height,"shaders/text.vs", "shaders/text.frag");
-    //load a font
-    textRenderer->loadFont("fonts/FreeSans.ttf", 12);
     //load textures
+    ResourceManager::LoadTexture("textures/default.png", "default", true);
     ResourceManager::LoadTexture("textures/test.png", "test", true);
     ResourceManager::LoadTexture("textures/player.png", "player", true);
     ResourceManager::LoadTexture("textures/item.png", "item", true);
     ResourceManager::LoadTexture("textures/flower.png", "flower", true);
-    ResourceManager::LoadTexture("textures/default.png", "default", true);
     ResourceManager::LoadTexture("textures/transparent.png", "transparent", true);
     ResourceManager::LoadTexture("textures/crate.png", "crate",true);
     ResourceManager::LoadTexture("textures/porm.png", "porm", true);
-
+    
     //Bind the textures that were loaded
     ResourceManager::BindTextures();
+
+    //load a font
+    textRenderer->loadFont("fonts/FreeSans.ttf", 12);
 
     //Init sound engine
     soundEng = new SoundEngine();
