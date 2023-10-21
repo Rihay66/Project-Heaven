@@ -183,6 +183,8 @@ void gameHandler::update(float deltaTime){
 void gameHandler::render(){
     //render stuff depending on the state of the game state enum
     if(Game_State == GAME_ACTIVE || Game_State == GAME_DEBUG){
+        //Render text
+        textRenderer->drawText("HELLO", glm::vec2(300.0f), glm::vec2(400, 400));
         //Render a list of objects
         renderer->Draw2D(renderList);
         //Draw a single object

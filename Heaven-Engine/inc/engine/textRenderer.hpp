@@ -38,6 +38,10 @@ class TextRenderer{
         //Contain the texture id
         unsigned int textureID;
 
+        //texture resulution
+        unsigned int texW;
+        unsigned int texH;
+
         //Create a array of 128 characters
         Characters c[128];
 
@@ -76,12 +80,12 @@ class TextRenderer{
         ~TextRenderer();
         
         //Create text quad
-        void createTextQuad(const char* character, glm::vec2 pos, float scale, glm::vec4 color);
+        void createTextQuad(const uint8_t* character, glm::vec2 pos, glm::vec2 scale, glm::vec4 color);
 
         //Load a font and sets a font size for the speicified font, returns false for error and returns true for success
         bool loadFont(const char* filename, unsigned int fontSize);
         //Draws text along with 
-        void drawText(const char* text, glm::vec2 position, float scale, glm::vec4 color = glm::vec4(0.0f));
+        void drawText(const char* text, glm::vec2 position, glm::vec2 scale, glm::vec4 color = glm::vec4(1.0f));
 };
 
 #endif
