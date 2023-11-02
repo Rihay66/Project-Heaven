@@ -5,7 +5,7 @@
 
 //Include standard libraries
 #include <string>
-#include <map>
+#include <vector>
 
 //include gameobject class
 #include <gameObjs/gameObject.hpp>
@@ -20,18 +20,32 @@ public:
     //*Adder Funcs
 
     // add a tag and object to the resource pool, if object already exists then replace it's tag
-    static void addTag(std::string& tagName, GameObject& gameObj);
+    static void addTag(std::string& tagName, GameObject* gameObj);
     //*Getter Funcs
 
     // get a tag from a object in the tag pool
-    static std::string getTag(GameObject& gameObj);
+    static std::string getTag(GameObject* gameObj);
     // get object from the tag pool by tag
-    static GameObject getObject(std::string tagName);
+    static GameObject* getObject(std::string& tagName);
+    // get amount of objects in the tag system
+    static int getAmountOfObjects();
+
+    //*Remover Funcs
+
+    // get object and remove from list
+    static void removeObject(GameObject* gameObj);
+
+    // get and remove objects with a certain tag
+    static void removeObjectsWithTag(std::string& tagName);
 
 private:
-    // resource storage
-    //? This may change to a vector list, for better performance 
-    static std::map<std::string, GameObject&> objectsWithTag;
+    //define data type that contains both tag and gameobject
+    struct objectTag{
+        std::string name;
+        GameObject* obj;
+    };
+    // resource storage 
+    static std::vector<objectTag> objectsWithTag;
     // private constructor
     TagSystem(){}
 };

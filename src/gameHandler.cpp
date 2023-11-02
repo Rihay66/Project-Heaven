@@ -141,6 +141,7 @@ void gameHandler::init(){
     //Init the physics system
     phys->init(glm::vec2(0.0f, 0.0f));
 
+    std::cout << "objects within tag system: " << TagSystem::getAmountOfObjects() << "\n";
     std::cout << "object size: " << renderList.size() << std::endl;
 }
 

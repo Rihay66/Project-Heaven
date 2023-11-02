@@ -3,6 +3,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include <resourceSys/tagSystem.hpp>
 #include <gameObjs/rigidbodyObject.hpp>
 #include <GLFW/glfw3.h>
 

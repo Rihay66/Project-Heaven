@@ -7,8 +7,6 @@
 #include <resourceSys/texture.hpp>
 #include <glm/glm.hpp>
 
-//TODO: Make a tag system for base game objects and have a global storage of the tag only for gameobjects and deriving classes
-
 class GameObject{
     public:
         //future use for changing sprite 
@@ -16,7 +14,8 @@ class GameObject{
             UP, DOWN, LEFT, RIGHT
         };
 
-        //reference to the 
+        //reference to the local tag
+        std::string tag;
 
         //transform reference of the object
         glm::vec2 position;
