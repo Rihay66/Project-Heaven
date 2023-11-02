@@ -3,6 +3,7 @@
 #ifndef GAMEOBJECT_HPP
 #define GAMEOBJECT_HPP
 
+#include <string>
 #include <resourceSys/texture.hpp>
 #include <glm/glm.hpp>
 
@@ -14,6 +15,8 @@ class GameObject{
         enum Direction{
             UP, DOWN, LEFT, RIGHT
         };
+
+        //reference to the 
 
         //transform reference of the object
         glm::vec2 position;
