@@ -11,6 +11,8 @@
 #include <resourceSys/shader.hpp>
 #include <resourceSys/texture.hpp>
 
+//! THIS CLASS SHOULDN"T BE USED AS IT WILL BE REFACTORED AT A LATER DATA
+
 // Maximum texture width
 #define MAXATLASWIDTH 1024
 
@@ -18,7 +20,7 @@ struct CharacterVertex{
     glm::vec2 position;
     glm::vec2 texCoords;
 };
-
+//! THIS CLASS SHOULDN"T BE USED AS IT WILL BE REFACTORED AT A LATER DATA
 struct Characters{
     float ax; // advance.x
     float ay; // advance.y
@@ -32,7 +34,7 @@ struct Characters{
     float tx; // x offset of glyph in texture coordinates
     float ty; // y offset of glyph in texture coordinates
 };
-
+//! THIS CLASS SHOULDN"T BE USED AS IT WILL BE REFACTORED AT A LATER DATA
 class TextRenderer{
     private:
         //Contain the texture id

@@ -15,7 +15,6 @@ gameHandler::~gameHandler(){
     //delete any pointers and clear resources (eg ResourceManager)
     delete camera;
     delete renderer;
-    delete textRenderer;
     delete plr;
     delete render_test;
     delete phys;
@@ -43,8 +42,6 @@ void gameHandler::init(){
     //load all resources like shaders, textures
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
 
-    //Set up the text renderer
-    textRenderer = new TextRenderer(this->Width, this->Height,"shaders/text.vs", "shaders/text.frag");
     //load textures
     ResourceManager::LoadTexture("textures/default.png", "default", true);
     ResourceManager::LoadTexture("textures/test.png", "test", true);
@@ -57,9 +54,6 @@ void gameHandler::init(){
     
     //Bind the textures that were loaded
     ResourceManager::BindTextures();
-
-    //load a font
-    textRenderer->loadFont("fonts/FreeSans.ttf", 12);
 
     //Init sound engine
     soundEng = new SoundEngine();
@@ -183,8 +177,6 @@ void gameHandler::update(float deltaTime){
 void gameHandler::render(){
     //render stuff depending on the state of the game state enum
     if(Game_State == GAME_ACTIVE || Game_State == GAME_DEBUG){
-        //Render text
-        textRenderer->drawText("HELLO", glm::vec2(300.0f), glm::vec2(400, 400));
         //Render a list of objects
         renderer->Draw2D(renderList);
         //Draw a single object

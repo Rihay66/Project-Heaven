@@ -13,7 +13,7 @@
     #include <ft2build.h>
     #include FT_FREETYPE_H
 #endif
-
+//! THIS CLASS SHOULDN"T BE USED AS IT WILL BE REFACTORED AT A LATER DATA
 //TODO: Make batch rendering when rendering text
 
 TextRenderer::TextRenderer(unsigned int width, unsigned int height,
@@ -277,3 +277,4 @@ void TextRenderer::flush(){
     //reset vertex count 
     this->vertexCount = 0;
 }
+//! THIS CLASS SHOULDN"T BE USED AS IT WILL BE REFACTORED AT A LATER DATA
