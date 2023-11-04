@@ -11,6 +11,7 @@
 #include <gameObjs/soundListener.hpp>
 #include <engine/physics.hpp>
 #include "../inc/player.hpp"
+#include "../inc/testTriggerObject.hpp"
 #include <orthoCam/orthoCameraController.hpp>
 #include <engine/renderer.hpp>
 #include <glm/glm.hpp>

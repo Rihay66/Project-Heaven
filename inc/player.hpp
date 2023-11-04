@@ -8,7 +8,7 @@
 #include <GLFW/glfw3.h>
 
 //Player class with inheritence from GameObject
-class Player : public physicsObject{
+class Player : public PhysicsObject{
     private:
         //reference to the window
         GLFWwindow* window;

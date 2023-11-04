@@ -1,7 +1,7 @@
 #include "../inc/player.hpp"
 
 Player::Player(GLFWwindow* &handle, glm::vec2 pos, glm::vec2 siz, int sprt, float spd, float cDeadzone, bool destroyed, glm::vec4 color) : 
-physicsObject(pos, siz, sprt, color, destroyed, false), speed(spd), window(handle), controllerDeadZone(cDeadzone), isController(false){
+PhysicsObject(pos, siz, sprt, color, destroyed), speed(spd), window(handle), controllerDeadZone(cDeadzone), isController(false){
     //Set tag
     this->tag = "Player";
     //Add tag to the tag system

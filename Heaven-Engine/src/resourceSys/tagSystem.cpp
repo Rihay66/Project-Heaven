@@ -3,7 +3,7 @@
 //Instantiate static resources
 std::vector<TagSystem::objectTag> TagSystem::objectsWithTag;
 
-void TagSystem::addTag(std::string& tagName, GameObject* gameObj){
+void TagSystem::addTag(std::string tagName, GameObject* gameObj){
     // add a new object to the pool or make a new one if tag doesn't exist
     
     //Check if list is not empty
@@ -43,7 +43,7 @@ std::string TagSystem::getTag(GameObject* gameObj){
     return nullptr;
 }
 
-GameObject* TagSystem::getObject(std::string& tagName){
+GameObject* TagSystem::getObject(std::string tagName){
     //loop to find object and return it's tag
     for(int i = 0; i < objectsWithTag.size(); i++){
         //check if the name found is the same

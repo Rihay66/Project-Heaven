@@ -4,8 +4,9 @@
 CameraController* camera;
 Player* plr;
 SoundSource* ss;
-//Test object
+//Test objects
 GameObject* render_test;
+TestTriggerObject* trigger_test;
 
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
@@ -17,6 +18,7 @@ gameHandler::~gameHandler(){
     delete renderer;
     delete plr;
     delete render_test;
+    delete trigger_test;
     delete phys;
     //Set sound source to a null address
     ss = nullptr;
@@ -80,30 +82,34 @@ void gameHandler::init(){
 
     pos = glm::vec2(-1.1f, 2.0f);
 
-    physicsObject* temp = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTexture("test"));
+    PhysicsObject* temp = new PhysicsObject(pos, standardSpriteSize, ResourceManager::GetTexture("test"));
     temp->rotation = 45.0f;
 
     pos = glm::vec2(1.0f);
-    physicsObject* test = new physicsObject(pos, standardSpriteSize + glm::vec2(1.0f, 0.0f), ResourceManager::GetTexture("transparent"), glm::vec4(0.1f, 0.7f, 0.1f, 1.0f));
+    PhysicsObject* test = new PhysicsObject(pos, standardSpriteSize + glm::vec2(1.0f, 0.0f), ResourceManager::GetTexture("transparent"), glm::vec4(1.0f, 1.0f, 0.5f, 1.0f));
 
     pos = glm::vec2(-4.0f, -4.0f);
-    physicsObject* ground = new physicsObject(pos, standardSpriteSize + glm::vec2(12.0f, 0.0f), ResourceManager::GetTexture("default"));
+    PhysicsObject* ground = new PhysicsObject(pos, standardSpriteSize + glm::vec2(12.0f, 0.0f), ResourceManager::GetTexture("default"));
 
     pos = glm::vec2(-4.0f, 5.0f);
-    physicsObject* roof = new physicsObject(pos, standardSpriteSize + glm::vec2(12.0f, 0.0f), ResourceManager::GetTexture("default"));
+    PhysicsObject* roof = new PhysicsObject(pos, standardSpriteSize + glm::vec2(12.0f, 0.0f), ResourceManager::GetTexture("default"));
 
     pos = glm::vec2(3.0f, 0.5f);
-    physicsObject* wall = new physicsObject(pos, standardSpriteSize + glm::vec2(0.0f, 9.0f), ResourceManager::GetTexture("default"));
+    PhysicsObject* wall = new PhysicsObject(pos, standardSpriteSize + glm::vec2(0.0f, 9.0f), ResourceManager::GetTexture("default"));
 
     pos = glm::vec2(-2.0f, 0.0f);
-    physicsObject* platform = new physicsObject(pos, standardSpriteSize + glm::vec2(1.0f, -0.5f), ResourceManager::GetTexture("default"));
+    PhysicsObject* platform = new PhysicsObject(pos, standardSpriteSize + glm::vec2(1.0f, -0.5f), ResourceManager::GetTexture("default"));
 
     pos = glm::vec2(-2.5f, -2.0f);
-    physicsObject* crate = new physicsObject(pos, standardSpriteSize, ResourceManager::GetTexture("crate"));
+    PhysicsObject* crate = new PhysicsObject(pos, standardSpriteSize, ResourceManager::GetTexture("crate"));
 
     //Make a test object to draw seperately from the list
     pos = glm::vec2(-4.5f, 0.5f);
     render_test = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("item"), glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
+
+    //Make a trigger object
+    pos = glm::vec2(-7.0f, 0.0f);
+    trigger_test = new TestTriggerObject(pos, standardSpriteSize, ResourceManager::GetTexture("transparent"), glm::vec4(0.1f, 1.0f, 0.1f, 1.0f));
 
     //Change rb type
     ground->rb.Type = BodyType::Static;
@@ -123,20 +129,25 @@ void gameHandler::init(){
     renderList.push_back(roof);
     renderList.push_back(wall);
     renderList.push_back(crate);
+    renderList.push_back(render_test);
+    renderList.push_back(trigger_test);
     renderList.push_back(plr);
 
     //Init physics system
     phys = new Physics();
 
-    //Add physics objtect to physics class
-    phys->pObjs.push_back(temp);
-    phys->pObjs.push_back(test);
-    phys->pObjs.push_back(ground);
-    phys->pObjs.push_back(roof);
-    phys->pObjs.push_back(platform);
-    phys->pObjs.push_back(wall);
-    phys->pObjs.push_back(plr);
-    phys->pObjs.push_back(crate);
+    //Add physics object to physics class
+    phys->rigidbodyObjs.push_back(temp);
+    phys->rigidbodyObjs.push_back(test);
+    phys->rigidbodyObjs.push_back(ground);
+    phys->rigidbodyObjs.push_back(roof);
+    phys->rigidbodyObjs.push_back(platform);
+    phys->rigidbodyObjs.push_back(wall);
+    phys->rigidbodyObjs.push_back(plr);
+    phys->rigidbodyObjs.push_back(crate);
+
+    //Add trigger object to physics class
+    phys->triggerObjs.push_back(trigger_test);
 
     //Init the physics system
     phys->init(glm::vec2(0.0f, 0.0f));

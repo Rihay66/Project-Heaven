@@ -8,6 +8,7 @@
 #include <math.h>
 
 #include <gameObjs/rigidbodyObject.hpp>
+#include <gameObjs/triggerObject.hpp>
 
 //include box2d lib
 #include <box2d/b2_world.h>
@@ -18,14 +19,10 @@
 class b2World;
 
 class Physics{
-    private:
-        //List of different rigidbody's with either a trigger or non trigger flag
-        std::vector<physicsObject*> triggerObjs;
-        std::vector<physicsObject*> rigidbodyObjs;
-
     public:
-        //List of all rigidbodies
-        std::vector<physicsObject*> pObjs;
+        //List of different rigidbody's with either a trigger or non trigger flag
+        std::vector<TriggerObject*> triggerObjs;
+        std::vector<PhysicsObject*>rigidbodyObjs;
 
         //reference to physics world
         b2World* world = nullptr;
@@ -42,7 +39,7 @@ class Physics{
         //check all physics object and check the player's collision
         void CheckCollisions(float deltaTime);
         //Simple check for aabb collision check
-        bool aabbCollision(physicsObject &a, physicsObject &b);
+        bool aabbCollision(GameObject* a, GameObject* b);
 
         //Make a enum translate between box2d and rigidbodyObject class
         static b2BodyType RbToB2Types(BodyType bodyType){
