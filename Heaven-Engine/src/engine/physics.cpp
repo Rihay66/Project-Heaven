@@ -75,15 +75,25 @@ void Physics::CheckCollisions(float deltaTime){
         }
     }
 
+    //TODO: Refactor checking for trigger collsion using space partitioning
     //Check trigger objects
     if(triggerObjs.size() > 0){
         //loop use each trigger will collide only with rigidbody objects
         for(TriggerObject* trigObj : triggerObjs){
             for(PhysicsObject* rigidObj : rigidbodyObjs){
-                //Check for aabb colllision
+                //check for aabb colllision
                 if(aabbCollision(trigObj, rigidObj)){
-                    //Call the trigger's collision callback
+                    //call the trigger's collision callback
                     trigObj->triggerCollisionCallback(rigidObj);
+                }
+            }
+            //Check if trigger is a exit trigger
+            if(trigObj->trigType == TriggerType::Exit){
+                //Call the exit trigger directly, and check if they're no longer colliding 
+                if(trigObj->lastObjToCollide != nullptr && !aabbCollision(trigObj, trigObj->lastObjToCollide)){
+                    trigObj->onTriggerExit(trigObj->lastObjToCollide);
+                    //Reset last object that collided with the exit trigger
+                    trigObj->lastObjToCollide = nullptr;
                 }
             }
         }

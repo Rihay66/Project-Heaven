@@ -12,12 +12,18 @@ void TriggerObject::triggerCollisionCallback(GameObject* obj){
         onTriggerEnter(obj);
         break;
     case TriggerType::Stay:
-        //Call stay trigger
-        onTriggerStay(obj);
+        //Wait till a value reaches dersired max time
+        if(currentTimeToTrigger >= maxTimeToTrigger){
+            //Call trigger stay
+            onTriggerStay(obj);
+            //reset current timer
+            currentTimeToTrigger = 0;
+        }else
+            currentTimeToTrigger++; //increment time
         break;
     case TriggerType::Exit:
-        //Call exit trigger
-        onTriggerExit(obj);
+        //Take object that collided initially 
+        lastObjToCollide = obj;
         break;
     default:
         break;

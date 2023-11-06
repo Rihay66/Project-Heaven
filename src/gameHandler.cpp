@@ -110,6 +110,11 @@ void gameHandler::init(){
     //Make a trigger object
     pos = glm::vec2(-7.0f, 0.0f);
     trigger_test = new TestTriggerObject(pos, standardSpriteSize, ResourceManager::GetTexture("transparent"), glm::vec4(0.1f, 1.0f, 0.1f, 1.0f));
+    //Change trigger type
+    trigger_test->trigType = TriggerType::Exit;
+
+    //Change default values
+    trigger_test->maxTimeToTrigger = 50;
 
     //Change rb type
     ground->rb.Type = BodyType::Static;

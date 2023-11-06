@@ -9,9 +9,9 @@
 
 class TriggerObject : public GameObject{
     private:
-        //delcare local variables that are used by the virtual triggers
-        int maxTimeToTrigger = 5;
+        //declare local variables that are used by the virtual triggers
         int currentTimeToTrigger = 0;
+
     public:
         //Declare trigger type
         TriggerType trigType;
@@ -22,6 +22,11 @@ class TriggerObject : public GameObject{
 
         //Used to check if object is enabled and when disabled is automatically removed from game
         bool isDestroyed; 
+        //This value is used to set as a timer interval to call onTriggerSta()
+        int maxTimeToTrigger = 5;
+
+        //Store last object to collide
+        GameObject* lastObjToCollide = nullptr;
 
         //Constructor
         TriggerObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec4 color = glm::vec4(1.0f));
@@ -31,7 +36,7 @@ class TriggerObject : public GameObject{
         //Used to define any function to do when this object is triggered
         virtual void onTriggerEnter(GameObject* obj){return;}
         virtual void onTriggerStay(GameObject* obj){return;}
-        virtual void onTriggerExit(GameObject* obj){return;}
+        virtual void onTriggerExit(GameObject* obj){return;} 
 };  
 
 #endif

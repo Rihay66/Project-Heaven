@@ -13,8 +13,8 @@ class TestTriggerObject : public TriggerObject{
 
         //Trigger types
         void onTriggerEnter(GameObject* obj) override;
-        //void onTriggerStay(GameObject* obj) override;
-        //void onTriggerExit(GameObject* obj) override;
+        void onTriggerStay(GameObject* obj) override;
+        void onTriggerExit(GameObject* obj) override;
 
 };
 

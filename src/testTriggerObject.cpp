@@ -9,6 +9,22 @@ void TestTriggerObject::onTriggerEnter(GameObject* obj){
     //Check if object is the player
     if(TagSystem::getObject("Player") == obj){
         //Do something...
-        printf("TRIGGERED!!!\n");
+        printf("ENTER TRIGGERED!!!\n");
+    }
+}
+
+void TestTriggerObject::onTriggerStay(GameObject* obj){
+    //Check if object is the player
+    if(TagSystem::getObject("Player") == obj){
+        //Do something...
+        printf("STAY TRIGGERED!!!\n");
+    }
+}
+
+void TestTriggerObject::onTriggerExit(GameObject* obj){
+    //Check if object is the player
+    if(TagSystem::getObject("Player") == obj){
+        //Do something...
+        printf("EXIT TRIGGERED!!!\n");
     }
 }
