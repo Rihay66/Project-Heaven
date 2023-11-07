@@ -59,7 +59,7 @@ class gameHandler{
 
         void init(); //intializes game (loads all shaders/textures/levels/gameobjects/camera/etc)
         void update(float deltaTime);
-        void render();
+        void render(float deltaTime);
 };
 
 #endif

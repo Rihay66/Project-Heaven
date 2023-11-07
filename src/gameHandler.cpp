@@ -171,10 +171,8 @@ void gameHandler::update(float deltaTime){
     phys->CheckCollisions(deltaTime);
 
     if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
-        camera->inputMovement(deltaTime);    
         plr->isDebug = true;
     }else if(Game_State == GAME_ACTIVE){
-        camera->followPos(plr->position, smallModelSize);
         plr->isDebug = false;
     }
 
@@ -191,7 +189,14 @@ void gameHandler::update(float deltaTime){
 
 }
 
-void gameHandler::render(){
+void gameHandler::render(float deltaTime){
+
+    if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
+        camera->inputMovement(deltaTime);    
+    }else if(Game_State == GAME_ACTIVE){
+        camera->followPos(plr->position, smallModelSize);
+    }
+
     //render stuff depending on the state of the game state enum
     if(Game_State == GAME_ACTIVE || Game_State == GAME_DEBUG){
         //Render a list of objects

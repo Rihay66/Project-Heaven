@@ -33,5 +33,5 @@ void GameWindow::update(){
 
 void GameWindow::render(){
     //Render the game
-    game->render();
+    game->render(DeltaTime);
 }

@@ -106,6 +106,50 @@ void Window::input(){
     //Can be overwritten 
 }
 
+//Create multithreaded runtime of update() and render()
+void Window::threadedRuntime(){
+    //Create two threads 
+
+    //Create a seperate update thread
+    std::thread updateT([this](){
+        while(!glfwWindowShouldClose(handle)){
+            //calculate delta time
+            currentFrame = glfwGetTime();
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+            //pass delta time to the window
+            DeltaTime = deltaTime;
+
+            //check for glfw events
+            glfwPollEvents();
+
+            //check for main window input
+		    getInput();
+
+		    //update any input, values, objects, loading etc..
+		    update();
+        }
+    });
+
+    while (!glfwWindowShouldClose(handle)){
+        //render background
+        glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        //draw or render
+        render();
+
+        //swap buffers
+        glfwSwapBuffers(handle);
+    }
+
+    //Join the threaded after quit flag
+    updateT.join();
+
+    //Exiting print
+    printf("Joining threads!\n");
+}
+
 //initialization
 void Window::init(){
     //Here goes the initial processing of shaders, textues, and objects
@@ -114,7 +158,7 @@ void Window::init(){
 //updating
 void Window::update(){
     //update any variables like moving objects or updating input
-    //* NOTE: that any object that needs input will need to have reference to the window handleas a parameter to be passed down
+    //* NOTE: that any object that needs input will need to have reference to the window handles a parameter to be passed down
 }
 
 //rendering

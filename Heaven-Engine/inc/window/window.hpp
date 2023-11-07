@@ -11,6 +11,10 @@
     #include <windows.h>
 #endif
 
+//Threading library
+#include <thread>
+
+//GLFW and OPENGL Libraries
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -32,6 +36,9 @@ class Window{
         double timeDiff;
         unsigned int counter = 0;
 
+        //set up vars for calculating delta time
+	    float deltaTime = 0, lastFrame = 0, currentFrame = 0;
+
     public:
         //Window handle
         GLFWwindow* handle;
@@ -49,8 +56,11 @@ class Window{
         ~Window();
         //used to get Engine base input
         void getInput();
-        //used as a forward of getInput() to add additional input or event checks
-        virtual void input();
+        
+        //Used to individually thread update() and render() 
+        void threadedRuntime();
+
+        virtual void input();//used as a forward of getInput() to add additional input or event checks
 
         virtual void init(); //used to call classes that handle the loading of shaders, textures, and objects
         
