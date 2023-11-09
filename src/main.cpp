@@ -10,7 +10,8 @@ int main(int argc, char* argv[]){
 	//init resources from files and load classes
 	window->init();
 
-	window->threadedRuntime();
+	//Single threaded runtime
+	window->runtime();
 
 	//delete any memory
 	delete window;

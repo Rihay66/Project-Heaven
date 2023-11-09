@@ -170,12 +170,24 @@ void gameHandler::update(float deltaTime){
     //* Do physics here
     phys->CheckCollisions(deltaTime);
 
-    if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
+    switch (Game_State){
+    case GAME_DEBUG:
+        // Allow debug camera
+        camera->inputMovement(deltaTime);
+        // Disable player controls
         plr->isDebug = true;
-    }else if(Game_State == GAME_ACTIVE){
+        break;
+    case GAME_ACTIVE:
+        // Make camera follow player position
+        camera->followPos(plr->position, smallModelSize);
+        // Enable player controls
         plr->isDebug = false;
+        break;
+    default:
+        break;
     }
 
+    //Test sound engine by playing a sound 
     if(glfwGetKey(this->window, GLFW_KEY_SPACE) == GLFW_PRESS){
         ss->play("test");
     }
@@ -186,19 +198,13 @@ void gameHandler::update(float deltaTime){
     }else if(Controller_State == CONTROLSSTATE::KMCONTROLLER){
         plr->isController = true;
     }
-
 }
 
 void gameHandler::render(float deltaTime){
-
-    if(Game_State == GAME_DEBUG){ //Check if the game state is active or on debug
-        camera->inputMovement(deltaTime);    
-    }else if(Game_State == GAME_ACTIVE){
-        camera->followPos(plr->position, smallModelSize);
-    }
-
     //render stuff depending on the state of the game state enum
     if(Game_State == GAME_ACTIVE || Game_State == GAME_DEBUG){
+        //Calculate projection
+        camera->calculateProjectionView();
         //Render a list of objects
         renderer->Draw2D(renderList);
         //Draw a single object

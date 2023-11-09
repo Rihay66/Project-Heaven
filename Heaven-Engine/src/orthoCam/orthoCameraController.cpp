@@ -1,13 +1,12 @@
 #include <orthoCam/orthoCameraController.hpp>
 
-CameraController::CameraController(unsigned int Width, unsigned int Height, GLFWwindow* handle,Shader &shader, float cameraSpeed, float zoomAmount)
- : Camera(Width, Height, handle, shader), speed(cameraSpeed), zoomSpeed(zoomAmount), zoomFactor(0.0f){
+//library for debgging code
+#include <stdio.h>
 
-}
+CameraController::CameraController(unsigned int Width, unsigned int Height, GLFWwindow* handle, Shader &shader, float cameraSpeed, float zoomAmount)
+ : Camera(Width, Height, handle, shader), speed(cameraSpeed), zoomSpeed(zoomAmount), zoomFactor(0.0f){}
 
-CameraController::~CameraController(){
-
-}
+CameraController::~CameraController(){}
 
 void CameraController::calculateProjectionView()
 {
@@ -20,6 +19,8 @@ void CameraController::calculateProjectionView()
 
     //put together the projectionView
     this->projectionView = this->projection * this->view;
+    //tell shader to set view
+    this->shader.SetMatrix4("projectionView", this->projectionView);
 }
 
 void CameraController::followPos(glm::vec2 pos, glm::vec2 size, glm::vec2 offset){
@@ -30,14 +31,17 @@ void CameraController::followPos(glm::vec2 pos, glm::vec2 size, glm::vec2 offset
     this->position = glm::vec3((((pos.x + offset.x) * size.x) - this->width / 2.0f), (((pos.y + offset.y) * size.y) - this->height / 2.0f), 0.0f);
     //update shader
     calculateProjectionView();
-
-    //tell shader to set view
-    this->shader.SetMatrix4("projectionView", this->projectionView);
 }
 
 void CameraController::inputMovement(float deltaTime){
 
     float movement = speed * deltaTime;
+
+    //When window can't be found
+    if(window == nullptr){
+        //Stop function
+        return;
+    }
 
     //input for increase movement while holding key
     if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
@@ -78,7 +82,4 @@ void CameraController::inputMovement(float deltaTime){
 
     //update shader and projection
     calculateProjectionView();
-
-    //tell shader to set view
-    this->shader.SetMatrix4("projectionView", this->projectionView);
 }

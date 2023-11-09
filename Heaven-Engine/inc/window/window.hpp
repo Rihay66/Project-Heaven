@@ -30,20 +30,17 @@ enum INPUT_STATE{
 
 class Window{
     private:
-        //vars used for frame profiling
-        double prevTime = 0.0;
-        double currentTime = 0.0;
-        double timeDiff;
-        unsigned int counter = 0;
-
         //set up vars for calculating delta time
-	    float deltaTime = 0, lastFrame = 0, currentFrame = 0;
+	    float lastFrame = 0, currentFrame = 0;
 
     public:
         //Window handle
         GLFWwindow* handle;
         //delta time variable for updating input, physics, and kind of movement
         float DeltaTime;
+        //Returns the current deltatime
+        virtual float getDeltaTime();
+
         //variable that can be set through input
         APP_STATE App_State;
         INPUT_STATE Input_State;
@@ -56,9 +53,12 @@ class Window{
         ~Window();
         //used to get Engine base input
         void getInput();
+
+        //Used to run init() and loop update() and render()
+        virtual void runtime();
         
         //Used to individually thread update() and render() 
-        void threadedRuntime();
+        virtual void threadedRuntime();
 
         virtual void input();//used as a forward of getInput() to add additional input or event checks
 

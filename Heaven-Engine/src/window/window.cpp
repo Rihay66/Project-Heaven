@@ -62,6 +62,15 @@ Window::~Window(){
     glfwTerminate();
 }
 
+float Window::getDeltaTime(){
+    // calculate delta time
+    currentFrame = glfwGetTime();
+    this->DeltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
+    return this->DeltaTime;
+}
+
 void Window::getInput(){
 
     //debug enabler button - toggle
@@ -106,6 +115,37 @@ void Window::input(){
     //Can be overwritten 
 }
 
+//TODO: Fix the input of the camera
+
+//Single threaded runtime of update and render()
+void Window::runtime(){
+    while(!glfwWindowShouldClose(this->handle)){
+        // Get Deltatime
+        this->getDeltaTime();
+
+        // check for glfw events
+        glfwPollEvents();
+
+        // check for main window input
+        getInput();
+
+        // update any input, values, objects, loading etc..
+        update();
+
+        //render background
+        //? Will be removed in final version
+        glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
+
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        //draw or render
+        render();
+
+        //swap buffers
+        glfwSwapBuffers(handle);
+    }
+}
+
 //Create multithreaded runtime of update() and render()
 void Window::threadedRuntime(){
     //Create two threads 
@@ -113,12 +153,8 @@ void Window::threadedRuntime(){
     //Create a seperate update thread
     std::thread updateT([this](){
         while(!glfwWindowShouldClose(handle)){
-            //calculate delta time
-            currentFrame = glfwGetTime();
-            deltaTime = currentFrame - lastFrame;
-            lastFrame = currentFrame;
-            //pass delta time to the window
-            DeltaTime = deltaTime;
+            //Get Deltatime
+            this->getDeltaTime();
 
             //check for glfw events
             glfwPollEvents();
@@ -133,7 +169,9 @@ void Window::threadedRuntime(){
 
     while (!glfwWindowShouldClose(handle)){
         //render background
+        //? Will be removed in final version
         glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
+
         glClear(GL_COLOR_BUFFER_BIT);
 
         //draw or render
