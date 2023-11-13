@@ -193,10 +193,15 @@ void gameHandler::update(float deltaTime){
     }
 
     //Check the controller state and change the player isDebug boolean
-    if(Controller_State == CONTROLSSTATE::KEYBOARDMOUSE){
-        plr->isController = false;
-    }else if(Controller_State == CONTROLSSTATE::KMCONTROLLER){
-        plr->isController = true;
+    switch(Controller_State){
+        case CONTROLSSTATE::KEYBOARDMOUSE:
+            //disable controller input and only use keyboard or mouse inputs
+            plr->isController = false;
+        case CONTROLSSTATE::KMCONTROLLER:
+            //Enable controller input 
+            plr->isController = true;
+        default:
+            break;
     }
 }
 

@@ -53,7 +53,6 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     std::cout << "window successfully created" << std::endl;
-    
 }
 
 //Destructor
@@ -115,9 +114,7 @@ void Window::input(){
     //Can be overwritten 
 }
 
-//TODO: Fix the input of the camera
-
-//Single threaded runtime of update and render()
+//Single threaded runtime of update() and render()
 void Window::runtime(){
     while(!glfwWindowShouldClose(this->handle)){
         // Get Deltatime
@@ -144,48 +141,6 @@ void Window::runtime(){
         //swap buffers
         glfwSwapBuffers(handle);
     }
-}
-
-//Create multithreaded runtime of update() and render()
-void Window::threadedRuntime(){
-    //Create two threads 
-
-    //Create a seperate update thread
-    std::thread updateT([this](){
-        while(!glfwWindowShouldClose(handle)){
-            //Get Deltatime
-            this->getDeltaTime();
-
-            //check for glfw events
-            glfwPollEvents();
-
-            //check for main window input
-		    getInput();
-
-		    //update any input, values, objects, loading etc..
-		    update();
-        }
-    });
-
-    while (!glfwWindowShouldClose(handle)){
-        //render background
-        //? Will be removed in final version
-        glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
-
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        //draw or render
-        render();
-
-        //swap buffers
-        glfwSwapBuffers(handle);
-    }
-
-    //Join the threaded after quit flag
-    updateT.join();
-
-    //Exiting print
-    printf("Joining threads!\n");
 }
 
 //initialization

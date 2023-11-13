@@ -54,11 +54,10 @@ class Window{
         //used to get Engine base input
         void getInput();
 
-        //Used to run init() and loop update() and render()
+        /*Loop update() and render()
+        * Can be overwritten dependin on the need of the game or application
+        */
         virtual void runtime();
-        
-        //Used to individually thread update() and render() 
-        virtual void threadedRuntime();
 
         virtual void input();//used as a forward of getInput() to add additional input or event checks
 
