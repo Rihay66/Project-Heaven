@@ -8,19 +8,19 @@ const void Renderer::resetStats(){
 Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
     this->shader = shader;
 
-    //set up shader samples
+    //set up shader samples for the quad textures
     this->shader.Use();
 
     auto loc = glGetUniformLocation(this->shader.ID, "image");
     
-    int samplers[32];
+    int samplers[this->maxTextureSlots];
 
     //set up samplers array
-    for(int i = 0; i < 32; i++){
+    for(int i = 0; i < this->maxTextureSlots; i++){
         samplers[i] = i;
     }
 
-    glUniform1iv(loc, 32, samplers);
+    glUniform1iv(loc, maxTextureSlots, samplers);
 
     //set up shader model view
     this->spriteSize = spriteSize;
@@ -95,6 +95,9 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
     this->resetStats();
     this->beginBatch();
 
+    //bind textures
+    ResourceManager::BindTextures();
+
     //Loop through objects and add to batch
     for(int i = 0 ; i < gameObjects.size(); i++){
         this->createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color);
@@ -111,6 +114,9 @@ void Renderer::Draw2D(GameObject* obj){
     //init the buffer
     this->resetStats();
     this->beginBatch();
+
+    //Bind textures
+    ResourceManager::BindTextures();
 
     //add a single object to the batch
     this->createQuad(obj->position, obj->size, obj->rotation, obj->textureIndex, obj->color);

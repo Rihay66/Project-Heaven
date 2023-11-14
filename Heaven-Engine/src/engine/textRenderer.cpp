@@ -17,9 +17,7 @@
 //TODO: Make batch rendering when rendering text
 
 TextRenderer::TextRenderer(unsigned int width, unsigned int height,
- const char* vShaderFile, const char* fShaderFile) : texW(0), texH(0){
-    //Load shader using Resource Manager
-    this->textShader = ResourceManager::LoadShader(vShaderFile, fShaderFile, nullptr, "text");
+ Shader& shader) : textShader(shader), texW(0), texH(0){
     //Configure shader
     this->textShader.SetMatrix4("projection", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.0f), true);
     this->textShader.SetInteger("text", 0);
@@ -40,48 +38,6 @@ TextRenderer::~TextRenderer(){
     delete[] this->quadBuffer;
     this->quadBufferPtr = nullptr;
     delete this->quadBufferPtr;
-}
-
-bool TextRenderer::loadFont(const char* filename, unsigned int fontsize){
-    //declare local var that stores atlas rows
-    unsigned int roww = 0;
-	unsigned int rowh = 0;
-
-    //init Characters array 
-    memset(c, 0, sizeof(c));
-
-    //Use free type to load font and set font size
-    FT_Library ft;
-    /* Initialize the FreeType2 library */
-	if (FT_Init_FreeType(&ft)){
-        std::cout << "ERROR: Couldn't load Freetype!" << std::endl;
-        return false;
-	}
-
-    FT_Face face;
-    /* Load a font */
-	if (FT_New_Face(ft, filename, 0, &face)){
-		std::cout << "ERROR: Couldn't load Fonb!" << std::endl;
-        return false;
-	}
-
-    //Set up texture atlas and set up the characters
-
-    //Set font size
-    FT_Set_Pixel_Sizes(face, 0, fontsize);
-    //Get font glyphs
-	FT_GlyphSlot g = face->glyph;
-
-    
-
-    printf("MSG: Generated a %d x %d (%d kb) texture atlas\n", texW, texH, texW * texH / 1024);
-
-    //Free Freetype resources
-    FT_Done_Face(face);
-    FT_Done_FreeType(ft);
-    //Succesfully managed to load the font
-    std::cout << "MSG: Text Font loaded succesfully!\n";
-    return true;
 }
 
 void TextRenderer::createTextQuad(const uint8_t* character, glm::vec2 pos, glm::vec2 scale, glm::vec4 color){

@@ -6,6 +6,15 @@
 #include <sstream>
 #include <fstream>
 
+//Check platform and then grab the Freetype library
+#ifdef __unix__ //Linux platform
+    #include <freetype2/ft2build.h>
+    #include FT_FREETYPE_H
+#elif defined(_WIN32) || defined(WIN32) //Windows platform
+    #include <ft2build.h>
+    #include FT_FREETYPE_H
+#endif
+
 #include <resourceSys/stb_image.h>
 
 // Instantiate static variables
@@ -52,6 +61,39 @@ Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool 
     return Textures[name];
 }
 
+int ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize){
+    
+    //Use free type to load font and set font size
+    FT_Library ft;
+    /* Initialize the FreeType2 library */
+	if (FT_Init_FreeType(&ft)){
+        std::cout << "ERROR: Couldn't load Freetype!" << std::endl;
+        return false;
+	}
+
+    FT_Face face;
+    /* Load a font */
+	if (FT_New_Face(ft, filename, 0, &face)){
+		std::cout << "ERROR: Couldn't load Fonb!" << std::endl;
+        return false;
+	}
+
+
+    //Set font size
+    FT_Set_Pixel_Sizes(face, 0, fontsize);
+    //Get font glyphs
+	FT_GlyphSlot g = face->glyph;
+
+    //TODO: Generate the font texture, Set up texture atlas and set up the characters
+
+    //Free Freetype resources
+    FT_Done_Face(face);
+    FT_Done_FreeType(ft);
+    //Succesfully managed to load the font
+    std::cout << "MSG: Text Font loaded succesfully!\n";
+    return 0;
+}
+
 int ResourceManager::GetTexture(std::string name){
 
     //*NOTE: The check is used to prevent using this function when no texture was binded to OpenGL
@@ -65,10 +107,8 @@ int ResourceManager::GetTexture(std::string name){
 
     for(int i = 0; i < texIDList.size(); i++){
         //check for id on the list and return it's location by iteration 
-        if(texIDList[i] == id){
-            //exit out and return texture index
-            return i;
-        }
+        if(texIDList[i] == id)
+            return i;//exit out and return texture index     
     }
 
     //Error the texture couldn't be found

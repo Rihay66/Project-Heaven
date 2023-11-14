@@ -8,8 +8,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include <resourceSys/shader.hpp>
-#include <resourceSys/texture.hpp>
+#include <resourceSys/resourceManager.hpp>
 
 //! THIS CLASS SHOULDN"T BE USED AS IT WILL BE REFACTORED AT A LATER DATA
 
@@ -71,21 +70,17 @@ class TextRenderer{
         //Used to tell opengl to render the triangles
         void flush();
 
-    public:
-
         //Shader used for text rendering
         Shader textShader;
-
+    public:
         //Constructor       
-        TextRenderer(unsigned int width, unsigned int height, const char* vShaderFile, const char* fShaderFile);
+        TextRenderer(unsigned int width, unsigned int height, Shader& shader);
         //Destructor
         ~TextRenderer();
         
         //Create text quad
         void createTextQuad(const uint8_t* character, glm::vec2 pos, glm::vec2 scale, glm::vec4 color);
-
-        //Load a font and sets a font size for the speicified font, returns false for error and returns true for success
-        bool loadFont(const char* filename, unsigned int fontSize);
+        
         //Draws text along with 
         void drawText(const char* text, glm::vec2 position, glm::vec2 scale, glm::vec4 color = glm::vec4(1.0f));
 };

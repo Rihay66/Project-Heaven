@@ -43,6 +43,7 @@ void gameHandler::setControllerState(int i){
 void gameHandler::init(){
     //load all resources like shaders, textures
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
+    ResourceManager::LoadShader("shaders/text.vs", "shaders/text.frag", nullptr, "text");
 
     //load textures
     ResourceManager::LoadTexture("textures/default.png", "default", true);
@@ -53,9 +54,8 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/transparent.png", "transparent", true);
     ResourceManager::LoadTexture("textures/crate.png", "crate",true);
     ResourceManager::LoadTexture("textures/porm.png", "porm", true);
-    
-    //Bind the textures that were loaded
-    ResourceManager::BindTextures();
+
+    //TODO: load font texture
 
     //Init sound engine
     soundEng = new SoundEngine();

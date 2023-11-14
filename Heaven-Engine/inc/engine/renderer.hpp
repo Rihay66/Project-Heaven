@@ -14,7 +14,7 @@
 
 //include shader and texture classes
 #include <gameObjs/gameObject.hpp>
-#include <resourceSys/shader.hpp>
+#include <resourceSys/resourceManager.hpp>
 
 //data struct for holding vertex info
 struct Vertex{ 
@@ -64,6 +64,9 @@ class Renderer{
         const static int maxQuadCount = 10000;
         const static int maxVertexCount = maxQuadCount * 4;
         const static int maxIndexCount = maxQuadCount * 6;
+
+        //stores maximum amount of textures there can be
+        const static int maxTextureSlots = 32;
 
         //Used to store vertex pos
         glm::vec4 quadVertexPositions[4];
