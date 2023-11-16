@@ -8,6 +8,22 @@ SoundSource* ss;
 GameObject* render_test;
 TestTriggerObject* trigger_test;
 
+//Frame profiling
+void gameHandler::getFrameTime(){
+    this->currentTime = glfwGetTime();
+    this->timeDiff = this->currentTime - this->prevTime;
+    this->counter++;
+    if(this->timeDiff >= 1.0 / 30.0){
+        //display frame per second & frame time
+        std::string FPS = std::to_string((1.0 / this->timeDiff) * this->counter);
+        std::string ms = std::to_string((this->timeDiff / this->counter) * 1000);
+        //set up title
+        frame = FPS + "FPS / " + ms + "ms";
+        this->prevTime = this->currentTime;
+        this->counter = 0;
+    }
+}
+
 //constructor
 gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* handle) : Width(width), Height(height), window(handle) {}
 
@@ -15,7 +31,10 @@ gameHandler::gameHandler(unsigned int width, unsigned int height, GLFWwindow* ha
 gameHandler::~gameHandler(){
     //delete any pointers and clear resources (eg ResourceManager)
     delete camera;
+    renderer = nullptr;
     delete renderer;
+    textRenderer = nullptr;
+    delete textRenderer;
     delete plr;
     delete render_test;
     delete trigger_test;
@@ -55,7 +74,7 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/crate.png", "crate",true);
     ResourceManager::LoadTexture("textures/porm.png", "porm", true);
 
-    //TODO: load font texture
+    ResourceManager::LoadFontTexture("fonts/FreeSans.ttf", 24);
 
     //Init sound engine
     soundEng = new SoundEngine();
@@ -71,6 +90,9 @@ void gameHandler::init(){
     Shader spriteShader = ResourceManager::GetShader("sprite");
     renderer = new Renderer(spriteShader, smallModelSize);
 
+    //set up the text renderer
+    Shader textShader = ResourceManager::GetShader("text");
+    textRenderer = new TextRenderer(this->Width, this->Height, textShader);
 
     //* The order of the objects affects how they're layered
     //set up game objects and camera
@@ -134,7 +156,6 @@ void gameHandler::init(){
     renderList.push_back(roof);
     renderList.push_back(wall);
     renderList.push_back(crate);
-    renderList.push_back(render_test);
     renderList.push_back(trigger_test);
     renderList.push_back(plr);
 
@@ -214,5 +235,12 @@ void gameHandler::render(float deltaTime){
         renderer->Draw2D(renderList);
         //Draw a single object
         renderer->Draw2D(render_test);
+        //draw frame profiling
+        textRenderer->drawText(this->frame, glm::vec2(0.0f, 900.0f), glm::vec2(1.0f, 2.0f), glm::vec4(0.2f, 0.2f, 0.8f, 1.0f));
+        //Draw a sample text
+        textRenderer->drawText("BEEP BOOP... Test Test", glm::vec2(100.0f, 500.0f), glm::vec2(0.5f, 1.5f), glm::vec4(0.8f, 0.1f, 0.1f, 1.0f));
     }
+
+    //Get frame time
+    getFrameTime();
 }

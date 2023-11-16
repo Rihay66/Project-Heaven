@@ -4,7 +4,6 @@
 #define GAMEHANDLER_HPP
 
 #include <iostream>
-#include <algorithm>
 
 #include <resourceSys/resourceManager.hpp>
 #include <engine/sound.hpp>
@@ -14,6 +13,7 @@
 #include "../inc/testTriggerObject.hpp"
 #include <orthoCam/orthoCameraController.hpp>
 #include <engine/renderer.hpp>
+#include <engine/textRenderer.hpp>
 #include <glm/glm.hpp>
 
 //define global vars for objects to use
@@ -34,6 +34,17 @@ enum CONTROLSSTATE{
 //handler class that manages all objects and also make use of the resource manager
 class gameHandler{
     private:
+        //vars used for frame profiling
+        double prevTime = 0.0;
+        double currentTime = 0.0;
+        double timeDiff;
+        unsigned int counter = 0;
+
+        void getFrameTime();
+
+        //store frame infor
+        std::string frame;
+
         //Contain reference of the window size
         unsigned int Width, Height;
         //contain reference of the window
@@ -44,6 +55,8 @@ class gameHandler{
         Renderer* renderer;
         //contain sound Engine
         SoundEngine* soundEng;
+        //contain text renderer
+        TextRenderer* textRenderer;
 
     public:
         //Game state & input state

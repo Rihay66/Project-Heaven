@@ -6,5 +6,5 @@ uniform vec4 textColor;
 uniform sampler2D text;
 
 void main(){
-    color = vec4(textColor) * texture(text, o_TexCoords);
+    color = vec4(textColor) * vec4(1.0, 1.0, 1.0, texture(text, o_TexCoords).r);
 }

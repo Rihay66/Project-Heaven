@@ -1,6 +1,9 @@
 #include "../inc/gameWindow.hpp"
 
-GameWindow::GameWindow(int w, int h, const char* name) : Window(w, h, name){}
+GameWindow::GameWindow(int w, int h, const char* name) : Window(w, h, name){
+    //Set vertical sync to be disabled
+    glfwSwapInterval(0);
+}
 
 GameWindow::~GameWindow(){
     //delete any pointers

@@ -10,6 +10,13 @@
 #include <resourceSys/texture.hpp>
 #include <resourceSys/shader.hpp>
 
+/// Holds all state information relevant to a character as loaded using FreeType
+struct Character{
+    unsigned int TextureID; // ID handle of the glyph texture
+    glm::ivec2 Size;        // Size of glyph
+    glm::ivec2 Bearing;     // Offset from baseline to left/top of glyph
+    unsigned int Advance;   // Horizontal offset to advance to next glyph
+};
 
 // A static singleton ResourceManager class that hosts several
 // functions to load Textures and Shaders. Each loaded texture
@@ -21,13 +28,13 @@
 // and/or shader is also stored for future reference by string
 // handles. All functions and resources are static and no 
 // public constructor is defined.
-class ResourceManager
-{
+class ResourceManager{
 public:
     // resource storage
     static std::map<std::string, Shader>    Shaders;
     static std::map<std::string, Texture2D> Textures;
     static std::vector<unsigned int>        texIDList;
+    static std::map<char, Character> Characters;
     // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
     static Shader    LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
     // retrieves a stored sader

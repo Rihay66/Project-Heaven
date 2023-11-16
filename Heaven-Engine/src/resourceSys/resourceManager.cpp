@@ -20,7 +20,8 @@
 // Instantiate static variables
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
-std::vector<unsigned int>              ResourceManager::texIDList;
+std::vector<unsigned int>           ResourceManager::texIDList;
+std::map<char, Character>           ResourceManager::Characters; 
 
 static std::string checkName(std::string str){
 
@@ -74,17 +75,50 @@ int ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize
     FT_Face face;
     /* Load a font */
 	if (FT_New_Face(ft, filename, 0, &face)){
-		std::cout << "ERROR: Couldn't load Fonb!" << std::endl;
+		std::cout << "ERROR: Couldn't load Font!" << std::endl;
         return false;
 	}
 
-
     //Set font size
     FT_Set_Pixel_Sizes(face, 0, fontsize);
-    //Get font glyphs
-	FT_GlyphSlot g = face->glyph;
+    //Disable byte-alignment restriction
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    //TODO: Generate the font texture, Set up texture atlas and set up the characters
+    // TODO: Optimize loading the font, maybe creating a atlas
+    //  load first 128 characters of ASCII set
+    for (unsigned char c = 0; c < 128; c++){
+        // Load character glyph
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER)){
+            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+            continue;
+        }
+        // generate texture
+        unsigned int texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RED,
+            face->glyph->bitmap.width,
+            face->glyph->bitmap.rows,
+            0,
+            GL_RED,
+            GL_UNSIGNED_BYTE,
+            face->glyph->bitmap.buffer);
+        // set texture options
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // now store character for later use
+        Character character = {
+            texture,
+            glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+            static_cast<unsigned int>(face->glyph->advance.x)};
+        Characters.insert(std::pair<char, Character>(c, character));
+    }
 
     //Free Freetype resources
     FT_Done_Face(face);
@@ -147,8 +181,11 @@ void ResourceManager::Clear(){
     // (properly) delete all textures
     for (auto iter : Textures)
         glDeleteTextures(1, &iter.second.ID);
+    // (properly) delete all font textures
+    for (auto iter : Characters)
+        glDeleteTextures(1, &iter.second.TextureID);
 
-    //Claer out the texture vector
+    //Clear out the texture vector
     texIDList.clear();
 }
 

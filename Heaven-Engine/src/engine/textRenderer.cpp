@@ -13,152 +13,81 @@
     #include <ft2build.h>
     #include FT_FREETYPE_H
 #endif
-//! THIS CLASS SHOULDN"T BE USED AS IT WILL BE REFACTORED AT A LATER DATA
 //TODO: Make batch rendering when rendering text
 
 TextRenderer::TextRenderer(unsigned int width, unsigned int height,
- Shader& shader) : textShader(shader), texW(0), texH(0){
+ Shader& shader) : textShader(shader){
+    //Create projection
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
+
     //Configure shader
-    this->textShader.SetMatrix4("projection", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.0f), true);
-    this->textShader.SetInteger("text", 0);
+    this->textShader.SetMatrix4("projection", projection, true);
 
     //Configure VAO/VBO for positioning and texturing
     initTextRenderingData();
 }
 
 TextRenderer::~TextRenderer(){
-    //delete texture
-    glDeleteTextures(1, &this->textureID);
-
     //delete quad buffer data 
-    glDeleteVertexArrays(1, &this->quadVAO);
-    glDeleteBuffers(1, &this->quadVBO);
-
-    //delete any pointers
-    delete[] this->quadBuffer;
-    this->quadBufferPtr = nullptr;
-    delete this->quadBufferPtr;
+    glDeleteVertexArrays(1, &this->VAO);
+    glDeleteBuffers(1, &this->VBO);
 }
 
-void TextRenderer::createTextQuad(const uint8_t* character, glm::vec2 pos, glm::vec2 scale, glm::vec4 color){
-
-    //check if not over the vertex count
-    if(this->vertexCount >= this->maxVertexCount){
-        this->endBatch();
-        this->flush();
-        this->beginBatch();
-    }
-
-    //Generate character and set correct character using the atlas
-
-    /* Calculate the vertex and texture coordinates */
-    float x2 = pos.x + this->c[*character].bl * scale.x;
-    float y2 = -pos.y - this->c[*character].bt * scale.y;
-    float w = this->c[*character].bw * scale.x;
-    float h = this->c[*character].bh * scale.y;
-
-    /* Advance the cursor to the start of the next character */
-    pos.x += this->c[*character].ax * scale.x;
-    pos.y += this->c[*character].ay * scale.y;
-
-    /* Skip glyphs that have no pixels and if glyphs have pixel then add to the quadbufferptr*/
-    if (!w || !h){
-        
-        quadBufferPtr->position = glm::vec2(x2, -y2);
-        quadBufferPtr->texCoords = glm::vec2(this->c[*character].tx, this->c[*character].ty);
-        quadBufferPtr++;
-
-        quadBufferPtr->position = glm::vec2(x2 + w, -y2);
-        quadBufferPtr->texCoords = glm::vec2(this->c[*character].tx + this->c[*character].bw / this->texW, this->c[*character].ty);
-        quadBufferPtr++;
-
-        quadBufferPtr->position = glm::vec2(x2, -y2 - this->texH);
-        quadBufferPtr->texCoords = glm::vec2(this->c[*character].tx, this->c[*character].ty + this->c[*character].bh / this->texH);
-        quadBufferPtr++;
-
-        quadBufferPtr->position = glm::vec2(x2 + this->texW, -y2);
-        quadBufferPtr->texCoords = glm::vec2(this->c[*character].tx + this->c[*character].bw / this->texW, this->c[*character].ty);
-        quadBufferPtr++;
-
-        quadBufferPtr->position = glm::vec2(x2, -y2 - this->texH);
-        quadBufferPtr->texCoords = glm::vec2(this->c[*character].tx, this->c[*character].ty + this->c[*character].bh / this->texH);
-        quadBufferPtr++;
-
-        quadBufferPtr->position = glm::vec2(x2 + this->texW, -y2 - this->texH);
-        quadBufferPtr->texCoords = glm::vec2(this->c[*character].tx + this->c[*character].bw / this->texW, this->c[*character].ty + this->c[*character].bh / this->texH);
-        quadBufferPtr++;        
-
-        //Amount of triangles needed to render each character
-        vertexCount += 6;
-    } 
-}
-
-void TextRenderer::drawText(const char* text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
-    //init the buffer
-    this->beginBatch();
-
-    //Set shader configs
-    glBindTexture(GL_TEXTURE_2D, this->textureID);
+void TextRenderer::drawText(std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
+    //Set the shader
     this->textShader.SetVector4f("textColor", color, true);
-    this->textShader.SetInteger("text", 31, true);
+    
+    //TODO: Change the way the vertex and buffer is binded because it conflicts with the main renderer
+    glActiveTexture(GL_TEXTURE0);
 
-    //Loop through each character and generate text buffer
-    const uint8_t* p;
-    for(p = (const uint8_t*)text; *p; p++){
-        createTextQuad(p, position, scale, color);
+    //Bind this VAO
+    glBindVertexArray(this->VAO);
+
+    // iterate through all characters
+    std::string::const_iterator c;
+    for (c = text.begin(); c != text.end(); c++) 
+    {
+        Character ch = ResourceManager::Characters[*c];
+
+        float xpos = position.x + ch.Bearing.x * scale.x;
+        float ypos = position.y + (ch.Size.y - ch.Bearing.y) * scale.y;
+
+        float w = ch.Size.x * scale.x;
+        float h = ch.Size.y * scale.y;
+        // update VBO for each character
+        float vertices[6][4] = {
+            { xpos,     ypos + h,   0.0f, 0.0f },            
+            { xpos,     ypos,       0.0f, 1.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+
+            { xpos,     ypos + h,   0.0f, 0.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+            { xpos + w, ypos + h,   1.0f, 0.0f }           
+        };
+        // render glyph texture over quad
+        glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+        // update content of VBO memory
+        glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // be sure to use glBufferSubData and not glBufferData
+        // render quad
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+        position.x += (ch.Advance >> 6) * scale.x; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
     }
-
-    //Set dynamic vertex buffer
-    this->endBatch();
-    //Draw the text
-    this->flush();
 }
 
 void TextRenderer::initTextRenderingData(){
-    //Configure buffers
-    if(this->quadBuffer != nullptr)
-        exit(-1);
+    // configure VAO/VBO for texture quads
+    glCreateVertexArrays(1, &this->VAO);
+    glBindVertexArray(this->VAO);
+
+    glCreateBuffers(1, &this->VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
     
-    this->quadBuffer = new CharacterVertex[this->maxVertexCount];
-
-    // configure VAO/VBO/EBO
-    glCreateVertexArrays(1, &this->quadVAO);
-    glCreateBuffers(1, &this->quadVBO);
-
-    glBindVertexArray(this->quadVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(CharacterVertex) * this->maxVertexCount, nullptr, GL_DYNAMIC_DRAW);
-
-    //vertex attribute
-    glEnableVertexArrayAttrib(this->quadVBO, 0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(CharacterVertex), (const void*)offsetof(CharacterVertex, position));
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
     
-    //texture coordinates attribute
-    glEnableVertexArrayAttrib(this->quadVBO, 1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(CharacterVertex), (const void*)offsetof(CharacterVertex, texCoords));  
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
-
-void TextRenderer::beginBatch(){
-    //Set buffer pointer
-    this->quadBufferPtr = quadBuffer;
-
-    //Call shader usage
-    this->textShader.Use();
-}
-
-void TextRenderer::endBatch(){
-    GLsizeiptr size = (uint8_t*)this->quadBufferPtr - (uint8_t*)this->quadBuffer;
-    //set up dynamic buffer
-    glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, quadBuffer);
-}
-
-void TextRenderer::flush(){
-    glBindVertexArray(this->quadVAO);
-    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
-
-    //reset vertex count 
-    this->vertexCount = 0;
-}
-//! THIS CLASS SHOULDN"T BE USED AS IT WILL BE REFACTORED AT A LATER DATA

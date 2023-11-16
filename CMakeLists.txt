@@ -40,7 +40,7 @@ set_target_properties(Heaven-Engine PROPERTIES
 #Make a reference to the Heaven-Engine's glfw lib 
 set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libglfw.so.3.3)
 #Make a reference to the Heaven-Engine's sfml-audio lib
-set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libsfml-audio.so.2.6.0)
+set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libsfml-audio.so.2.6.1)
 
 #Link libraries to compile with
 target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw} ${local-audio})

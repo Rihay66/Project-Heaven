@@ -20,7 +20,7 @@ void CameraController::calculateProjectionView()
     //put together the projectionView
     this->projectionView = this->projection * this->view;
     //tell shader to set view
-    this->shader.SetMatrix4("projectionView", this->projectionView);
+    this->shader.SetMatrix4("projectionView", this->projectionView, true);
 }
 
 void CameraController::followPos(glm::vec2 pos, glm::vec2 size, glm::vec2 offset){
@@ -29,8 +29,6 @@ void CameraController::followPos(glm::vec2 pos, glm::vec2 size, glm::vec2 offset
 
     //follow a position
     this->position = glm::vec3((((pos.x + offset.x) * size.x) - this->width / 2.0f), (((pos.y + offset.y) * size.y) - this->height / 2.0f), 0.0f);
-    //update shader
-    calculateProjectionView();
 }
 
 void CameraController::inputMovement(float deltaTime){
@@ -79,7 +77,4 @@ void CameraController::inputMovement(float deltaTime){
     //Check to make sure zoom is only for zooming out and not to zoom
     if(zoomFactor >= 0.0f)
         zoomFactor = 0.0f;
-
-    //update shader and projection
-    calculateProjectionView();
 }
