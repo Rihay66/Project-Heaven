@@ -31,30 +31,33 @@ file(COPY "${PROJECT_SOURCE_DIR}/fonts" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}
 # Add the path to your engine library's CMake configuration files
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}Heaven-Engine/build)
 
-#Make reference to the Heaven-Engine's library and it's include folder
+# Make reference to the Heaven-Engine's library and it's include folder
 add_library(Heaven-Engine SHARED IMPORTED)
 set_target_properties(Heaven-Engine PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libHeaven-Engine.so
+    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.so
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
 )
-#Make a reference to the Heaven-Engine's glfw lib 
-set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libglfw.so.3.3)
-#Make a reference to the Heaven-Engine's sfml-audio lib
-set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libsfml-audio.so.2.6.1)
-
-#Link libraries to compile with
-target_link_libraries(project-heaven PRIVATE Heaven-Engine ${local-glfw} ${local-audio})
 
 # Define the source and destination paths for the DLL of the Heaven Engine
-set(ENGINE_SO_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.so")
-set(SO_DEST "${CMAKE_BINARY_DIR}")
+set(ENGINE_SO_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/lib")
 
-# Use file(COPY ...) to copy the SO
-file(COPY "${ENGINE_SO_SOURCE}" DESTINATION "${SO_DEST}")
-file(COPY ${local-glfw} DESTINATION ${SO_DEST})
-file(COPY ${local-audio} DESTINATION ${SO_DEST})
+#search all libraries and add them to a var
+file(GLOB LIBRARIES 
+${ENGINE_SO_SOURCE}/*)
+
+# Link the Heaven-Engine to executable
+target_link_libraries(project-heaven PRIVATE Heaven-Engine ${LIBRARIES})
+
+#Get all libraries from the engine's "lib" folder and place them onto the binary directory
+add_custom_command(
+	TARGET project-heaven POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${CMAKE_SOURCE_DIR}/Heaven-Engine/build/lib
+	${CMAKE_BINARY_DIR}
+)
 
 # Make sure your external project knows where to find the copied SOs
+set(SO_DEST "${CMAKE_BINARY_DIR}")
 add_definitions(-DHEAVEN_ENGINE_SO_PATH="${SO_DEST}")
 
 endif (UNIX)

@@ -77,7 +77,7 @@ if(UNIX)
     # Get Xorg dependencies into one variable
     set(Xorg Xxf86vm X11 Xrandr pthread Xi openal udev ogg vorbis vorbisenc vorbisfile)
 
-    # Grab SDL dirs
+    # Grab GLFW dirs
     target_link_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
     target_link_directories(Heaven-Engine-s PUBLIC ${GLFW3_INCLUDE_DIR})
 
@@ -137,17 +137,17 @@ endif(WIN32)
 
 # Install the library and CMake configuration files
 install(TARGETS Heaven-Engine EXPORT Heaven-EngineConfig
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    ARCHIVE DESTINATION ${CMAKE_BINARY_DIR}
+    LIBRARY DESTINATION ${CMAKE_BINARY_DIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 # Install the library and CMake configuration files
 install(TARGETS Heaven-Engine-s EXPORT Heaven-Engine-sConfig
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    ARCHIVE DESTINATION ${CMAKE_BINARY_DIR}
+    LIBRARY DESTINATION ${CMAKE_BINARY_DIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
