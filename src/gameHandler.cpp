@@ -57,8 +57,6 @@ void gameHandler::setControllerState(int i){
     Controller_State = (CONTROLSSTATE)i;
 }
 
-//TODO: UI and text
-
 void gameHandler::init(){
     //load all resources like shaders, textures
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
@@ -74,7 +72,7 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/crate.png", "crate",true);
     ResourceManager::LoadTexture("textures/porm.png", "porm", true);
 
-    ResourceManager::LoadFontTexture("fonts/FreeSans.ttf", 24);
+    ResourceManager::LoadFontTexture("fonts/FFF-Forward.ttf", 12);
 
     //Init sound engine
     soundEng = new SoundEngine();
