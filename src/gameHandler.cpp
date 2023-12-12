@@ -236,7 +236,7 @@ void gameHandler::render(float deltaTime){
         //draw frame profiling
         textRenderer->drawText(this->frame, glm::vec2(0.0f, 900.0f), glm::vec2(1.0f, 2.0f), glm::vec4(0.2f, 0.2f, 0.8f, 1.0f));
         //Draw a sample text
-        textRenderer->drawText("BEEP BOOP... Test Test", glm::vec2(100.0f, 500.0f), glm::vec2(0.5f, 1.5f), glm::vec4(0.8f, 0.1f, 0.1f, 1.0f));
+        textRenderer->drawText("BEEP BOOP... YyRrBbTt", glm::vec2(100.0f, 500.0f), glm::vec2(0.5f, 1.5f), glm::vec4(0.8f, 0.1f, 0.1f, 0.5f));
     }
 
     //Get frame time

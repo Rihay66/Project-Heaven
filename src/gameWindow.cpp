@@ -1,8 +1,11 @@
 #include "../inc/gameWindow.hpp"
 
+//static var
+static bool pressed = false;
+static bool vSync = true;
+
 GameWindow::GameWindow(int w, int h, const char* name) : Window(w, h, name){
-    //Set vertical sync to be disabled
-    glfwSwapInterval(0);
+
 }
 
 GameWindow::~GameWindow(){
@@ -25,6 +28,21 @@ void GameWindow::input(){
         //set window to close
         glfwSetWindowShouldClose(handle, true);
     }
+
+    //V-sync disabler and enabler
+    if(glfwGetKey(handle, GLFW_KEY_V) == GLFW_PRESS && !pressed){
+        //Flip v-sync boolean
+        vSync = !vSync;
+        
+        //Enable/Disable V-sync
+        glfwSwapInterval((int)vSync);
+        std::cout << "Vsync status: " << vSync  << "\n";
+
+        pressed = !pressed;
+    }else if(glfwGetKey(handle, GLFW_KEY_V) == GLFW_RELEASE && pressed){
+        pressed = !pressed;
+    }
+
 }
 
 void GameWindow::update(){

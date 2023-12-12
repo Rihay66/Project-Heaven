@@ -13,7 +13,8 @@
     #include <ft2build.h>
     #include FT_FREETYPE_H
 #endif
-//TODO: Make batch rendering when rendering text
+
+//TODO: Redo text renderer to use a batch rendering solution
 
 TextRenderer::TextRenderer(unsigned int width, unsigned int height,
  Shader& shader) : textShader(shader){
@@ -36,9 +37,6 @@ TextRenderer::~TextRenderer(){
 void TextRenderer::drawText(std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
     //Set the shader
     this->textShader.SetVector4f("textColor", color, true);
-    
-    //TODO: Change the way the vertex and buffer is binded because it conflicts with the main renderer
-    glActiveTexture(GL_TEXTURE0);
 
     //Bind this VAO
     glBindVertexArray(this->VAO);
@@ -50,7 +48,7 @@ void TextRenderer::drawText(std::string text, glm::vec2 position, glm::vec2 scal
         Character ch = ResourceManager::Characters[*c];
 
         float xpos = position.x + ch.Bearing.x * scale.x;
-        float ypos = position.y + (ch.Size.y - ch.Bearing.y) * scale.y;
+        float ypos = position.y - (ch.Size.y - ch.Bearing.y) * scale.y;
 
         float w = ch.Size.x * scale.x;
         float h = ch.Size.y * scale.y;

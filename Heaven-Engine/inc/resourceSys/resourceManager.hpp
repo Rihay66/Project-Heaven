@@ -42,7 +42,7 @@ public:
     // loads (and generates) a texture from file
     static Texture2D LoadTexture(const char *file, std::string name, bool alpha = false);
     // loads (and generates) a text texture from file
-    static int LoadFontTexture(const char* file, unsigned int fontsize);
+    static int LoadFontTexture(const char* file, unsigned int fontsize, bool isLinear = true);
     // retrieves a stored texture on the texList vector
     static int       GetTexture(std::string name);
     // binds all textures from the texList to be used by OpenGL

@@ -4,17 +4,12 @@
 #define TEXTRENDERING_HPP
 
 #include <string>
-#include <algorithm>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
 #include <resourceSys/resourceManager.hpp>
 
-struct CharacterVertex{
-    glm::vec2 position;
-    glm::vec2 texCoords;
-};
 class TextRenderer{
     private:
         //stores data of a quad
