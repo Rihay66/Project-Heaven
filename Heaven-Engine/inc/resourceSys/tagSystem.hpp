@@ -27,6 +27,8 @@ public:
     static std::string getTag(GameObject* gameObj);
     // get object from the tag pool by tag
     static GameObject* getObject(std::string tagName);
+    // check if tag pertains to a passed object that exists in tag pool
+    static bool checkObject(std::string target, GameObject* gameObj);
     // get amount of objects in the tag system
     static int getAmountOfObjects();
 

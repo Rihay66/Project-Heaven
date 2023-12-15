@@ -23,10 +23,12 @@ class TriggerObject : public GameObject{
         //Used to check if object is enabled and when disabled is automatically removed from game
         bool isDestroyed; 
         //This value is used to set as a timer interval to call onTriggerSta()
-        int maxTimeToTrigger = 5;
+        int maxTimeToTrigger;
 
         //Store last object to collide
-        GameObject* lastObjToCollide = nullptr;
+        GameObject* lastObjToCollide;
+        //Store target tag 
+        std::string targetTag;
 
         //Constructor
         TriggerObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec4 color = glm::vec4(1.0f));

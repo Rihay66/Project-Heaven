@@ -72,7 +72,7 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/crate.png", "crate",true);
     ResourceManager::LoadTexture("textures/porm.png", "porm", true);
 
-    ResourceManager::LoadFontTexture("fonts/FFF-Forward.ttf", 12);
+    ResourceManager::LoadFontTexture("fonts/FFFForward.ttf", 12, false);
 
     //Init sound engine
     soundEng = new SoundEngine();
@@ -128,10 +128,13 @@ void gameHandler::init(){
     render_test = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("item"), glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
 
     //Make a trigger object
-    pos = glm::vec2(-7.0f, 0.0f);
+    pos = glm::vec2(-2.0f, -2.0f);
     trigger_test = new TestTriggerObject(pos, standardSpriteSize, ResourceManager::GetTexture("transparent"), glm::vec4(0.1f, 1.0f, 0.1f, 1.0f));
     //Change trigger type
     trigger_test->trigType = TriggerType::Exit;
+
+    //Add target tag
+    trigger_test->targetTag = "Player";
 
     //Change default values
     trigger_test->maxTimeToTrigger = 50;

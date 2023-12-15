@@ -56,6 +56,19 @@ GameObject* TagSystem::getObject(std::string tagName){
     return nullptr;
 }
 
+bool TagSystem::checkObject(std::string target, GameObject* gameObj){
+    //loop to find tag and then compare if the object is the same as in tag pool
+    for(int i = 0; i < objectsWithTag.size(); i++){
+        if(objectsWithTag[i].name.compare(target) == 0 && objectsWithTag[i].obj == gameObj){
+            //Object was found then return true
+            return true;
+        }
+    }
+
+    //nothing was found then return false by default
+    return false;
+}
+
 int TagSystem::getAmountOfObjects(){
     //exit function if the list is empty
     if(objectsWithTag.size() <= 0)

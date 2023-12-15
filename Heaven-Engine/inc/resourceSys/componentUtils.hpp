@@ -43,9 +43,6 @@ struct TriggerBoxCollider{
     glm::vec2 size = {0.5f, 0.5f};  
     float rotationOffset = 0.0f;
 
-    //storage for runtime
-    void* runtimeBody = nullptr;
-
     //Constructors
     TriggerBoxCollider() = default;
     TriggerBoxCollider(const TriggerBoxCollider&) = default;
