@@ -100,7 +100,6 @@ void Physics::CheckCollisions(float deltaTime){
     }
 }
 
-//TODO: Move this to be a collision check for trigger and gameobjects, make use of the TriggerBoxCollider component
 //TODO: Make it able to detect collision for rotation and rotation offsets
 bool Physics::aabbCollision(GameObject* a, GameObject* b){
     // collision x-axis?

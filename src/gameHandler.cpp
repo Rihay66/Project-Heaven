@@ -72,7 +72,7 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/crate.png", "crate",true);
     ResourceManager::LoadTexture("textures/porm.png", "porm", true);
 
-    ResourceManager::LoadFontTexture("fonts/FFFForward.ttf", 12, false);
+    ResourceManager::LoadFontTexture("fonts/November.ttf", 18, false);
 
     //Init sound engine
     soundEng = new SoundEngine();
@@ -132,7 +132,6 @@ void gameHandler::init(){
     trigger_test = new TestTriggerObject(pos, standardSpriteSize, ResourceManager::GetTexture("transparent"), glm::vec4(0.1f, 1.0f, 0.1f, 1.0f));
     //Change trigger type
     trigger_test->trigType = TriggerType::Exit;
-
     //Add target tag
     trigger_test->targetTag = "Player";
 

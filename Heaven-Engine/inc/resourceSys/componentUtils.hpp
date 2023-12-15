@@ -38,14 +38,4 @@ struct BoxCollider{
     BoxCollider(const BoxCollider&) = default;
 };
 
-struct TriggerBoxCollider{
-    glm::vec2 offset = {0.0f, 0.0f};
-    glm::vec2 size = {0.5f, 0.5f};  
-    float rotationOffset = 0.0f;
-
-    //Constructors
-    TriggerBoxCollider() = default;
-    TriggerBoxCollider(const TriggerBoxCollider&) = default;
-};
-
 #endif

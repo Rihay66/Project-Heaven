@@ -16,10 +16,6 @@ class TriggerObject : public GameObject{
         //Declare trigger type
         TriggerType trigType;
 
-        //TODO: USE THIS FOR THE PHYSICS ENGINE
-        //declare box collider
-        TriggerBoxCollider box; 
-
         //Used to check if object is enabled and when disabled is automatically removed from game
         bool isDestroyed; 
         //This value is used to set as a timer interval to call onTriggerSta()
