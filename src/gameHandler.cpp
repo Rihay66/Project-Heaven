@@ -72,7 +72,7 @@ void gameHandler::init(){
     ResourceManager::LoadTexture("textures/crate.png", "crate",true);
     ResourceManager::LoadTexture("textures/porm.png", "porm", true);
 
-    ResourceManager::LoadFontTexture("fonts/November.ttf", 18, false);
+    ResourceManager::LoadFontTexture("fonts/November.ttf", 24, false);
 
     //Init sound engine
     soundEng = new SoundEngine();
@@ -236,7 +236,7 @@ void gameHandler::render(float deltaTime){
         //Draw a single object
         renderer->Draw2D(render_test);
         //draw frame profiling
-        textRenderer->drawText(this->frame, glm::vec2(0.0f, 900.0f), glm::vec2(1.0f, 2.0f), glm::vec4(0.2f, 0.2f, 0.8f, 1.0f));
+        textRenderer->drawText(this->frame, glm::vec2(0.0f, 900.0f), glm::vec2(0.5f, 1.5f), glm::vec4(0.2f, 0.2f, 0.8f, 1.0f));
         //Draw a sample text
         textRenderer->drawText("BEEP BOOP... YyRrBbTt", glm::vec2(100.0f, 500.0f), glm::vec2(0.5f, 1.5f), glm::vec4(0.8f, 0.1f, 0.1f, 0.5f));
     }
