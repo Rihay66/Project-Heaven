@@ -29,6 +29,8 @@ class TriggerObject : public GameObject{
 
         //Constructor
         TriggerObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec4 color = glm::vec4(1.0f));
+        //Destructor
+        ~TriggerObject();
         
         //Called to check for trigger type and do a overwritten action
         void triggerCollisionCallback(GameObject* obj);

@@ -3,6 +3,10 @@
 TriggerObject::TriggerObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec4 color) :
 GameObject(pos, siz, sprt, color), isDestroyed(false), maxTimeToTrigger(5), trigType(TriggerType::Enter){}
 
+TriggerObject::~TriggerObject(){
+    this->lastCollidedObjs.clear();
+}
+
 //Define function to check if a object already exists in the passed list
 bool isAlreadyPresent(const std::vector<GameObject*>& vec, GameObject* value) {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
