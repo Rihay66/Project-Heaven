@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.15.0)
 project(project-heaven VERSION 0.0.8 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
-#include all files
-# Add source files
+#Include all files
+#Add source files
 file(GLOB_RECURSE SOURCE_FILES 
 	${CMAKE_SOURCE_DIR}/src/*.c
 	${CMAKE_SOURCE_DIR}/src/*.cpp)
@@ -19,14 +19,34 @@ ${HEADER_FILES}
 ${SOURCE_FILES}
 )
 
+# Define resource folders
+set(TEXTURES_DIR ${CMAKE_SOURCE_DIR}/textures)
+set(SHADERS_DIR ${CMAKE_SOURCE_DIR}/shaders)
+set(FONTS_DIR ${CMAKE_SOURCE_DIR}/fonts)
+set(SOUNDS_DIR ${CMAKE_SOURCE_DIR}/sounds)
+
+# Define the destination build folder
+set(BUILD_DIR ${CMAKE_BINARY_DIR})
+
 # Link libs if the detected OS is LINUX
 if(UNIX)
 
 #Create folders and their sub files for runtime loading
-file(COPY "${PROJECT_SOURCE_DIR}/textures" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "${PROJECT_SOURCE_DIR}/fonts" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+# Function to copy files if they are different
+function(copy_if_different SRC_DIR DEST_DIR)
+    file(GLOB_RECURSE FILES_LIST "${SRC_DIR}/*")
+    foreach(FILE_PATH ${FILES_LIST})
+        get_filename_component(FILE_NAME ${FILE_PATH} NAME)
+        set(DEST_FILE_PATH "${DEST_DIR}/${FILE_NAME}")
+        configure_file(${FILE_PATH} ${DEST_FILE_PATH} COPYONLY)
+    endforeach()
+endfunction()
+
+# Call the function for each resource folder
+copy_if_different(${TEXTURES_DIR} ${BUILD_DIR}/textures)
+copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
+copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/sounds)
+copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
 
 # Add the path to your engine library's CMake configuration files
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}Heaven-Engine/build)
@@ -134,10 +154,21 @@ file(COPY ${local-box2d} DESTINATION ${DLL_DEST})
 else(MSVC)
 
 #Create folders and their sub files for runtime loading
-file(COPY "${PROJECT_SOURCE_DIR}/textures" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "${PROJECT_SOURCE_DIR}/fonts" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+# Function to copy files if they are different
+function(copy_if_different SRC_DIR DEST_DIR)
+    file(GLOB_RECURSE FILES_LIST "${SRC_DIR}/*")
+    foreach(FILE_PATH ${FILES_LIST})
+        get_filename_component(FILE_NAME ${FILE_PATH} NAME)
+        set(DEST_FILE_PATH "${DEST_DIR}/${FILE_NAME}")
+        configure_file(${FILE_PATH} ${DEST_FILE_PATH} COPYONLY)
+    endforeach()
+endfunction()
+
+# Call the function for each resource folder
+copy_if_different(${TEXTURES_DIR} ${BUILD_DIR}/textures)
+copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
+copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/sounds)
+copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
 
 #Get the engine library
 find_package(Heaven-Engine REQUIRED)

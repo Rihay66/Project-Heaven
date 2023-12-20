@@ -4,6 +4,7 @@
 #define COMPONENTUTILS_HPP
 
 #include <glm/glm.hpp>
+#include <algorithm>
 
 enum class TriggerType {Enter = 0, Stay, Exit};
 enum class BodyType {Static = 0, Dynamic, Kinematic };
