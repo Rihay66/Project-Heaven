@@ -123,6 +123,12 @@ void gameHandler::init(){
     pos = glm::vec2(-2.5f, -2.0f);
     PhysicsObject* crate = new PhysicsObject(pos, standardSpriteSize, ResourceManager::GetTexture("crate"));
 
+    //*Giving the crate the same tag as the player and testing exit trigger collision
+    //Set tag
+    std::string tag = "Player";
+    //Add tag to the tag system
+    TagSystem::addTag(tag, crate);
+
     //Make a test object to draw seperately from the list
     pos = glm::vec2(-4.5f, 0.5f);
     render_test = new GameObject(pos, standardSpriteSize, ResourceManager::GetTexture("item"), glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
@@ -132,8 +138,6 @@ void gameHandler::init(){
     trigger_test = new TestTriggerObject(pos, standardSpriteSize, ResourceManager::GetTexture("transparent"), glm::vec4(0.1f, 1.0f, 0.1f, 1.0f));
     //Change trigger type
     trigger_test->trigType = TriggerType::Exit;
-    //Add target tag
-    trigger_test->targetTag = "Player";
 
     //Change default values
     trigger_test->maxTimeToTrigger = 50;

@@ -7,7 +7,7 @@ TestTriggerObject::TestTriggerObject(glm::vec2 pos, glm::vec2 siz,int sprt, glm:
 
 void TestTriggerObject::onTriggerEnter(GameObject* obj){
     //Check if object is the player
-    if(TagSystem::getObject("Player") == obj){
+    if(TagSystem::checkObject("Player", obj)){
         //Do something...
         printf("ENTER TRIGGERED!!!\n");
     }
@@ -15,7 +15,7 @@ void TestTriggerObject::onTriggerEnter(GameObject* obj){
 
 void TestTriggerObject::onTriggerStay(GameObject* obj){
     //Check if object is the player
-    if(TagSystem::getObject("Player") == obj){
+    if(TagSystem::checkObject("Player", obj)){
         //Do something...
         printf("STAY TRIGGERED!!!\n");
     }
@@ -23,7 +23,7 @@ void TestTriggerObject::onTriggerStay(GameObject* obj){
 
 void TestTriggerObject::onTriggerExit(GameObject* obj){
     //Check if object is the player
-    if(TagSystem::getObject("Player") == obj){
+    if(TagSystem::checkObject("Player", obj)){
         //Do something...
         printf("EXIT TRIGGERED!!!\n");
     }

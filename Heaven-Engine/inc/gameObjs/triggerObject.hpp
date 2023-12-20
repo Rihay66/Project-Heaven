@@ -22,9 +22,10 @@ class TriggerObject : public GameObject{
         int maxTimeToTrigger;
 
         //Store last object to collide
-        GameObject* lastObjToCollide;
-        //Store target tag 
-        std::string targetTag;
+        std::vector<GameObject*> lastCollidedObjs;
+
+        //Define a function that checks objects that last collided if this objects is a EXIT TRIGGER
+        void exitTriggerObjectCheck();
 
         //Constructor
         TriggerObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec4 color = glm::vec4(1.0f));

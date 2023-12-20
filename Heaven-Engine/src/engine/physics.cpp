@@ -20,7 +20,7 @@ void Physics::init(glm::vec2 gravity){
         std::cout << "Warning: list of physics objects is ZERO!!!" << "\n";
     }else{
         // Loop through list of rigidbodies and add them to the box2d world
-        for (PhysicsObject *obj : rigidbodyObjs){
+        for (PhysicsObject* obj : rigidbodyObjs){
 
             // set up rigidbody and boxcollider
             b2BodyDef bodyDef;
@@ -29,7 +29,7 @@ void Physics::init(glm::vec2 gravity){
             bodyDef.angle = obj->rotation;
 
             // create body
-            b2Body *body = world->CreateBody(&bodyDef);
+            b2Body* body = world->CreateBody(&bodyDef);
             body->SetFixedRotation(obj->rb.fixedRotation);
             obj->rb.runtimeBody = body;
 
@@ -55,15 +55,14 @@ void Physics::init(glm::vec2 gravity){
     }
 }
 
-//TODO: When a physics object is destroyed remove from list
 void Physics::CheckCollisions(float deltaTime){
 
     if(rigidbodyObjs.size() > 0){
         //Check rigidbodies
         world->Step(deltaTime, velocityIterations, positionIterations);
-        for (PhysicsObject *obj : rigidbodyObjs){
+        for (PhysicsObject* obj : rigidbodyObjs){
             //retrieve the body from each rigidbody
-            b2Body *body = obj->physicBody();
+            b2Body* body = obj->physicBody();
 
             //Check for any changed
             const b2Vec2 position = body->GetPosition();
@@ -72,6 +71,19 @@ void Physics::CheckCollisions(float deltaTime){
             obj->position.x = position.x;
             obj->position.y = position.y;
             obj->rotation = body->GetAngle();
+        }
+
+        //Remove rigidbodies that are set to be destroyed
+        for(PhysicsObject* obj : rigidbodyObjs){
+            if(obj->isDestroyed){
+                //Find object in list
+                auto index = std::find(rigidbodyObjs.begin(), rigidbodyObjs.end(), obj);
+
+                //Remove object from list
+                if (index != rigidbodyObjs.end()){  // Ensure the object is found
+                    rigidbodyObjs.erase(index); // Erase 
+                }
+            }
         }
     }
 
@@ -89,12 +101,8 @@ void Physics::CheckCollisions(float deltaTime){
             }
             //Check if trigger is a exit trigger
             if(trigObj->trigType == TriggerType::Exit){
-                //Call the exit trigger directly, and check if they're no longer colliding 
-                if(trigObj->lastObjToCollide != nullptr && !aabbCollision(trigObj, trigObj->lastObjToCollide)){
-                    trigObj->onTriggerExit(trigObj->lastObjToCollide);
-                    //Reset last object that collided with the exit trigger
-                    trigObj->lastObjToCollide = nullptr;
-                }
+                //Call to check objects that collided with the exit trigger
+                trigObj->exitTriggerObjectCheck();
             }
         }
     }

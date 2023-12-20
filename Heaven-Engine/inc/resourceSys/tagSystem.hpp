@@ -10,7 +10,7 @@
 //include gameobject class
 #include <gameObjs/gameObject.hpp>
 
-/* Static singleton  TagSystem class 
+/* Static singleton TagSystem class 
 
 
 */
@@ -21,11 +21,15 @@ public:
 
     // add a tag and object to the resource pool, if object already exists then replace it's tag
     static void addTag(std::string tagName, GameObject* gameObj);
+
     //*Getter Funcs
 
     // get a tag from a object in the tag pool
     static std::string getTag(GameObject* gameObj);
-    // get object from the tag pool by tag
+    /* get object from the tag pool by tag
+        ! Only use this function only when there's a singular object with it's own special tag
+        ! it will not return multiple objects the same tag
+    */
     static GameObject* getObject(std::string tagName);
     // check if tag pertains to a passed object that exists in tag pool
     static bool checkObject(std::string target, GameObject* gameObj);

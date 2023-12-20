@@ -43,6 +43,7 @@ std::string TagSystem::getTag(GameObject* gameObj){
     return nullptr;
 }
 
+//TODO: Refactor to return a list of objects with the same tag
 GameObject* TagSystem::getObject(std::string tagName){
     //loop to find object and return it's tag
     for(int i = 0; i < objectsWithTag.size(); i++){
