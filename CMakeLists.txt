@@ -94,8 +94,6 @@ set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
 
 if(MSVC)
 
-set(BUILD_SHARED_LIBS ON)
-
 #VC CODE
 #Create a directory
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
@@ -122,7 +120,18 @@ file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_CURRENT_BINARY_DIR
 file(COPY "${PROJECT_SOURCE_DIR}/fonts" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 #Get the engine library
+# Add the path to your engine library's CMake configuration files
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build)
+
+
+# Find and link the Heaven-Engine library
 find_package(Heaven-Engine-s REQUIRED)
+
+# Make reference to the Heaven-Engine's library and it's include folder
+set_target_properties(Heaven-Engine-s PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/Heaven-Engine-s.lib
+    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
+)
 
 #GLM
 find_package(GLM CONFIG REQUIRED)
@@ -139,17 +148,17 @@ find_package(SFML COMPONENTS audio REQUIRED)
 #Find Freetype
 find_package(Freetype REQUIRED)
 
-target_include_directories(project-heaven PUBLIC glm::glm glfw box2d::box2d Freetype::Freetype)
-target_link_libraries(project-heaven PUBLIC Heaven-Engine-s glm::glm glfw box2d::box2d sfml-audio)
+target_include_directories(project-heaven PRIVATE Heaven-Engine-s glm::glm glfw box2d::box2d sfml-audio)
+target_link_libraries(project-heaven PRIVATE Heaven-Engine-s glm::glm glfw box2d::box2d sfml-audio)
 
-# Define the source and destination paths for the DLL of the Heaven Engine
-set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine-s.lib")
-# Define the path box2d from the Heaven-Engine
-set(local-box2d )
+# Copy DLL to output directory after build
+add_custom_command(TARGET project-heaven POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/Heaven-Engine-s.lib
+        $<TARGET_FILE_DIR:project-heaven>
+)
 
 set(DLL_DEST "${CMAKE_BINARY_DIR}")
-
-file(COPY ${local-box2d} DESTINATION ${DLL_DEST})
 
 else(MSVC)
 
@@ -187,11 +196,6 @@ target_link_libraries(project-heaven PUBLIC Heaven-Engine ${local-glfw} ${local-
 set(DLL_DEST "${CMAKE_BINARY_DIR}")
 
 endif(MSVC)
-
-# Use file(COPY ...) to copy the DLL
-file(COPY "${ENGINE_DLL_SOURCE}" DESTINATION "${DLL_DEST}")
-file(COPY ${local-glfw} DESTINATION ${DLL_DEST})
-file(COPY ${local-audio} DESTINATION ${DLL_DEST})
 
 # Make sure your external project knows where to find the copied DLL
 add_definitions(-DHEAVEN_ENGINE_DLL_PATH="${DLL_DEST}")
