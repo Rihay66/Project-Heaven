@@ -45,7 +45,7 @@ void TextRenderer::drawText(std::string text, glm::vec2 position, glm::vec2 scal
     std::string::const_iterator c;
     for (c = text.begin(); c != text.end(); c++) 
     {
-        Character ch = ResourceManager::Characters[*c];
+        ResourceManager::Character ch = ResourceManager::Characters[*c];
 
         float xpos = position.x + ch.Bearing.x * scale.x;
         float ypos = position.y - (ch.Size.y - ch.Bearing.y) * scale.y;

@@ -18,22 +18,22 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-//define window states
-enum APP_STATE{
-    ACTIVE, DEBUG
-};
-
-//define input state
-enum INPUT_STATE{
-    KM, KMANDCONTROLLER
-};
-
 class Window{
     private:
         //set up vars for calculating delta time
 	    float lastFrame = 0, currentFrame = 0;
 
     public:
+        //define window states
+        enum APP_STATE{
+            ACTIVE, DEBUG
+        };
+
+        //define input state
+        enum INPUT_STATE{
+            KM, KMANDCONTROLLER
+        };
+
         //Window handle
         GLFWwindow* handle;
         //delta time variable for updating input, physics, and kind of movement

@@ -9,9 +9,6 @@
 
 class PhysicsObject : public GameObject{
     public:
-        //Declare direction of the object
-        Direction dir;
-
         //Declare Rigidbody
         Rigidbody rb;
         //declare BoxCollider

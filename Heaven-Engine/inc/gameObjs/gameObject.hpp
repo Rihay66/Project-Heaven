@@ -9,11 +9,6 @@
 
 class GameObject{
     public:
-        //future use for changing sprite 
-        enum Direction{
-            UP, DOWN, LEFT, RIGHT
-        };
-
         //reference to the local tag
         std::string tag;
 

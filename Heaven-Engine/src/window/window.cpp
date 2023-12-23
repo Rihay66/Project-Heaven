@@ -52,7 +52,7 @@ Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    std::cout << "window successfully created" << std::endl;
+    std::cout << "MSG: Window successfully created" << std::endl;
 }
 
 //Destructor
@@ -93,12 +93,12 @@ void Window::getInput(){
     if(glfwJoystickPresent(GLFW_JOYSTICK_1) == GLFW_TRUE && !controllerCheck){
         //print out that the joystick is connected
         const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
-        std::cout << "Controller is connected! ID: " << name << std::endl;
+        std::cout << "MSG: Controller is connected! ID: " << name << std::endl;
         std::cout << "MSG: Controller input is enabled!" << std::endl;
         Input_State = KMANDCONTROLLER;
         controllerCheck = !controllerCheck;
     }else if(glfwJoystickPresent(GLFW_JOYSTICK_1) == GLFW_FALSE && controllerCheck){
-        std::cout << "Controller is disconnected!" << std::endl;
+        std::cout << "MSG: Controller is disconnected!" << std::endl;
         std::cout << "MSG: Controller input is disabled!" << std::endl;
         Input_State = KM;
         controllerCheck = !controllerCheck;
@@ -130,9 +130,6 @@ void Window::runtime(){
         update();
 
         //render background
-        //? Will be removed in final version
-        glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
-
         glClear(GL_COLOR_BUFFER_BIT);
 
         //draw or render

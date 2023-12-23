@@ -233,6 +233,8 @@ void gameHandler::update(float deltaTime){
 void gameHandler::render(float deltaTime){
     //render stuff depending on the state of the game state enum
     if(Game_State == GAME_ACTIVE || Game_State == GAME_DEBUG){
+        //? Will be removed in final version
+        glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
         //Calculate projection
         camera->calculateProjectionView();
         //Render a list of objects

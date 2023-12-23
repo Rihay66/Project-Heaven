@@ -16,18 +16,6 @@
 #include <gameObjs/gameObject.hpp>
 #include <resourceSys/resourceManager.hpp>
 
-//data struct for holding vertex info
-struct Vertex{ 
-    glm::vec2 position;
-    glm::vec2 texCoords;
-    float texIndex;
-    glm::vec4 color;
-};
-
-struct RendererStats{
-    int quadCount = 0, drawCount = 0;
-};
-
 class Renderer{
     public:
         //constructor & desconstructor
@@ -43,6 +31,11 @@ class Renderer{
         //reference to the model size
         glm::vec2 spriteSize;
 
+        //data struct for holding amount of draw calls and quad count
+        struct RendererStats{
+            int quadCount = 0, drawCount = 0;
+        };
+
         //contain reference to amont of quads and amount of draw calls
         RendererStats stats;
 
@@ -53,6 +46,14 @@ class Renderer{
         unsigned int quadVAO;
         unsigned int quadVBO;
         unsigned int quadEBO;
+
+        //data struct for holding vertex info
+        struct Vertex{
+            glm::vec2 position;
+            glm::vec2 texCoords;
+            float texIndex;
+            glm::vec4 color;
+        };
 
         //stores the quad buffer
         Vertex* quadBuffer = nullptr;

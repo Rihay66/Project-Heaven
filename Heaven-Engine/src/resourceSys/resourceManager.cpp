@@ -18,10 +18,11 @@
 #include <resourceSys/stb_image.h>
 
 // Instantiate static variables
+
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
 std::vector<unsigned int>           ResourceManager::texIDList;
-std::map<char, Character>           ResourceManager::Characters; 
+std::map<char, ResourceManager::Character>           ResourceManager::Characters; 
 
 static std::string checkName(std::string str){
 

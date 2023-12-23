@@ -59,13 +59,13 @@ set_target_properties(Heaven-Engine PROPERTIES
 )
 
 #GLM
-find_package(GLM CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
 #GLFW
-find_package(GLFW3 REQUIRED REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
 
 #box2d
-find_package(BOX2D CONFIG REQUIRED)
+find_package(box2d CONFIG REQUIRED)
 
 #Find SFML
 find_package(SFML COMPONENTS audio REQUIRED)
