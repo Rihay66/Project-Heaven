@@ -5,8 +5,6 @@ cmake_policy(SET CMP0072 NEW)
 
 # Set the install prefix to the build folder's lib directory
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
-# Create lib folder
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # Grab all source files
 file(GLOB_RECURSE ENGINE
@@ -88,9 +86,6 @@ endif(UNIX)
 
 # *WINDOWS version of finding the dependencies
 if(WIN32)
-    # Set SFML libs to be static
-    set(SFML_STATIC_LIBRARIES TRUE)
-
     # OpenGL
     find_package(OpenGL REQUIRED)
 
@@ -117,7 +112,7 @@ if(WIN32)
         target_link_directories(Heaven-Engine PUBLIC ${GLFW_INCLUDE_DIR})
         target_link_directories(Heaven-Engine-s PUBLIC ${GLFW_INCLUDE_DIR})
 
-        # Grab GLFW headers
+        # Grab GLM headers
         target_link_directories(Heaven-Engine PUBLIC ${GLM_INCLUDE_DIR})
         target_link_directories(Heaven-Engine-s PUBLIC ${GLM_INCLUDE_DIR})
 
@@ -128,6 +123,10 @@ if(WIN32)
         # Grab GLFW headers
         target_link_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
         target_link_directories(Heaven-Engine-s PUBLIC ${GLFW3_INCLUDE_DIR})
+
+        # Grab GLM headers
+        target_link_directories(Heaven-Engine PUBLIC ${GLM_INCLUDE_DIR})
+        target_link_directories(Heaven-Engine-s PUBLIC ${GLM_INCLUDE_DIR})
     endif(MSVC)
 
     # Link against OpenGL and GLM
@@ -169,33 +168,3 @@ install(EXPORT Heaven-Engine-sConfig
 export(TARGETS Heaven-Engine FILE Heaven-Engine.cmake)
 
 export(TARGETS Heaven-Engine-s FILE Heaven-Engine-s.cmake)
-
-# Copy GLFW's SO/DLL files to the "lib" folder
-add_custom_command(
-    TARGET Heaven-Engine POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:glfw>
-    ${CMAKE_BINARY_DIR}/lib
-)
-
-add_custom_command(
-    TARGET Heaven-Engine-s POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:glfw>
-    ${CMAKE_BINARY_DIR}/lib
-)
-
-# Copy SFML audio's SO/DLL files to the "lib folder"
-add_custom_command(
-    TARGET Heaven-Engine POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:sfml-audio> # Use the actual target name from SFML
-    ${CMAKE_BINARY_DIR}/lib
-)
-
-add_custom_command(
-    TARGET Heaven-Engine-s POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:sfml-audio> # Use the actual target name from SFML
-    ${CMAKE_BINARY_DIR}/lib
-)

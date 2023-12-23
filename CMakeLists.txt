@@ -58,35 +58,81 @@ set_target_properties(Heaven-Engine PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
 )
 
-# Define the source and destination paths for the DLL of the Heaven Engine
-set(ENGINE_SO_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/lib")
+#GLM
+find_package(GLM CONFIG REQUIRED)
 
-#search all libraries and add them to a var
-file(GLOB LIBRARIES 
-${ENGINE_SO_SOURCE}/*)
+#GLFW
+find_package(GLFW3 REQUIRED REQUIRED)
 
+#box2d
+find_package(BOX2D CONFIG REQUIRED)
+
+#Find SFML
+find_package(SFML COMPONENTS audio REQUIRED)
+
+#Find Freetype
+find_package(Freetype REQUIRED)
+# Link the extra packages their include directories to avoid linking errors
+target_include_directories(project-heaven PRIVATE Heaven-Engine glm glfw box2d sfml-audio Freetype::Freetype)
 # Link the Heaven-Engine to executable
-target_link_libraries(project-heaven PRIVATE Heaven-Engine ${LIBRARIES})
-
-#Get all libraries from the engine's "lib" folder and place them onto the binary directory
-add_custom_command(
-	TARGET project-heaven POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_directory
-	${CMAKE_SOURCE_DIR}/Heaven-Engine/build/lib
-	${CMAKE_BINARY_DIR}
-)
-
-# Make sure your external project knows where to find the copied SOs
-set(SO_DEST "${CMAKE_BINARY_DIR}")
-add_definitions(-DHEAVEN_ENGINE_SO_PATH="${SO_DEST}")
+target_link_libraries(project-heaven PRIVATE Heaven-Engine glm box2d glfw sfml-audio Freetype::Freetype)
 
 endif (UNIX)
 
 # Link libs if the detected OS is Windows
-# NOTE was compiled using msys2's w64-x86_64 packages
 if(WIN32)
 
-if(MSVC)
+if(MSVC) #Using msys2's w64-x86_64 packages
+
+#Create folders and their sub files for runtime loading
+# Function to copy files if they are different
+function(copy_if_different SRC_DIR DEST_DIR)
+    file(GLOB_RECURSE FILES_LIST "${SRC_DIR}/*")
+    foreach(FILE_PATH ${FILES_LIST})
+        get_filename_component(FILE_NAME ${FILE_PATH} NAME)
+        set(DEST_FILE_PATH "${DEST_DIR}/${FILE_NAME}")
+        configure_file(${FILE_PATH} ${DEST_FILE_PATH} COPYONLY)
+    endforeach()
+endfunction()
+
+# Call the function for each resource folder
+copy_if_different(${TEXTURES_DIR} ${BUILD_DIR}/Release/textures)
+copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/Release/shaders)
+copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/Release/sounds)
+copy_if_different(${FONTS_DIR} ${BUILD_DIR}/Release/fonts)
+
+#Get the engine library
+# Add the path to your engine library's CMake configuration files
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}\\Heaven-Engine\\build)
+# Make reference to the Heaven-Engine's library and it's include folder
+add_library(Heaven-Engine SHARED IMPORTED)
+set_target_properties(Heaven-Engine PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}\\Heaven-Engine\\build\\Release\\Heaven-Engine.dll
+    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}\\Heaven-Engine\\build\\include
+    IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}\\Heaven-Engine\\build/Release\\Heaven-Engine-s.lib
+)
+
+#GLM
+find_package(GLM CONFIG REQUIRED)
+
+#GLFW
+find_package(GLFW3 REQUIRED REQUIRED)
+
+#box2d
+find_package(BOX2D CONFIG REQUIRED)
+
+#Find SFML
+find_package(SFML COMPONENTS audio REQUIRED)
+
+#Find Freetype
+find_package(Freetype REQUIRED)
+
+# Link the extra packages their include directories to avoid linking errors
+target_include_directories(project-heaven PRIVATE Heaven-Engine glm::glm glfw box2d::box2d sfml-audio Freetype::Freetype)
+# Link the Heaven-Engine to executable
+target_link_libraries(project-heaven PRIVATE Heaven-Engine glm::glm glfw box2d::box2d sfml-audio Freetype::Freetype)
+
+else(MSVC) #Using mingw
 
 #Create folders and their sub files for runtime loading
 # Function to copy files if they are different
@@ -111,9 +157,9 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build)
 # Make reference to the Heaven-Engine's library and it's include folder
 add_library(Heaven-Engine SHARED IMPORTED)
 set_target_properties(Heaven-Engine PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine.dll
+    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.dll
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
-    IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine-s.lib
+    IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine-s.a
 )
 
 #GLM
@@ -131,10 +177,10 @@ find_package(SFML COMPONENTS audio REQUIRED)
 #Find Freetype
 find_package(Freetype REQUIRED)
 
-target_include_directories(project-heaven PRIVATE Heaven-Engine glm::glm glfw box2d::box2d sfml-audio Freetype::Freetype)
-target_link_libraries(project-heaven PRIVATE Heaven-Engine glm::glm glfw box2d::box2d sfml-audio Freetype::Freetype)
-
-else(MSVC)
+# Link the extra packages their include directories to avoid linking errors
+target_include_directories(project-heaven PRIVATE Heaven-Engine glm glfw box2d sfml-audio Freetype::Freetype)
+# Link the Heaven-Engine to executable
+target_link_libraries(project-heaven PRIVATE Heaven-Engine glm glfw box2d sfml-audio Freetype::Freetype)
 
 endif(MSVC)
 
