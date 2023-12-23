@@ -86,81 +86,7 @@ endif (UNIX)
 # NOTE was compiled using msys2's w64-x86_64 packages
 if(WIN32)
 
-# Specify the path to Heaven-Engine-sConfig.cmake
-set(Heaven-Engine-s_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
-
-# Specify the path to Heaven-EngineConfig.cmake
-set(Heaven-Engine_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build")
-
 if(MSVC)
-
-#VC CODE
-#Create a directory
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release/textures)
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release/shaders)
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Release/sounds)
-
-#Create folders and their sub files for runtime loading
-file(COPY "${PROJECT_SOURCE_DIR}/textures" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
-file(COPY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
-file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_BINARY_DIR}/Release")
-file(COPY "${PROJECT_SOURCE_DIR}/fonts" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
-
-#VS 2022
-#Create directory
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/textures)
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/shaders)
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/sounds)
-
-#Create folders and their sub files for runtime loading
-file(COPY "${PROJECT_SOURCE_DIR}/textures" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "${PROJECT_SOURCE_DIR}/sounds" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "${PROJECT_SOURCE_DIR}/fonts" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-
-#Get the engine library
-# Add the path to your engine library's CMake configuration files
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build)
-
-
-# Find and link the Heaven-Engine library
-find_package(Heaven-Engine-s REQUIRED)
-
-# Make reference to the Heaven-Engine's library and it's include folder
-set_target_properties(Heaven-Engine-s PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/Heaven-Engine-s.lib
-    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
-)
-
-#GLM
-find_package(GLM CONFIG REQUIRED)
-
-#GLFW
-find_package(GLFW3 REQUIRED REQUIRED)
-
-#box2d
-find_package(BOX2D CONFIG REQUIRED)
-
-#Find SFML
-find_package(SFML COMPONENTS audio REQUIRED)
-
-#Find Freetype
-find_package(Freetype REQUIRED)
-
-target_include_directories(project-heaven PRIVATE Heaven-Engine-s glm::glm glfw box2d::box2d sfml-audio)
-target_link_libraries(project-heaven PRIVATE Heaven-Engine-s glm::glm glfw box2d::box2d sfml-audio)
-
-# Copy DLL to output directory after build
-add_custom_command(TARGET project-heaven POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/Heaven-Engine-s.lib
-        $<TARGET_FILE_DIR:project-heaven>
-)
-
-set(DLL_DEST "${CMAKE_BINARY_DIR}")
-
-else(MSVC)
 
 #Create folders and their sub files for runtime loading
 # Function to copy files if they are different
@@ -180,24 +106,36 @@ copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/sounds)
 copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
 
 #Get the engine library
-find_package(Heaven-Engine REQUIRED)
+# Add the path to your engine library's CMake configuration files
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build)
+# Make reference to the Heaven-Engine's library and it's include folder
+add_library(Heaven-Engine SHARED IMPORTED)
+set_target_properties(Heaven-Engine PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine.dll
+    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/include
+    IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/Release/Heaven-Engine-s.lib
+)
 
-#Make a reference to the Heaven-Engine's sfml-audio lib
-set(local-audio ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/libsfml-audio-s.a)
+#GLM
+find_package(GLM CONFIG REQUIRED)
 
-# Define the source and destination paths for the DLL of the Heaven Engine
-set(ENGINE_DLL_SOURCE "${CMAKE_SOURCE_DIR}/Heaven-Engine/build/libHeaven-Engine.dll")
+#GLFW
+find_package(GLFW3 REQUIRED REQUIRED)
 
-#Make a reference to the Heaven-Engine's glfw lib 
-set(local-glfw ${CMAKE_CURRENT_SOURCE_DIR}/Heaven-Engine/build/lib/glfw3.dll)
+#box2d
+find_package(BOX2D CONFIG REQUIRED)
 
-target_link_libraries(project-heaven PUBLIC Heaven-Engine ${local-glfw} ${local-audio})
+#Find SFML
+find_package(SFML COMPONENTS audio REQUIRED)
 
-set(DLL_DEST "${CMAKE_BINARY_DIR}")
+#Find Freetype
+find_package(Freetype REQUIRED)
+
+target_include_directories(project-heaven PRIVATE Heaven-Engine glm::glm glfw box2d::box2d sfml-audio Freetype::Freetype)
+target_link_libraries(project-heaven PRIVATE Heaven-Engine glm::glm glfw box2d::box2d sfml-audio Freetype::Freetype)
+
+else(MSVC)
 
 endif(MSVC)
-
-# Make sure your external project knows where to find the copied DLL
-add_definitions(-DHEAVEN_ENGINE_DLL_PATH="${DLL_DEST}")
 
 endif(WIN32)
