@@ -5,11 +5,17 @@ A Simple 2D OpenGL based Engine called:
 Current Version: 1.0a
 
 What's Coming?
+
 [] Documentation and Tutorial on how to use
+
 [] Unit Testing 
+
 [] Setup scripts 
+
 [] SDL2 and GLFW3 options?
+
 [] Cross platform building (Only Windows and Unix/Linux)
+
 [] Further Optimization
 
 # Licensing
