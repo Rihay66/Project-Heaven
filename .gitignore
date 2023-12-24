@@ -5,3 +5,6 @@
 #ignore cmake build folder
 **/build
 build/
+
+#ignore cmake settings
+cmakeSettings.json
