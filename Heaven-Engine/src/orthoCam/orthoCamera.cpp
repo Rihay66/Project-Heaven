@@ -23,4 +23,6 @@ void Camera::calculateProjectionView()
 
     //put together the projectionView
     this->projectionView = this->projection * this->view;
+    //tell shader to set view
+    this->shader.SetMatrix4("projectionView", this->projectionView, true);
 }

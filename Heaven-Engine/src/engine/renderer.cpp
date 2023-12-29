@@ -109,8 +109,30 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
     this->flush();
 }
 
+//render multiple objects pointers
+void Renderer::Draw2D(std::vector<GameObject> &gameObjects){
+
+    //init the buffer
+    this->resetStats();
+    this->beginBatch();
+
+    //bind textures
+    ResourceManager::BindTextures();
+
+    //Loop through objects and add to batch
+    for(int i = 0 ; i < gameObjects.size(); i++){
+        this->createQuad(gameObjects[i].position, gameObjects[i].size, gameObjects[i].rotation, gameObjects[i].textureIndex, gameObjects[i].color);
+    }
+
+    //Set dynamic vertex buffer
+    this->endBatch();
+    //draw
+    this->flush();
+}
+
 //render a single object pointer
 void Renderer::Draw2D(GameObject* obj){
+
     //init the buffer
     this->resetStats();
     this->beginBatch();
@@ -120,6 +142,25 @@ void Renderer::Draw2D(GameObject* obj){
 
     //add a single object to the batch
     this->createQuad(obj->position, obj->size, obj->rotation, obj->textureIndex, obj->color);
+
+    //Set dynamic vertex buffer
+    this->endBatch();
+    //draw
+    this->flush();
+} 
+
+//render a single object pointer
+void Renderer::Draw2D(GameObject &obj){
+
+    //init the buffer
+    this->resetStats();
+    this->beginBatch();
+
+    //Bind textures
+    ResourceManager::BindTextures();
+
+    //add a single object to the batch
+    this->createQuad(obj.position, obj.size, obj.rotation, obj.textureIndex, obj.color);
 
     //Set dynamic vertex buffer
     this->endBatch();
