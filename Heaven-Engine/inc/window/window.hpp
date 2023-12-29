@@ -11,9 +11,6 @@
     #include <windows.h>
 #endif
 
-//Threading library
-#include <thread>
-
 //GLFW and OPENGL Libraries
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
