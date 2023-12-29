@@ -1,12 +1,7 @@
 #include <orthoCam/orthoCamera.hpp>
 
-Camera::Camera(unsigned int Width, unsigned int Height, GLFWwindow* handle, Shader &shader) : width(Width), height(Height){
-    //Set window handle
-    this->window = handle;
-
-    //Set shader
-    this->shader = shader;
-    
+Camera::Camera(unsigned int Width, unsigned int Height, GLFWwindow* handle, Shader &shader) : 
+width(Width), height(Height), window(handle), shader(shader){  
     //update shader
     calculateProjectionView();    
 
