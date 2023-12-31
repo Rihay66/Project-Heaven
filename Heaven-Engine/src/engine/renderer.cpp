@@ -46,7 +46,7 @@ Renderer::~Renderer(){
     delete this->quadBufferPtr;
 }
 
-void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float texIndex, glm::vec4 color){
+void Renderer::createQuad(GameObject::RenderType type, glm::vec2 pos, glm::vec2 size, float rotation, float texIndex, glm::vec4 color){
 
     //check if not over the index count
     if(this->indexCount >= this->maxIndexCount){
@@ -60,29 +60,113 @@ void Renderer::createQuad(glm::vec2 pos, glm::vec2 size, float rotation, float t
     * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
     * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
 
-    quadBufferPtr->position = (transform * quadVertexPositions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {0.0f, 0.0f};
-    quadBufferPtr->texIndex = texIndex;
-    quadBufferPtr->color = color;
-    quadBufferPtr++;
+    switch (type){
+        case GameObject::RenderType::Default:
+            quadBufferPtr->position = (transform * quadVertexPositions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {0.0f, 0.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
 
-    quadBufferPtr->position =  (transform * quadVertexPositions[1]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {1.0f, 0.0f};
-    quadBufferPtr->texIndex = texIndex;
-    quadBufferPtr->color = color;
-    quadBufferPtr++;
+            quadBufferPtr->position = (transform * quadVertexPositions[1]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {-1.0f, 0.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
 
-    quadBufferPtr->position = (transform * quadVertexPositions[2]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {0.0f, 1.0f};
-    quadBufferPtr->texIndex = texIndex;
-    quadBufferPtr->color = color;
-    quadBufferPtr++;
-    
-    quadBufferPtr->position = (transform * quadVertexPositions[3]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {1.0f, 1.0f};
-    quadBufferPtr->texIndex = texIndex;
-    quadBufferPtr->color = color;
-    quadBufferPtr++;
+            quadBufferPtr->position = (transform * quadVertexPositions[2]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {0.0f, 1.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[3]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {-1.0f, 1.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+            break;
+
+        case GameObject::RenderType::flipVertically:
+            quadBufferPtr->position = (transform * quadVertexPositions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {0.0f, 0.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[1]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {1.0f, 0.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[2]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {0.0f, 1.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[3]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {1.0f, 1.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+            break;
+
+        case GameObject::RenderType::flipHorizontal:
+            quadBufferPtr->position = (transform * quadVertexPositions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {0.0f, 0.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[1]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {-1.0f, 0.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[2]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {0.0f, -1.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[3]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {-1.0f, -1.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+            break;
+        case GameObject::RenderType::flipBoth:
+            quadBufferPtr->position = (transform * quadVertexPositions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {0.0f, 0.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[1]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {1.0f, 0.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[2]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {0.0f, -1.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+
+            quadBufferPtr->position = (transform * quadVertexPositions[3]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+            quadBufferPtr->texCoords = {1.0f, -1.0f};
+            quadBufferPtr->texIndex = texIndex;
+            quadBufferPtr->color = color;
+            quadBufferPtr++;
+            break;
+            
+        default:
+            break;
+    }
 
     this->indexCount += 6;
     this->stats.quadCount++;
@@ -100,7 +184,7 @@ void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
 
     //Loop through objects and add to batch
     for(int i = 0 ; i < gameObjects.size(); i++){
-        this->createQuad(gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color);
+        this->createQuad(gameObjects[i]->renderType, gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color);
     }
 
     //Set dynamic vertex buffer
@@ -121,7 +205,7 @@ void Renderer::Draw2D(std::vector<GameObject> &gameObjects){
 
     //Loop through objects and add to batch
     for(int i = 0 ; i < gameObjects.size(); i++){
-        this->createQuad(gameObjects[i].position, gameObjects[i].size, gameObjects[i].rotation, gameObjects[i].textureIndex, gameObjects[i].color);
+        this->createQuad(gameObjects[i].renderType, gameObjects[i].position, gameObjects[i].size, gameObjects[i].rotation, gameObjects[i].textureIndex, gameObjects[i].color);
     }
 
     //Set dynamic vertex buffer
@@ -141,7 +225,7 @@ void Renderer::Draw2D(GameObject* obj){
     ResourceManager::BindTextures();
 
     //add a single object to the batch
-    this->createQuad(obj->position, obj->size, obj->rotation, obj->textureIndex, obj->color);
+    this->createQuad(obj->renderType, obj->position, obj->size, obj->rotation, obj->textureIndex, obj->color);
 
     //Set dynamic vertex buffer
     this->endBatch();
@@ -160,7 +244,7 @@ void Renderer::Draw2D(GameObject &obj){
     ResourceManager::BindTextures();
 
     //add a single object to the batch
-    this->createQuad(obj.position, obj.size, obj.rotation, obj.textureIndex, obj.color);
+    this->createQuad(obj.renderType, obj.position, obj.size, obj.rotation, obj.textureIndex, obj.color);
 
     //Set dynamic vertex buffer
     this->endBatch();

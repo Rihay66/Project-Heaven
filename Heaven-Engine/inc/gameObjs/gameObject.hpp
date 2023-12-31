@@ -9,6 +9,12 @@
 
 class GameObject{
     public:
+        //Define enum for how to render this object
+        enum class RenderType {Default = 0, flipVertically, flipHorizontal, flipBoth};
+
+        //Define variable to set how the gameObject will be renderered
+        RenderType renderType;
+
         //reference to the local tag
         std::string tag;
 
