@@ -22,7 +22,10 @@ class TriggerObject : public GameObject{
         int maxTimeToTrigger;
 
         //Store last object to collide
-        std::vector<GameObject*> lastCollidedObjs;
+        std::vector<GameObject*> collidedObjs;
+
+        //Define function to check if a object already exists in the passed list
+        bool isAlreadyPresent(const std::vector<GameObject*>& vec, GameObject* value);
 
         //Define a function that checks objects that last collided if this objects is a EXIT TRIGGER
         void exitTriggerObjectCheck();
@@ -33,7 +36,7 @@ class TriggerObject : public GameObject{
         ~TriggerObject();
         
         //Called to check for trigger type and do a overwritten action
-        void triggerCollisionCallback(GameObject* obj);
+        virtual void triggerCollisionCallback(GameObject* obj);
         //Used to define any function to do when this object is triggered
         virtual void onTriggerEnter(GameObject* obj){return;}
         virtual void onTriggerStay(GameObject* obj){return;}
