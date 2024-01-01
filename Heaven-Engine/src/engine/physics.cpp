@@ -110,12 +110,12 @@ void Physics::CheckCollisions(float deltaTime){
 
 //TODO: Make it able to detect collision for rotation and rotation offsets
 bool Physics::aabbCollision(GameObject* a, GameObject* b){
-    // collision x-axis?
-    bool collisionX = a->position.x + a->size.x >= b->position.x &&
-        b->position.x + b->size.x >= a->position.x;
-    // collision y-axis?
-    bool collisionY = a->position.y + a->size.y >= b->position.y &&
-        b->position.y + b->size.y >= a->position.y;
-    // collision only if on both axes
+    // Calculate the sides of the rectangles with the offset considered
+
+    // Check for no overlap
+    bool collisionX = (a->position.x + a->size.x / 2.0f) >= (b->position.x - b->size.x / 2.0f) && (a->position.x - a->size.x / 2.0f) <= (b->position.x + b->size.x / 2.0f);
+    bool collisionY = (a->position.y + a->size.y / 2.0f) >= (b->position.y - b->size.y / 2.0f) && (a->position.y - a->size.y / 2.0f) <= (b->position.y + b->size.y / 2.0f);
+
+    // If the rectangles overlap on both axes, a collision is detected
     return collisionX && collisionY;
 }
