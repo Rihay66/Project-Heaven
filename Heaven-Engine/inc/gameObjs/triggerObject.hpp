@@ -31,7 +31,7 @@ class TriggerObject : public GameObject{
         void exitTriggerObjectCheck();
 
         //Constructor
-        TriggerObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec4 color = glm::vec4(1.0f));
+        TriggerObject(int sprt, glm::vec2 pos = glm::vec2(0.0f), glm::vec2 siz = glm::vec2(1.0f), glm::vec4 color = glm::vec4(1.0f));
         //Destructor
         ~TriggerObject();
         

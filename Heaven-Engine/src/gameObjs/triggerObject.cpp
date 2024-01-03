@@ -1,7 +1,7 @@
 #include <gameObjs/triggerObject.hpp>
 
-TriggerObject::TriggerObject(glm::vec2 pos, glm::vec2 siz, int sprt, glm::vec4 color) :
-GameObject(pos, siz, sprt, color), isDestroyed(false), maxTimeToTrigger(5), trigType(TriggerType::Enter){}
+TriggerObject::TriggerObject(int sprt, glm::vec2 pos, glm::vec2 siz, glm::vec4 color) :
+GameObject(sprt, pos, siz, color), isDestroyed(false), maxTimeToTrigger(5), trigType(TriggerType::Enter){}
 
 TriggerObject::~TriggerObject(){
     this->collidedObjs.clear();
