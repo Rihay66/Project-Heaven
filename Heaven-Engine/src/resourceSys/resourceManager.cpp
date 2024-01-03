@@ -302,8 +302,11 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha){
     unsigned char* data = stbi_load(file, &width, &height, &nrChannels, 0);
     //check file if it has been found
     if(!data){
-        std::cout << "ERROR: Failed to load texture file!\n";
-        std::cout << "ERROR: " << stbi_failure_reason() << std::endl;
+        std::cout << "ERROR: Failed to load texture file: " << file << " !\n";
+        std::cout << "ERROR: " << stbi_failure_reason() << "\n";
+
+        //Give hint to developer
+        std::cout << "HINT: Make sure file or folder name is all lowercase, or check if file exists in build folder" << std::endl;
         exit(-1);
     }
     // now generate texture
