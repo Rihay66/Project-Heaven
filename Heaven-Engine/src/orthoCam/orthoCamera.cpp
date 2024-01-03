@@ -2,11 +2,8 @@
 
 Camera::Camera(unsigned int Width, unsigned int Height, GLFWwindow* handle, Shader &shader) : 
 width(Width), height(Height), window(handle), shader(shader){  
-    //update shader
-    calculateProjectionView();    
-
-    //tell shader to set view
-    this->shader.SetMatrix4("projectionView", this->projectionView);
+    //update projection and add to shader
+    calculateProjectionView();
 }
 
 Camera::~Camera(){
