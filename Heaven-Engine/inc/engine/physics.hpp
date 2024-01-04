@@ -18,28 +18,38 @@
 
 class b2World;
 
+/* Static Class
+
+
+*/
 class Physics{
     public:
-        //List of different rigidbody's with either a trigger or non trigger flag
-        std::vector<TriggerObject*> triggerObjs;
-        std::vector<PhysicsObject*>rigidbodyObjs;
+        //List of different trigger objects 
+        static std::vector<TriggerObject*> triggerObjs;
+        //List of different rigidbody
+        static std::vector<PhysicsObject*> rigidbodyObjs;
 
         //reference to physics world
-        b2World* world = nullptr;
-        //physics iteration values
-        const int32_t velocityIterations = 6;
-        const int32_t positionIterations = 2;
+        static b2World* world;
 
-        //constructors / destructors
-        Physics();
-        ~Physics();
+        //physics iteration values
+        static const int32_t velocityIterations = 6;
+        static const int32_t positionIterations = 2;
+
+        //constructors
+        Physics() {};
+
         //Init function that is used after adding all pObjs
-        void init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
+        static void init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
 
         //check all physics object and check the player's collision
-        void CheckCollisions(float deltaTime);
+        static void updatePhysics(float deltaTime);
+
+        //Clear resources
+        static void clear();
+
         //Simple check for aabb collision check
-        bool aabbCollision(GameObject* a, GameObject* b);
+        static bool aabbCollision(GameObject* a, GameObject* b);
 
         //Make a enum translate between box2d and rigidbodyObject class
         static b2BodyType RbToB2Types(BodyType bodyType){

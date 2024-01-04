@@ -1,15 +1,11 @@
 #include <engine/physics.hpp>
 
-Physics::Physics(){}
+//init resources
 
-Physics::~Physics(){
-    //delete any pointer 
-    rigidbodyObjs.clear();
-    triggerObjs.clear();
+std::vector<TriggerObject*> Physics::triggerObjs;
+std::vector<PhysicsObject*> Physics::rigidbodyObjs;
 
-    world = nullptr;
-    delete world;
-}
+b2World* Physics::world = nullptr;
 
 void Physics::init(glm::vec2 gravity){
     //Set up box 2d world
@@ -55,7 +51,7 @@ void Physics::init(glm::vec2 gravity){
     }
 }
 
-void Physics::CheckCollisions(float deltaTime){
+void Physics::updatePhysics(float deltaTime){
 
     if(rigidbodyObjs.size() > 0){
         //Check rigidbodies
@@ -106,6 +102,17 @@ void Physics::CheckCollisions(float deltaTime){
             }
         }
     }
+}
+
+void Physics::clear(){
+    
+    //remove reference to any pointer from all lists
+    rigidbodyObjs.clear();
+    triggerObjs.clear();
+
+    //Properly delete box 2d world
+    world = nullptr;
+    delete world;
 }
 
 //TODO: Make it able to detect collision for rotation and rotation offsets
