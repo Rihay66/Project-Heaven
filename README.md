@@ -4,7 +4,7 @@ A Simple 2D OpenGL based Engine called:
 
 ![](Heaven-Engine_logo.png)
 
-Current Version: 1.0L
+Current Version: 1.0M
 
 What's Coming?
 
@@ -21,4 +21,4 @@ What's Coming?
 [] Further Optimization
 
 # Licensing
-This Project is under GNU GPL-3.0 License
+This Project is under GNU GPL-3.0 License for now and there might be changes or additional limitations or information about the use of the engine.
