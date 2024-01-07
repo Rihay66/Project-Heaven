@@ -66,17 +66,24 @@ Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool 
 int ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize, bool isLinear){
     
     //Use free type to load font and set font size
-    FT_Library ft;
+    
     /* Initialize the FreeType2 library */
-	if (FT_Init_FreeType(&ft)){
-        std::cout << "ERROR: Couldn't load Freetype!" << std::endl;
+    FT_Library ft;
+    //Grab errors
+    FT_Error error = FT_Init_FreeType(&ft);
+
+	if (error){
+        std::cout << "ERROR: Couldn't load Freetype | Error: " << error << std::endl;
         return false;
 	}
 
+    /* Load the font */
     FT_Face face;
-    /* Load a font */
-	if (FT_New_Face(ft, filename, 0, &face)){
-		std::cout << "ERROR: Couldn't load Font!" << std::endl;
+    //Grab errors
+    error = FT_New_Face(ft, filename, 0, &face);
+
+	if (error){
+		std::cout << "ERROR: Couldn't load Font | Error: " << error << std::endl;
         return false;
 	}
 

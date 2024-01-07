@@ -18,8 +18,9 @@
 
 TextRenderer::TextRenderer(unsigned int width, unsigned int height,
  Shader& shader) : textShader(shader){
-    //Create projection
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
+    //Create projection to be centered on the screen
+    glm::mat4 projection = glm::ortho(-(static_cast<float>(width) / 2.0f), (static_cast<float>(width) / 2.0f), 
+        -(static_cast<float>(height) / 2.0f), (static_cast<float>(height) / 2.0f), -1.0f, 1.0f);
 
     //Configure shader
     this->textShader.SetMatrix4("projection", projection, true);
