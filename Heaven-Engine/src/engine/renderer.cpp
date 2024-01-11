@@ -46,7 +46,7 @@ Renderer::~Renderer(){
     delete this->quadBufferPtr;
 }
 
-void Renderer::createQuad(GameObject::RenderType type, glm::vec2 pos, glm::vec2 size, float rotation, float texIndex, glm::vec4 color){
+void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color){
 
     //check if not over the index count
     if(this->indexCount >= this->maxIndexCount){
