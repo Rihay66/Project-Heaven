@@ -17,8 +17,8 @@
 
 class Window{
     private:
-        //set up vars for calculating delta time
-	    float lastFrame = 0, currentFrame = 0;
+        //set up vars for calculating delta time and the fixed time step
+	    float lastFrame = 0, currentFrame = 0, accumulator = 0;
 
     public:
         //define window states
@@ -33,10 +33,14 @@ class Window{
 
         //Window handle
         GLFWwindow* handle;
+
+        /*Fixed rate that updates the stepUpdate(), adjust accordingly as needed
+        * Default value is 0.016 or 16ms
+        */
+        float fixedTimeStep = 1.0f / 60.0f;
+
         //delta time variable for updating input, physics, and kind of movement
-        float DeltaTime;
-        //Returns the current deltatime
-        virtual float getDeltaTime();
+        float DeltaTime = 0;
 
         //variable that can be set through input
         APP_STATE App_State;
@@ -48,21 +52,32 @@ class Window{
         Window(int w, int h, const char* name);
         //destructor
         ~Window();
+
         //used to get Engine base input
         void getInput();
+
+        //Returns the current deltatime
+        virtual float getDeltaTime();
 
         /*Loop update() and render()
         * Can be overwritten dependin on the need of the game or application
         */
         virtual void runtime();
 
-        virtual void input();//used as a forward of getInput() to add additional input or event checks
+        //used as a forward of getInput() to add additional input or event checks
+        virtual void input();
 
-        virtual void init(); //used to call classes that handle the loading of shaders, textures, and objects
+        //used to call classes that handle the loading of shaders, textures, and objects
+        virtual void init(); 
         
-        virtual void update(); //used to update logic, custom events, and other
-        
-        virtual void render(); //used to render things on the screen
+        //used to update logic, custom events, and other
+        virtual void update();
+
+        //used to update Physics, ticks systems, or other
+        virtual void stepUpdate(float ts);
+
+        //used to render things on the screen
+        virtual void render(); 
 };
 
 #endif

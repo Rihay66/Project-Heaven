@@ -11,7 +11,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 //Window constructor, intializes GLFW and GLAD then creates a window with the passed parameters
-Window::Window(int h, int w, const char* name) : DeltaTime(0), App_State(ACTIVE), Input_State(KM), width(0), height(0){
+Window::Window(int h, int w, const char* name) : App_State(ACTIVE), Input_State(KM), width(0), height(0){
 
     //set local vars
     width = w;
@@ -61,14 +61,6 @@ Window::~Window(){
     glfwTerminate();
 }
 
-float Window::getDeltaTime(){
-    // calculate delta time
-    currentFrame = glfwGetTime();
-    this->DeltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
-
-    return this->DeltaTime;
-}
 
 void Window::getInput(){
 
@@ -114,10 +106,19 @@ void Window::input(){
     //Can be overwritten 
 }
 
+float Window::getDeltaTime(){
+    // calculate delta time
+    currentFrame = glfwGetTime();
+    this->DeltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
+    return this->DeltaTime;
+}
+
 //Single threaded runtime of update() and render()
 void Window::runtime(){
     while(!glfwWindowShouldClose(this->handle)){
-        // Get Deltatime
+        // get Deltatime
         this->getDeltaTime();
 
         // check for glfw events
@@ -126,17 +127,25 @@ void Window::runtime(){
         // check for main window input
         getInput();
 
+        //  accumulate time and do stepUpdate()
+        this->accumulator += this->DeltaTime;
+        while(this->accumulator >= fixedTimeStep){
+            // update with fixed time step
+            stepUpdate(this->fixedTimeStep);
+            accumulator -= fixedTimeStep;
+        } 
+
         // update any input, values, objects, loading etc..
         update();
 
-        //render background
+        // render background
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //draw or render
+        // draw or render
         render();
 
-        //swap buffers
-        glfwSwapBuffers(handle);
+        // swap buffers
+        glfwSwapBuffers(this->handle);
     }
 }
 
@@ -149,6 +158,11 @@ void Window::init(){
 void Window::update(){
     //update any variables like moving objects or updating input
     //* NOTE: that any object that needs input will need to have reference to the window handles a parameter to be passed down
+}
+
+//update physics or ticks
+void Window::stepUpdate(float ts){
+    //Used to update physics with a fixed time step 
 }
 
 //rendering
