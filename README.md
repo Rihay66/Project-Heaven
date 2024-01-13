@@ -4,7 +4,13 @@ A Simple 2D OpenGL based Engine called:
 
 ![](Heaven-Engine_logo.png)
 
-Current Version: 1.0M
+Current Version: 1.0P
+
+Features:
+
+* Cross-platform building (Windows & Unix/Linux)
+* Batch Rendering solution
+* Box2D for physics simulation
 
 What's Coming?
 
@@ -16,9 +22,9 @@ What's Coming?
 
 [] SDL2 and GLFW3 options?
 
-[] Cross platform building (Only Windows and Unix/Linux)
+[] Cross-platform development environments (Only Windows and Unix/Linux)
 
 [] Further Optimization
 
 # Licensing
-This Project is under GNU GPL-3.0 License for now and there might be changes or additional limitations or information about the use of the engine.
+This Project is under GNU GPL-3.0 License for now and there may be future changes or additional limitations or information about the use of the engine.
