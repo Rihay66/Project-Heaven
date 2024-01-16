@@ -51,38 +51,45 @@ void Physics::init(glm::vec2 gravity){
     }
 }
 
-void Physics::updatePhysics(float deltaTime){
+void Physics::updateWorld(float deltaTime){
 
     if(rigidbodyObjs.size() > 0){
-        //Check rigidbodies
+        //update rigidbodies
         world->Step(deltaTime, velocityIterations, positionIterations);
-        for (PhysicsObject* obj : rigidbodyObjs){
-            //retrieve the body from each rigidbody
-            b2Body* body = obj->physicBody();
+    }
+}
 
-            //Check for any changed
-            const b2Vec2 position = body->GetPosition();
+void Physics::updatePhysics(){
+    for (PhysicsObject *obj : rigidbodyObjs){
+        // retrieve the body from each rigidbody
+        b2Body *body = obj->physicBody();
 
-            //update each rigidbody their position
-            obj->position.x = position.x;
-            obj->position.y = position.y;
-            obj->rotation = body->GetAngle();
-        }
+        // Check for any changed
+        const b2Vec2 position = body->GetPosition();
 
-        //Remove rigidbodies that are set to be destroyed
-        for(PhysicsObject* obj : rigidbodyObjs){
-            if(obj->isDestroyed){
-                //Find object in list
-                auto index = std::find(rigidbodyObjs.begin(), rigidbodyObjs.end(), obj);
+        // update each rigidbody their position
+        obj->position.x = position.x;
+        obj->position.y = position.y;
+        obj->rotation = body->GetAngle();
+    }
 
-                //Remove object from list
-                if (index != rigidbodyObjs.end()){  // Ensure the object is found
-                    rigidbodyObjs.erase(index); // Erase 
-                }
+    // Remove rigidbodies that are set to be destroyed
+    for (PhysicsObject *obj : rigidbodyObjs){
+        if (obj->isDestroyed)
+        {
+            // Find object in list
+            auto index = std::find(rigidbodyObjs.begin(), rigidbodyObjs.end(), obj);
+
+            // Remove object from list
+            if (index != rigidbodyObjs.end())
+            {                               // Ensure the object is found
+                rigidbodyObjs.erase(index); // Erase
             }
         }
     }
+}
 
+void Physics::updateTriggers(){
     //TODO: Refactor checking for trigger collsion using space partitioning
     //Check trigger objects
     if(triggerObjs.size() > 0){
@@ -105,13 +112,14 @@ void Physics::updatePhysics(float deltaTime){
 }
 
 void Physics::clear(){
+
+    //TODO: Properly refactor how the objects are free from memory
     
     //remove reference to any pointer from all lists
     rigidbodyObjs.clear();
     triggerObjs.clear();
 
     //Properly delete box 2d world
-    world = nullptr;
     delete world;
 }
 

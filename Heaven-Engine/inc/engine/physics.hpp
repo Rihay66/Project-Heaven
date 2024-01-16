@@ -42,8 +42,18 @@ class Physics{
         //Init function that is used after adding all pObjs
         static void init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
 
-        //check all physics object and check the player's collision
-        static void updatePhysics(float deltaTime);
+        /*Check all physics object and update their positions and rotations
+        *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        */
+        static void updatePhysics();
+
+        //Check all trigger objects
+        static void updateTriggers();
+
+        /*Updates physics world which updates physics objects 
+        *  NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        */
+        static void updateWorld(float deltaTime);
 
         //Clear resources
         static void clear();
