@@ -23,13 +23,13 @@ class Renderer{
         ~Renderer();
 
         //draw multiple pointer objects in a vector list
-        void Draw2D(std::vector<GameObject*> objs);
+        void Draw2D(std::vector<GameObject*> &objs);
 
         //draw multiple non-pointer objects in a vector list
         void Draw2D(std::vector<GameObject> &objs);
 
         //Draw a single pointer object
-        void Draw2D(GameObject* obj);
+        void Draw2D(GameObject* &obj);
 
         //Draw a single non-pointer object
         void Draw2D(GameObject &obj);

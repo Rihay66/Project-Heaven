@@ -35,15 +35,15 @@ Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
 }
 
 Renderer::~Renderer(){
+    //delete any pointers
+    delete[] this->quadBuffer;
+    delete this->quadBufferPtr;
+
     //delete quad buffer data 
     glDeleteVertexArrays(1, &this->quadVAO);
     glDeleteBuffers(1, &this->quadVBO);
     glDeleteBuffers(1, &this->quadEBO);
 
-    //delete any pointers
-    delete[] this->quadBuffer;
-    this->quadBufferPtr = nullptr;
-    delete this->quadBufferPtr;
 }
 
 void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color){
@@ -173,7 +173,7 @@ void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec
 }
 
 //render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject*> gameObjects){
+void Renderer::Draw2D(std::vector<GameObject*> &gameObjects){
 
     //init the buffer
     this->resetStats();
@@ -215,7 +215,7 @@ void Renderer::Draw2D(std::vector<GameObject> &gameObjects){
 }
 
 //render a single object pointer
-void Renderer::Draw2D(GameObject* obj){
+void Renderer::Draw2D(GameObject* &obj){
 
     //init the buffer
     this->resetStats();
