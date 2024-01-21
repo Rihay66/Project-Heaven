@@ -28,10 +28,10 @@ class Renderer{
         //draw multiple non-pointer objects in a vector list
         void Draw2D(std::vector<GameObject> &objs);
 
-        //Draw a single pointer object
+        //draw a single pointer object
         void Draw2D(GameObject* &obj);
 
-        //Draw a single non-pointer object
+        //draw a single non-pointer object
         void Draw2D(GameObject &obj);
 
         //reference to the model size

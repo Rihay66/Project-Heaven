@@ -37,6 +37,7 @@ Renderer::Renderer(Shader &shader, glm::vec2 spriteSize){
 Renderer::~Renderer(){
     //delete any pointers
     delete[] this->quadBuffer;
+    this->quadBufferPtr = nullptr;
     delete this->quadBufferPtr;
 
     //delete quad buffer data 

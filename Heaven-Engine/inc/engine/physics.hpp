@@ -55,8 +55,14 @@ class Physics{
         */
         static void updateWorld(float deltaTime);
 
-        //Clear resources
-        static void clear();
+        //Clear and delete objects, NOTE: deleteting class that inherent either trigger or physics object will cause a memory leak
+        static void clearAll();
+
+        //Delete world, NOTE: Make sure to delete trigger and physics objects properly
+        static void clearWorld();
+
+        //Clears reference to physics and trigger objects, NOTE: Make sure to delete such references
+        static void clearReference();
 
         //Simple check for aabb collision check
         static bool aabbCollision(GameObject* a, GameObject* b);

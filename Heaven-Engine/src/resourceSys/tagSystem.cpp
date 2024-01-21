@@ -99,3 +99,8 @@ void TagSystem::removeObjectsWithTag(std::string& tagName){
         }
     }
 }
+
+void TagSystem::clear(){
+    //Remove references to pointers
+    tagPool.clear();
+}

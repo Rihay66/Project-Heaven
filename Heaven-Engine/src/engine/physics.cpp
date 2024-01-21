@@ -111,16 +111,39 @@ void Physics::updateTriggers(){
     }
 }
 
-void Physics::clear(){
+void Physics::clearAll(){
 
     //TODO: Properly refactor how the objects are free from memory
     
-    //remove reference to any pointer from all lists
+    //Remove pointer from all lists
+
+    //Remove all PhysicsObjects attached to the physics engine
+    for(PhysicsObject* obj : rigidbodyObjs){
+        delete obj;
+    }
+
     rigidbodyObjs.clear();
+
+    //Remove all TriggerObject attached to the physics engine
+    for(TriggerObject* obj : triggerObjs){
+        delete obj;
+    }
+
     triggerObjs.clear();
 
     //Properly delete box 2d world
     delete world;
+}
+
+void Physics::clearWorld(){
+    //Properly delete box 2d world
+    delete world;
+}
+
+void Physics::clearReference(){
+    //Remove reference to pointers in all lists
+    rigidbodyObjs.clear();
+    triggerObjs.clear();
 }
 
 //TODO: Make it able to detect collision for rotation and rotation offsets

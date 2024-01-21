@@ -44,6 +44,8 @@ class TagSystem{
         //get and remove objects with a certain tag
         static void removeObjectsWithTag(std::string& tagName);
 
+        static void clear();
+
     private:
         //define data type that contains both tag and gameobject
         struct objectTag{
