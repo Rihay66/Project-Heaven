@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include <resourceSys/resourceManager.hpp>
+#include <resourceSys/shader.hpp>
 
 class TextRenderer{
     private:
