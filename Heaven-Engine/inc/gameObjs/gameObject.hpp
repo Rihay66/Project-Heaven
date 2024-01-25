@@ -5,12 +5,17 @@
 
 #include <string>
 #include <resourceSys/texture.hpp>
+#include <window/interpolationUtil.hpp>
 #include <glm/glm.hpp>
 
 class GameObject{
     public:
         //Define enum for how to render this object
         enum class RenderType {Default = 0, flipVertically, flipHorizontal, flipBoth};
+
+        //Define states of object to smoothly render any object
+        State currentState;
+        State previousState;
 
         //Define variable to set how the gameObject will be renderered
         RenderType renderType;

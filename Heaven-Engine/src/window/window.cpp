@@ -1,5 +1,7 @@
 #include <window/window.hpp>
 
+#include <iostream>
+
 //static vars
 static bool isDebug = false;
 static bool pressed = false;
@@ -110,6 +112,8 @@ float Window::getDeltaTime(){
     // calculate delta time
     currentFrame = glfwGetTime();
     this->DeltaTime = currentFrame - lastFrame;
+    if(this->DeltaTime > 0.25)
+        this->DeltaTime = 0.25;
     lastFrame = currentFrame;
 
     return this->DeltaTime;
@@ -133,7 +137,11 @@ void Window::runtime(){
             // update with fixed time step
             stepUpdate(this->fixedTimeStep);
             accumulator -= fixedTimeStep;
+            //Update previous state to be current
+            
         } 
+
+        this->alpha = accumulator / this->fixedTimeStep;
 
         // update any input, values, objects, loading etc..
         update();
@@ -142,7 +150,7 @@ void Window::runtime(){
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw or render
-        render();
+        render(alpha);
 
         // swap buffers
         glfwSwapBuffers(this->handle);
@@ -161,11 +169,11 @@ void Window::update(){
 }
 
 //update physics or ticks
-void Window::stepUpdate(float ts){
+void Window::stepUpdate(double ts){
     //Used to update physics with a fixed time step 
 }
 
 //rendering
-void Window::render(){
+void Window::render(double alpha){
     //here update visually the objects, shaders, textures, etc
 }

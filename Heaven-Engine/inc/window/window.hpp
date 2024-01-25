@@ -3,7 +3,6 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include <iostream>
 //Check platform
 #ifdef __unix__ //Linux platform
     #include <unistd.h>
@@ -18,7 +17,7 @@
 class Window{
     private:
         //set up vars for calculating delta time and the fixed time step
-	    float lastFrame = 0, currentFrame = 0, accumulator = 0;
+	    double lastFrame = 0, currentFrame = 0, accumulator = 0, alpha = 0;
 
     public:
         //define window states
@@ -37,10 +36,10 @@ class Window{
         /*Fixed rate that updates the stepUpdate(), adjust accordingly as needed
         * Default value is 0.016 or 16ms
         */
-        float fixedTimeStep = 1.0f / 60.0f;
+        double fixedTimeStep = 1.0f / 60.0f;
 
         //delta time variable for updating input, physics, and kind of movement
-        float DeltaTime = 0;
+        double DeltaTime = 0;
 
         //variable that can be set through input
         APP_STATE App_State;
@@ -74,10 +73,10 @@ class Window{
         virtual void update();
 
         //used to update Physics, ticks systems, or other
-        virtual void stepUpdate(float ts);
+        virtual void stepUpdate(double ts);
 
         //used to render things on the screen
-        virtual void render(); 
+        virtual void render(double alpha); 
 };
 
 #endif

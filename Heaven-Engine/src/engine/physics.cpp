@@ -71,6 +71,10 @@ void Physics::updatePhysics(){
         obj->position.x = position.x;
         obj->position.y = position.y;
         obj->rotation = body->GetAngle();
+
+        // update each rigidbody's state position
+        obj->currentState.posX = position.x;
+        obj->currentState.posY = position.y;
     }
 
     // Remove rigidbodies that are set to be destroyed
