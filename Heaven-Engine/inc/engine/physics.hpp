@@ -33,8 +33,8 @@ class Physics{
         static b2World* world;
 
         //physics iteration values
-        static const int32_t velocityIterations = 6;
-        static const int32_t positionIterations = 2;
+        static int32_t velocityIterations;
+        static int32_t positionIterations;
 
         //constructors
         Physics() {};

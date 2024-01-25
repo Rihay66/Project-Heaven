@@ -4,6 +4,8 @@
 
 std::vector<TriggerObject*> Physics::triggerObjs;
 std::vector<PhysicsObject*> Physics::rigidbodyObjs;
+int32_t Physics::velocityIterations = 6;
+int32_t Physics::positionIterations = 2;
 
 b2World* Physics::world = nullptr;
 
