@@ -65,6 +65,9 @@ void Physics::updatePhysics(){
     for (PhysicsObject *obj : rigidbodyObjs){
         // retrieve the body from each rigidbody
         b2Body *body = obj->physicBody();
+        
+        //update previous state
+        obj->previousState = obj->currentState;
 
         // Check for any changed
         const b2Vec2 position = body->GetPosition();
@@ -74,11 +77,15 @@ void Physics::updatePhysics(){
         obj->position.y = position.y;
         obj->rotation = body->GetAngle();
 
+
         // update each rigidbody's state position
         obj->currentState.posX = position.x;
         obj->currentState.posY = position.y;
     }
 
+    //TODO: Create a memory safe system to create and delete objects 
+
+    /*
     // Remove rigidbodies that are set to be destroyed
     for (PhysicsObject *obj : rigidbodyObjs){
         if (obj->isDestroyed)
@@ -93,6 +100,7 @@ void Physics::updatePhysics(){
             }
         }
     }
+    */
 }
 
 void Physics::updateTriggers(){

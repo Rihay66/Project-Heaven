@@ -9,13 +9,16 @@
 #include <glm/glm.hpp>
 
 class GameObject{
+    private:
+        //Contain flag that is check to see if object is interpolated
+        bool interpolation;
+
     public:
         //Define enum for how to render this object
         enum class RenderType {Default = 0, flipVertically, flipHorizontal, flipBoth};
 
         //Define states of object to smoothly render any object
-        State currentState;
-        State previousState;
+        State currentState, previousState;
 
         //Define variable to set how the gameObject will be renderered
         RenderType renderType;
@@ -31,8 +34,13 @@ class GameObject{
         //reference to the texture
         int textureIndex;
 
+        //Getter function
+
+        //Return the GameObject's interpolation flag
+        bool getInterpolationFlag();
+
         //constructor(s)
-        GameObject(int sprt, glm::vec2 pos = glm::vec2(0.0f), glm::vec2 size = glm::vec2(1.0f), glm::vec4 color = glm::vec4(1.0f));
+        GameObject(int sprt, glm::vec2 pos = glm::vec2(0.0f), glm::vec2 size = glm::vec2(1.0f), glm::vec4 color = glm::vec4(1.0f), bool interpolated = false);
 };
 
 #endif

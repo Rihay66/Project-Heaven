@@ -23,16 +23,16 @@ class Renderer{
         ~Renderer();
 
         //draw multiple pointer objects in a vector list
-        void Draw2D(std::vector<GameObject*> &objs);
+        void Draw2D(std::vector<GameObject*> &objs, double &alpha);
 
         //draw multiple non-pointer objects in a vector list
-        void Draw2D(std::vector<GameObject> &objs);
+        void Draw2D(std::vector<GameObject> &objs, double &alpha);
 
         //draw a single pointer object
-        void Draw2D(GameObject* &obj);
+        void Draw2D(GameObject* &obj, double &alpha);
 
         //draw a single non-pointer object
-        void Draw2D(GameObject &obj);
+        void Draw2D(GameObject &obj, double &alpha);
 
         //reference to the model size
         glm::vec2 spriteSize;
@@ -82,7 +82,8 @@ class Renderer{
         void initRenderData();
 
         //used to draw a quad
-        void createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color);
+        void createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec2 &size, 
+        float &rotation, int &texIndex, glm::vec4 &color);
 
         //Used to set and unset the vertex buffers
         void beginBatch();

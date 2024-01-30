@@ -56,6 +56,8 @@ void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec
         this->beginBatch();
     }
 
+    //Check if object needs to be interpolated
+
     //create model transform
     glm::mat4 transform  = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0.0f))
     * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
@@ -174,7 +176,7 @@ void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec
 }
 
 //render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject*> &gameObjects){
+void Renderer::Draw2D(std::vector<GameObject*> &gameObjects, double &alpha){
 
     //init the buffer
     this->resetStats();
@@ -195,7 +197,7 @@ void Renderer::Draw2D(std::vector<GameObject*> &gameObjects){
 }
 
 //render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject> &gameObjects){
+void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha){
 
     //init the buffer
     this->resetStats();
@@ -216,7 +218,7 @@ void Renderer::Draw2D(std::vector<GameObject> &gameObjects){
 }
 
 //render a single object pointer
-void Renderer::Draw2D(GameObject* &obj){
+void Renderer::Draw2D(GameObject* &obj, double &alpha){
 
     //init the buffer
     this->resetStats();
@@ -235,7 +237,7 @@ void Renderer::Draw2D(GameObject* &obj){
 } 
 
 //render a single object pointer
-void Renderer::Draw2D(GameObject &obj){
+void Renderer::Draw2D(GameObject &obj, double &alpha){
 
     //init the buffer
     this->resetStats();
