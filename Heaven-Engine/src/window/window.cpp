@@ -137,8 +137,6 @@ void Window::runtime(){
             // update with fixed time step
             stepUpdate(this->fixedTimeStep);
             accumulator -= fixedTimeStep;
-            //Update previous state to be current
-            
         } 
 
         this->alpha = accumulator / this->fixedTimeStep;

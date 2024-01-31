@@ -83,7 +83,7 @@ class Renderer{
 
         //used to draw a quad
         void createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec2 &size, 
-        float &rotation, int &texIndex, glm::vec4 &color);
+        float &rotation, int &texIndex, glm::vec4 &color, State &inter);
 
         //Used to set and unset the vertex buffers
         void beginBatch();

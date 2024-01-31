@@ -4,8 +4,8 @@
 
 std::vector<TriggerObject*> Physics::triggerObjs;
 std::vector<PhysicsObject*> Physics::rigidbodyObjs;
-int32_t Physics::velocityIterations = 6;
-int32_t Physics::positionIterations = 2;
+int32_t Physics::velocityIterations = 8;
+int32_t Physics::positionIterations = 4;
 
 b2World* Physics::world = nullptr;
 
@@ -79,11 +79,11 @@ void Physics::updatePhysics(){
 
 
         // update each rigidbody's state position
-        obj->currentState.posX = position.x;
-        obj->currentState.posY = position.y;
+        //obj->currentState.posX = position.x;
+        //obj->currentState.posY = position.y;
     }
 
-    //TODO: Create a memory safe system to create and delete objects 
+    //TODO: Create a memory safe system to create and delete rigidbody objects 
 
     /*
     // Remove rigidbodies that are set to be destroyed
