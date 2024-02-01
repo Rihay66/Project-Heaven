@@ -19,7 +19,7 @@
 class Renderer{
     public:
         //constructor & desconstructor
-        Renderer(Shader &shader, glm::vec2 spriteSize);
+        Renderer(Shader &shader, glm::uvec2 &spriteSize);
         ~Renderer();
 
         //draw multiple pointer objects in a vector list
@@ -34,9 +34,6 @@ class Renderer{
         //draw a single non-pointer object
         void Draw2D(GameObject &obj, double &alpha);
 
-        //reference to the model size
-        glm::vec2 spriteSize;
-
         //data struct for holding amount of draw calls and quad count
         struct RendererStats{
             int quadCount = 0, drawCount = 0;
@@ -46,6 +43,9 @@ class Renderer{
         RendererStats stats;
 
     private:
+        //reference to the model size
+        glm::uvec2 spriteSize;
+
         //stores data of a passed in shader
         Shader shader;
         //stores data of a quad
@@ -77,6 +77,12 @@ class Renderer{
 
         //Used to store vertex pos
         glm::vec4 quadVertexPositions[4];
+
+        //Create a overwrittable State struct, used in interpolation
+        State interpolation;
+
+        //Create a overwrittable transform
+        glm::mat4 transform;
 
         //initial setup for rendering, setups the rendering of quads and their buffer data
         void initRenderData();

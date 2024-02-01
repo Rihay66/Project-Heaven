@@ -6,7 +6,7 @@ const void Renderer::resetStats()
     this->stats.drawCount = 0;
 }
 
-Renderer::Renderer(Shader &shader, glm::vec2 spriteSize)
+Renderer::Renderer(Shader &shader, glm::uvec2 &spriteSize)
 {
     this->shader = shader;
 
@@ -62,7 +62,9 @@ void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec
     }
 
     // create model transform
-    glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x + inter.posX, pos.y + inter.posY, 0.0f)) * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
+    transform = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x + inter.posX, pos.y + inter.posY, 0.0f)) 
+    * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) 
+    * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
 
     switch (type)
     {
@@ -172,6 +174,7 @@ void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec
     default:
         break;
     }
+    
 
     this->indexCount += 6;
     this->stats.quadCount++;
@@ -191,10 +194,6 @@ void Renderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha)
     // Loop through objects and add to batch
     for (int i = 0; i < gameObjects.size(); i++)
     {
-
-        // Create a empty instance of state
-        State interpolation;
-
         if (gameObjects[i]->getInterpolationFlag())
         {
             interpolation = interpolateState(alpha, gameObjects[i]->previousState, gameObjects[i]->currentState);
@@ -225,10 +224,6 @@ void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha)
     // Loop through objects and add to batch
     for (int i = 0; i < gameObjects.size(); i++)
     {
-
-        // Create a empty instance of state
-        State interpolation;
-
         if (gameObjects[i].getInterpolationFlag())
         {
             interpolation = interpolateState(alpha, gameObjects[i].previousState, gameObjects[i].currentState);
@@ -256,13 +251,10 @@ void Renderer::Draw2D(GameObject *&obj, double &alpha)
     // Bind textures
     ResourceManager::BindTextures();
 
-    // Create a empty instance of state
-    State interpolation;
-
     if (obj->getInterpolationFlag()){
         interpolation = interpolateState(alpha, obj->previousState, obj->currentState);
     }else{
-            interpolation = obj->currentState;
+        interpolation = obj->currentState;
     }
 
     // add a single object to the batch
@@ -282,16 +274,10 @@ void Renderer::Draw2D(GameObject &obj, double &alpha)
     this->resetStats();
     this->beginBatch();
 
-    // Bind textures
-    ResourceManager::BindTextures();
-
-    // Create a empty instance of state
-    State interpolation;
-
     if (obj.getInterpolationFlag()){
         interpolation = interpolateState(alpha, obj.previousState, obj.currentState);
     }else{
-            interpolation = obj.currentState;
+        interpolation = obj.currentState;
     }
 
     // add a single object to the batch

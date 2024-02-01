@@ -7,6 +7,8 @@ width(Width), height(Height), window(handle), shader(shader){
 }
 
 Camera::~Camera(){
+    //Forget the window handle
+    this->window = nullptr;
 }
 
 void Camera::calculateProjectionView()
