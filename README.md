@@ -2,7 +2,7 @@
 A Simple 2D OpenGL based Engine called:
 # Heaven-Engine
 
-![](Heaven-Engine_logo.png)
+![](Heaven-Engine_logo_new.png)
 
 Current Version: 1.0U-Dev
 
