@@ -5,7 +5,7 @@
 
 #include <string>
 #include <resourceSys/texture.hpp>
-#include <window/interpolationUtil.hpp>
+#include <resourceSys/interpolationUtil.hpp>
 #include <glm/glm.hpp>
 
 class GameObject{

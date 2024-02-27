@@ -1,20 +1,20 @@
 #include <engine/renderer.hpp>
 
-const void Renderer::resetStats()
-{
+const void Renderer::resetStats(){
     this->stats.quadCount = 0;
     this->stats.drawCount = 0;
 }
 
-Renderer::Renderer(Shader &shader, glm::uvec2 &spriteSize)
-{
+Renderer::Renderer(Shader &shader, glm::uvec2 &spriteSize){
     this->shader = shader;
 
     // set up shader samples for the quad textures
     this->shader.Use();
-
+    
+    // grab the uniform location of 'image' in the shader, the name 'iamge' is explicit
     auto loc = glGetUniformLocation(this->shader.ID, "image");
 
+    // set up array to the size of the max number of textures
     int samplers[this->maxTextureSlots];
 
     // set up samplers array
@@ -23,6 +23,7 @@ Renderer::Renderer(Shader &shader, glm::uvec2 &spriteSize)
         samplers[i] = i;
     }
 
+    // set up the index of the shader's texture array
     glUniform1iv(loc, maxTextureSlots, samplers);
 
     // set up shader model view
@@ -34,11 +35,11 @@ Renderer::Renderer(Shader &shader, glm::uvec2 &spriteSize)
     quadVertexPositions[2] = {0.5f, -0.5f, 0.0f, 1.0f};
     quadVertexPositions[3] = {-0.5f, -0.5f, 0.0f, 1.0f};
 
-    this->initRenderData(); // set up rendering of quads
+    // set up rendering of quads
+    this->initRenderData(); 
 }
 
-Renderer::~Renderer()
-{
+Renderer::~Renderer(){
     // delete any pointers
     delete[] this->quadBuffer;
     this->quadBufferPtr = nullptr;
@@ -50,24 +51,23 @@ Renderer::~Renderer()
     glDeleteBuffers(1, &this->quadEBO);
 }
 
-void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter)
-{
+void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter){
 
     // check if not over the index count
-    if (this->indexCount >= this->maxIndexCount)
-    {
+    if (this->indexCount >= this->maxIndexCount){
+        // flush what's left and start another batch
         this->endBatch();
         this->flush();
         this->beginBatch();
     }
 
     // create model transform
-    transform = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x + inter.posX, pos.y + inter.posY, 0.0f)) 
+    transform = glm::translate(glm::mat4(1.0f), glm::vec3(inter.posX, inter.posY, 0.0f)) 
     * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) 
     * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
-
-    switch (type)
-    {
+    
+    // check GameObject rendering state
+    switch (type){
     case GameObject::RenderType::Default:
         quadBufferPtr->position = (transform * quadVertexPositions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
         quadBufferPtr->texCoords = {0.0f, 0.0f};
@@ -181,8 +181,7 @@ void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec
 }
 
 // render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha)
-{
+void Renderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha){
 
     // init the buffer
     this->resetStats();
@@ -198,7 +197,8 @@ void Renderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha)
         {
             interpolation = interpolateState(alpha, gameObjects[i]->previousState, gameObjects[i]->currentState);
         }else{
-            interpolation = gameObjects[i]->currentState;
+            interpolation.posX = gameObjects[i]->position.x;
+            interpolation.posY = gameObjects[i]->position.y;
         }
 
         this->createQuad(gameObjects[i]->renderType, gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color, interpolation);
@@ -211,8 +211,7 @@ void Renderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha)
 }
 
 // render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha)
-{
+void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha){
 
     // init the buffer
     this->resetStats();
@@ -221,20 +220,21 @@ void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha)
     // bind textures
     ResourceManager::BindTextures();
 
-    // Loop through objects and add to batch
+    // loop through objects and add to batch
     for (int i = 0; i < gameObjects.size(); i++)
     {
         if (gameObjects[i].getInterpolationFlag())
         {
             interpolation = interpolateState(alpha, gameObjects[i].previousState, gameObjects[i].currentState);
         }else{
-            interpolation = gameObjects[i].currentState;
+            interpolation.posX = gameObjects[i].position.x;
+            interpolation.posY = gameObjects[i].position.y;
         }
 
         this->createQuad(gameObjects[i].renderType, gameObjects[i].position, gameObjects[i].size, gameObjects[i].rotation, gameObjects[i].textureIndex, gameObjects[i].color, interpolation);
     }
 
-    // Set dynamic vertex buffer
+    // set dynamic vertex buffer
     this->endBatch();
     // draw
     this->flush();
@@ -243,32 +243,31 @@ void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha)
 // render a single object pointer
 void Renderer::Draw2D(GameObject *&obj, double &alpha)
 {
-
     // init the buffer
     this->resetStats();
     this->beginBatch();
 
-    // Bind textures
+    // bind textures
     ResourceManager::BindTextures();
 
     if (obj->getInterpolationFlag()){
         interpolation = interpolateState(alpha, obj->previousState, obj->currentState);
     }else{
-        interpolation = obj->currentState;
+        interpolation.posX = obj->position.x;
+        interpolation.posY = obj->position.y;
     }
 
     // add a single object to the batch
     this->createQuad(obj->renderType, obj->position, obj->size, obj->rotation, obj->textureIndex, obj->color, interpolation);
 
-    // Set dynamic vertex buffer
+    // set dynamic vertex buffer
     this->endBatch();
     // draw
     this->flush();
 }
 
 // render a single object pointer
-void Renderer::Draw2D(GameObject &obj, double &alpha)
-{
+void Renderer::Draw2D(GameObject &obj, double &alpha){
 
     // init the buffer
     this->resetStats();
@@ -277,21 +276,21 @@ void Renderer::Draw2D(GameObject &obj, double &alpha)
     if (obj.getInterpolationFlag()){
         interpolation = interpolateState(alpha, obj.previousState, obj.currentState);
     }else{
-        interpolation = obj.currentState;
+        interpolation.posX = obj.position.x;
+        interpolation.posY = obj.position.y;
     }
 
     // add a single object to the batch
     this->createQuad(obj.renderType, obj.position, obj.size, obj.rotation, obj.textureIndex, obj.color, interpolation);
 
-    // Set dynamic vertex buffer
+    // set dynamic vertex buffer
     this->endBatch();
     // draw
     this->flush();
 }
 
 // Set up the quad rendering
-void Renderer::initRenderData()
-{
+void Renderer::initRenderData(){
 
     // configure buffer
     if (this->quadBuffer != nullptr)
@@ -346,25 +345,24 @@ void Renderer::initRenderData()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
-void Renderer::beginBatch()
-{
-    // Set buffer pointer
+void Renderer::beginBatch(){
+    // set buffer pointer
     this->quadBufferPtr = quadBuffer;
 
-    // Call shader usage
+    // call shader usage
     this->shader.Use();
 }
 
-void Renderer::endBatch()
-{
+void Renderer::endBatch(){
+    // calculate amount of quads to render
     GLsizeiptr size = (uint8_t *)this->quadBufferPtr - (uint8_t *)this->quadBuffer;
     // set up dynamic buffer
     glBindBuffer(GL_ARRAY_BUFFER, this->quadVBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, quadBuffer);
 }
 
-void Renderer::flush()
-{
+void Renderer::flush(){
+    // draw the quad/s
     glBindVertexArray(this->quadVAO);
     glDrawElements(GL_TRIANGLES, this->indexCount, GL_UNSIGNED_INT, nullptr);
     this->stats.drawCount++;

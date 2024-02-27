@@ -8,10 +8,6 @@ struct State{
     //* Note: both values are by default set to zero
     float posX = 0.0f;
     float posY = 0.0f;
-
-    //Constructors
-    State() = default;
-    State(const State&) = default;
 };
 
 //Define function that calculates the interpolated state between previous and current states

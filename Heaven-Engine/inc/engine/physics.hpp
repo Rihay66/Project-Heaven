@@ -18,7 +18,7 @@
 
 class b2World;
 
-/* Static Class
+/* Static Singleton Class
 
 
 */
