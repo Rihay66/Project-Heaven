@@ -2,31 +2,32 @@
 
 #include <iostream>
 
-//static vars
+// static vars for tracking input
+
 static bool isDebug = false;
 static bool pressed = false;
 static bool controllerCheck = false;
 
-//Callback func
+// callback function to move the OpenGL viewport to the GLFW window's position
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
 }
 
-//Window constructor, intializes GLFW and GLAD then creates a window with the passed parameters
+// constructor, intializes GLFW and GLAD then creates a window with the passed parameters
 Window::Window(int h, int w, const char* name) : App_State(ACTIVE), Input_State(KM), width(0), height(0){
 
-    //set local vars
+    // set local vars of the window size
     width = w;
     height = h;
 
-    //init GLFW
+    // init GLFW
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, false); //disable resizing the screen
 
-    //create the window and check for errors
+    // create the window and check for errors
     handle = glfwCreateWindow(h, w, name, NULL, NULL);
     if(!handle){
         std::cout << "Failed to create window!" << std::endl;
@@ -34,42 +35,42 @@ Window::Window(int h, int w, const char* name) : App_State(ACTIVE), Input_State(
         exit(-1);
     }
 
-    //create window
-    glfwMakeContextCurrent(handle);
+    // create window
+    glfwMakeContextCurrent((GLFWwindow*)handle);
 
-    //load glad
+    // load glad
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
         std::cout << "Failed to init GLAD!" << std::endl;
         exit(-1);
     }
 
-    //set up call back to update the opengl window
-    glfwSetFramebufferSizeCallback(handle, framebuffer_size_callback);
-    //enable vsync
+    // set up call back to update the opengl window
+    glfwSetFramebufferSizeCallback((GLFWwindow*)handle, framebuffer_size_callback);
+    // enable vsync
     glfwSwapInterval(1);
-    //set openGL window size
+    // set openGL window size
     glViewport(0, 0, h, w);
 
-    //set up rendering for 2D
+    // set up rendering for 2D
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    std::cout << "MSG: Window successfully created" << std::endl;
+    //TODO: Create debug options for the window class to display a console to show any errors or messages
+    //std::cout << "MSG: Window successfully created" << std::endl;
 }
 
-//Destructor
+// destructor
 Window::~Window(){
-    //delete any pointers
+    // delete any pointers
     glfwTerminate();
 }
 
-
 void Window::getInput(){
 
-    //debug enabler button - toggle
-    if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS && !pressed){
+    // debug enabler button - toggle
+    if(glfwGetKey((GLFWwindow*)handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS && !pressed){
         isDebug = !isDebug;
-        //check the isDebug value and set the proper app state
+        // check the isDebug value and set the proper app state
         if(isDebug){
             App_State = DEBUG;
             std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
@@ -79,13 +80,14 @@ void Window::getInput(){
             std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
         }
         pressed = !pressed;
-    }else if(glfwGetKey(handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){
+    }else if(glfwGetKey((GLFWwindow*)handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){
         pressed = !pressed;
     }
 
-    //check for joystick
+    //TODO: this checking system for joystick may need to check if joystick is indeed a gamepad
+    // check for the first joystick
     if(glfwJoystickPresent(GLFW_JOYSTICK_1) == GLFW_TRUE && !controllerCheck){
-        //print out that the joystick is connected
+        // print out that the joystick is connected
         const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
         std::cout << "MSG: Controller is connected! ID: " << name << std::endl;
         std::cout << "MSG: Controller input is enabled!" << std::endl;
@@ -98,15 +100,10 @@ void Window::getInput(){
         controllerCheck = !controllerCheck;
     }
 
-    //Call additional input
+    // call additional input
     this->input();
 }
 
-//Handle main window input function
-void Window::input(){
-    //Here goes additional input that is within SDL event handling and getEvent() loop
-    //Can be overwritten 
-}
 
 float Window::getDeltaTime(){
     // calculate delta time
@@ -119,9 +116,9 @@ float Window::getDeltaTime(){
     return this->DeltaTime;
 }
 
-//Single threaded runtime of update() and render()
+// single threaded runtime of update(), stepUpdate() and render()
 void Window::runtime(){
-    while(!glfwWindowShouldClose(this->handle)){
+    while(!glfwWindowShouldClose((GLFWwindow*)this->handle)){
         // get Deltatime
         this->getDeltaTime();
 
@@ -138,7 +135,7 @@ void Window::runtime(){
             stepUpdate(this->fixedTimeStep);
             accumulator -= fixedTimeStep;
         } 
-
+        // calculate alpha for linear interpolation
         this->alpha = accumulator / this->fixedTimeStep;
 
         // update any input, values, objects, loading etc..
@@ -151,27 +148,33 @@ void Window::runtime(){
         render(alpha);
 
         // swap buffers
-        glfwSwapBuffers(this->handle);
+        glfwSwapBuffers((GLFWwindow*)this->handle);
     }
 }
 
-//initialization
+// handle main window input function
+void Window::input(){
+    // here goes additional input that is within SDL event handling and getEvent() loop
+    // can be overwritten 
+}
+
+// initialization
 void Window::init(){
-    //Here goes the initial processing of shaders, textues, and objects
+    // here goes the initial processing of shaders, textues, and objects
 }
 
 //updating
 void Window::update(){
-    //update any variables like moving objects or updating input
+    // update any variables like moving objects or updating input
     //* NOTE: that any object that needs input will need to have reference to the window handles a parameter to be passed down
 }
 
-//update physics or ticks
+// update physics or ticks
 void Window::stepUpdate(double ts){
-    //Used to update physics with a fixed time step 
+    // used to update physics, ticks, or other with a fixed time step 
 }
 
-//rendering
+// rendering
 void Window::render(double alpha){
-    //here update visually the objects, shaders, textures, etc
+    // here update visually the objects, shaders, textures, etc
 }
