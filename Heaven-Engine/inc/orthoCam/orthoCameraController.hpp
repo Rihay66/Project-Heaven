@@ -5,30 +5,36 @@
 
 #include <orthoCam/orthoCamera.hpp>
 
-//Deriving class of OrthoCamera
+// deriving class of OrthoCamera with 
 class CameraController : public Camera{
-    public:
-        //reference to the movement speed of the camera
+    private:
+        // reference to the movement speed of the camera
         float speed;
-        //reference to debug zoom 
+
+        // reference to debug zoom 
         float zoomSpeed;
 
-        //reference to current zoom amount
+        // reference to current zoom amount
         float zoomFactor;
 
-        //Constructor
+    public:
+        // constructor
         CameraController(unsigned int Width, unsigned int Height, GLFWwindow* handle,
         Shader &shader, float cameraSpeed = 1.0f, float zoomSpeed = 1.0f);
 
-        //Destructor
+        // destructor
         ~CameraController();
 
-        //overwrite projectionview calculation function
+        // overwrite projectionview calculation function
         void calculateProjectionView() override;
 
-        //Overridable functions
+        //* virtual functions
+
+        // virtual function that sets the camera position to snap to a given position
         virtual void followPos(glm::vec2 pos, glm::vec2 size = glm::vec2(0.0f),
         glm::vec2 offset = glm::vec2(0.0f));
+
+        //virtual function that allows for keyboard controlled camera movement using WASD and zooming with up and down arrow keys
         virtual void inputMovement(float deltatime);
 };
 
