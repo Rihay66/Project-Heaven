@@ -18,18 +18,20 @@
 */
 class ResourceManager{
     public:
-        /// Holds all state information relevant to a character as loaded using FreeType
+        /// holds all state information relevant to a character as loaded using FreeType
         struct Character{
             unsigned int TextureID; // ID handle of the glyph texture
-            glm::ivec2 Size;        // Size of glyph
-            glm::ivec2 Bearing;     // Offset from baseline to left/top of glyph
-            unsigned int Advance;   // Horizontal offset to advance to next glyph
+            glm::ivec2 Size;        // size of glyph
+            glm::ivec2 Bearing;     // offset from baseline to left/top of glyph
+            unsigned int Advance;   // horizontal offset to advance to next glyph
         };
+
         // resource storage
+
         static std::map<std::string, Shader> Shaders;
         static std::map<std::string, Texture2D> Textures;
-        static std::vector<unsigned int> texIDList;
         static std::map<char, Character> Characters;
+
         // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
         static Shader LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
         // retrieves a stored sader
@@ -40,12 +42,15 @@ class ResourceManager{
         static int LoadFontTexture(const char *file, unsigned int fontsize, bool isLinear = true);
         // retrieves a stored texture on the texList vector
         static int GetTexture(std::string name);
-        // binds all textures from the texList to be used by OpenGL
+        // binds all textures from the texture list to be used by OpenGL
         static bool BindTextures();
         // properly de-allocates all loaded resources
         static void Clear();
 
     private:
+        // private resource storage
+        static std::vector<unsigned int> texIDList;
+
         // private constructor, that is we do not want any actual resource manager objects. Its members and functions should be publicly available (static).
         ResourceManager() {}
         // loads and generates a shader from file
