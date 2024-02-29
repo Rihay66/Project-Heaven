@@ -45,7 +45,7 @@ class Renderer{
 
         // contain reference to amont of quads and amount of draw calls
         RendererStats stats;
-
+        
     private:
         // reference to the model size
         glm::uvec2 spriteSize;

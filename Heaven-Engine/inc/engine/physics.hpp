@@ -3,83 +3,111 @@
 #ifndef PHYSICS_HPP
 #define PHYSICS_HPP
 
-#include <iostream>
 #include <vector>
 #include <math.h>
 
 #include <gameObjs/rigidbodyObject.hpp>
 #include <gameObjs/triggerObject.hpp>
 
-//include box2d lib
+// include box2d library
 #include <box2d/b2_world.h>
 #include <box2d/b2_body.h>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_polygon_shape.h>
 
+// redeclare the box2d b2World class for engine use
 class b2World;
 
-/* Static Singleton Class
-
-
+/* Static Singleton Physics class that hosts functions to add
+ either TriggerObject or PhysicsObject into the physics engine.
+ Objects can be added at any time after init() (not recommended).
+ Use update functions to update TriggerObjects and PhysicsObjects.
+ (NOTE: update functions don't work until init() has been called once)
 */
 class Physics{
     public:
-        //List of different trigger objects 
-        static std::vector<TriggerObject*> triggerObjs;
-        //List of different rigidbody
-        static std::vector<PhysicsObject*> rigidbodyObjs;
+        //* Initializer functions
 
-        //reference to physics world
-        static b2World* world;
-
-        //physics iteration values
-        static int32_t velocityIterations;
-        static int32_t positionIterations;
-
-        //constructors
-        Physics() {};
-
-        //Init function that is used after adding all pObjs
+        /* initializer function to initialize the physics world and physicsObject
+        * NOTE: Must be called once! If intentionally calling init again make sure to clearWorld() before calling init() again
+        */
         static void init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
 
-        /*Check all physics object and update their positions and rotations
+        //* Adder functions
+
+        // add trigger object to the physics engine
+        static TriggerObject* addTriggerObject(TriggerObject* obj);
+
+        // add physics object to the physics engine
+        static PhysicsObject* addPhysicsObject(PhysicsObject* obj);
+
+        //* Setter functions
+
+        /* set the physics velocity iteration, by default value is 8
+        * NOTE: Passed value cannot be less than 1
+        */
+        static void setPhysicsVelocityIterations(int32_t iter);
+
+        /* set the physics position iteration, by default value is 4
+        * NOTE: Passed value cannot be less than 1
+        */
+        static void setPhysicsPositionIterations(int32_t iter);
+
+        //* Update functions
+
+        /* check all physics object and update their positions and rotations
         *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void updatePhysics();
 
-        //Check all trigger objects
+        // check all trigger objects
         static void updateTriggers();
 
-        /*Updates physics world which updates physics objects 
+        /* updates physics world which updates physics objects 
         *  NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void updateWorld(float deltaTime);
 
-        //Clear and delete objects, NOTE: deleteting class that inherent either trigger or physics object will cause a memory leak
+        //* Cleaner functions
+
+        /* clear and delete objects
+        * NOTE: Deleteting a class that inherent either trigger or physics object will cause a memory leak
+        */
         static void clearAll();
 
-        //Delete world, NOTE: Make sure to delete trigger and physics objects properly
+        /* delete world
+        * NOTE: Make sure to delete trigger and physics objects properly
+        */
         static void clearWorld();
 
-        //Clears reference to physics and trigger objects, NOTE: Make sure to delete such references
+        /* clears reference to physics and trigger objects 
+        * NOTE: Make sure to delete such references
+        */
         static void clearReference();
 
-        //Simple check for aabb collision check
+        //* Helper functions
+
+        // simple check for aabb collision check
         static bool aabbCollision(GameObject* a, GameObject* b);
 
-        //Make a enum translate between box2d and rigidbodyObject class
-        static b2BodyType RbToB2Types(BodyType bodyType){
-            
-            switch(bodyType){
-                case BodyType::Static:  return b2_staticBody;
-                case BodyType::Dynamic: return b2_dynamicBody;
-                case BodyType::Kinematic: return b2_kinematicBody;
-            }
+        // enum translate between box2d and rigidbodyObject class
+        static b2BodyType RbToB2Types(BodyType bodyType);
+    private:
+        // list of different trigger objects 
+        static std::vector<TriggerObject*> triggerObjs;
+        // list of different rigidbody
+        static std::vector<PhysicsObject*> rigidbodyObjs;
 
-            //No type was set or there is a unknown body type being passed
-            std::cout << "Warning:Unknown RB Body Type being passed!" << "\n";
-            return b2_staticBody;
-        }
+        //* physics iteration values
+
+        static int32_t velocityIterations;
+        static int32_t positionIterations;
+
+        // reference to physics world
+        static b2World* world;
+
+        // private constructor
+        Physics() {};
 };
 
 #endif
