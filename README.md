@@ -4,11 +4,7 @@ A Simple 2D OpenGL based Engine called:
 
 ![](Heaven-Engine_logo_new.png)
 
-<<<<<<< HEAD
-Current Version: 1.0V-dev
-=======
 Current Version: 1.0W-Dev
->>>>>>> 9977b46c2791ce80a6cab538878b7c7660fc585a
 
 Features:
 
