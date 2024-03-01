@@ -3,10 +3,12 @@
 #ifndef RESOURCEMANAGER_HPP
 #define RESOURCEMANAGER_HPP
 
+// include standard libraries
 #include <map>
 #include <string>
 #include <vector>
 
+// include necessary classes such as texture and shader classes
 #include <resourceSys/texture.hpp>
 #include <resourceSys/shader.hpp>
 
@@ -18,7 +20,7 @@
 */
 class ResourceManager{
     public:
-        /// holds all state information relevant to a character as loaded using FreeType
+        // holds all state information relevant to a character as loaded using FreeType
         struct Character{
             unsigned int TextureID; // ID handle of the glyph texture
             glm::ivec2 Size;        // size of glyph

@@ -24,17 +24,14 @@ class TagSystem{
 
         //*Helper Funcs
         
-        // get object from the list and replace the tag
+        // get object from the list and replace the tag of in the tag pool, not the object's tag itself
         static void replaceTag(std::string tagName, GameObject* gameObj);
 
         //*Getter Funcs
 
         // get a tag from a object in the tag pool
         static std::string getTag(GameObject* gameObj);
-        /* get object from the tag pool by tag
-            ! Only use this function only when there's a singular object with it's own special tag
-            ! it will not return multiple objects the same tag
-        */
+        // get objects from the tag pool by tag
         static std::vector<GameObject*> getObject(std::string tagName);
         // check if tag pertains to a passed object that exists in tag pool
         static bool checkObject(std::string target, GameObject* gameObj);

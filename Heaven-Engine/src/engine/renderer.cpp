@@ -195,7 +195,7 @@ void Renderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha){
     {
         if (gameObjects[i]->getInterpolationFlag())
         {
-            interpolation = interpolateState(alpha, gameObjects[i]->previousState, gameObjects[i]->currentState);
+            interpolation = interpolateState(alpha, gameObjects[i]->getPreviousInterpolatedState(), gameObjects[i]->getCurrentInterpolatedState());
         }else{
             interpolation.posX = gameObjects[i]->position.x;
             interpolation.posY = gameObjects[i]->position.y;
@@ -225,7 +225,7 @@ void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha){
     {
         if (gameObjects[i].getInterpolationFlag())
         {
-            interpolation = interpolateState(alpha, gameObjects[i].previousState, gameObjects[i].currentState);
+            interpolation = interpolateState(alpha, gameObjects[i].getPreviousInterpolatedState(), gameObjects[i].getCurrentInterpolatedState());
         }else{
             interpolation.posX = gameObjects[i].position.x;
             interpolation.posY = gameObjects[i].position.y;
@@ -251,7 +251,7 @@ void Renderer::Draw2D(GameObject *&obj, double &alpha)
     ResourceManager::BindTextures();
 
     if (obj->getInterpolationFlag()){
-        interpolation = interpolateState(alpha, obj->previousState, obj->currentState);
+        interpolation = interpolateState(alpha, obj->getPreviousInterpolatedState(), obj->getCurrentInterpolatedState());
     }else{
         interpolation.posX = obj->position.x;
         interpolation.posY = obj->position.y;
@@ -274,7 +274,7 @@ void Renderer::Draw2D(GameObject &obj, double &alpha){
     this->beginBatch();
 
     if (obj.getInterpolationFlag()){
-        interpolation = interpolateState(alpha, obj.previousState, obj.currentState);
+        interpolation = interpolateState(alpha, obj.getPreviousInterpolatedState(), obj.getCurrentInterpolatedState());
     }else{
         interpolation.posX = obj.position.x;
         interpolation.posY = obj.position.y;
@@ -292,10 +292,11 @@ void Renderer::Draw2D(GameObject &obj, double &alpha){
 // Set up the quad rendering
 void Renderer::initRenderData(){
 
-    // configure buffer
+    // check if quad buffer had already been initialize
     if (this->quadBuffer != nullptr)
-        exit(-1);
+        exit(-1); // avoid re-initalize the render data
 
+    // configure buffer
     this->quadBuffer = new Vertex[this->maxVertexCount];
 
     // configure VAO/VBO/EBO
@@ -326,9 +327,7 @@ void Renderer::initRenderData(){
     // indices buffer data
     unsigned int indices[maxIndexCount];
     unsigned int offset = 0;
-    for (size_t i = 0; i < maxIndexCount; i += 6)
-    {
-
+    for (size_t i = 0; i < maxIndexCount; i += 6){
         indices[i + 0] = 0 + offset;
         indices[i + 1] = 1 + offset;
         indices[i + 2] = 2 + offset;

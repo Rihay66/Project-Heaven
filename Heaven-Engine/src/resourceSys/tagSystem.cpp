@@ -24,7 +24,7 @@ void TagSystem::addTag(std::string tagName, GameObject* gameObj){
 
     // set the game objects tag to be the tag assigned
     if(gameObj && gameObj != nullptr){
-        gameObj->tag = tagName;
+        gameObj->setTag(tagName);
     }else{
         // stop function as game object doesn't exist
         return;
@@ -44,7 +44,6 @@ void TagSystem::replaceTag(std::string target, GameObject* gameObj){
     for(int i = 0; i < tagPool.size(); i++){
         if(tagPool[i].obj == gameObj){
             // replace tag on tag pool and the object itself
-            tagPool[i].obj->tag = target;
             tagPool[i].name = target;
 
             //stop function 

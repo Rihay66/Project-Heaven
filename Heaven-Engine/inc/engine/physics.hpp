@@ -106,6 +106,9 @@ class Physics{
         // reference to physics world
         static b2World* world;
 
+        // overwrittable State struct
+        static State mState;
+
         // private constructor
         Physics() {};
 };
