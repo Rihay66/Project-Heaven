@@ -6,11 +6,11 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
-//Check platform and then grab the Freetype library
-#ifdef __unix__ //Linux platform
+// check platform and then grab the Freetype library
+#ifdef __unix__ // Linux/Unix platform
     #include <freetype2/ft2build.h>
     #include FT_FREETYPE_H
-#elif defined(_WIN32) || defined(WIN32) //Windows platform
+#elif defined(_WIN32) || defined(WIN32) // Windows platform
     #include <ft2build.h>
     #include FT_FREETYPE_H
 #endif
@@ -19,28 +19,28 @@
 
 TextRenderer::TextRenderer(unsigned int width, unsigned int height,
  Shader& shader) : textShader(shader){
-    //Create projection to be centered on the screen
+    // create projection to be centered on the screen
     glm::mat4 projection = glm::ortho(-(static_cast<float>(width) / 2.0f), (static_cast<float>(width) / 2.0f), 
         -(static_cast<float>(height) / 2.0f), (static_cast<float>(height) / 2.0f), -1.0f, 1.0f);
 
-    //Configure shader
+    // configure shader
     this->textShader.SetMatrix4("projection", projection, true);
 
-    //Configure VAO/VBO for positioning and texturing
+    // configure VAO/VBO for positioning and texturing
     initTextRenderingData();
 }
 
 TextRenderer::~TextRenderer(){
-    //delete quad buffer data 
+    // delete quad buffer data 
     glDeleteVertexArrays(1, &this->VAO);
     glDeleteBuffers(1, &this->VBO);
 }
 
 void TextRenderer::drawText(std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
-    //Set the shader
+    // set the shader and set the textColor
     this->textShader.SetVector4f("textColor", color, true);
 
-    //Bind this VAO
+    // bind this VAO
     glBindVertexArray(this->VAO);
 
     // iterate through all characters
@@ -54,6 +54,7 @@ void TextRenderer::drawText(std::string text, glm::vec2 position, glm::vec2 scal
 
         float w = ch.Size.x * scale.x;
         float h = ch.Size.y * scale.y;
+
         // update VBO for each character
         float vertices[6][4] = {
             { xpos,     ypos + h,   0.0f, 0.0f },            
@@ -64,6 +65,7 @@ void TextRenderer::drawText(std::string text, glm::vec2 position, glm::vec2 scal
             { xpos + w, ypos,       1.0f, 1.0f },
             { xpos + w, ypos + h,   1.0f, 0.0f }           
         };
+        
         // render glyph texture over quad
         glBindTexture(GL_TEXTURE_2D, ch.TextureID);
         // update content of VBO memory

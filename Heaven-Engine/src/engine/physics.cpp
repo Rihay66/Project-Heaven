@@ -236,7 +236,7 @@ void Physics::updateTriggers(){
             }
         }
         // check if trigger is a exit trigger
-        if (trigObj->trigType == TriggerType::Exit){
+        if (trigObj->getTriggerType() == TriggerType::Exit){
             // call to check objects that collided with the exit trigger
             trigObj->exitTriggerObjectCheck();
         }

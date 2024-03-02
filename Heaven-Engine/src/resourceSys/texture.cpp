@@ -16,6 +16,7 @@ void Texture2D::Generate(unsigned int width, unsigned int height, unsigned char*
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->Filter_Max);
 
     glTexImage2D(GL_TEXTURE_2D, 0, this->Internal_Format, width, height, 0, this->Image_Format, GL_UNSIGNED_BYTE, data);
-    //Create mipmap, when objects are far away, OpenGL will set the correct texture resolution
+    
+    // create mipmap, when objects are far away, OpenGL will set the correct texture resolution
     glGenerateMipmap(GL_TEXTURE_2D);
 }

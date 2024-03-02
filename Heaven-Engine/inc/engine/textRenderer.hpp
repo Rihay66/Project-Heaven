@@ -10,24 +10,27 @@
 
 #include <resourceSys/shader.hpp>
 
+/* Text Renderer Class used to render a text using only one loaded font from the ResourceManager
+* NOTE: Text is rendered in the center of the screen
+*/
 class TextRenderer{
     private:
-        //stores data of a quad
+        // stores data of a quad
         unsigned int VAO;
         unsigned int VBO;
 
-        //initial setup of the rendering data
+        // initial setup of the rendering data
         void initTextRenderingData();
 
-        //Shader used for text rendering
+        // shader used for text rendering
         Shader textShader;
     public:
-        //Constructor       
+        // constructor       
         TextRenderer(unsigned int width, unsigned int height, Shader& shader);
-        //Destructor
+        // destructor
         ~TextRenderer();
         
-        //Draws text along with 
+        // draws text along with with their position, scale, and color 
         void drawText(std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color = glm::vec4(1.0f));
 };
 

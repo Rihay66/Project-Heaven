@@ -6,7 +6,7 @@
 #include <fstream>
 
 // check platform and then grab the Freetype library
-#ifdef __unix__ // Linux platform
+#ifdef __unix__ // Linux/Unix platform
     #include <freetype2/ft2build.h>
     #include FT_FREETYPE_H
 #elif defined(_WIN32) || defined(WIN32) // Windows platform

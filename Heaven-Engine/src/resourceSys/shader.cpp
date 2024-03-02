@@ -1,4 +1,5 @@
 #include <resourceSys/shader.hpp>
+
 #include <iostream>
 
 Shader &Shader::Use()

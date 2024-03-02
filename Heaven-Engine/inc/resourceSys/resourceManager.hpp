@@ -20,6 +20,8 @@
 */
 class ResourceManager{
     public:
+        //TODO: Allow for multiple fonts to be loaded in 
+
         // holds all state information relevant to a character as loaded using FreeType
         struct Character{
             unsigned int TextureID; // ID handle of the glyph texture

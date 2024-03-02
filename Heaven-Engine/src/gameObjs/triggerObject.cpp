@@ -1,18 +1,18 @@
 #include <gameObjs/triggerObject.hpp>
 
 TriggerObject::TriggerObject(int sprt, glm::vec2 pos, glm::vec2 siz, glm::vec4 color) :
-GameObject(sprt, pos, siz, color), isDestroyed(false), maxTimeToTrigger(5), trigType(TriggerType::Enter){}
+GameObject(sprt, pos, siz, color), maxTimeToTrigger(5), trigType(TriggerType::Enter){}
 
 TriggerObject::~TriggerObject(){
     this->collidedObjs.clear();
 }
 
-//Define function to check if a object already exists in the passed list
+// define function to check if a object already exists in the passed list
 bool TriggerObject::isAlreadyPresent(const std::vector<GameObject*>& vec, GameObject* value) {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
 }
 
-//Define aabb collision detection
+// define aabb collision detection
 bool aabbCollision(GameObject* a, GameObject* b){
     // Calculate the sides of the rectangles with the offset considered
 
@@ -24,29 +24,41 @@ bool aabbCollision(GameObject* a, GameObject* b){
     return collisionX && collisionY;
 }
 
+TriggerType TriggerObject::getTriggerType(){
+    return this->trigType;
+}
+
+void TriggerObject::setTimeToTrigger(int amount){
+    if(amount < 1){
+        this->maxTimeToTrigger = 1;
+    }
+
+    this->maxTimeToTrigger = amount;
+}
+
 void TriggerObject::triggerCollisionCallback(GameObject* obj){
 
     switch (this->trigType){
         case TriggerType::Enter:
-            //Call enter trigger 
+            // call enter trigger 
             onTriggerEnter(obj);
             break;
         case TriggerType::Stay:
-            //Wait till a value reaches dersired max time
+            // wait till a value reaches dersired max time
             if(currentTimeToTrigger >= maxTimeToTrigger){
-                //Call trigger stay
+                // call trigger stay
                 onTriggerStay(obj);
-                //reset current timer
+                // reset current timer
                 currentTimeToTrigger = 0;
             }else
-                currentTimeToTrigger++; //increment time
+                currentTimeToTrigger++; // increment time
             break;
         case TriggerType::Exit:
-            //Check if object is valid to be added to list
+            // check if object is valid to be added to list
             if(obj && obj != nullptr){
-                //Check if objects doesn't exist
+                // check if objects doesn't exist
                 if(!isAlreadyPresent(this->collidedObjs, obj)){
-                    //Add object to list
+                    // add object to list
                     this->collidedObjs.push_back(obj);
                 }
             }
@@ -57,25 +69,25 @@ void TriggerObject::triggerCollisionCallback(GameObject* obj){
 }
 
 void TriggerObject::exitTriggerObjectCheck(){
-    //Check if list is not empty
+    // check if list is not empty
     if(this->collidedObjs.capacity() <= 0){
         return;
     }
 
-    //Check every object and then call the exit trigger 
+    // check every object and then call the exit trigger 
     for(GameObject* obj : collidedObjs){
-        //Check if one of the objects
+        // check if one of the objects
         if(!aabbCollision(this, obj)){
-            //Call the exit trigger function
+            // call the exit trigger function
             this->onTriggerExit(obj);
-            //Then remove object from the list
+            // then remove object from the list
 
-            //Find object by index
+            // find object by index
             auto index = std::find(collidedObjs.begin(), collidedObjs.end(), obj);
 
-            //Remove object from list
-            if (index != collidedObjs.end()){  // Ensure the object is found
-                collidedObjs.erase(index); // Erase
+            // remove object from list
+            if (index != collidedObjs.end()){  // ensure the object is found
+                collidedObjs.erase(index); // erase
             }
         }
     }
