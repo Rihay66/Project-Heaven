@@ -11,7 +11,7 @@
 
 // General purpose shader object. Compiles from file, generates
 // compile/link-time error messages and hosts several utility 
-// functions for easy management.
+// functions for easy management of the shader.
 class Shader{
     public:
         // state

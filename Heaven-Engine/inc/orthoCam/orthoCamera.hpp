@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
-// Camera class
+// Orthographic Camera class
 class Camera{
     protected:
         // declare const vars
@@ -23,12 +23,12 @@ class Camera{
         // reference to the GLFW window handle
         GLFWwindow* window;
 
+        // reference to the shader that can be changed at anytime
+        Shader shader;
+
     public:
         // reference to the camera position
         glm::vec3 position = glm::vec3(0.0f);
-
-        // reference to the shader that can be changed at anytime
-        Shader shader;
 
         // construcotr
         Camera(unsigned int width, unsigned int height, GLFWwindow* handle,

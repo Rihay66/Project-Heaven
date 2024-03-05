@@ -10,6 +10,8 @@
 // include SFML sound module
 #include <SFML/Audio.hpp>
 
+/* Sound file loader class that loads sounds into a resource collection of sound buffers.
+*/
 class SoundEngine{
     private:
         // resource containing each sound along with their names

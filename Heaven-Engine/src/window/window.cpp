@@ -67,6 +67,7 @@ Window::~Window(){
 
 void Window::getInput(){
 
+    //TODO: Make the terminal msgs be optional
     // debug enabler button - toggle
     if(glfwGetKey((GLFWwindow*)handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS && !pressed){
         isDebug = !isDebug;
@@ -85,6 +86,7 @@ void Window::getInput(){
     }
 
     //TODO: this checking system for joystick may need to check if joystick is indeed a gamepad
+    //TODO: also have the checking system make "profiles" for more than one joystick
     // check for the first joystick
     if(glfwJoystickPresent(GLFW_JOYSTICK_1) == GLFW_TRUE && !controllerCheck){
         // print out that the joystick is connected

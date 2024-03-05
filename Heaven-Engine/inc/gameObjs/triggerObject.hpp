@@ -7,7 +7,9 @@
 #include <resourceSys/componentUtils.hpp>
 #include <resourceSys/tagSystem.hpp>
 
-/* Deriving Class of GameObject
+/* Deriving Class of GameObject. Allows for special functionality when a PhysicsObject collides
+with this deriving class. Must be added to the PhysicsEngine in order for it's virtual functions
+to work.
 */
 class TriggerObject : public GameObject{
     private:

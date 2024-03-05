@@ -13,6 +13,7 @@
 
 /* Sound Source Class contains a collection of loaded sounds.
  Sounds that can be played, stopped, and looped and adjusted to meet a specific need.
+ *NOTE: This is a wrapper of SFML audio module
 */
 class SoundSource{
     private:

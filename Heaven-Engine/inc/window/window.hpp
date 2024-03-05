@@ -42,6 +42,10 @@ class Window{
 
         // window handle
         const GLFWwindow* handle;
+    protected:
+        // used to get windows's base input and calls input()
+        void getInput();
+
     public:
 
         // state of the window application 
@@ -55,16 +59,13 @@ class Window{
         // destructor
         ~Window();
 
-        // getters
+        //* Getters functions
         
         // used to grab the window handle context, without being able to modify the context directly
         GLFWwindow* getWindowHandle() {return (GLFWwindow*)this->handle;}
 
-        // used to get Engine base input
-        void getInput();
-
         /* returns the current deltatime, can be overwritten
-            !Overwritting may need further modifications to the update() and stepUpdate() as it may cause unintended behavior
+          !Overwritting may need further modifications to the update() and stepUpdate() as it may cause unintended behavior
         */
         virtual float getDeltaTime();
 
@@ -74,12 +75,12 @@ class Window{
         // return the height of the window
         unsigned int getHeight(){return this->height;}
 
-        // virtual functions
+        //* Virtual functions
 
-        /*Loops update(), stepUpdate(), and render()
-        * Can be overwritten depending on the need of the game or application
-        * NOTE: it is a single threaded function
-        * !If overwritten, may need to apply calculations of fixed time step and accumulator yourself
+        /* Loops input(), update(), stepUpdate(), and render()
+          Can be overwritten depending on the need of the game or application
+         *NOTE: it is a single threaded function
+         !If overwritten, may need to apply calculations of fixed time step and accumulator yourself
         */
         virtual void runtime();
 

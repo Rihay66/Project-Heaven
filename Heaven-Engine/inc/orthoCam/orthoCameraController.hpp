@@ -5,7 +5,9 @@
 
 #include <orthoCam/orthoCamera.hpp>
 
-// deriving class of OrthoCamera with 
+/* deriving class of OrthoCamera with added functionality such as 
+free roam keyboard driven controls with zoom, and a function to follow an object
+*/
 class CameraController : public Camera{
     private:
         // reference to the movement speed of the camera
