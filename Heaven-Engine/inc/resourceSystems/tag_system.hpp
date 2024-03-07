@@ -1,14 +1,14 @@
 #pragma once
 
-#ifndef TAGSYSTEM_HPP
-#define TAGSYSTEM_HPP
+#ifndef TAG_SYSTEM_HPP
+#define TAG_SYSTEM_HPP
 
 // include standard libraries
 #include <string>
 #include <vector>
 
 // include gameobject class
-#include <gameObjs/gameObject.hpp>
+#include <gameObjects/game_object.hpp>
 
 /* A Static singleton TagSystem class that hosts several
  functions to add, edit, find GameObjects that have a set tag 

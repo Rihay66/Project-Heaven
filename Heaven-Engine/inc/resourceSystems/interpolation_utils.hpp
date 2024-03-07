@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef INTERPOLATIONUTIL_HPP
-#define INTERPOLATIONUTIL_HPP
+#ifndef INTERPOLATION_UTIL_HPP
+#define INTERPOLATION_UTIL_HPP
 
 // define a state position that is used to allow for smooth render transitions
 struct State{

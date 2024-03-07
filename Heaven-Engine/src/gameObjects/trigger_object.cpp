@@ -1,4 +1,4 @@
-#include <gameObjs/triggerObject.hpp>
+#include <gameObjects/trigger_object.hpp>
 
 TriggerObject::TriggerObject(int sprt, glm::vec2 pos, glm::vec2 siz, glm::vec4 color) :
 GameObject(sprt, pos, siz, color), maxTimeToTrigger(5), trigType(TriggerType::Enter){}

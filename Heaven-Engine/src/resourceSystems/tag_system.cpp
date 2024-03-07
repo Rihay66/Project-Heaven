@@ -1,4 +1,4 @@
-#include <resourceSys/tagSystem.hpp>
+#include <resourceSystems/tag_system.hpp>
 
 // instantiate static resources
 std::vector<TagSystem::objectTag> TagSystem::tagPool;

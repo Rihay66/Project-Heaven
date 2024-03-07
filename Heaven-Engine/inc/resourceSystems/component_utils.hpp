@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef COMPONENTUTILS_HPP
-#define COMPONENTUTILS_HPP
+#ifndef COMPONENT_UTILS_HPP
+#define COMPONENT_UTILS_HPP
 
 #include <glm/glm.hpp>
 #include <algorithm>

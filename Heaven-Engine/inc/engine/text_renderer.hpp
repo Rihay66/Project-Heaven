@@ -1,14 +1,14 @@
 #pragma once 
 
-#ifndef TEXTRENDERING_HPP
-#define TEXTRENDERING_HPP
+#ifndef TEXT_RENDERING_HPP
+#define TEXT_RENDERING_HPP
 
 #include <string>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include <resourceSys/shader.hpp>
+#include <resourceSystems/shader.hpp>
 
 /* Text Renderer Class used to render a text using only one loaded font from the ResourceManager
 * NOTE: Text is rendered in the center of the screen

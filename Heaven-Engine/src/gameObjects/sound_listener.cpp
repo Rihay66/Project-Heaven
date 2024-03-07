@@ -1,4 +1,6 @@
-#include <gameObjs/soundListener.hpp>
+#include <gameObjects/sound_listener.hpp>
+
+#include <iostream>
 
 // instantiate static resource
 std::map<std::string, sf::Sound> SoundSource::Sounds;

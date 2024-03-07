@@ -1,9 +1,8 @@
 #pragma once
-#ifndef SOUNDLISTENER_HPP
-#define SOUNDLISTENER_HPP
+#ifndef SOUND_LISTENER_HPP
+#define SOUND_LISTENER_HPP
 
 // include standard libs
-#include <iostream>
 #include <map>
 #include <string>
 

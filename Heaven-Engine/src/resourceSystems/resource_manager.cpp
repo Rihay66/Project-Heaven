@@ -1,4 +1,4 @@
-#include <resourceSys/resourceManager.hpp>
+#include <resourceSystems/resource_manager.hpp>
 
 #include <algorithm>
 #include <iostream>
@@ -14,7 +14,7 @@
     #include FT_FREETYPE_H
 #endif
 
-#include <resourceSys/stb_image.h>
+#include <resourceSystems/stb_image.h>
 
 // instantiate static variables
 

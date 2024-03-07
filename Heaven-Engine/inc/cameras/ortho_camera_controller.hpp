@@ -1,14 +1,14 @@
 #pragma once
 
-#ifndef ORTHOCAMERACONTROLLER_HPP
-#define ORTHOCAMERACONTROLLER_HPP
+#ifndef ORTHO_CAMERA_CONTROLLER_HPP
+#define ORTHO_CAMERA_CONTROLLER_HPP
 
-#include <orthoCam/orthoCamera.hpp>
+#include <cameras/ortho_camera.hpp>
 
 /* deriving class of OrthoCamera with added functionality such as 
 free roam keyboard driven controls with zoom, and a function to follow an object
 */
-class CameraController : public Camera{
+class OrthoCameraController : public OrthoCamera{
     private:
         // reference to the movement speed of the camera
         float speed;
@@ -21,11 +21,11 @@ class CameraController : public Camera{
 
     public:
         // constructor
-        CameraController(unsigned int Width, unsigned int Height, GLFWwindow* handle,
+        OrthoCameraController(unsigned int Width, unsigned int Height, GLFWwindow* handle,
         Shader &shader, float cameraSpeed = 1.0f, float zoomSpeed = 1.0f);
 
         // destructor
-        ~CameraController();
+        ~OrthoCameraController();
 
         // overwrite projectionview calculation function
         void calculateProjectionView() override;

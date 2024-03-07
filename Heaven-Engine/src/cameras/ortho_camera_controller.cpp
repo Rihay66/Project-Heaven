@@ -1,11 +1,11 @@
-#include <orthoCam/orthoCameraController.hpp>
+#include <cameras/ortho_camera_controller.hpp>
 
-CameraController::CameraController(unsigned int Width, unsigned int Height, GLFWwindow* handle, Shader &shader, float cameraSpeed, float zoomAmount)
- : Camera(Width, Height, handle, shader), speed(cameraSpeed), zoomSpeed(zoomAmount), zoomFactor(0.0f){}
+OrthoCameraController::OrthoCameraController(unsigned int Width, unsigned int Height, GLFWwindow* handle, Shader &shader, float cameraSpeed, float zoomAmount)
+ : OrthoCamera(Width, Height, handle, shader), speed(cameraSpeed), zoomSpeed(zoomAmount), zoomFactor(0.0f){}
 
-CameraController::~CameraController(){}
+OrthoCameraController::~OrthoCameraController(){}
 
-void CameraController::calculateProjectionView()
+void OrthoCameraController::calculateProjectionView()
 {
     // include zzoom factor to the orthographic projection
     this->projection = glm::ortho(0.0f + zoomFactor / 2, static_cast<float>(this->width) - zoomFactor / 2, 
@@ -23,12 +23,12 @@ void CameraController::calculateProjectionView()
     this->shader.SetMatrix4("projectionView", this->projectionView, true);
 }
 
-void CameraController::followPos(glm::vec2 pos, glm::vec2 size, glm::vec2 offset){
+void OrthoCameraController::followPos(glm::vec2 pos, glm::vec2 size, glm::vec2 offset){
     // follow a position
     this->position = glm::vec3((((pos.x + offset.x) * size.x) - this->width / 2.0f), (((pos.y + offset.y) * size.y) - this->height / 2.0f), 0.0f);
 }
 
-void CameraController::inputMovement(float deltaTime){
+void OrthoCameraController::inputMovement(float deltaTime){
 
     // calculate movement using the speed and delta time
     float movement = speed * deltaTime;

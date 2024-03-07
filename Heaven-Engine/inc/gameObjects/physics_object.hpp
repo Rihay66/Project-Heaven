@@ -1,10 +1,10 @@
 #pragma once
 
-#ifndef RIGIDBODYOBJECT_HPP
-#define RIGIDBODYOBJECT_HPP
+#ifndef PHYSICS_OBJECT_HPP
+#define PHYSICS_OBJECT_HPP
 
-#include <gameObjs/gameObject.hpp>
-#include <resourceSys/componentUtils.hpp>
+#include <gameObjects/game_object.hpp>
+#include <resourceSystems/component_utils.hpp>
 #include <box2d/b2_body.h>
 
 /* Deriving Class from GameObject. This object allows for

@@ -1,14 +1,14 @@
 #pragma once
 
-#ifndef ORTHOCAMERA_HPP
-#define ORTHOCAMERA_HPP
+#ifndef ORTHO_CAMERA_HPP
+#define ORTHO_CAMERA_HPP
 
-#include <resourceSys/shader.hpp>
+#include <resourceSystems/shader.hpp>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
 // Orthographic Camera class
-class Camera{
+class OrthoCamera{
     protected:
         // declare const vars
         const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -31,11 +31,11 @@ class Camera{
         glm::vec3 position = glm::vec3(0.0f);
 
         // construcotr
-        Camera(unsigned int width, unsigned int height, GLFWwindow* handle,
+        OrthoCamera(unsigned int width, unsigned int height, GLFWwindow* handle,
         Shader &shader);
 
         // destructor
-        ~Camera();
+        ~OrthoCamera();
 
         // does calculations of the view and projection to create the ProjectionView
         virtual void calculateProjectionView();

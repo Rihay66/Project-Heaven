@@ -1,11 +1,11 @@
 #pragma once
 
-#ifndef TRIGGEROBJECT_HPP
-#define TRIGGEROBJECT_HPP
+#ifndef TRIGGER_OBJECT_HPP
+#define TRIGGER_OBJECT_HPP
 
-#include <gameObjs/gameObject.hpp>
-#include <resourceSys/componentUtils.hpp>
-#include <resourceSys/tagSystem.hpp>
+#include <gameObjects/game_object.hpp>
+#include <resourceSystems/component_utils.hpp>
+#include <resourceSystems/tag_system.hpp>
 
 /* Deriving Class of GameObject. Allows for special functionality when a PhysicsObject collides
 with this deriving class. Must be added to the PhysicsEngine in order for it's virtual functions

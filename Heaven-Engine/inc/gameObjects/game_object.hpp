@@ -1,11 +1,11 @@
 #pragma once
 
-#ifndef GAMEOBJECT_HPP
-#define GAMEOBJECT_HPP
+#ifndef GAME_OBJECT_HPP
+#define GAME_OBJECT_HPP
 
 #include <string>
-#include <resourceSys/texture.hpp>
-#include <resourceSys/interpolationUtil.hpp>
+#include <resourceSystems/texture.hpp>
+#include <resourceSystems/interpolation_utils.hpp>
 #include <glm/glm.hpp>
 
 /* Base Class that contains a modifiable transform in 2D space.

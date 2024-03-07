@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
+#ifndef RESOURCE_MANAGER_HPP
+#define RESOURCE_MANAGER_HPP
 
 // include standard libraries
 #include <map>
@@ -9,8 +9,8 @@
 #include <vector>
 
 // include necessary classes such as texture and shader classes
-#include <resourceSys/texture.hpp>
-#include <resourceSys/shader.hpp>
+#include <resourceSystems/texture.hpp>
+#include <resourceSystems/shader.hpp>
 
 /* A static singleton ResourceManager class that hosts several
  functions to load Textures and Shaders. Each loaded texture

@@ -1,6 +1,6 @@
-#include <engine/textRenderer.hpp>
+#include <engine/text_renderer.hpp>
 
-#include <resourceSys/resourceManager.hpp>
+#include <resourceSystems/resource_manager.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>

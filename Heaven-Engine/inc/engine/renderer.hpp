@@ -13,8 +13,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 // include shader and texture classes
-#include <gameObjs/gameObject.hpp>
-#include <resourceSys/resourceManager.hpp>
+#include <gameObjects/game_object.hpp>
+#include <resourceSystems/resource_manager.hpp>
 
 /*
 Rendering Class used to render *ONLY* type GameObjects and/or it's child classses

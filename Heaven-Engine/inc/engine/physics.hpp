@@ -6,8 +6,8 @@
 #include <vector>
 #include <math.h>
 
-#include <gameObjs/rigidbodyObject.hpp>
-#include <gameObjs/triggerObject.hpp>
+#include <gameObjects/physics_object.hpp>
+#include <gameObjects/trigger_object.hpp>
 
 // include box2d library
 #include <box2d/b2_world.h>
