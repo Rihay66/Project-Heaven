@@ -12,16 +12,16 @@ file(GLOB_RECURSE ENGINE
     ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
 
 file(GLOB_RECURSE GAMEOBJS
-    ${CMAKE_SOURCE_DIR}/src/gameObjs/*.c
-    ${CMAKE_SOURCE_DIR}/src/gameObjs/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/gameObjects/*.c
+    ${CMAKE_SOURCE_DIR}/src/gameObjects/*.cpp)
 
-file(GLOB_RECURSE ORTHOCAM 
-    ${CMAKE_SOURCE_DIR}/src/orthoCam/*.c
-    ${CMAKE_SOURCE_DIR}/src/orthoCam/*.cpp)
+file(GLOB_RECURSE CAMERAS 
+    ${CMAKE_SOURCE_DIR}/src/cameras/*.c
+    ${CMAKE_SOURCE_DIR}/src/cameras/*.cpp)
 
 file(GLOB_RECURSE RESOURCESYS 
-    ${CMAKE_SOURCE_DIR}/src/resourceSys/*.c
-    ${CMAKE_SOURCE_DIR}/src/resourceSys/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/resourceSystems/*.c
+    ${CMAKE_SOURCE_DIR}/src/resourceSystems/*.cpp)
 
 file(GLOB_RECURSE WINDOW 
     ${CMAKE_SOURCE_DIR}/src/window/*.c
@@ -35,8 +35,8 @@ file(GLOB_RECURSE GLAD
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # Create both shared and static libraries
-add_library(Heaven-Engine SHARED ${ENGINE} ${GAMEOBJS} ${ORTHOCAM} ${RESOURCESYS} ${GLAD} ${WINDOW})
-add_library(Heaven-Engine-s STATIC ${ENGINE} ${GAMEOBJS} ${ORTHOCAM} ${RESOURCESYS} ${GLAD} ${WINDOW})
+add_library(Heaven-Engine SHARED ${ENGINE} ${GAMEOBJS} ${CAMERAS} ${RESOURCESYS} ${GLAD} ${WINDOW})
+add_library(Heaven-Engine-s STATIC ${ENGINE} ${GAMEOBJS} ${CAMERAS} ${RESOURCESYS} ${GLAD} ${WINDOW})
 
 # Include directories for header files
 target_include_directories(Heaven-Engine PUBLIC

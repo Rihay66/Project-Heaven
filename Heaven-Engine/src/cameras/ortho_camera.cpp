@@ -1,4 +1,4 @@
-#include <orthoCam/orthoCamera.hpp>
+#include <cameras/ortho_camera.hpp>
 
 OrthoCamera::OrthoCamera(unsigned int w, unsigned int h, GLFWwindow* handle, Shader &shdr) : 
 width(w), height(h), window(handle), shader(shdr){  
