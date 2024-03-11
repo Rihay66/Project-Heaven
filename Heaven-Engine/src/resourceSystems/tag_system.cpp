@@ -33,10 +33,8 @@ void TagSystem::addTag(std::string tagName, GameObject* gameObj){
     temp.name = tagName;
     temp.obj = gameObj;
 
-    // add to the list
+    // add to the tag pool
     tagPool.push_back(temp);
-
-    //TODO: Organize list by using the tag string from descending to ascending order
 }
 
 void TagSystem::replaceTag(std::string target, GameObject* gameObj){
@@ -52,7 +50,7 @@ void TagSystem::replaceTag(std::string target, GameObject* gameObj){
     }
 }
 
-std::string TagSystem::getTag(GameObject* gameObj){
+std::string TagSystem::getTagByGameObject(GameObject* gameObj){
     // loop to find object and return it's tag
     for(int i = 0; i < tagPool.size(); i++){
         if(tagPool[i].obj == gameObj){
@@ -65,7 +63,7 @@ std::string TagSystem::getTag(GameObject* gameObj){
     return nullptr;
 }
 
-std::vector<GameObject*> TagSystem::getObject(std::string target){
+std::vector<GameObject*> TagSystem::getObjectsByTag(std::string target){
     // create temporary pool that will contain objects with similar given target tag
     std::vector<GameObject*> pool;
 
@@ -82,7 +80,7 @@ std::vector<GameObject*> TagSystem::getObject(std::string target){
 }
 
 //TODO: Refactor to use binary search for the target
-bool TagSystem::checkObject(std::string target, GameObject* gameObj){
+bool TagSystem::checkObjectByTag(std::string target, GameObject* gameObj){
     // linear loop to find tag and then compare if the object is the same as in tag pool
     for(int i = 0; i < tagPool.size(); i++){
         if(tagPool[i].name.compare(target) == 0 && tagPool[i].obj == gameObj){

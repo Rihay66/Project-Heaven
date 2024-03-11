@@ -6,6 +6,7 @@
 // include standard libraries
 #include <string>
 #include <vector>
+#include <iostream>
 
 // include gameobject class
 #include <gameObjects/game_object.hpp>
@@ -30,11 +31,11 @@ class TagSystem{
         //*Getter Funcs
 
         // get a tag from a object in the tag pool
-        static std::string getTag(GameObject* gameObj);
+        static std::string getTagByGameObject(GameObject* gameObj);
         // get objects from the tag pool by tag
-        static std::vector<GameObject*> getObject(std::string tagName);
+        static std::vector<GameObject*> getObjectsByTag(std::string tagName);
         // check if tag pertains to a passed object that exists in tag pool
-        static bool checkObject(std::string target, GameObject* gameObj);
+        static bool checkObjectByTag(std::string target, GameObject* gameObj);
         // get amount of objects in the tag system
         static int getAmountOfObjects();
 
@@ -49,15 +50,16 @@ class TagSystem{
         // remove references and clear tag pool
         static void clear();
 
-
     private:
         // define data type that contains both tag and gameobject
         struct objectTag{
             std::string name;
             GameObject* obj;
         };
+
         // static resource. Contains GameObjects alongside with their assigned tag
         static std::vector<objectTag> tagPool;
+
         // private constructor
         TagSystem(){}
 };

@@ -10,7 +10,7 @@ GameObject::GameObject(int sprt, glm::vec2 pos, glm::vec2 siz, glm::vec4 col, bo
 void GameObject::setTag(std::string tag){
     this->tag = tag;
     // check if object exists in tag pool
-    if(TagSystem::checkObject(tag, this)){
+    if(TagSystem::checkObjectByTag(tag, this)){
         // does exist, the replace tag in the tag pool
         TagSystem::replaceTag(tag, this);
     }
