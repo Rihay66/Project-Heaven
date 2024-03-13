@@ -3,7 +3,7 @@
 #include <iostream>
 
 // instantiate static resource
-std::map<std::string, sf::Sound> SoundSource::Sounds;
+//std::map<std::string, sf::Sound> SoundSource::Sounds;
 
 static std::string checkName(std::string str){
 
@@ -31,13 +31,15 @@ SoundSource::SoundSource(float vol, glm::vec3 pos) : volume(vol), position(pos){
 // destructor
 SoundSource::~SoundSource(){
     // grab all sound sources and stop playing their attached buffer
+    /*
     for(auto sound : Sounds){
         sound.second.stop();
     }
     // clear all element of static resource
     Sounds.clear();
+    */
 }
-
+/*
 void SoundSource::loadSound(sf::SoundBuffer& buffer, std::string name, bool loop){
     // check the name
     name = checkName(name);
@@ -135,3 +137,4 @@ void SoundSource::setAttenuation(float amount, std::string name){
     // set attenuation of the sound
     Sounds[name].setAttenuation(amount);
 }
+*/

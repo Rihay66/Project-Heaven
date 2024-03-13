@@ -6,8 +6,6 @@
 #include <map>
 #include <string>
 
-// include SFML lib
-#include <SFML/Audio.hpp>
 #include <glm/glm.hpp>
 
 /* Sound Source Class contains a collection of loaded sounds.
@@ -17,7 +15,7 @@
 class SoundSource{
     private:
         // contain resources of added sounds
-        static std::map<std::string, sf::Sound> Sounds;
+        //static std::map<std::string, sf::Sound> Sounds;
 
         // contain reference to the volume
         float volume;
@@ -39,7 +37,7 @@ class SoundSource{
         ~SoundSource();
         
         // load a sound buffer along with a name
-        void loadSound(sf::SoundBuffer&, std::string name, bool loop = false);
+        //void loadSound(sf::SoundBuffer&, std::string name, bool loop = false);
 
         //*NOTE: For these functions to be used, be sure to load the sound along with it's set name
         

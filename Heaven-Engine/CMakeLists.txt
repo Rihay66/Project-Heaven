@@ -63,14 +63,17 @@ if(UNIX)
     # Find GLFW
     find_package(box2d CONFIG REQUIRED)
 
-    # Find SFML
-    find_package(SFML COMPONENTS audio REQUIRED)
+    # Find OpenAL
+    find_package(OpenAL CONFIG REQUIRED)
+
+    # Find SNDFile
+    find_package(SndFile CONFIG REQUIRED)
 
     # Find FreeType2
     find_package(Freetype REQUIRED)
 
     # Put together all necessary libs into one variable
-    set(LIBS OpenGL glm box2d glfw sfml-audio Freetype::Freetype)
+    set(LIBS OpenGL glm box2d glfw Freetype::Freetype sndfile)
 
     # Get Xorg dependencies into one variable
     set(Xorg Xxf86vm X11 Xrandr pthread Xi openal udev ogg vorbis vorbisenc vorbisfile)
@@ -98,15 +101,18 @@ if(WIN32)
     # BOX2D
     find_package(BOX2D CONFIG REQUIRED)
 
-    # Find SFML
-    find_package(SFML COMPONENTS audio REQUIRED)
+    # Find OpenAL
+    find_package(OpenAL CONFIG REQUIRED)
+
+    # Find SNDFile
+    find_package(SndFile CONFIG REQUIRED)
 
     # Find Freetype
     find_package(Freetype REQUIRED)
 
     if(MSVC)
         # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm::glm box2d::box2d glfw sfml-audio Freetype::Freetype)
+        set(LIBS opengl32 glm::glm box2d::box2d glfw OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
 
         # Grab GLFW headers
         target_link_directories(Heaven-Engine PUBLIC ${GLFW_INCLUDE_DIR})
@@ -118,7 +124,7 @@ if(WIN32)
 
     else(MSVC)
         # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm box2d glfw sfml-audio Freetype::Freetype)
+        set(LIBS opengl32 glm box2d glfw openal Freetype::Freetype sndfile)
 
         # Grab GLFW headers
         target_link_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIR})

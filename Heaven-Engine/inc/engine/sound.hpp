@@ -7,27 +7,51 @@
 #include <map>
 #include <string>
 
-// include SFML sound module
-#include <SFML/Audio.hpp>
+#include <AL/alc.h>
+#include <AL/al.h>
 
-/* Sound file loader class that loads sounds into a resource collection of sound buffers.
+/* Sound Device class
 */
-class SoundEngine{
-    private:
-        // resource containing each sound along with their names
-        std::map<std::string, sf::SoundBuffer> SoundBuffers;
-
+class SoundDevice{
     public:
-        // constructor
-        SoundEngine();
-        // destructor
-        ~SoundEngine();
 
-        // loads a sound buffer and the buffer is stored in the static resources, can also return the buffer that is loaded
-        sf::SoundBuffer& loadSoundBuffer(const std::string filename, std::string name);
+        // Sound device getter
+        static SoundDevice* get();
 
-        // finds and returns a buffer from the static resources 
-        sf::SoundBuffer& getSoundBuffer(std::string name);
+    private:
+        ALCdevice* ALCDevice;
+        ALCcontext* ALCContext;
+
+        // private constructor
+        SoundDevice();
+        // private destructor
+        ~SoundDevice();
+    
+};
+
+/* Sound Buffer Class
+*/
+class SoundBuffer{
+    public: 
+        // Sound buffer getter
+        static SoundBuffer* get();
+
+        //* Adder functions
+
+        ALuint addSound(const char* filename, std::string name);
+
+        //* Remove functions
+
+        bool removeSound(std::string name);
+
+    private:
+        // private constructor
+        SoundBuffer();
+        // private descontructor
+        ~SoundBuffer();
+
+        // private storage of sounds
+        std::map<std::string, ALuint> soundBuffers;
 };
 
 #endif
