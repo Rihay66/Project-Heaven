@@ -1,4 +1,5 @@
 #include <resourceSystems/resource_manager.hpp>
+#include <utilities/convention_utils.hpp>
 
 #include <algorithm>
 #include <iostream>
@@ -22,26 +23,6 @@ std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
 std::vector<unsigned int>           ResourceManager::texIDList;
 std::map<char, ResourceManager::Character>           ResourceManager::Characters; 
-
-static std::string checkName(std::string str){
-
-    // checking if string contains special character
-    for(int i=0;i<str.length();i++)
-    {
-        if ((str[i]>=48 && str[i]<=57)||(str[i]>=65 && str[i]<=90)||(str[i]>=97 && str[i]<=122))
-            continue;
-        else
-            std::cout << "ERROR: No special characters when setting or getting of either Shader or Texture! STR: \"" << str << "\""<< std::endl;
-            exit(-1); // when a special character is found then stop the program
-    }
-
-    // make all characters to lower case
-    for(int j=0;j<str.length();j++){
-        str[j]=tolower(str[j]);
-    }
-    
-    return str;
-}
 
 Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name){
     // check the name for any special characters

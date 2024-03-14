@@ -4,7 +4,7 @@
 #define PHYSICS_OBJECT_HPP
 
 #include <gameObjects/game_object.hpp>
-#include <resourceSystems/component_utils.hpp>
+#include <utilities/component_utils.hpp>
 #include <box2d/b2_body.h>
 
 /* Deriving Class from GameObject. This object allows for

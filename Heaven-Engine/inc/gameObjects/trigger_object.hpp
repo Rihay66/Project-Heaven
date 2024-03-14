@@ -4,7 +4,7 @@
 #define TRIGGER_OBJECT_HPP
 
 #include <gameObjects/game_object.hpp>
-#include <resourceSystems/component_utils.hpp>
+#include <utilities/component_utils.hpp>
 #include <resourceSystems/tag_system.hpp>
 
 /* Deriving Class of GameObject. Allows for special functionality when a PhysicsObject collides

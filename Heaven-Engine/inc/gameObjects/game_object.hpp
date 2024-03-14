@@ -5,7 +5,7 @@
 
 #include <string>
 #include <resourceSystems/texture.hpp>
-#include <resourceSystems/interpolation_utils.hpp>
+#include <utilities/interpolation_utils.hpp>
 #include <glm/glm.hpp>
 
 /* Base Class that contains a modifiable transform in 2D space.
