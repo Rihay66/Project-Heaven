@@ -25,7 +25,11 @@ ALuint* grabSoundBuffers(std::map<std::string, ALuint> &buffers){
     return bufferArray;
 }
 
-ALuint SoundBuffer::addSound(const char* filename, std::string name){
+ALuint SoundBuffer::getSound(std::string name){
+    return this->soundBuffers[name];
+}
+
+ALuint SoundBuffer::addSound(std::string name, const char* filename){
 
     // create local vars
     ALenum err, format;

@@ -11,6 +11,7 @@
 /* Sound Source Class contains a collection of loaded sounds.
  Sounds that can be played, stopped, and looped and adjusted to meet a specific need.
 */
+/*
 class SoundSource{
     private:
         // contain resources of added sounds
@@ -68,5 +69,6 @@ class SoundSource{
         // set attenuation
         void setAttenuation(float amount, std::string name);
 };
+*/
 
 #endif

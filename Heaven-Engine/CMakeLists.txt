@@ -35,9 +35,10 @@ file(GLOB_RECURSE SOUNDCOMPONENTS
     ${CMAKE_SOURCE_DIR}/src/soundComponents/*.c
     ${CMAKE_SOURCE_DIR}/src/soundComponents/*.cpp)
 
-    file(GLOB_RECURSE UTILITY
+file(GLOB_RECURSE UTILITY
     ${CMAKE_SOURCE_DIR}/src/utilities/*.c
-    ${CMAKE_SOURCE_DIR}/src/utilities/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/utilities/*.cpp
+)
 
 # Include directory for your engine's headers
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)

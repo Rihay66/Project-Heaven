@@ -22,9 +22,13 @@ class SoundBuffer{
         // descontructor
         ~SoundBuffer();
 
+        //* Getter functions
+
+        ALuint getSound(std::string name);
+
         //* Adder functions
 
-        ALuint addSound(const char* filename, std::string name);
+        ALuint addSound(std::string name, const char* filename);
 
         //* Remove functions
 
