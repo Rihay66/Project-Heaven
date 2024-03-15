@@ -21,7 +21,7 @@ class SoundDevice{
 
     public:
         // constructor
-        SoundDevice(const char* queriedDevice = nullptr, const char debugMode = NULL);
+        SoundDevice(const char* queriedDevice = nullptr, const char debugMode = 'y');
         // destructor
         ~SoundDevice();
 

@@ -4,13 +4,14 @@ A Simple 2D OpenGL based Engine called:
 
 ![](Heaven-Engine_logo_new.png)
 
-Current Version: 1.01A-Dev
+Current Version: 1.01B-Dev
 
 Features:
 
 * Cross-platform building (Windows & Unix/Linux)
 * Batch Rendering solution
 * Box2D for physics simulation
+* OpenAL based sound engine
 
 What's Coming?
 
