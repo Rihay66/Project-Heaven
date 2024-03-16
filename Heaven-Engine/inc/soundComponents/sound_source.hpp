@@ -31,10 +31,10 @@ class SoundSource{
         //* Helper functions
 
         // plays the given sound, also sets the given buffer to be current
-        void play(const unsigned int sound, bool waitForSound = false);
+        void play(const unsigned int sound, bool playOnce = false, bool waitForSound = false);
         
         // plays a pre-given sound
-        void play(bool waitForSound = false);
+        void play(bool playOnce = false, bool waitForSound = false);
 
         // constructor
         SoundSource();

@@ -12,18 +12,30 @@ unsigned int SoundSource::getBuffer(){
     return this->buffer;
 }
 
-void SoundSource::play(const unsigned int sound, bool waitForSound){
+void SoundSource::play(const unsigned int sound, bool playOnce, bool waitForSound){
+    // create a state variable
+    ALint state;
     // check if it's a different buffer
     if(sound != buffer){
         setBuffer(sound);
         alSourcei(source, AL_BUFFER, buffer);
     }
 
-    alSourcePlay(source);
+    if(playOnce){
+        alGetSourcei(source, AL_SOURCE_STATE, &state);
+        // check if the source is done playing the sound
+        if(state != AL_PLAYING){
+            // play sound
+            alSourcePlay(source);
+        }
+    }else{
+        // play sound
+        alSourcePlay(source);
+    }
 
     if(waitForSound){
-        // create a state variable
-        ALint state = AL_PLAYING;
+        // set state variable
+        state = AL_PLAYING;
 
         // wait for sound to finish playing
         while(state == AL_PLAYING && alGetError() == AL_NO_ERROR){
@@ -32,14 +44,26 @@ void SoundSource::play(const unsigned int sound, bool waitForSound){
     }
 }
 
-void SoundSource::play(bool waitForSound){
+void SoundSource::play(bool playOnce, bool waitForSound){
+    // create a state variable
+    ALint state;
     // check if sound buffer is not set to default value
     if(buffer != 0){
-        alSourcePlay(source);
+        if (playOnce){
+            alGetSourcei(source, AL_SOURCE_STATE, &state);
+            // check if the source is done playing the sound
+            if (state != AL_PLAYING){
+                // play sound
+                alSourcePlay(source);
+            }
+        }
+        else{
+            alSourcePlay(source);
+        }
 
         if(waitForSound){
-            // create a state variable
-            ALint state = AL_PLAYING;
+            // set state variable
+            state = AL_PLAYING;
 
             // wait for sound to finish playing
             while(state == AL_PLAYING && alGetError() == AL_NO_ERROR){

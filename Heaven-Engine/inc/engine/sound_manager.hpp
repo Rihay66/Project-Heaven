@@ -36,7 +36,7 @@ class SoundManager{
 
         //* helper functions
 
-        static void playSound(std::string collectionName, std::string soundName);
+        static void playSound(std::string collectionName, std::string soundName, bool playOnce = false);
 
         //* getter functions
 

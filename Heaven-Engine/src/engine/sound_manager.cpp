@@ -43,10 +43,10 @@ void SoundManager::close(){
     }
 }
 
-void SoundManager::playSound(std::string collectionName, std::string soundName){
+void SoundManager::playSound(std::string collectionName, std::string soundName, bool playOnce){
     // check that collection nor source are not null
     if(sounds[collectionName] != nullptr && source != nullptr){
-        source->play(sounds[collectionName]->getSound(soundName));
+        source->play(sounds[collectionName]->getSound(soundName), playOnce);
     }
 }
 
