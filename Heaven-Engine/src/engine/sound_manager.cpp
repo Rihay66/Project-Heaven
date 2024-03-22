@@ -50,6 +50,13 @@ void SoundManager::playSound(std::string collectionName, std::string soundName, 
     }
 }
 
+void SoundManager::stopSound(){
+     // check that collection nor source are not null
+    if(source != nullptr){
+        source->stop();
+    }
+}
+
 SoundBuffer* SoundManager::getBufferFromCollection(std::string name){
     return sounds[name];
 }

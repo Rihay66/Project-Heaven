@@ -38,6 +38,8 @@ class SoundManager{
 
         static void playSound(std::string collectionName, std::string soundName, bool playOnce = false);
 
+        static void stopSound();
+
         //* getter functions
 
         // get the buffer from the collection

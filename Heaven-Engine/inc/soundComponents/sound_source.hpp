@@ -36,6 +36,9 @@ class SoundSource{
         // plays a pre-given sound
         void play(bool playOnce = false, bool waitForSound = false);
 
+        // stops current sound
+        void stop();
+
         // constructor
         SoundSource();
         // decontructor

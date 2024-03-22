@@ -73,6 +73,10 @@ void SoundSource::play(bool playOnce, bool waitForSound){
     }
 }
 
+void SoundSource::stop(){
+    alSourceStop(this->source);
+}
+
 SoundSource::SoundSource(){
     // genretate OpenAL source
     alGenSources(1, &source);
