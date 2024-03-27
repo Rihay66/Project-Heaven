@@ -29,7 +29,22 @@ public class Shader {
                 glUniform2f(glGetUniformLocation(ID, name), value.x, value.y);
         }
 
+        public void setVector3f(String name, Vector3f value){
+            if(ID != -1)
+                glUniform3f(glGetUniformLocation(ID, name), value.x, value.y, value.z);
+        }
 
+        public void setVector4f(String name, Vector4f value){
+            if(ID != -1)
+                glUniform4f(glGetUniformLocation(ID, name), value.x, value.y, value.z, value.w);
+        }
+
+        public void setMatrix4(String name, Matrix4f value){
+            if(ID != -1){
+                float[] data = new float[16];
+                glUniformMatrix4fv(glGetUniformLocation(ID, name), false, value.get(data));
+            }
+        }
 
         public String compile(String vertexSource, String fragmentSource, String geometrySource){
             // storage reference of the vertex,fragment, and geometry shaders

@@ -48,7 +48,7 @@ public abstract class Window {
     }
 
     private void initializeWindow(String name){
-        // setup the GLFW error callback
+        // set up the GLFW error callback
         // by default print error messages in System.err
         GLFWErrorCallback.createPrint(System.err).set();
 
