@@ -16,7 +16,7 @@ public class ResourceManager {
         return instance;
     }
 
-    public Shader LoadShader(String vShaderFile, String fShaderFile, String name){
+    public Shader loadShader(String vShaderFile, String fShaderFile, String name){
         return null;
     }
 
@@ -36,7 +36,7 @@ public class ResourceManager {
 
     }
 
-    private Shader loadShaderFromFile(String vShaderFile, String fShaderFile, String name){
+    private Shader loadShaderFromFile(String vShaderFile, String fShaderFile){
         return null;
     }
 

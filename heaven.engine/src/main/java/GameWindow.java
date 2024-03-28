@@ -19,7 +19,7 @@ public class GameWindow extends Window {
 
     }
 
-    public void stepUpdate(){
+    public void stepUpdate(double ts){
 
     }
 

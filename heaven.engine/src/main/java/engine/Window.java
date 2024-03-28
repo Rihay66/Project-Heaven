@@ -86,7 +86,7 @@ public abstract class Window {
 
     public abstract void update();
 
-    public abstract void stepUpdate();
+    public abstract void stepUpdate(double ts);
 
     public abstract void render();
 
@@ -99,7 +99,7 @@ public abstract class Window {
             // get delta time, accumulate delta time and do stepUpdate()
             accumulator += getDeltaTime();;
             while(accumulator >= fixed_timeStep){
-                stepUpdate();
+                stepUpdate(fixed_timeStep);
                 accumulator -= fixed_timeStep;
             }
 
@@ -128,7 +128,4 @@ public abstract class Window {
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
-
-    //unit test for window
-
 }

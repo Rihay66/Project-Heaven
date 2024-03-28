@@ -32,6 +32,21 @@ public class Texture {
         return -1;
     }
 
+    public void setAlpha(boolean a){
+        if(ID != -1)
+            return; // stop function
+
+        if(a){
+            // enable alpha
+            internal_format = GL_RGBA;
+            image_format = GL_RGBA;
+        }else {
+            // no alpha
+            internal_format = GL_RGB;
+            image_format = GL_RGB;
+        }
+    }
+
     public void generate(int w, int h, FloatBuffer data){
         if(ID == -1){
             ID = glGenTextures();
