@@ -33,23 +33,31 @@ public class Texture {
     }
 
     public void generate(int w, int h, FloatBuffer data){
-        ID = glGenTextures();
+        if(ID == -1){
+            ID = glGenTextures();
 
-        width = w;
-        height = h;
+            width = w;
+            height = h;
 
-        // create texture
-        glBindTexture(GL_TEXTURE_2D, ID);
-        // set texture wrap and filter modes
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_max);
+            // create texture
+            glBindTexture(GL_TEXTURE_2D, ID);
+            // set texture wrap and filter modes
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_max);
 
-        // generate the image
-        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height,0, image_format, GL_UNSIGNED_BYTE, data);
+            // generate the image
+            glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height,0, image_format, GL_UNSIGNED_BYTE, data);
 
-        // create MipMap, when objects are far away, OpenGL will set the correct texture resolution
-        glGenerateMipmap(GL_TEXTURE_2D);
+            // create MipMap, when objects are far away, OpenGL will set the correct texture resolution
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }else{
+            // delete previous texture
+            glDeleteTextures(ID);
+            ID = -1;
+            // recall generate to make a new texture
+            generate(w, h, data);
+        }
     }
 }

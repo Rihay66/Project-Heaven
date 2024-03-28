@@ -47,6 +47,9 @@ public abstract class Window {
         return deltaTime;
     }
 
+    public int getWidth(){return width;}
+    public int getHeight(){return height;}
+
     private void initializeWindow(String name){
         // set up the GLFW error callback
         // by default print error messages in System.err
@@ -90,14 +93,11 @@ public abstract class Window {
     public void runtime(){
         // main loop of the window
         while(!glfwWindowShouldClose(windowHandle)){
-            // get the deltaTime
-            getDeltaTime();
-
             // check for any glfw events
             glfwPollEvents();
 
-            // accumulate time and do stepUpdate()
-            accumulator += deltaTime;
+            // get delta time, accumulate delta time and do stepUpdate()
+            accumulator += getDeltaTime();;
             while(accumulator >= fixed_timeStep){
                 stepUpdate();
                 accumulator -= fixed_timeStep;

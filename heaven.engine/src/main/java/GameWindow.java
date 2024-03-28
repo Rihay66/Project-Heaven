@@ -1,14 +1,17 @@
-import engine.Window;
+import engine.*;
 
 import static org.lwjgl.opengl.GL45.*;
 
 public class GameWindow extends Window {
-
+    private Camera cam;
     public GameWindow(int w, int h, String name){
         super(w, h, name);
     }
 
     public void init(){
+        // create an instance of the resource manager
+        ResourceManager.getInstance();
+        cam = new Camera(getWidth(), getHeight(), null);
 
     }
 

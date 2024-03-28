@@ -10,6 +10,10 @@ public class Shader {
         //* NOTE: uses default constructor
 
         public  Shader use(){
+            if(ID == -1){
+                return null;
+            }
+
             glUseProgram(ID);
             return this;
         }
@@ -46,9 +50,9 @@ public class Shader {
             }
         }
 
-        public String compile(String vertexSource, String fragmentSource, String geometrySource){
+        public String compile(String vertexSource, String fragmentSource){
             // storage reference of the vertex,fragment, and geometry shaders
-            int sVertex, sFragment, gShader = 0;
+            int sVertex, sFragment;
             // vertex shader
             sVertex = glCreateShader(GL_VERTEX_SHADER);
             glShaderSource(sVertex, vertexSource, null);
@@ -65,22 +69,10 @@ public class Shader {
                 return errorInfoLog;
             }
 
-            // optionally check for geometry shader
-            if(geometrySource != null){
-                gShader = glCreateShader(GL_GEOMETRY_SHADER);
-                glShaderSource(gShader, geometrySource, null);
-                glCompileShader(gShader);
-                if(checkCompileErrors(gShader, "GEOMETRY")) {
-                    return errorInfoLog;
-                }
-            }
-
             // shader program
             ID = glCreateProgram();
             glAttachShader(ID, sVertex);
             glAttachShader(ID, sFragment);
-            if(geometrySource != null)
-                glAttachShader(ID, gShader);
             glLinkProgram(ID);
             if(checkCompileErrors(ID, "PROGRAM")){
                 return errorInfoLog;
@@ -89,9 +81,6 @@ public class Shader {
             // delete shaders as they're linked into the program and no longer necessary to keep them
             glDeleteShader(sVertex);
             glDeleteShader(sFragment);
-            if(geometrySource != null){
-                glDeleteShader(gShader);
-            }
 
             // returning nothing when there isn't an error
             return null;
@@ -117,5 +106,4 @@ public class Shader {
 
             return false;
         }
-
 }

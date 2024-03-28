@@ -1,6 +1,5 @@
 package engine;
 
-
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -33,7 +32,9 @@ public class Camera {
 
         projectionView = projection.mul(view);
 
-        shader.use();
-        shader.setMatrix4("projectionView", projectionView);
+        if(shader != null){
+            shader.use();
+            shader.setMatrix4("projectionView", projectionView);
+        }
     }
 }
