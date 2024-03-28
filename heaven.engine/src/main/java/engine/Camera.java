@@ -17,6 +17,10 @@ public class Camera {
         }
         width = w;
         height = h;
+        projection = new Matrix4f();
+        view = new Matrix4f();
+        projectionView = new Matrix4f();
+        transform = new Matrix4f();
         // calculate the projectionView
         calculateProjectionView();
     }
