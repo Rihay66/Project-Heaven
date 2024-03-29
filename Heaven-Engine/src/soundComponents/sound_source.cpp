@@ -77,6 +77,14 @@ void SoundSource::stop(){
     alSourceStop(this->source);
 }
 
+void SoundSource::restartSound(){
+    // pause the current sound
+    alSourcePause(this->source);
+    // restart the sound
+    alSourceRewind(this->source);;
+}
+
+
 SoundSource::SoundSource(){
     // genretate OpenAL source
     alGenSources(1, &source);

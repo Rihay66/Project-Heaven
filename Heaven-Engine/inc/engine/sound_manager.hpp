@@ -40,6 +40,8 @@ class SoundManager{
 
         static void stopSound();
 
+        static void restartSound();
+
         //* getter functions
 
         // get the buffer from the collection

@@ -39,6 +39,9 @@ class SoundSource{
         // stops current sound
         void stop();
 
+        // pauses current sound and restarts the sound to the beggining
+        void restartSound();
+
         // constructor
         SoundSource();
         // decontructor
