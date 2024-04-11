@@ -11,6 +11,8 @@
 #include <soundComponents/sound_buffer.hpp>
 #include <soundComponents/sound_source.hpp>
 
+//TODO: Add documentation about the class
+
 /* Static Sound Manager class
 */
 class SoundManager{
@@ -18,6 +20,7 @@ class SoundManager{
         // private static storage for sound device
         static SoundDevice* device;
 
+        // private single static sound source and can be utilized at a time that is used
         static SoundSource* source;
 
         // private static storage for sound buffers as a collection

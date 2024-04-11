@@ -7,8 +7,11 @@
 
 #include <AL/al.h>
 
+//TODO: Add documentation about the class
+
 class SoundSource{
-    private:
+    protected:
+        // TODO: Add documentation for each variable
         // variables
         unsigned int source;
         float pitch = 1.0f;
@@ -20,12 +23,15 @@ class SoundSource{
 
     public:
 
+        //TODO: Add gain and pitch setters
+
         //* Setter functions
 
+        // adds and sets the sound buffer of the source
         void setBuffer(unsigned int buff);
 
         //* Getter functions
-
+        // returns the sound buffer that is set to this sound source
         unsigned int getBuffer();
 
         //* Helper functions
