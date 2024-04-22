@@ -14,7 +14,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 // constructor, intializes GLFW and GLAD then creates a window with the passed parameters
-Window::Window(int h, int w, const char* name) : App_State(ACTIVE), Input_State(KM), width(0), height(0){
+Window::Window(int w, int h, const char* name) : App_State(ACTIVE), Input_State(KM), width(0), height(0){
 
     // set local vars of the window size
     width = w;
@@ -28,7 +28,7 @@ Window::Window(int h, int w, const char* name) : App_State(ACTIVE), Input_State(
     glfwWindowHint(GLFW_RESIZABLE, false); //disable resizing the screen
 
     // create the window and check for errors
-    handle = glfwCreateWindow(h, w, name, NULL, NULL);
+    handle = glfwCreateWindow(w, h, name, NULL, NULL);
     if(!handle){
         std::cout << "Failed to create window!" << std::endl;
         glfwTerminate();
@@ -49,7 +49,7 @@ Window::Window(int h, int w, const char* name) : App_State(ACTIVE), Input_State(
     // enable vsync
     glfwSwapInterval(1);
     // set openGL window size
-    glViewport(0, 0, h, w);
+    glViewport(0, 0, w, h);
 
     // set up rendering for 2D
     glEnable(GL_BLEND);
