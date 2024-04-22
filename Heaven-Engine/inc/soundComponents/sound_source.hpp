@@ -23,9 +23,13 @@ class SoundSource{
 
     public:
 
-        //TODO: Add gain and pitch setters
-
         //* Setter functions
+
+        // sets the pitch of the source, takes in a vlaue within 0.0f to 1.0f
+        void setPitch(float p);
+
+        // sets the gain of the source, takes in a vlaue within 0.0f to 1.0f
+        void setGain(float g);
 
         // adds and sets the sound buffer of the source
         void setBuffer(unsigned int buff);
@@ -37,10 +41,10 @@ class SoundSource{
         //* Helper functions
 
         // plays the given sound, also sets the given buffer to be current
-        void play(const unsigned int sound, bool playOnce = false, bool waitForSound = false);
+        void play(const unsigned int sound, bool playOnce = false);
         
         // plays a pre-given sound
-        void play(bool playOnce = false, bool waitForSound = false);
+        void play(bool playOnce = false);
 
         // stops current sound
         void stop();

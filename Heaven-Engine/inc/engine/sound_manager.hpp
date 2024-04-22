@@ -53,7 +53,7 @@ class SoundManager{
         // get sound from the buffer that in the collection, returns -1 if collection is not found
         static unsigned int getSoundFromBufferInColleciton(std::string collectionName, std::string soundName);
 
-        //* adder functions 
+        //* adder/setter functions 
 
         // instantiates a new buffer that is empty 
         static SoundBuffer* createSoundCollection(std::string name);

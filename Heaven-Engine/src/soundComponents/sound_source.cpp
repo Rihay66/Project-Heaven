@@ -1,5 +1,25 @@
 #include <soundComponents/sound_source.hpp>
 
+void SoundSource::setPitch(float p){
+    // check if parameter is within a range
+    if(p > 0.0f && p < 1.0f){
+        // then replace pitch to such value
+        this->pitch = p;
+        // change the source to have new pitch value
+        alSourcef(source, AL_PITCH, pitch);
+    }
+}
+
+void SoundSource::setGain(float g){
+    // check if parameter is within a range
+    if(g > 0.0f && g < 1.0f){
+        // then replace pitch to such value
+        this->gain = g;
+        // change the source to have new gain value
+        alSourcef(source, AL_GAIN, gain);
+    }
+}
+
 void SoundSource::setBuffer(unsigned int buff){
     // check if given buffer is zero
     if(buff == 0){
@@ -12,7 +32,7 @@ unsigned int SoundSource::getBuffer(){
     return this->buffer;
 }
 
-void SoundSource::play(const unsigned int sound, bool playOnce, bool waitForSound){
+void SoundSource::play(const unsigned int sound, bool playOnce){
     // create a state variable
     ALint state;
     // check if it's a different buffer
@@ -23,7 +43,7 @@ void SoundSource::play(const unsigned int sound, bool playOnce, bool waitForSoun
 
     if(playOnce){
         alGetSourcei(source, AL_SOURCE_STATE, &state);
-        // check if the source is done playing the sound
+        // check if the source is done playing a sound
         if(state != AL_PLAYING){
             // play sound
             alSourcePlay(source);
@@ -32,26 +52,16 @@ void SoundSource::play(const unsigned int sound, bool playOnce, bool waitForSoun
         // play sound
         alSourcePlay(source);
     }
-
-    if(waitForSound){
-        // set state variable
-        state = AL_PLAYING;
-
-        // wait for sound to finish playing
-        while(state == AL_PLAYING && alGetError() == AL_NO_ERROR){
-            alGetSourcei(source, AL_SOURCE_STATE, &state);
-        }
-    }
 }
 
-void SoundSource::play(bool playOnce, bool waitForSound){
+void SoundSource::play(bool playOnce){
     // create a state variable
     ALint state;
     // check if sound buffer is not set to default value
     if(buffer != 0){
         if (playOnce){
             alGetSourcei(source, AL_SOURCE_STATE, &state);
-            // check if the source is done playing the sound
+            // check if the source is done playing a sound
             if (state != AL_PLAYING){
                 // play sound
                 alSourcePlay(source);
@@ -59,16 +69,6 @@ void SoundSource::play(bool playOnce, bool waitForSound){
         }
         else{
             alSourcePlay(source);
-        }
-
-        if(waitForSound){
-            // set state variable
-            state = AL_PLAYING;
-
-            // wait for sound to finish playing
-            while(state == AL_PLAYING && alGetError() == AL_NO_ERROR){
-                alGetSourcei(source, AL_SOURCE_STATE, &state);
-            }
         }
     }
 }

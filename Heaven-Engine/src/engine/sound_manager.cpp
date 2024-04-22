@@ -51,14 +51,14 @@ void SoundManager::playSound(std::string collectionName, std::string soundName, 
 }
 
 void SoundManager::stopSound(){
-     // check that source are not null
+     // check that source is not null
     if(source != nullptr){
         source->stop();
     }
 }
 
 void SoundManager::restartSound(){
-    // check that source are not null
+    // check that source is not null
     if(source != nullptr){
         source->restartSound();
     }
