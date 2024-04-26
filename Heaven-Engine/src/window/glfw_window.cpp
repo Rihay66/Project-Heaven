@@ -1,4 +1,4 @@
-#include <window/window.hpp>
+#include <window/glfw_window.hpp>
 
 #include <iostream>
 

@@ -28,6 +28,14 @@ void SoundSource::setBuffer(unsigned int buff){
     this->buffer = buff;
 }
 
+void SoundSource::setLoopSound(bool l){
+    // set var of the parameter for looping sounds
+    this->loopSound = l;
+
+    // change source to allow auto looping of a sound
+    alSourcei(source, AL_LOOPING, loopSound);
+}
+
 unsigned int SoundSource::getBuffer(){
     return this->buffer;
 }
