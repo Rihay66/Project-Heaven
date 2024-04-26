@@ -27,7 +27,7 @@ enum INPUT_STATE{
 class Window{
     private:
         // set up vars for calculating delta time and the fixed time step
-	    double lastFrame = 0, currentFrame = 0, accumulator = 0, alpha = 0;
+	    double lastFrame = 0, currentFrame = 0, frameDuration = 0, accumulator = 0, alpha = 0, threadSleepTime = 0;
 
         // vars storing and reference to window size, width x height
         unsigned int width, height;
@@ -37,12 +37,21 @@ class Window{
         */
         double fixedTimeStep = 1.0f / 60.0f;
 
+         /*Fixed rate that updates application, adjust accordingly as needed
+        * Default value is 0.16ms
+        */
+        double targetTimeStep = 1.0f / 60.0f;
+
         // delta time variable for updating input, physics, and kind of movement
         double DeltaTime = 0;
 
         // window handle
         const GLFWwindow* handle;
     protected:
+        // used to set the target frame time between frame, aka max frame time
+        void setTargetTimeStep(double time);
+        // used to set the fixed frame time between frame
+        void setFixedTimeStep(double time);
         // used to get windows's base input and calls input()
         void getInput();
 

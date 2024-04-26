@@ -1,6 +1,8 @@
 #include <window/glfw_window.hpp>
 
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 // static vars for tracking input
 
@@ -46,8 +48,8 @@ Window::Window(int w, int h, const char* name) : App_State(ACTIVE), Input_State(
 
     // set up call back to update the opengl window
     glfwSetFramebufferSizeCallback((GLFWwindow*)handle, framebuffer_size_callback);
-    // enable vsync
-    glfwSwapInterval(1);
+    // disable vsync
+    glfwSwapInterval(0);
     // set openGL window size
     glViewport(0, 0, w, h);
 
@@ -63,6 +65,22 @@ Window::Window(int w, int h, const char* name) : App_State(ACTIVE), Input_State(
 Window::~Window(){
     // delete any pointers
     glfwTerminate();
+}
+
+void Window::setTargetTimeStep(double time){
+    // check the passed parameter if it less than the fixed time step
+    if(this->fixedTimeStep >= time){
+        // set the time step to given parameter
+        this->targetTimeStep = time;
+    }
+}
+
+void Window::setFixedTimeStep(double time){
+    // check the passed parameter is less more than target time step
+    if(this->targetTimeStep <= time){
+        // set the fixed time step to given parameter
+        this->fixedTimeStep = time;
+    }
 }
 
 void Window::getInput(){
@@ -120,7 +138,13 @@ float Window::getDeltaTime(){
 
 // single threaded runtime of update(), stepUpdate() and render()
 void Window::runtime(){
+    //create local vars for timing
+    std::chrono::steady_clock::time_point frameStart, frameEnd;
+
     while(!glfwWindowShouldClose((GLFWwindow*)this->handle)){
+        // start timing the frame
+        frameStart = std::chrono::steady_clock::now();
+
         // get Deltatime
         this->getDeltaTime();
 
@@ -151,6 +175,16 @@ void Window::runtime(){
 
         // swap buffers
         glfwSwapBuffers((GLFWwindow*)this->handle);
+
+        // end timing the frame
+        frameEnd = std::chrono::steady_clock::now();
+        // calculate the duration of the frame
+        frameDuration = std::chrono::duration<double>(frameEnd - frameStart).count();
+        // calculate the time to sleep to achieve the desired time step
+        threadSleepTime = targetTimeStep - frameDuration;
+        if(threadSleepTime > 0){
+            std::this_thread::sleep_for(std::chrono::duration<double>(threadSleepTime));
+        }
     }
 }
 
