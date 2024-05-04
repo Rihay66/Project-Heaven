@@ -4,9 +4,10 @@
 #define GAME_OBJECT_HPP
 
 #include <string>
-#include <resourceSystems/texture.hpp>
 #include <utilities/interpolation_utils.hpp>
 #include <glm/glm.hpp>
+
+//TODO: Move the render type and interpolation to somewhere else to keep this class take up less memory
 
 /* Base Class that contains a modifiable transform in 2D space.
    Contains a texture index and a render type of how the texture is rendered. 

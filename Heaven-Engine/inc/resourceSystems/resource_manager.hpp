@@ -12,7 +12,7 @@
 #include <resourceSystems/texture.hpp>
 #include <resourceSystems/shader.hpp>
 
-/* A static singleton ResourceManager class that hosts several
+/* A static singleton Resource Manager class that hosts several
  functions to load Textures and Shaders. Each loaded texture
  and/or shader is also stored for future reference by string
  handles. All functions and resources are static and no 

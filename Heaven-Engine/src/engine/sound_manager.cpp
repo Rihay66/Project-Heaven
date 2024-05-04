@@ -1,28 +1,20 @@
 #include <engine/sound_manager.hpp>
-#include <utilities/convention_utils.hpp>
 
 // include standard output library
-#include <ostream>
+#include <iostream>
 
 // instantiate static variables
 SoundDevice* SoundManager::device;
-SoundSource* SoundManager::source;
 std::map<std::string, SoundBuffer*> SoundManager::sounds;
 
 void SoundManager::init(){
     // init sound device
     device = new SoundDevice();
-
-    // init sound source
-    source = new SoundSource();
 }
 
 void SoundManager::close(){
     // try and catch any errors
     try{
-        // delete the source
-        delete source;
-
         // clear all sound buffers
         for(auto& iter : sounds){
             delete iter.second;
@@ -32,7 +24,7 @@ void SoundManager::close(){
         delete device;
         
     }catch(std::exception& e){
-
+        // print out error
         std::cout << "ERROR: OpenAL caused an Exception: " << e.what() << "\n";
 
         // check for any OpenAL errors
@@ -40,27 +32,6 @@ void SoundManager::close(){
         if(err != AL_NO_ERROR){
             fprintf(stderr, "ERROR: OpenAL Error: %s\n", alGetString(err));
         }
-    }
-}
-
-void SoundManager::playSound(std::string collectionName, std::string soundName, bool playOnce){
-    // check that collection nor source are not null
-    if(sounds[collectionName] != nullptr && source != nullptr){
-        source->play(sounds[collectionName]->getSound(soundName), playOnce);
-    }
-}
-
-void SoundManager::stopSound(){
-     // check that source is not null
-    if(source != nullptr){
-        source->stop();
-    }
-}
-
-void SoundManager::restartSound(){
-    // check that source is not null
-    if(source != nullptr){
-        source->restartSound();
     }
 }
 

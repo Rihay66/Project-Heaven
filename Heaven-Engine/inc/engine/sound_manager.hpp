@@ -5,23 +5,23 @@
 
 // include standard libraries
 #include <map>
-#include <string>
 
+// include necessary 
 #include <soundComponents/sound_device.hpp>
 #include <soundComponents/sound_buffer.hpp>
-#include <soundComponents/sound_source.hpp>
 
-//TODO: Add documentation about the class
-
-/* Static Sound Manager class
+/* A Static singleton Sound Manager class that hosts several
+ function to load sounds and enables playing sounds. 
+ Each loaded sound is also stored for future reference 
+ by string handles as well stored within a collection 
+ that contains a number of sounds. All functions and 
+ resources are static and no public 
+ constructor is defined.  
 */
 class SoundManager{
     private:
         // private static storage for sound device
         static SoundDevice* device;
-
-        // private single static sound source and can be utilized at a time that is used
-        static SoundSource* source;
 
         // private static storage for sound buffers as a collection
         static std::map<std::string, SoundBuffer*> sounds;
@@ -36,14 +36,6 @@ class SoundManager{
 
         // closes and clear the sound device and all sound buffers
         static void close();
-
-        //* helper functions
-
-        static void playSound(std::string collectionName, std::string soundName, bool playOnce = false);
-
-        static void stopSound();
-
-        static void restartSound();
 
         //* getter functions
 
@@ -66,8 +58,10 @@ class SoundManager{
 
         //* remover functions
 
+        // to remove a whole collection of sounds
         static void removeSoundCollection(std::string name);
 
+        // to remove a single sound from a collection
         static void removeSoundFromBuffer(std::string collectionName, std::string soundName);
 
 };
