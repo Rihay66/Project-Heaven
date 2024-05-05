@@ -18,15 +18,17 @@
 
 //TODO: Give more information about the class
 
-/*
-Rendering Class used to render *ONLY* type GameObjects and/or it's child classses
+/* Sprite Rendering Class used to render 2D quads. This
+ class uses mainly the GameObject Class to represent
+ each quad. This class utilizes batch rendering when
+ rendering a LIST of GameObjects. 
 !Requires a shader class and a standard sprite size 
 */
-class Renderer{
+class SpriteRenderer{
     public:
         // constructor & desconstructor
-        Renderer(Shader &shader, glm::uvec2 &spriteSize);
-        ~Renderer();
+        SpriteRenderer(Shader &shader, glm::uvec2 &spriteSize);
+        ~SpriteRenderer();
 
         // draw multiple pointer objects in a vector list, objects become batch rendered
         void Draw2D(std::vector<GameObject*> &objs, double &alpha);

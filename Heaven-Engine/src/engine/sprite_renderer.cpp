@@ -1,11 +1,11 @@
-#include <engine/renderer.hpp>
+#include <engine/sprite_renderer.hpp>
 
-const void Renderer::resetStats(){
+const void SpriteRenderer::resetStats(){
     this->stats.quadCount = 0;
     this->stats.drawCount = 0;
 }
 
-Renderer::Renderer(Shader &shader, glm::uvec2 &spriteSize){
+SpriteRenderer::SpriteRenderer(Shader &shader, glm::uvec2 &spriteSize){
     this->shader = shader;
 
     // set up shader samples for the quad textures
@@ -39,7 +39,7 @@ Renderer::Renderer(Shader &shader, glm::uvec2 &spriteSize){
     this->initRenderData(); 
 }
 
-Renderer::~Renderer(){
+SpriteRenderer::~SpriteRenderer(){
     // delete any pointers
     delete[] this->quadBuffer;
     this->quadBufferPtr = nullptr;
@@ -51,7 +51,7 @@ Renderer::~Renderer(){
     glDeleteBuffers(1, &this->quadEBO);
 }
 
-void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter){
+void SpriteRenderer::createQuad(GameObject::RenderType &type, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter){
 
     // check if not over the index count
     if (this->indexCount >= this->maxIndexCount){
@@ -183,7 +183,7 @@ void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &size, float &
 }
 
 // render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha){
+void SpriteRenderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha){
 
     // init the buffer
     this->resetStats();
@@ -213,7 +213,7 @@ void Renderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha){
 }
 
 // render multiple objects pointers
-void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha){
+void SpriteRenderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha){
 
     // init the buffer
     this->resetStats();
@@ -243,7 +243,7 @@ void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha){
 }
 
 // render a single object pointer
-void Renderer::Draw2D(GameObject *&obj, double &alpha)
+void SpriteRenderer::Draw2D(GameObject *&obj, double &alpha)
 {
     // init the buffer
     this->resetStats();
@@ -269,7 +269,7 @@ void Renderer::Draw2D(GameObject *&obj, double &alpha)
 }
 
 // render a single object pointer
-void Renderer::Draw2D(GameObject &obj, double &alpha){
+void SpriteRenderer::Draw2D(GameObject &obj, double &alpha){
 
     // init the buffer
     this->resetStats();
@@ -292,7 +292,7 @@ void Renderer::Draw2D(GameObject &obj, double &alpha){
 }
 
 // Set up the quad rendering
-void Renderer::initRenderData(){
+void SpriteRenderer::initRenderData(){
 
     // check if quad buffer had already been initialize
     if (this->quadBuffer != nullptr)
@@ -346,7 +346,7 @@ void Renderer::initRenderData(){
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
-void Renderer::beginBatch(){
+void SpriteRenderer::beginBatch(){
     // set buffer pointer
     this->quadBufferPtr = quadBuffer;
 
@@ -354,7 +354,7 @@ void Renderer::beginBatch(){
     this->shader.Use();
 }
 
-void Renderer::endBatch(){
+void SpriteRenderer::endBatch(){
     // calculate amount of quads to render
     GLsizeiptr size = (uint8_t *)this->quadBufferPtr - (uint8_t *)this->quadBuffer;
     // set up dynamic buffer
@@ -362,7 +362,7 @@ void Renderer::endBatch(){
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, quadBuffer);
 }
 
-void Renderer::flush(){
+void SpriteRenderer::flush(){
     // draw the quad/s
     glBindVertexArray(this->quadVAO);
     glDrawElements(GL_TRIANGLES, this->indexCount, GL_UNSIGNED_INT, nullptr);

@@ -17,8 +17,11 @@
 
 //TODO: Give more information about the class 
 
-/* Window class  
-
+/* Window class used for creating a graphical window
+ that is used to hold all that makes up an application.
+ The window class provides various functions and most 
+ functions are overwrittable. 
+ !It is recommended to inherit this class
 */
 class Window{
     private:
@@ -33,7 +36,7 @@ class Window{
         */
         double fixedTimeStep = 1.0f / 60.0f;
 
-         /*Fixed rate that updates application, adjust accordingly as needed
+        /*Fixed rate that updates application, adjust accordingly as needed
         * Default value is 0.16ms
         */
         double targetTimeStep = 1.0f / 60.0f;

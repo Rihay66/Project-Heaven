@@ -74,7 +74,7 @@ SoundDevice::~SoundDevice(){
         // check for any OpenAL errors
         ALenum err = alGetError();
         if(err != AL_NO_ERROR){
-            fprintf(stderr, "ERROR: OpenAL Error: %s\n", alGetString(err));
+            fprintf(stderr, "ERROR: Sound Device OpenAL Error: %s\n", alGetString(err));
         }
     }
 

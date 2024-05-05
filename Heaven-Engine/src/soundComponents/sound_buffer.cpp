@@ -6,25 +6,6 @@
 #include <inttypes.h>
 #include <limits.h>
 
-ALuint* grabSoundBuffers(std::map<std::string, ALuint> &buffers){
-    // allocate memory for an array of ALuint to store all the buffer values
-    ALuint* bufferArray = new ALuint[buffers.size()];
-
-    // iterator for traversing the map
-    auto it = buffers.begin();
-
-    // index to keep track of the position in the bufferArray
-    size_t index = 0;
-
-    // iterate over the map and copy buffer values to bufferArray
-    while (it != buffers.end()) {
-        bufferArray[index++] = it->second;
-        ++it;
-    }
-
-    return bufferArray;
-}
-
 ALuint SoundBuffer::getSound(std::string name){
     return this->soundBuffers[name];
 }
@@ -101,7 +82,7 @@ ALuint SoundBuffer::addSound(std::string name, const char* filename){
     // check for any OpenAL errors
     err = alGetError();
     if(err != AL_NO_ERROR){
-        fprintf(stderr, "ERROR: OpenAL Error: %s\n", alGetString(err));
+        fprintf(stderr, "ERROR: Sound Buffer Sound Loading OpenAL Error: %s\n", alGetString(err));
         if(buffer && alIsBuffer(buffer)){
             alDeleteBuffers(1, &buffer);
         }
@@ -131,7 +112,7 @@ bool SoundBuffer::removeSound(std::string name){
     // check for any OpenAL errors
     ALenum err = alGetError();
     if(err != AL_NO_ERROR){
-        fprintf(stderr, "ERROR: OpenAL Error: %s\n", alGetString(err));
+        fprintf(stderr, "ERROR: Sound Buffer Sound Removal OpenAL Error: %s\n", alGetString(err));
 
         return false;
     }
@@ -143,12 +124,16 @@ SoundBuffer::SoundBuffer(){}
 
 SoundBuffer::~SoundBuffer(){
     // delete all sound buffers
-    alDeleteBuffers(soundBuffers.size(), grabSoundBuffers(soundBuffers));
-
+    for(auto const& [key, value] : this->soundBuffers){
+        if(!removeSound(key)){
+            fprintf(stderr, "ERROR: Failed to remove buffer | %s, %i\n", key.c_str(), value);
+        }
+    }
+    
     // check for any OpenAL errors
     ALenum err = alGetError();
     if(err != AL_NO_ERROR){
-        fprintf(stderr, "ERROR: OpenAL Error: %s\n", alGetString(err));
+        fprintf(stderr, "ERROR: Sound Buffer Deconstructor OpenAL Error: %s\n", alGetString(err));
     }
 
     soundBuffers.clear();

@@ -26,6 +26,7 @@ void SoundSource::setBuffer(unsigned int buff){
         return; // stop function
     }
     this->buffer = buff;
+    alSourcei(source, AL_BUFFER, buffer);
 }
 
 void SoundSource::setLoopSound(bool l){
@@ -46,7 +47,6 @@ void SoundSource::play(const unsigned int sound, bool playOnce){
     // check if it's a different buffer
     if(sound != buffer){
         setBuffer(sound);
-        alSourcei(source, AL_BUFFER, buffer);
     }
 
     if(playOnce){
