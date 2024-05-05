@@ -5,9 +5,12 @@
 
 #include <resourceSystems/shader.hpp>
 #include <glm/glm.hpp>
-#include <GLFW/glfw3.h>
 
-// Orthographic Camera class
+/* Orthographic Camera class used for allowing 
+ perception of what's being rendered in a Orthographic
+ manner, the class can be modified and changed to allow
+ desired perception of the scene.  
+*/
 class OrthoCamera{
     protected:
         // declare const vars
@@ -20,9 +23,6 @@ class OrthoCamera{
         // reference to the window size
         unsigned int width, height;
 
-        // reference to the GLFW window handle
-        GLFWwindow* window;
-
         // reference to the shader that can be changed at anytime
         Shader shader;
 
@@ -31,7 +31,7 @@ class OrthoCamera{
         glm::vec3 position = glm::vec3(0.0f);
 
         // construcotr
-        OrthoCamera(unsigned int width, unsigned int height, GLFWwindow* handle,
+        OrthoCamera(unsigned int width, unsigned int height,
         Shader &shader);
 
         // destructor

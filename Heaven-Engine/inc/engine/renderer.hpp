@@ -16,6 +16,8 @@
 #include <gameObjects/game_object.hpp>
 #include <resourceSystems/resource_manager.hpp>
 
+//TODO: Give more information about the class
+
 /*
 Rendering Class used to render *ONLY* type GameObjects and/or it's child classses
 !Requires a shader class and a standard sprite size 
@@ -97,7 +99,7 @@ class Renderer{
         void initRenderData();
 
         // used to draw a quad and to be stored in to the quad buffer 
-        void createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec2 &size, 
+        void createQuad(GameObject::RenderType &type, glm::vec2 &size, 
         float &rotation, int &texIndex, glm::vec4 &color, State &inter);
 
         // used to set the quad vertex buffers

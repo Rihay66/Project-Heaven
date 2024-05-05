@@ -11,12 +11,10 @@ struct State{
 };
 
 // define function that calculates the interpolated state between previous and current states
-static State interpolateState(double &alpha, State previous, State current){
+static void interpolateState(State &state, double &alpha, State &previous, State &current){
     // create a linear interpolation between previous and current states
-    State interpolateState;
-    interpolateState.posX = current.posX * alpha + previous.posX * (1.0 - alpha);
-    interpolateState.posY = current.posY * alpha + previous.posY * (1.0 - alpha);
-    return interpolateState;
+    state.posX = current.posX * alpha + previous.posX * (1.0 - alpha);
+    state.posY = current.posY * alpha + previous.posY * (1.0 - alpha);
 }
 
 #endif

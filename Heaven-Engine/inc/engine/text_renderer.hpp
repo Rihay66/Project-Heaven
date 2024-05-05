@@ -10,6 +10,8 @@
 
 #include <resourceSystems/shader.hpp>
 
+//TODO: Give more information about the class
+
 /* Text Renderer Class used to render a text using only one loaded font from the ResourceManager
 * NOTE: Text is rendered in the center of the screen
 */

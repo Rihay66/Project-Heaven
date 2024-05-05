@@ -51,7 +51,7 @@ Renderer::~Renderer(){
     glDeleteBuffers(1, &this->quadEBO);
 }
 
-void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter){
+void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter){
 
     // check if not over the index count
     if (this->indexCount >= this->maxIndexCount){
@@ -65,6 +65,8 @@ void Renderer::createQuad(GameObject::RenderType &type, glm::vec2 &pos, glm::vec
     transform = glm::translate(glm::mat4(1.0f), glm::vec3(inter.posX, inter.posY, 0.0f)) 
     * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) 
     * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
+    
+    //TODO: Simplify the code below to be less lines of code
     
     // check GameObject rendering state
     switch (type){
@@ -195,13 +197,13 @@ void Renderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alpha){
     {
         if (gameObjects[i]->getInterpolationFlag())
         {
-            interpolation = interpolateState(alpha, gameObjects[i]->getPreviousInterpolatedState(), gameObjects[i]->getCurrentInterpolatedState());
+            interpolateState(this->interpolation, alpha, gameObjects[i]->getPreviousInterpolatedState(), gameObjects[i]->getCurrentInterpolatedState());
         }else{
             interpolation.posX = gameObjects[i]->position.x;
             interpolation.posY = gameObjects[i]->position.y;
         }
 
-        this->createQuad(gameObjects[i]->renderType, gameObjects[i]->position, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color, interpolation);
+        this->createQuad(gameObjects[i]->renderType, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color, interpolation);
     }
 
     // Set dynamic vertex buffer
@@ -225,13 +227,13 @@ void Renderer::Draw2D(std::vector<GameObject> &gameObjects, double &alpha){
     {
         if (gameObjects[i].getInterpolationFlag())
         {
-            interpolation = interpolateState(alpha, gameObjects[i].getPreviousInterpolatedState(), gameObjects[i].getCurrentInterpolatedState());
+            interpolateState(this->interpolation, alpha, gameObjects[i].getPreviousInterpolatedState(), gameObjects[i].getCurrentInterpolatedState());
         }else{
             interpolation.posX = gameObjects[i].position.x;
             interpolation.posY = gameObjects[i].position.y;
         }
 
-        this->createQuad(gameObjects[i].renderType, gameObjects[i].position, gameObjects[i].size, gameObjects[i].rotation, gameObjects[i].textureIndex, gameObjects[i].color, interpolation);
+        this->createQuad(gameObjects[i].renderType, gameObjects[i].size, gameObjects[i].rotation, gameObjects[i].textureIndex, gameObjects[i].color, interpolation);
     }
 
     // set dynamic vertex buffer
@@ -251,14 +253,14 @@ void Renderer::Draw2D(GameObject *&obj, double &alpha)
     ResourceManager::BindTextures();
 
     if (obj->getInterpolationFlag()){
-        interpolation = interpolateState(alpha, obj->getPreviousInterpolatedState(), obj->getCurrentInterpolatedState());
+        interpolateState(this->interpolation, alpha, obj->getPreviousInterpolatedState(), obj->getCurrentInterpolatedState());
     }else{
         interpolation.posX = obj->position.x;
         interpolation.posY = obj->position.y;
     }
 
     // add a single object to the batch
-    this->createQuad(obj->renderType, obj->position, obj->size, obj->rotation, obj->textureIndex, obj->color, interpolation);
+    this->createQuad(obj->renderType, obj->size, obj->rotation, obj->textureIndex, obj->color, interpolation);
 
     // set dynamic vertex buffer
     this->endBatch();
@@ -274,14 +276,14 @@ void Renderer::Draw2D(GameObject &obj, double &alpha){
     this->beginBatch();
 
     if (obj.getInterpolationFlag()){
-        interpolation = interpolateState(alpha, obj.getPreviousInterpolatedState(), obj.getCurrentInterpolatedState());
+        interpolateState(this->interpolation, alpha, obj.getPreviousInterpolatedState(), obj.getCurrentInterpolatedState());
     }else{
         interpolation.posX = obj.position.x;
         interpolation.posY = obj.position.y;
     }
 
     // add a single object to the batch
-    this->createQuad(obj.renderType, obj.position, obj.size, obj.rotation, obj.textureIndex, obj.color, interpolation);
+    this->createQuad(obj.renderType, obj.size, obj.rotation, obj.textureIndex, obj.color, interpolation);
 
     // set dynamic vertex buffer
     this->endBatch();

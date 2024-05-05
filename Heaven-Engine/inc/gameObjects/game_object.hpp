@@ -57,10 +57,10 @@ class GameObject{
         bool getInterpolationFlag();
 
         // return the GameObject's current interpolated state
-        State getCurrentInterpolatedState();
+        State& getCurrentInterpolatedState();
 
         // return the GameObject's previous interpolated state 
-        State getPreviousInterpolatedState();
+        State& getPreviousInterpolatedState();
 
         // return the GameObject's tag
         std::string getTag();

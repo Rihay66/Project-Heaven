@@ -1,15 +1,12 @@
 #include <cameras/ortho_camera.hpp>
 
-OrthoCamera::OrthoCamera(unsigned int w, unsigned int h, GLFWwindow* handle, Shader &shdr) : 
-width(w), height(h), window(handle), shader(shdr){  
+OrthoCamera::OrthoCamera(unsigned int w, unsigned int h,  Shader &shdr) : 
+width(w), height(h), shader(shdr){  
     // update projection and add to shader
     calculateProjectionView();
 }
 
-OrthoCamera::~OrthoCamera(){
-    // forget the window handle
-    this->window = nullptr;
-}
+OrthoCamera::~OrthoCamera(){}
 
 void OrthoCamera::calculateProjectionView(){
     // create the projection

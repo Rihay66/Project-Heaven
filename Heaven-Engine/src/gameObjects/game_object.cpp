@@ -30,11 +30,11 @@ std::string GameObject::getTag(){
     return this->tag;
 }
 
-State GameObject::getCurrentInterpolatedState(){
+State& GameObject::getCurrentInterpolatedState(){
     return this->currentState;
 }
 
-State GameObject::getPreviousInterpolatedState(){
+State&  GameObject::getPreviousInterpolatedState(){
     return this->previousState;
 }
 

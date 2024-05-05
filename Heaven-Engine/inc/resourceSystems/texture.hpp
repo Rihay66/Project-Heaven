@@ -5,8 +5,10 @@
 
 #include <glad/glad.h>
 
-// Texture2D is able to store and configure a texture in OpenGL.
-// It also hosts utility functions for easy management.
+/* Texture2D is able to store and configure a 2D texture in OpenGL.
+ It also hosts utility variables for easy management and modifiability.
+ The class requires an image size and a path to the texture.
+*/
 class Texture2D{
 public:
     // holds the ID of the texture object, used for all texture operations to reference to this particular texture

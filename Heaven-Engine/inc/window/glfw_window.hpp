@@ -13,17 +13,13 @@
 // GLFW and OPENGL Libraries
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <utilities/application_state_utils.hpp>
 
-// define window states
-enum APP_STATE{
-    ACTIVE, DEBUG
-};
+//TODO: Give more information about the class 
 
-// define input state
-enum INPUT_STATE{
-    KM, KMANDCONTROLLER
-};
+/* Window class  
 
+*/
 class Window{
     private:
         // set up vars for calculating delta time and the fixed time step
@@ -47,6 +43,7 @@ class Window{
 
         // window handle
         const GLFWwindow* handle;
+
     protected:
         // used to set the target frame time between frame, aka max frame time
         void setTargetTimeStep(double time);
@@ -54,14 +51,13 @@ class Window{
         void setFixedTimeStep(double time);
         // used to get windows's base input and calls input()
         void getInput();
-
-    public:
-
+        //TODO: Refactor the window state system to allow for robust changing input or going to debug, etc...
         // state of the window application 
         APP_STATE App_State;
         // state of the window's input state
         INPUT_STATE Input_State;
 
+    public:
         // constructor, initializes GLFW and OpenGL
         Window(int w, int h, const char* name);
 
