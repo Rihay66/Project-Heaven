@@ -5,10 +5,8 @@
 #include <thread>
 
 // static vars for tracking input
-
 static bool isDebug = false;
 static bool pressed = false;
-static bool controllerCheck = false;
 
 // callback function to move the OpenGL viewport to the GLFW window's position
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height){
@@ -16,18 +14,13 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 // constructor, intializes GLFW and GLAD then creates a window with the passed parameters
-Window::Window(int w, int h, const char* name) : App_State(ACTIVE), Input_State(KM), width(0), height(0){
+Window::Window(int w, int h, const char* name) : App_State(ACTIVE), width(0), height(0){
 
     // set local vars of the window size
     width = w;
     height = h;
 
-    // init GLFW
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, false); //disable resizing the screen
+    initializeGLFW();
 
     // create the window and check for errors
     handle = glfwCreateWindow(w, h, name, NULL, NULL);
@@ -48,14 +41,12 @@ Window::Window(int w, int h, const char* name) : App_State(ACTIVE), Input_State(
 
     // set up call back to update the opengl window
     glfwSetFramebufferSizeCallback((GLFWwindow*)handle, framebuffer_size_callback);
-    // disable vsync
-    glfwSwapInterval(0);
     // set openGL window size
     glViewport(0, 0, w, h);
+    // disable vsync
+    glfwSwapInterval(0);
 
-    // set up rendering for 2D
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    setUpOpenGL();
 
     //TODO: Create debug options for the window class to display a console to show any errors or messages
     //std::cout << "MSG: Window successfully created" << std::endl;
@@ -83,6 +74,23 @@ void Window::setFixedTimeStep(double time){
     }
 }
 
+void Window::initializeGLFW(){
+    // init GLFW
+    glfwInit();
+    // set specific opengl version to 4.5
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    // set up opengl window profile
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, false); //disable resizing the screen
+}
+
+void Window::setUpOpenGL(){
+    // set up rendering for 2D
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
 void Window::getInput(){
 
     //TODO: Make the terminal msgs be optional
@@ -103,23 +111,6 @@ void Window::getInput(){
         pressed = !pressed;
     }
 
-    //TODO: this checking system for joystick may need to check if joystick is indeed a gamepad
-    //TODO: also have the checking system make "profiles" for more than one joystick
-    // check for the first joystick
-    if(glfwJoystickPresent(GLFW_JOYSTICK_1) == GLFW_TRUE && !controllerCheck){
-        // print out that the joystick is connected
-        const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
-        std::cout << "MSG: Controller is connected! ID: " << name << std::endl;
-        std::cout << "MSG: Controller input is enabled!" << std::endl;
-        Input_State = KMANDCONTROLLER;
-        controllerCheck = !controllerCheck;
-    }else if(glfwJoystickPresent(GLFW_JOYSTICK_1) == GLFW_FALSE && controllerCheck){
-        std::cout << "MSG: Controller is disconnected!" << std::endl;
-        std::cout << "MSG: Controller input is disabled!" << std::endl;
-        Input_State = KM;
-        controllerCheck = !controllerCheck;
-    }
-
     // call additional input
     this->input();
 }
@@ -129,8 +120,6 @@ float Window::getDeltaTime(){
     // calculate delta time
     currentFrame = glfwGetTime();
     this->DeltaTime = currentFrame - lastFrame;
-    if(this->DeltaTime > 0.25)
-        this->DeltaTime = 0.25;
     lastFrame = currentFrame;
 
     return this->DeltaTime;

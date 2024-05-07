@@ -54,11 +54,14 @@ class Window{
         void setFixedTimeStep(double time);
         // used to get windows's base input and calls input()
         void getInput();
+        // used for initializing GLFW and setting it up for window creation
+        virtual void initializeGLFW();
+        // used for setting up OpenGL rendering
+        virtual void setUpOpenGL();
+
         //TODO: Refactor the window state system to allow for robust changing input or going to debug, etc...
         // state of the window application 
         APP_STATE App_State;
-        // state of the window's input state
-        INPUT_STATE Input_State;
 
     public:
         // constructor, initializes GLFW and OpenGL

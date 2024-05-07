@@ -16,8 +16,6 @@
 #include <gameObjects/game_object.hpp>
 #include <resourceSystems/resource_manager.hpp>
 
-//TODO: Give more information about the class
-
 /* Sprite Rendering Class used to render 2D quads. This
  class uses mainly the GameObject Class to represent
  each quad. This class utilizes batch rendering when
