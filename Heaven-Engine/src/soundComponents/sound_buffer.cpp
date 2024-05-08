@@ -124,9 +124,9 @@ SoundBuffer::SoundBuffer(){}
 
 SoundBuffer::~SoundBuffer(){
     // delete all sound buffers
-    for(auto const& [key, value] : this->soundBuffers){
-        if(!removeSound(key)){
-            fprintf(stderr, "ERROR: Failed to remove buffer | %s, %i\n", key.c_str(), value);
+    for(auto const& i : this->soundBuffers){
+        if(!removeSound(i.first)){
+            fprintf(stderr, "ERROR: Failed to remove buffer | %s, %i\n", i.first.c_str(), i.second);
         }
     }
     

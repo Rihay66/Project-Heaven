@@ -172,14 +172,18 @@ void Window::runtime(){
         // calculate the time to sleep to achieve the desired time step
         threadSleepTime = targetTimeStep - frameDuration;
         if(threadSleepTime > 0){
-            std::this_thread::sleep_for(std::chrono::duration<double>(threadSleepTime));
+            // sleep until specified thread sleep time
+            auto start = std::chrono::high_resolution_clock::now();
+            auto end = start + std::chrono::duration<double>(threadSleepTime);
+            // sleep
+            while (std::chrono::high_resolution_clock::now() < end){}
         }
     }
 }
 
 // handle main window input function
 void Window::input(){
-    // here goes additional input that is within SDL event handling and getEvent() loop
+    // here goes additional input 
     // can be overwritten 
 }
 

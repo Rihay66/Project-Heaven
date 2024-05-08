@@ -26,7 +26,8 @@
 class Window{
     private:
         // set up vars for calculating delta time and the fixed time step
-	    double lastFrame = 0, currentFrame = 0, frameDuration = 0, accumulator = 0, alpha = 0, threadSleepTime = 0;
+	    double lastFrame = 0, currentFrame = 0, frameDuration = 0, accumulator = 0, 
+        alpha = 0, threadSleepTime = 0;
 
         // vars storing and reference to window size, width x height
         unsigned int width, height;
