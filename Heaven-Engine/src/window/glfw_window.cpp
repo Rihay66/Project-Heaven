@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <chrono>
-#include <thread>
 
 // static vars for tracking input
 static bool isDebug = false;

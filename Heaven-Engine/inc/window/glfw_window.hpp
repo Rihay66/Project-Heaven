@@ -15,9 +15,6 @@
 #include <GLFW/glfw3.h>
 #include <utilities/application_state_utils.hpp>
 
-//! TEMPORARY: FOR TESTING THE COMPILATION OF GLFWGAMEPAD_UTILS_HPP & GLFW_GAMEPAD_QUERY_UTILS_HPP
-#include <utilities/glfwgamepad_query_utils.hpp>
-
 //TODO: Give more information about the class 
 
 /* Window class used for creating a graphical window
