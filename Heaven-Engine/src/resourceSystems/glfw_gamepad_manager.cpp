@@ -10,23 +10,33 @@ int GamepadManager::getGamepadAmount(){
     return 0;
 }
 
-void GamepadManager::updateQuery(){
+void GamepadManager::updateQuery(char option){
+    //TODO: include the option to add debug options
+
     // check that GLFW has been initialized
     if(glfwGetError(NULL) == GLFW_NOT_INITIALIZED){
         return; // stop function
     }
 
-    //TODO: Remove any gamepads that are disconnected
-
-    // query for devices and verify device are gamepads
-    queryDevices();
-
-}
-
-void GamepadManager::queryDevices(){
     // poll events from glfw to get all connected devices
     glfwPollEvents();
 
+    // query for new devices and verify device are gamepads
+    queryDevices();
+
+    // check any disconnected devices by state
+    checkGamepadConnection();
+}
+
+void GamepadManager::removeDisconnectedDevices(){
+    // remove any devices that have a 'disconnected' flag and by state is disconnected
+}
+
+void GamepadManager::clear(){
+    // clear resources
+}
+
+void GamepadManager::queryDevices(){
     // loop through all possible joysticks
     for(int i = 0; i < GLFW_JOYSTICK_LAST; i++){
         // check each joystick if they're present
@@ -39,6 +49,8 @@ void GamepadManager::queryDevices(){
             gamepad pad;
             pad.dev.ID = i;
             pad.dev.name = glfwGetGamepadName(i);
+            //! By default device is set to be connected
+            pad.isConnected = true;
             // get gamepad state
             glfwGetGamepadState(pad.dev.ID, &pad.state);
             //? Debug print of gamepad
@@ -46,12 +58,27 @@ void GamepadManager::queryDevices(){
             // add device to list
             queriedGamepads.push_back(pad);
         }
-        
     }
+}
 
-    //? Debug print amount of gamepads present
-    std::cout << "Amount of Gamepads present: " << queriedGamepads.size() << "\n";
+void GamepadManager::checkGamepadConnection(){
+    // loop through all available gamepads
+    for(int i = 0; i < queriedGamepads.size(); i++){
+        // check their connection 
+        if(glfwGetGamepadState(queriedGamepads.at(i).dev.ID, &queriedGamepads.at(i).state) == GLFW_FALSE && queriedGamepads.at(i).isConnected){
+            // if no connection then set 'isConnected' flag to false
+            queriedGamepads.at(i).isConnected = false;
 
+            //? debug print
+            std::cout << "Gamepad Name: " << queriedGamepads.at(i).dev.name << " | ID: " << queriedGamepads.at(i).dev.ID << " has been disconnected\n"; 
+        }else if(glfwGetGamepadState(queriedGamepads.at(i).dev.ID, &queriedGamepads.at(i).state) != GLFW_FALSE && !queriedGamepads.at(i).isConnected){
+            // there is a reconnection then set 'isConnected' flag to true
+            queriedGamepads.at(i).isConnected = true;
+
+            //? debug print
+            std::cout << "Gamepad Name: " << queriedGamepads.at(i).dev.name  << " | ID: " << queriedGamepads.at(i).dev.ID << " has been reconnected\n";
+        }
+    }
 }
 
 bool GamepadManager::checkGamepadExistance(int id){

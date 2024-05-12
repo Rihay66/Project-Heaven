@@ -37,7 +37,8 @@ class GamepadManager{
             device dev;
             // define gamepad state holder, used to further verify gamepads
             GLFWgamepadstate state;
-            // variables
+            // connection flag, used to allow input
+            bool isConnected = false;
         };
 
         //* Getter functions
@@ -47,8 +48,14 @@ class GamepadManager{
 
         //* Helper functions
 
-        // to update the query of devices
-        static void updateQuery();
+        // to update the query of devices, parameter is used for debugging or setting
+        static void updateQuery(char option = 'n');
+
+        // to remove any disconnected devices 
+        static void removeDisconnectedDevices();
+
+        // to clear any used resources
+        static void clear();
 
     private:
         // private resource storage
@@ -66,6 +73,9 @@ class GamepadManager{
          Add valid devices to a resizeable list
         */
         static void queryDevices();
+
+        // checks each connected device and sets their 'isConnection' flag to false if by state is disconnected
+        static void checkGamepadConnection();
 
         // returns the state of existance of a ID within the list of gamepads
         static bool checkGamepadExistance(int id);
