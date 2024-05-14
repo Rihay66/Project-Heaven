@@ -1,55 +1,31 @@
 #pragma once
 
-#ifndef GLFWGAMEPAD_QUERY_UTILS_HPP
-#define GLFWGAMEPAD_QUERY_UTILS_HPP
+#ifndef GLFW_GAMEPAD_QUERY_UTILS_HPP
+#define GLFW_GAMEPAD_QUERY_UTILS_HPP
 
 // include standard libraries
 #include <vector>
 
-// include GLFW
-#include <GLFW/glfw3.h>
+#include <utilities/glfw_gamepad_utils.hpp>
 
-static const char* queryKeywords[] = {"controller", "gamepad", "playstation", "xbox", "nintendo", "4"};
-
-//TODO: Define a controller, has an ID, active, 
-
-//TODO: define Heaven-Engine buttons for Xbox, Playstation, and even switch
-
-//TODO: grab queried devices from query 
-
-//TODO: implement controller reference
-// have devices have unique ID to allow for GLFW input
-// have a call back that reference GLFW input 
-
-//TODO: Allow for controller device reference to have modifiable variables 
-// add deadzone, or other
-
+//TODO: Add more documentation on how this works
 class GamepadManager{
     public:
-        // define basic structure of a device
-        struct device{
-            const char* name = "";
-            int ID;
-        };
-
-        // define structure of a gamepad
-        struct gamepad{
-            device dev;
-            // define gamepad state holder, used to further verify gamepads
-            GLFWgamepadstate state;
-            // connection flag, used to allow input
-            bool isConnected = false;
-        };
-
         //* Getter functions
 
         // returns the number of devices that identify as "Gamepads"
         static int getGamepadAmount();
 
+        // returns a gamepad reference at the determined index, default gets the first gamepad
+        static Gamepad* getGamepad(int index = 0);
+
         //* Helper functions
 
         // to update the query of devices, parameter is used for debugging or setting
         static void updateQuery(char option = 'n');
+
+        // to update the state of all gamepads, regardless of the flag 'isConnected'
+        static void updateGamepadsState();
 
         // to remove any disconnected devices 
         static void removeDisconnectedDevices();
@@ -61,9 +37,9 @@ class GamepadManager{
         // private resource storage
 
         // define a list of devices that are gamepads
-        static std::vector<gamepad> queriedGamepads;
+        static std::vector<Gamepad> queriedGamepads;
 
-        //private constructor, that is to avoid any actual gamepad manager objects
+        // private constructor, that is to avoid any actual gamepad manager objects
         GamepadManager() {}
 
         //* Private Helper functions
