@@ -4,7 +4,7 @@
 #define SOUND_BUFFER_HPP
 
 // include standard libraries
-#include <map>
+#include <vector>
 #include <string>
 
 #include <AL/al.h>
@@ -17,8 +17,13 @@ file format.
 */
 class SoundBuffer{
     private:
+        // define a struct that represent a sound buffer pair
+        struct BufferPair {
+            std::string str;
+            ALuint buffer;
+        };
         // private storage of sounds
-        std::map<std::string, ALuint> soundBuffers;
+        std::vector<BufferPair> soundBuffers;
 
     public: 
         // constructor

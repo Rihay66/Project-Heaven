@@ -7,7 +7,13 @@
 #include <limits.h>
 
 ALuint SoundBuffer::getSound(std::string name){
-    return this->soundBuffers[name];
+    for (int i = 0; i < this->soundBuffers.size(); i++) {
+        if (soundBuffers.at(i).str.compare(name) == 0) {
+            return soundBuffers.at(i).buffer;
+        }
+    }
+
+    return 0;
 }
 
 ALuint SoundBuffer::addSound(std::string name, const char* filename){
@@ -93,20 +99,25 @@ ALuint SoundBuffer::addSound(std::string name, const char* filename){
     name = checkName(name);
 
     // add name to resources
-    soundBuffers[name] = buffer;
+    soundBuffers.push_back({name, buffer});
     
     return buffer;
 } 
 
 bool SoundBuffer::removeSound(std::string name){
-
-    if(soundBuffers[name]){
-        // remove sound buffer
-        alDeleteBuffers(1, &soundBuffers[name]);
-        soundBuffers.erase(name);
-    }else{
-        // couldn't find the buffer in resources
+    // check name is not empty
+    if (name.empty()) 
         return false;
+    
+    // loop through to find name
+    for (int i = 0; i < this->soundBuffers.size(); i++) {
+        if (soundBuffers.at(i).str.compare(name) == 0) {
+            // delete the buffer
+            alDeleteBuffers(1, &soundBuffers.at(i).buffer);
+            // delete the element
+            auto index = soundBuffers.begin() + i;
+            soundBuffers.erase(index);
+        }
     }
 
     // check for any OpenAL errors
@@ -123,11 +134,10 @@ bool SoundBuffer::removeSound(std::string name){
 SoundBuffer::SoundBuffer(){}
 
 SoundBuffer::~SoundBuffer(){
-    //TODO: Change the way the sound buffers are deleted
     // delete all sound buffers
-    for(auto& i : this->soundBuffers){
-        if(!removeSound(i.first)){
-            fprintf(stderr, "ERROR: Failed to remove buffer | %s, %i\n", i.first.c_str(), i.second);
+    for (auto& i : soundBuffers) {
+        if (!removeSound(i.str)) {
+            fprintf(stderr, "ERROR: Failed to remove buffer | %s, %i\n", i.str.c_str(), i.buffer);
         }
     }
     
