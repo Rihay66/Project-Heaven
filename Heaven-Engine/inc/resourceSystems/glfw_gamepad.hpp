@@ -15,6 +15,15 @@ class Controller {
         // storage of referece to the gamepad
         Gamepad* pad;
 
+        // storage of controller reference
+        static Controller* instance;
+
+        // sets the static instance 
+        static void setInstance(Controller* inst);
+
+        // joystick callback that calls virtual functions depending on an event 
+        static void connectionCheck(int id, int event);
+
     public:
         // constructor
         Controller(Gamepad *gamepad);
@@ -23,6 +32,9 @@ class Controller {
         ~Controller();
 
         //* Getter functions
+
+        // for getting the connection status of the gamepad
+        bool getGamepadConnection();
 
         //* Setter functions
 
@@ -43,9 +55,13 @@ class Controller {
          */
         float getAxisInput(int key, float deadzone = 0.5f);
 
-        /* when the pad is disconnected, the user must provide what to do within their application
+        /* when the pad is connected, the user must provide what to do within their application
         */
-        virtual void onDisconnect() = 0;
+        virtual void onGamepadConnect() = 0;
+
+        /* when the pad is disconnected
+        */
+        virtual void onGamepadDisconnect() {};
 };
 
 #endif

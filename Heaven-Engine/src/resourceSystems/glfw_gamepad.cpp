@@ -1,17 +1,55 @@
 #include <resourceSystems/glfw_gamepad.hpp>
 
+Controller* Controller::instance = nullptr;
+
+void Controller::setInstance(Controller* inst){
+    instance = inst;
+}
+
+void Controller::connectionCheck(int id, int event){
+    // check that instance was set
+    if(!instance)
+        return;
+    
+    // check for connection events
+    if(event == GLFW_CONNECTED){
+        // call user defined function for on connection
+        instance->onGamepadConnect();
+    }else if(event == GLFW_DISCONNECTED){
+        // call user defined function for on disconnection
+        instance->onGamepadDisconnect();
+    }
+}
+
 Controller::Controller(Gamepad* gamepad){
     // check that GLFW has been initialized
     if(glfwGetError(NULL) == GLFW_NOT_INITIALIZED){
-        pad = nullptr; // the pad is undefined
+        pad = nullptr; // the gamepad is undefined
     }else{
+        // set the gamepad
         pad = gamepad;
+        // pass the instance of this object
+        setInstance(this);
+        
+        // set up callback of gamepad connection
+        glfwSetJoystickCallback(Controller::connectionCheck);
     }
 }
 
 Controller::~Controller(){
     // clear resources and references
     this->pad = nullptr;
+    setInstance(nullptr);
+}
+
+bool Controller::getGamepadConnection(){
+    // check if gamepad is set and is connected
+    if(pad != nullptr && pad->dev.isConnected){
+        return true;
+    }
+
+    // return false, meaning gamepad is not set or is disconnected
+    return false;
 }
 
 void Controller::setGamepad(Gamepad* gamepad){

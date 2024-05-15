@@ -31,8 +31,13 @@ struct Gamepad{
 #define PLAYSTATION_BUTTON_TRIANGLE 3
 #define PLAYSTATION_BUTTON_L1 4
 #define PLAYSTATION_BUTTON_R1 5
+
 #define PLAYSTATION_JOYSTICK_LEFT_X 0
 #define PLAYSTATION_JOYSTICK_LEFT_Y 1
+#define PLAYSTATION_JOYSTICK_RIGHT_X 2
+#define PLAYSTATION_JOYSTICK_RIGHT_Y 3
+#define PLAYSTATION_TRIGGER_LEFT 4
+#define PLAYSTATION_TRIGGER_RIGHT 5
 
 //TODO: implement controller reference
 // have a call back that reference GLFW input 
