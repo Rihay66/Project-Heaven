@@ -134,9 +134,6 @@ float Window::getDeltaTime(){
 void Window::runtime(){
     //create local vars for timing
     std::chrono::steady_clock::time_point frameStart, frameEnd;
-    std::chrono::_V2::system_clock::time_point start;
-    std::chrono::time_point<std::chrono::_V2::system_clock, 
-    std::chrono::duration<double, std::chrono::_V2::steady_clock::period>> end;
 
     while(!glfwWindowShouldClose((GLFWwindow*)this->handle)){
         // start timing the frame
@@ -181,8 +178,8 @@ void Window::runtime(){
         threadSleepTime = targetTimeStep - frameDuration;
         if(threadSleepTime > 0){
             // sleep until specified thread sleep time
-            start = std::chrono::high_resolution_clock::now();
-            end = start + std::chrono::duration<double>(threadSleepTime);
+            auto start = std::chrono::high_resolution_clock::now();
+            auto end = start + std::chrono::duration<double>(threadSleepTime);
             // sleep
             while (std::chrono::high_resolution_clock::now() < end){}
         }
