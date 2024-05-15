@@ -123,8 +123,9 @@ bool SoundBuffer::removeSound(std::string name){
 SoundBuffer::SoundBuffer(){}
 
 SoundBuffer::~SoundBuffer(){
+    //TODO: Change the way the sound buffers are deleted
     // delete all sound buffers
-    for(auto const& i : this->soundBuffers){
+    for(auto& i : this->soundBuffers){
         if(!removeSound(i.first)){
             fprintf(stderr, "ERROR: Failed to remove buffer | %s, %i\n", i.first.c_str(), i.second);
         }

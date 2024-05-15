@@ -167,7 +167,7 @@ install(TARGETS Heaven-Engine-s EXPORT Heaven-Engine-sConfig
 
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc/
-    DESTINATION "${CMAKE_BINARY_DIR}/include"
+    DESTINATION "${CMAKE_SOURCE_DIR}/build/include"
 )
 
 # Configure the package and specify the export destination
