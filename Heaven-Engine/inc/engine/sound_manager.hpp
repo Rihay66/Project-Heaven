@@ -19,16 +19,6 @@
  constructor is defined.  
 */
 class SoundManager{
-    private:
-        // private static storage for sound device
-        static SoundDevice* device;
-
-        // private static storage for sound buffers as a collection
-        static std::map<std::string, SoundBuffer*> sounds;
-
-        // constructor
-        SoundManager() {};
-
     public:
 
         // initializes the sound device
@@ -63,7 +53,15 @@ class SoundManager{
 
         // to remove a single sound from a collection
         static void removeSoundFromBuffer(std::string collectionName, std::string soundName);
+    private:
+        // private static storage for sound device
+        static SoundDevice* device;
 
+        // private static storage for sound buffers as a collection
+        static std::map<std::string, SoundBuffer*> sounds;
+
+        // constructor
+        SoundManager() {};
 };
 
 #endif

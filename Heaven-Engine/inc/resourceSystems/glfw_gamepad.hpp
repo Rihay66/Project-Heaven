@@ -3,13 +3,16 @@
 #ifndef GLFW_GAMEPAD_HPP
 #define GLFW_GAMEPAD_HPP
 
+// include utilities
 #include <utilities/glfw_gamepad_utils.hpp>
 
-//TODO: Allow for controller device reference to have modifiable variables 
-// add deadzone, or other
-
-//TODO: Provide ways user can define deadzone
-
+/* An abstract Controller class which keeps track 
+ of a passed gamepad. This class allows for getting
+ input from the passed gamepad such as buttons and
+ axes. It also sets up a callback that calls defined 
+ functionality when a gamepad is diconnected. 
+ !When using this class be sure to define onConnection()
+*/
 class Controller {
     private:
         // storage of referece to the gamepad
@@ -31,17 +34,17 @@ class Controller {
         // deconstructor
         ~Controller();
 
-        //* Getter functions
+        //* getter functions
 
         // for getting the connection status of the gamepad
         bool getGamepadConnection();
 
-        //* Setter functions
+        //* setter functions
 
         // for setting the gamepad to a different one
         void setGamepad(Gamepad *gamepad);
 
-        //* Helper functions
+        //* helper functions
 
         /* button callback of the gamepad which checks for the given key
          */

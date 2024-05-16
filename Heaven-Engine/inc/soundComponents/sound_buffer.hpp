@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 
+// include OpenAL
 #include <AL/al.h>
 
 /* Sound Buffer Class for loading and storing sounds.
@@ -31,17 +32,17 @@ class SoundBuffer{
         // descontructor
         ~SoundBuffer();
 
-        //* Getter functions
+        //* getter functions
 
         // for retrieving the sound buffer by identifier name
         ALuint getSound(std::string name);
 
-        //* Adder functions
+        //* adder functions
 
         // for storing a sound along with their identifier name and file path, returns the sound as a buffer
         ALuint addSound(std::string name, const char* filename);
 
-        //* Remove functions
+        //* remove functions
 
         // for removing a stored sound buffer using the identifier name, returns false for error and true for success
         bool removeSound(std::string name);

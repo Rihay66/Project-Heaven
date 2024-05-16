@@ -20,7 +20,8 @@
 */
 class ResourceManager{
     public:
-        //TODO: Allow for multiple fonts to be loaded in 
+        // TODO: Allow for multiple fonts to be loaded in 
+        // TODO: Move resource storage to be encapsulated
 
         // holds all state information relevant to a character as loaded using FreeType
         struct Character{

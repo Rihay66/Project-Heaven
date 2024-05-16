@@ -3,9 +3,12 @@
 #ifndef SHADER_HPP
 #define SHADER_HPP
 
+// include standard libraries
 #include <string>
 
+// include GLAD
 #include <glad/glad.h>
+// includ GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -14,6 +17,9 @@
  functions for easy management of the shader.
 */
 class Shader{
+    private:
+        // checks if compilation or linking failed and if so, print the error logs
+        void    checkCompileErrors(unsigned int object, std::string type); 
     public:
         // state
         unsigned int ID; 
@@ -37,9 +43,6 @@ class Shader{
         void    SetVector4f (const char *name, float x, float y, float z, float w, bool useShader = false);
         void    SetVector4f (const char *name, const glm::vec4 &value, bool useShader = false);
         void    SetMatrix4  (const char *name, const glm::mat4 &matrix, bool useShader = false);
-    private:
-        // checks if compilation or linking failed and if so, print the error logs
-        void    checkCompileErrors(unsigned int object, std::string type); 
 };
 
 

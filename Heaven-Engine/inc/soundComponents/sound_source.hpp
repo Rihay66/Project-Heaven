@@ -3,7 +3,9 @@
 #ifndef SOUND_SOURCE_HPP
 #define SOUND_SOURCE_HPP
 
+// include GLM
 #include <glm/glm.hpp>
+// include OpenAL
 #include <AL/al.h>
 
 /* Sound Source Class allows for a sound that can be played, 
@@ -29,7 +31,7 @@ class SoundSource{
         unsigned int buffer = 0;
 
     public:
-        //* Setter functions
+        //* setter functions
 
         // sets the pitch of the source, takes in a vlaue within 0.0f to 1.0f
         void setPitch(float p);
@@ -43,12 +45,12 @@ class SoundSource{
         // sets the loopSound parameter to make the sound be looped automatically when played once
         void setLoopSound(bool l);
 
-        //* Getter functions
+        //* getter functions
 
         // returns the sound buffer that is set to this sound source
         unsigned int getBuffer();
 
-        //* Helper functions
+        //* helper functions
 
         // plays the given sound, also sets the given buffer to be current
         void play(const unsigned int sound, bool playOnce = false);

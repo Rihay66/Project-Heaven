@@ -22,32 +22,7 @@
  rendering a LIST of GameObjects. 
 !Requires a shader class and a standard sprite size 
 */
-class SpriteRenderer{
-    public:
-        // constructor & desconstructor
-        SpriteRenderer(Shader &shader, glm::uvec2 &spriteSize);
-        ~SpriteRenderer();
-
-        // draw multiple pointer objects in a vector list, objects become batch rendered
-        void Draw2D(std::vector<GameObject*> &objs, double &alpha);
-
-        // draw multiple non-pointer objects in a vector list, objects become batch rendered
-        void Draw2D(std::vector<GameObject> &objs, double &alpha);
-
-        // draw a single pointer object
-        void Draw2D(GameObject* &obj, double &alpha);
-
-        // draw a single non-pointer object
-        void Draw2D(GameObject &obj, double &alpha);
-
-        // data struct for holding amount of draw calls and quad count
-        struct RendererStats{
-            int quadCount = 0, drawCount = 0;
-        };
-
-        // contain reference to amont of quads and amount of draw calls
-        RendererStats stats;
-        
+class SpriteRenderer{    
     private:
         // reference to the model size
         glm::uvec2 spriteSize;
@@ -113,6 +88,30 @@ class SpriteRenderer{
 
         // resets stats such as draw calls and amount quads
         const void resetStats();
+    public:
+        // constructor & desconstructor
+        SpriteRenderer(Shader &shader, glm::uvec2 &spriteSize);
+        ~SpriteRenderer();
+
+        // draw multiple pointer objects in a vector list, objects become batch rendered
+        void Draw2D(std::vector<GameObject*> &objs, double &alpha);
+
+        // draw multiple non-pointer objects in a vector list, objects become batch rendered
+        void Draw2D(std::vector<GameObject> &objs, double &alpha);
+
+        // draw a single pointer object
+        void Draw2D(GameObject* &obj, double &alpha);
+
+        // draw a single non-pointer object
+        void Draw2D(GameObject &obj, double &alpha);
+
+        // data struct for holding amount of draw calls and quad count
+        struct RendererStats{
+            int quadCount = 0, drawCount = 0;
+        };
+
+        // contain reference to amont of quads and amount of draw calls
+        RendererStats stats;
 };
 
 #endif

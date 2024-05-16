@@ -3,6 +3,7 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
+//include GLAD
 #include <glad/glad.h>
 
 /* Texture2D is able to store and configure a 2D texture in OpenGL.

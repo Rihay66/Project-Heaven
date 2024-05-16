@@ -6,12 +6,19 @@
 // include standard libraries
 #include <vector>
 
+// include utilities
 #include <utilities/glfw_gamepad_utils.hpp>
 
-//TODO: Add more documentation on how this works
+/* A static singleton GamepadManager class that hosts 
+ several functions to query for connected or disconnected 
+ Gamepads. Each obtained connected controller are stored for
+ reference to allow for further usage of the gamepad.
+ This class keeps track of all connected or diconnected 
+ devices. 
+*/
 class GamepadManager{
     public:
-        //* Getter functions
+        //* getter functions
 
         // returns the number of devices that identify as "Gamepads"
         static int getGamepadAmount();
@@ -19,7 +26,7 @@ class GamepadManager{
         // returns a gamepad reference at the determined index, default gets the first gamepad
         static Gamepad* getGamepad(int index = 0);
 
-        //* Helper functions
+        //* helper functions
 
         // to update the query of devices, parameter is used for debugging or setting
         static void updateQuery(char option = 'n');
@@ -42,11 +49,11 @@ class GamepadManager{
         // private constructor, that is to avoid any actual gamepad manager objects
         GamepadManager() {}
 
-        //* Private Helper functions
+        //* private helper functions
 
-        /* List out devices
-         Verify that device is a "controller"
-         Add valid devices to a resizeable list
+        /* list out devices
+         verify that device is a "controller"
+         add valid devices to storage
         */
         static void queryDevices();
 

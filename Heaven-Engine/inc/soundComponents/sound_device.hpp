@@ -5,6 +5,7 @@
 
 // include standard libraries
 #include <string>
+// include OpenAL
 
 #include <AL/alc.h>
 

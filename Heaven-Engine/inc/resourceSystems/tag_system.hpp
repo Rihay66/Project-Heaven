@@ -18,17 +18,17 @@
 */
 class TagSystem{
     public:
-        //*Adder Funcs
+        //* adder Funcs
 
         // add a tag and object to the resource pool, if object already exists then replace it's tag
         static void addTag(std::string tagName, GameObject* gameObj);
 
-        //*Helper Funcs
+        //* helper Funcs
         
         // get object from the list and replace the tag of in the tag pool, not the object's tag itself
         static void replaceTag(std::string tagName, GameObject* gameObj);
 
-        //*Getter Funcs
+        //* getter Funcs
 
         // get a tag from a object in the tag pool
         static std::string getTagByGameObject(GameObject* gameObj);
@@ -39,7 +39,7 @@ class TagSystem{
         // get amount of objects in the tag system
         static int getAmountOfObjects();
 
-        //*Remover Funcs
+        //* remover Funcs
 
         // get object and remove from list
         static void removeObject(GameObject* gameObj);
