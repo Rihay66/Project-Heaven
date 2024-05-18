@@ -1,6 +1,9 @@
 #include <engine/physics.hpp>
 
-//init resources
+// include standard library for debugging
+#include <iostream>
+
+// init resources
 
 std::vector<TriggerObject*> Physics::triggerObjs;
 std::vector<PhysicsObject*> Physics::rigidbodyObjs;
@@ -9,15 +12,26 @@ int32_t Physics::positionIterations = 4;
 
 b2World* Physics::world = nullptr;
 
-void Physics::init(glm::vec2 gravity){
-    //Set up box 2d world
-    world = new b2World({gravity.x, gravity.y});
+State Physics::mState;
 
-    //Check if there is an empty list of rigidbodies
-    if(rigidbodyObjs.size() <= 0){
-        std::cout << "Warning: list of physics objects is ZERO!!!" << "\n";
+void Physics::init(glm::vec2 gravity){
+    // set up box 2d world
+    if(world == nullptr){
+        world = new b2World({gravity.x, gravity.y});
     }else{
-        // Loop through list of rigidbodies and add them to the box2d world
+        // display error
+        std::cout << "ERROR: Physics initialization must only be called once!" << "\n";
+        std::cout << "HINT: If more than one Physics initialization is called with intention make sure to clearWorld() before calling init() again" << std::endl;
+        // cause crash to program that uses this physics engine
+        exit(-1);
+    }
+
+    // check if there is an empty list of rigidbodies
+    if(rigidbodyObjs.size() <= 0){
+        //TODO: Create debug options for the Physics class to display a console to show any errors or messages
+        //std::cout << "Warning: list of physics objects is ZERO!!!" << "\n";
+    }else{
+        // loop through list of rigidbodies and add them to the box2d world
         for (PhysicsObject* obj : rigidbodyObjs){
 
             // set up rigidbody and boxcollider
@@ -47,29 +61,128 @@ void Physics::init(glm::vec2 gravity){
         }
     }
 
-    //Check if there are any trigger object
+    // check if there are any trigger object
     if(triggerObjs.size() <= 0){
-        std::cout << "Warning: list of trigger objects is ZERO!!!" << "\n";
+        //TODO: Create debug options for the Physics class to display a console to show any errors or messages
+        //std::cout << "Warning: list of trigger objects is ZERO!!!" << "\n";
     }
 }
 
-void Physics::updateWorld(float deltaTime){
+TriggerObject* Physics::addTriggerObject(TriggerObject* obj){
+    // check if the object is valid
+    if(obj && obj != nullptr){
+        // check if object already exists in the list
+        for(int i = 0; i < triggerObjs.size(); i++){
+            if(triggerObjs[i] == obj){
+                return nullptr; // object already exists so stop function and return nothing
+            }
+        }
 
-    if(rigidbodyObjs.size() > 0){
-        //update rigidbodies
+        // object is valid then add to list
+        triggerObjs.push_back(obj);
+
+    }else{
+        //TODO: Create debug options for the Physics class to display a console to show any errors or messages
+        // return nothing
+        return nullptr;
+    }
+
+    // return the same object given
+    return obj;
+}
+
+PhysicsObject* Physics::addPhysicsObject(PhysicsObject* obj){
+    // check if the object is valid
+    if(obj && obj != nullptr){
+        // check if object already exists in the list
+        for(int i = 0; i < rigidbodyObjs.size(); i++){
+            if(rigidbodyObjs[i] == obj){
+                return nullptr; // object already exists so stop function and return nothing
+            }
+        }
+
+        // create body and insert it into physics world only if world is initialized
+        if(world != nullptr){
+            // set up rigidbody and boxcollider
+            b2BodyDef bodyDef;
+            bodyDef.type = RbToB2Types(obj->rb.Type);
+            bodyDef.position.Set(obj->position.x, obj->position.y);
+            bodyDef.angle = obj->rotation;
+
+            // create body
+            b2Body* body = world->CreateBody(&bodyDef);
+            body->SetFixedRotation(obj->rb.fixedRotation);
+            obj->rb.runtimeBody = body;
+
+            // set up box collider
+            b2PolygonShape boxShape;
+            boxShape.SetAsBox(obj->collider.size.x * obj->size.x, obj->collider.size.y * obj->size.y,
+             {obj->collider.offset.x, obj->collider.offset.y}, obj->collider.rotationOffset);
+
+            // set up physics material
+            b2FixtureDef fixtureDef;
+            fixtureDef.shape = &boxShape;
+            fixtureDef.density = obj->collider.density;
+            fixtureDef.friction = obj->collider.friction;
+            fixtureDef.restitution = obj->collider.restitution;
+            fixtureDef.restitutionThreshold = obj->collider.restitutionThreshold;
+            body->CreateFixture(&fixtureDef);
+        }
+
+        // object is valid then add to list
+        rigidbodyObjs.push_back(obj);
+
+    }else{
+        //TODO: Create debug options for the Physics class to display a console to show any errors or messages
+        // return nothing
+        return nullptr;
+    }
+
+    // return the same object given
+    return obj;
+}
+
+void Physics::setPhysicsVelocityIterations(int32_t iter){
+    // check if given value is less than 1
+    if(iter < 1){
+        return; // stop function
+    }
+
+    // set given value 
+    velocityIterations = iter;
+}
+
+void Physics::setPhysicsPositionIterations(int32_t iter){
+        // check if given value is less than 1
+    if(iter < 1){
+        return; // stop function
+    }
+
+    // set given value 
+    positionIterations = iter;
+}
+
+void Physics::updateWorld(float deltaTime){
+    if(rigidbodyObjs.size() > 0 && world != nullptr){
+        // update any collisions detection, but not update the rigidbodies position
         world->Step(deltaTime, velocityIterations, positionIterations);
     }
 }
 
 void Physics::updatePhysics(){
+    if(rigidbodyObjs.size() <= 0 && world != nullptr){
+        //TODO: Create debug options for the Physics class to display a console to show any errors or messages
+        return; //stop function
+    }
+
     for (PhysicsObject *obj : rigidbodyObjs){
         // retrieve the body from each rigidbody
         b2Body *body = obj->physicBody();
         
         //update previous state
-        obj->previousState = obj->currentState;
+        obj->setPreviousInterpolatedState(obj->getCurrentInterpolatedState());
 
-        // Check for any changed
+        // check for any changed
         const b2Vec2 position = body->GetPosition();
 
         // update each rigidbody their position
@@ -79,8 +192,10 @@ void Physics::updatePhysics(){
 
 
         // update each rigidbody's state position
-        obj->currentState.posX = position.x;
-        obj->currentState.posY = position.y;
+        mState.posX = position.x;
+        mState.posY = position.y;
+
+        obj->setCurrentInterpolatedState(mState);
     }
 
     //TODO: Create a memory safe system to create and delete rigidbody objects 
@@ -105,69 +220,91 @@ void Physics::updatePhysics(){
 
 void Physics::updateTriggers(){
     //TODO: Refactor checking for trigger collsion using space partitioning
-    //Check trigger objects
-    if(triggerObjs.size() > 0){
-        //loop use each trigger will collide only with rigidbody objects
-        for(TriggerObject* trigObj : triggerObjs){
-            for(PhysicsObject* rigidObj : rigidbodyObjs){
-                //check for aabb colllision
-                if(aabbCollision(trigObj, rigidObj)){
-                    //call the trigger's collision callback
-                    trigObj->triggerCollisionCallback(rigidObj);
-                }
-            }
-            //Check if trigger is a exit trigger
-            if(trigObj->trigType == TriggerType::Exit){
-                //Call to check objects that collided with the exit trigger
-                trigObj->exitTriggerObjectCheck();
+
+    if(triggerObjs.size() <= 0){
+        //TODO: Create debug options for the Physics class to display a console to show any errors or messages
+        return; // stop function
+    }
+
+    // loop use each trigger will collide only with rigidbody objects
+    for (TriggerObject *trigObj : triggerObjs){
+        for (PhysicsObject *rigidObj : rigidbodyObjs){
+            // check for aabb colllision
+            if (aabbCollision(trigObj, rigidObj)){
+                // call the trigger's collision callback
+                trigObj->triggerCollisionCallback(rigidObj);
             }
         }
+        // check if trigger is a exit trigger
+        if (trigObj->getTriggerType() == TriggerType::Exit){
+            // call to check objects that collided with the exit trigger
+            trigObj->exitTriggerObjectCheck();
+        }
     }
+
+    //TODO: Create a memory safe system to create and delete trigger objects 
 }
 
 void Physics::clearAll(){
 
     //TODO: Properly refactor how the objects are free from memory
     
-    //Remove pointer from all lists
+    // remove pointer from all lists
 
-    //Remove all PhysicsObjects attached to the physics engine
+    // remove all PhysicsObjects attached to the physics engine
     for(PhysicsObject* obj : rigidbodyObjs){
         delete obj;
     }
 
     rigidbodyObjs.clear();
 
-    //Remove all TriggerObject attached to the physics engine
+    // remove all TriggerObject attached to the physics engine
     for(TriggerObject* obj : triggerObjs){
         delete obj;
     }
 
     triggerObjs.clear();
 
-    //Properly delete box 2d world
+    // properly delete box 2d world
     delete world;
 }
 
 void Physics::clearWorld(){
-    //Properly delete box 2d world
+    // properly delete box 2d world
     delete world;
+    // set world to nothing
+    world = nullptr;
 }
 
 void Physics::clearReference(){
-    //Remove reference to pointers in all lists
+    // remove reference to pointers in all lists
     rigidbodyObjs.clear();
     triggerObjs.clear();
 }
 
 //TODO: Make it able to detect collision for rotation and rotation offsets
 bool Physics::aabbCollision(GameObject* a, GameObject* b){
-    // Calculate the sides of the rectangles with the offset considered
+    // calculate the sides of the quad with the offset considered
 
-    // Check for no overlap
+    // check for no overlap
     bool collisionX = (a->position.x + a->size.x / 2.0f) >= (b->position.x - b->size.x / 2.0f) && (a->position.x - a->size.x / 2.0f) <= (b->position.x + b->size.x / 2.0f);
     bool collisionY = (a->position.y + a->size.y / 2.0f) >= (b->position.y - b->size.y / 2.0f) && (a->position.y - a->size.y / 2.0f) <= (b->position.y + b->size.y / 2.0f);
 
-    // If the rectangles overlap on both axes, a collision is detected
+    // if the quad overlap on both axes, a collision is detected
     return collisionX && collisionY;
+}
+
+b2BodyType Physics::RbToB2Types(BodyType bodyType){
+    switch (bodyType){
+        case BodyType::Static:
+            return b2_staticBody;
+        case BodyType::Dynamic:
+            return b2_dynamicBody;
+        case BodyType::Kinematic:
+            return b2_kinematicBody;
+    }
+
+    // no type was set or there is a unknown body type being passed
+    std::cout << "Warning: Unknown RB Body Type being passed!" << "\n";
+    return b2_staticBody;
 }

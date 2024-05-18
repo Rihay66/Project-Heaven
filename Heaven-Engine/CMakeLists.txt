@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.15.0)
-project(Heaven-Engine VERSION 0.0.3 LANGUAGES C CXX)
-project(Heaven-Engine-s VERSION 0.0.3 LANGUAGES C CXX)
+set (CMAKE_CXX_STANDARD 17)
+project(Heaven-Engine VERSION 0.1.0 LANGUAGES C CXX)
+project(Heaven-Engine-s VERSION 0.1.0 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
 # Set the install prefix to the build folder's lib directory
@@ -12,16 +13,16 @@ file(GLOB_RECURSE ENGINE
     ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
 
 file(GLOB_RECURSE GAMEOBJS
-    ${CMAKE_SOURCE_DIR}/src/gameObjs/*.c
-    ${CMAKE_SOURCE_DIR}/src/gameObjs/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/gameObjects/*.c
+    ${CMAKE_SOURCE_DIR}/src/gameObjects/*.cpp)
 
-file(GLOB_RECURSE ORTHOCAM 
-    ${CMAKE_SOURCE_DIR}/src/orthoCam/*.c
-    ${CMAKE_SOURCE_DIR}/src/orthoCam/*.cpp)
+file(GLOB_RECURSE CAMERAS 
+    ${CMAKE_SOURCE_DIR}/src/cameras/*.c
+    ${CMAKE_SOURCE_DIR}/src/cameras/*.cpp)
 
 file(GLOB_RECURSE RESOURCESYS 
-    ${CMAKE_SOURCE_DIR}/src/resourceSys/*.c
-    ${CMAKE_SOURCE_DIR}/src/resourceSys/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/resourceSystems/*.c
+    ${CMAKE_SOURCE_DIR}/src/resourceSystems/*.cpp)
 
 file(GLOB_RECURSE WINDOW 
     ${CMAKE_SOURCE_DIR}/src/window/*.c
@@ -31,12 +32,21 @@ file(GLOB_RECURSE GLAD
     ${CMAKE_SOURCE_DIR}/src/glad/*.c
     ${CMAKE_SOURCE_DIR}/src/glad/*.cpp)
 
+file(GLOB_RECURSE SOUNDCOMPONENTS
+    ${CMAKE_SOURCE_DIR}/src/soundComponents/*.c
+    ${CMAKE_SOURCE_DIR}/src/soundComponents/*.cpp)
+
+file(GLOB_RECURSE UTILITY
+    ${CMAKE_SOURCE_DIR}/src/utilities/*.c
+    ${CMAKE_SOURCE_DIR}/src/utilities/*.cpp
+)
+
 # Include directory for your engine's headers
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # Create both shared and static libraries
-add_library(Heaven-Engine SHARED ${ENGINE} ${GAMEOBJS} ${ORTHOCAM} ${RESOURCESYS} ${GLAD} ${WINDOW})
-add_library(Heaven-Engine-s STATIC ${ENGINE} ${GAMEOBJS} ${ORTHOCAM} ${RESOURCESYS} ${GLAD} ${WINDOW})
+add_library(Heaven-Engine SHARED ${ENGINE} ${GAMEOBJS} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDCOMPONENTS})
+add_library(Heaven-Engine-s STATIC ${ENGINE} ${GAMEOBJS} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDCOMPONENTS})
 
 # Include directories for header files
 target_include_directories(Heaven-Engine PUBLIC
@@ -63,14 +73,17 @@ if(UNIX)
     # Find GLFW
     find_package(box2d CONFIG REQUIRED)
 
-    # Find SFML
-    find_package(SFML COMPONENTS audio REQUIRED)
+    # Find OpenAL
+    find_package(OpenAL CONFIG REQUIRED)
+
+    # Find SNDFile
+    find_package(SndFile CONFIG REQUIRED)
 
     # Find FreeType2
     find_package(Freetype REQUIRED)
 
     # Put together all necessary libs into one variable
-    set(LIBS OpenGL glm box2d glfw sfml-audio Freetype::Freetype)
+    set(LIBS OpenGL glm box2d glfw Freetype::Freetype sndfile)
 
     # Get Xorg dependencies into one variable
     set(Xorg Xxf86vm X11 Xrandr pthread Xi openal udev ogg vorbis vorbisenc vorbisfile)
@@ -98,15 +111,18 @@ if(WIN32)
     # BOX2D
     find_package(BOX2D CONFIG REQUIRED)
 
-    # Find SFML
-    find_package(SFML COMPONENTS audio REQUIRED)
+    # Find OpenAL
+    find_package(OpenAL CONFIG REQUIRED)
+
+    # Find SNDFile
+    find_package(SndFile CONFIG REQUIRED)
 
     # Find Freetype
     find_package(Freetype REQUIRED)
 
     if(MSVC)
         # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm::glm box2d::box2d glfw sfml-audio Freetype::Freetype)
+        set(LIBS opengl32 glm::glm box2d::box2d glfw OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
 
         # Grab GLFW headers
         target_link_directories(Heaven-Engine PUBLIC ${GLFW_INCLUDE_DIR})
@@ -118,7 +134,7 @@ if(WIN32)
 
     else(MSVC)
         # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm box2d glfw sfml-audio Freetype::Freetype)
+        set(LIBS opengl32 glm box2d glfw openal Freetype::Freetype sndfile)
 
         # Grab GLFW headers
         target_link_directories(Heaven-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
@@ -152,7 +168,7 @@ install(TARGETS Heaven-Engine-s EXPORT Heaven-Engine-sConfig
 
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc/
-    DESTINATION "${CMAKE_BINARY_DIR}/include"
+    DESTINATION "${CMAKE_SOURCE_DIR}/build/include"
 )
 
 # Configure the package and specify the export destination
