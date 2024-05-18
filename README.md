@@ -1,17 +1,18 @@
 # Project-Heaven
-A Simple 2D OpenGL based Engine called:
+A Lightweight 2D OpenGL based Engine called:
 # Heaven-Engine
 
 ![](Heaven-Engine_logo_new.png)
 
-Current Version: 1.01F-Dev
+Current Version: 1.02
 
 Features:
 
 * Cross-platform building (Windows & Unix/Linux)
 * Batch Rendering solution
 * Box2D for physics simulation
-* OpenAL based sound engine
+* OpenAL-based sound engine
+* Controller-Support
 
 What's Coming?
 
@@ -25,14 +26,20 @@ What's Coming?
 
 [] Cross-platform development environments (Only Windows and Unix/Linux)
 
-[] Further Optimization
+[] Further Optimizations
+
+# Documentation
+This project's documentation will be in the works and is expected to be completed by the end of Summer 2024.
+
+# Contribution
+This project has yet to include contributors, though GitHub issues can be made to highlight needed modifications to the engine.
 
 # Licensing
 This Project is under the MIT License.
 
 Additional Information:
 * Games/Software made using the "Heaven-Engine", the "Heaven-Engine"'s license does not apply to the content made with it. If this software's shared or static library is included in
-  the content of your software, thus, it is required to include a copyright notice and license statement as part of your documentation.
+  the content of your software, so it's required to include a copyright notice and license statement as part of your documentation.
 
 Additional Restriction:
 * If the software is directly modified, the source code is changed, thus, the modified software will no longer hold the name "Heaven-Engine" nor "Project-Heaven".
@@ -42,5 +49,4 @@ Additional Restriction:
   modified, even a modified version of the original software's logo, is unrelated to the original software.
 
 Disclaimer:
-* The above explanations of this software's license terms and implications for its users do not constitute legal advice. The statements only reflect the author's understanding
-  of the software's licensing terms; in case of doubt, please refer to a lawyer.
+* The above explanations of this software's license terms and implications for its users do not constitute legal advice. The statements only reflect the author's understanding of the software's licensing terms; please refer to a lawyer if you have any questions.
