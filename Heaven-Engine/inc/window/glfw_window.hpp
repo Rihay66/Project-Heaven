@@ -33,12 +33,12 @@ class Window{
         unsigned int width, height;
 
         /*Fixed rate that updates the stepUpdate(), adjust accordingly as needed
-        * Default value is 0.16ms
+         !Default value is 0.16ms
         */
         double fixedTimeStep = 1.0f / 60.0f;
 
         /*Fixed rate that updates application, adjust accordingly as needed
-        * Default value is 0.16ms
+         !Default value is 0.16ms
         */
         double targetTimeStep = 1.0f / 60.0f;
 
@@ -55,10 +55,6 @@ class Window{
         void setFixedTimeStep(double time);
         // used to get windows's base input and calls input()
         void getInput();
-        // used for initializing GLFW and setting it up for window creation
-        virtual void initializeGLFW();
-        // used for setting up OpenGL rendering
-        virtual void setUpOpenGL();
 
         //TODO: Refactor the window state system to allow for robust changing input or going to debug, etc...
         // state of the window application 
@@ -89,6 +85,14 @@ class Window{
 
         //* Virtual functions
 
+        // used for adding additional glfw window hints 
+        virtual void additionalGLFWOptions();
+
+        /* used for setting up OpenGL rendering
+         !Current default is 2D rendering
+        */
+        virtual void setUpOpenGL();
+
         /* Loops input(), update(), stepUpdate(), and render()
           Can be overwritten depending on the need of the game or application
          *NOTE: it is a single threaded function
@@ -105,7 +109,7 @@ class Window{
         // used to update logic, custom events, and other
         virtual void update();
 
-        // used to update Physics, ticks systems, or other at a fixed time step of 0.16ms
+        // used to update Physics, ticks systems, or other at a fixed time step
         virtual void stepUpdate(double ts);
 
         // used to render things on the screen 

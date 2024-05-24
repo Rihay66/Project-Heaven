@@ -12,14 +12,24 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-// constructor, intializes GLFW and GLAD then creates a window with the passed parameters
+// constructor, initializes GLFW and GLAD then creates a window with the passed parameters
 Window::Window(int w, int h, const char* name) : App_State(ACTIVE), width(0), height(0){
 
     // set local vars of the window size
     width = w;
     height = h;
 
-    initializeGLFW();
+    // init GLFW
+    glfwInit();
+
+    // set specific opengl version to 4.5
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    // set up opengl window profile
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
+    // add additional hints
+    additionalGLFWOptions();
 
     // create the window and check for errors
     handle = glfwCreateWindow(w, h, name, NULL, NULL);
@@ -71,17 +81,6 @@ void Window::setFixedTimeStep(double time){
         // set the fixed time step to given parameter
         this->fixedTimeStep = time;
     }
-}
-
-void Window::initializeGLFW(){
-    // init GLFW
-    glfwInit();
-    // set specific opengl version to 4.5
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-    // set up opengl window profile
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, false); //disable resizing the screen
 }
 
 void Window::setUpOpenGL(){
