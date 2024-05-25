@@ -13,58 +13,62 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 // constructor, initializes GLFW and GLAD then creates a window with the passed parameters
-Window::Window(int w, int h, const char* name) : App_State(ACTIVE), width(0), height(0){
-
-    // set local vars of the window size
-    width = w;
-    height = h;
-
-    // init GLFW
-    glfwInit();
-
-    // set specific opengl version to 4.5
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-    // set up opengl window profile
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
-    // add additional hints
-    additionalGLFWOptions();
-
-    // create the window and check for errors
-    handle = glfwCreateWindow(w, h, name, NULL, NULL);
-    if(!handle){
-        std::cout << "Failed to create window!" << std::endl;
-        glfwTerminate();
-        exit(-1);
-    }
-
-    // create window
-    glfwMakeContextCurrent((GLFWwindow*)handle);
-
-    // load glad
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
-        std::cout << "Failed to init GLAD!" << std::endl;
-        exit(-1);
-    }
-
-    // set up call back to update the opengl window
-    glfwSetFramebufferSizeCallback((GLFWwindow*)handle, framebuffer_size_callback);
-    // set openGL window size
-    glViewport(0, 0, w, h);
-    // disable vsync
-    glfwSwapInterval(0);
-
-    setUpOpenGL();
-
-    //TODO: Create debug options for the window class to display a console to show any errors or messages
-    //std::cout << "MSG: Window successfully created" << std::endl;
-}
+Window::Window(int w, int h, const char* name) : App_State(ACTIVE), width(w), height(h), windowName(name){}
 
 // destructor
 Window::~Window(){
     // delete any pointers
     glfwTerminate();
+}
+
+void Window::initializeWindow(){
+    // allow the initialization of the window to be called ONLY once
+    std::call_once(onceFlag, [this]{
+        // init GLFW
+        if(!glfwInit()){
+            std::cout << "Failed to initialize GLFW!" << std::endl;
+            glfwTerminate();
+            exit(-1);
+        }
+
+        // set specific opengl version to 4.5
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        // set up opengl window profile
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
+        // add additional hints
+        additionalWindowOptions();
+
+        // create the window and check for errors
+        handle = glfwCreateWindow(width, height, windowName, NULL, NULL);
+        if(!handle){
+            std::cout << "Failed to create window!" << std::endl;
+            glfwTerminate();
+            exit(-1);
+        }
+
+        // create window
+        glfwMakeContextCurrent((GLFWwindow*)handle);
+
+        // load glad
+        if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
+            std::cout << "Failed to init GLAD!" << std::endl;
+            exit(-1);
+        }
+
+        // set up call back to update the opengl window
+        glfwSetFramebufferSizeCallback((GLFWwindow*)handle, framebuffer_size_callback);
+        // set openGL window size
+        glViewport(0, 0, width, height);
+        // disable vsync
+        glfwSwapInterval(0);
+
+        setUpOpenGL();
+
+        //TODO: Create debug options for the window class to display a console to show any errors or messages
+        //std::cout << "MSG: Window successfully created" << std::endl;
+    });
 }
 
 void Window::setTargetTimeStep(double time){
@@ -81,6 +85,10 @@ void Window::setFixedTimeStep(double time){
         // set the fixed time step to given parameter
         this->fixedTimeStep = time;
     }
+}
+
+void Window::additionalWindowOptions(){
+    // add additional glfw window hints, options, etc.
 }
 
 void Window::setUpOpenGL(){
@@ -129,10 +137,13 @@ float Window::getDeltaTime(){
     return this->DeltaTime;
 }
 
-// single threaded runtime of update(), stepUpdate() and render()
+// single threaded runtime of input(), update(), stepUpdate() and render()
 void Window::runtime(){
     //create local vars for timing
     std::chrono::steady_clock::time_point frameStart, frameEnd;
+
+    // call init for resource initialization
+    init();
 
     while(!glfwWindowShouldClose((GLFWwindow*)this->handle)){
         // start timing the frame

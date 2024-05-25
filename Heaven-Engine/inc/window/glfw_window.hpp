@@ -10,7 +10,10 @@
     #include <windows.h>
 #endif
 
-// GLFW and OPENGL Libraries
+// include standard libraries
+#include <mutex>
+
+// GLFW and OPENGL libraries
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <utilities/application_state_utils.hpp>
@@ -29,8 +32,11 @@ class Window{
 	    double lastFrame = 0, currentFrame = 0, frameDuration = 0, accumulator = 0, 
         alpha = 0, threadSleepTime = 0;
 
-        // vars storing and reference to window size, width x height
+        // vars storing and referencing to window size, width x height
         unsigned int width, height;
+
+        // var storing and referencing to the window name
+        const char* windowName;
 
         /*Fixed rate that updates the stepUpdate(), adjust accordingly as needed
          !Default value is 0.16ms
@@ -48,6 +54,9 @@ class Window{
         // window handle
         const GLFWwindow* handle;
 
+        // flag var for tracking the initialization of the window
+        std::once_flag onceFlag;
+
     protected:
         // used to set the target frame time between frame, aka max frame time
         void setTargetTimeStep(double time);
@@ -61,11 +70,20 @@ class Window{
         APP_STATE App_State;
 
     public:
-        // constructor, initializes GLFW and OpenGL
-        Window(int w, int h, const char* name);
+        // constructor, in
+        Window(int w, int h, const char* name = "");
 
         // destructor
         ~Window();
+
+        //* Initialization functions
+
+        /* used to initialize the window and it's contexts by default 
+          initializes GLFW and creates a Window with OpenGL 4.5 capabilities
+          !Overwritting is not recommended, however due note that runtime(), getDeltaTime(), 
+          !getInput(), setUpOpenGL() require GLFW to be initialized and have a created context
+        */ 
+        virtual void initializeWindow();
 
         //* Getters functions
         
@@ -86,17 +104,18 @@ class Window{
         //* Virtual functions
 
         // used for adding additional glfw window hints 
-        virtual void additionalGLFWOptions();
+        virtual void additionalWindowOptions();
 
         /* used for setting up OpenGL rendering
-         !Current default is 2D rendering
+         !Default is 2D rendering
         */
         virtual void setUpOpenGL();
 
-        /* Loops input(), update(), stepUpdate(), and render()
+        /* Calls init() once, and then loops input(), getDeltaTime(), update(), stepUpdate(), and render()
           Can be overwritten depending on the need of the game or application
          *NOTE: it is a single threaded function
-         !If overwritten, may need to apply calculations of fixed time step and accumulator yourself
+         *NOTE: calls GLFW poll events, swap buffers and clears the OpenGL color buffer
+         !If overwritten, may need to apply calculations of time step, fixed time step and accumulator yourself
         */
         virtual void runtime();
 
