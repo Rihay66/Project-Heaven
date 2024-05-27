@@ -192,9 +192,13 @@ void SpriteRenderer::Draw2D(std::vector<GameObject *> &gameObjects, double &alph
     // bind textures
     ResourceManager::BindTextures();
 
-    // Loop through objects and add to batch
+    // loop through objects and add to batch
     for (int i = 0; i < gameObjects.size(); i++)
     {
+        // skip objects that are null or aren't set
+        if(gameObjects[i] == nullptr)
+            continue; // skip iteration
+
         if (gameObjects[i]->getInterpolationFlag())
         {
             interpolateState(this->interpolation, alpha, gameObjects[i]->getPreviousInterpolatedState(), gameObjects[i]->getCurrentInterpolatedState());
@@ -251,6 +255,15 @@ void SpriteRenderer::Draw2D(GameObject *&obj, double &alpha)
 
     // bind textures
     ResourceManager::BindTextures();
+
+    // skip object that is not set
+    if(obj == nullptr){
+        // finish buffer
+        this->endBatch();
+        // draw
+        this->flush();
+        return; // stop function
+    }
 
     if (obj->getInterpolationFlag()){
         interpolateState(this->interpolation, alpha, obj->getPreviousInterpolatedState(), obj->getCurrentInterpolatedState());
