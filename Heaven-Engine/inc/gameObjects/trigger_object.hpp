@@ -66,6 +66,11 @@ class TriggerObject : public GameObject{
 
         // define a function that checks objects that last collided if this objects is a Exit trigger
         void exitTriggerObjectCheck();
+
+        //TODO: Check for rotational collisions
+
+        // aabb collision detection with this object and the given object, returns true if there is a collision, false if there is no collision
+        bool aabbCollision(GameObject* obj);
 };  
 
 #endif

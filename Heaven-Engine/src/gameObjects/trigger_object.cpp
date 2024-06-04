@@ -13,12 +13,12 @@ bool TriggerObject::isAlreadyPresent(const std::vector<GameObject*>& vec, GameOb
 }
 
 // define aabb collision detection
-bool aabbCollision(GameObject* a, GameObject* b){
+bool TriggerObject::aabbCollision(GameObject* b){
     // Calculate the sides of the rectangles with the offset considered
 
     // Check for no overlap
-    bool collisionX = (a->position.x + a->size.x / 2.0f) >= (b->position.x - b->size.x / 2.0f) && (a->position.x - a->size.x / 2.0f) <= (b->position.x + b->size.x / 2.0f);
-    bool collisionY = (a->position.y + a->size.y / 2.0f) >= (b->position.y - b->size.y / 2.0f) && (a->position.y - a->size.y / 2.0f) <= (b->position.y + b->size.y / 2.0f);
+    bool collisionX = (this->position.x + this->size.x / 2.0f) >= (b->position.x - b->size.x / 2.0f) && (this->position.x - this->size.x / 2.0f) <= (b->position.x + b->size.x / 2.0f);
+    bool collisionY = (this->position.y + this->size.y / 2.0f) >= (b->position.y - b->size.y / 2.0f) && (this->position.y - this->size.y / 2.0f) <= (b->position.y + b->size.y / 2.0f);
 
     // If the rectangles overlap on both axes, a collision is detected
     return collisionX && collisionY;
@@ -77,7 +77,7 @@ void TriggerObject::exitTriggerObjectCheck(){
     // check every object and then call the exit trigger 
     for(GameObject* obj : collidedObjs){
         // check if one of the objects
-        if(!aabbCollision(this, obj)){
+        if(!aabbCollision(obj)){
             // call the exit trigger function
             this->onTriggerExit(obj);
             // then remove object from the list
