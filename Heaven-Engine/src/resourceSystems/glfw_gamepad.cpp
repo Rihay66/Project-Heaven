@@ -52,6 +52,16 @@ bool Controller::getGamepadConnection(){
     return false;
 }
 
+bool Controller::getGamepadState(){
+    // check if gamepad is set
+    if(this->pad != nullptr){
+        return true; 
+    }
+
+    // return false, meaning gamepad is not set
+    return false;
+}
+
 void Controller::setGamepad(Gamepad* gamepad){
     // check that reference to the gamepad exists
     if(gamepad != nullptr){
