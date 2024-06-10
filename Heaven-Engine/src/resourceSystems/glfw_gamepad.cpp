@@ -88,7 +88,7 @@ float Controller::getAxisRawInput(int key, float deadzone){
         //check for positive and negative values above deadzone
         if(pad->state.axes[key] < -deadzone){
             return pad->state.axes[key];
-        }else if(pad->state.axes[key] > -deadzone){
+        }else if(pad->state.axes[key] > deadzone){
             return pad->state.axes[key];
         }
     }
