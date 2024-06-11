@@ -8,10 +8,10 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include <resourceSystems/shader.hpp>
+#include <resourceSystems/resource_manager.hpp>
 
 /* Text Renderer Class used to render text. This Class
-uses only one loaded font from the ResourceManager Class.
+uses a loaded font from the ResourceManager Class.
 * NOTE: Text is rendered in the center of the screen
 ! This Class is unoptimized and not very flexible thus 
  take into consideration of its current design
@@ -34,7 +34,7 @@ class TextRenderer{
         ~TextRenderer();
         
         // draws text along with with their position, scale, and color 
-        void drawText(std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color = glm::vec4(1.0f));
+        void drawText(std::map<char, ResourceManager::Character> &chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color = glm::vec4(1.0f));
 };
 
 #endif

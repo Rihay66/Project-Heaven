@@ -35,18 +35,20 @@ class ResourceManager{
 
         static std::map<std::string, Shader> Shaders;
         static std::map<std::string, Texture2D> Textures;
-        static std::map<char, Character> Characters;
+        static std::map<std::string, std::map<char, Character>> Fonts;
 
         // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
-        static Shader LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
+        static Shader& LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
         // retrieves a stored sader
-        static Shader GetShader(std::string name);
+        static Shader& GetShader(std::string name);
         // loads (and generates) a texture from file
-        static Texture2D LoadTexture(const char *file, std::string name, bool alpha = false);
-        // loads (and generates) a text texture from file
-        static int LoadFontTexture(const char *file, unsigned int fontsize, bool isLinear = true);
+        static Texture2D& LoadTexture(const char *file, std::string name, bool alpha = false);
         // retrieves a stored texture on the texList vector
         static int GetTexture(std::string name);
+        // loads (and generates) a text texture from file
+        static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool isLinear = true);
+        // retrieves a stored font texture map that contains characters and associated font
+        static std::map<char, Character>& GetFontTexture(std::string name);
         // binds all textures from the texture list to be used by OpenGL
         static bool BindTextures();
         // properly de-allocates all loaded resources
