@@ -3,7 +3,16 @@
 #include <resourceSystems/tag_system.hpp>
 
 GameObject::GameObject(int sprt, glm::vec2 pos, glm::vec2 siz, glm::vec4 col, bool inter) 
-: position(pos), size(siz), color(col), textureIndex(sprt), rotation(0.0f), tag("default"), renderType(RenderType::Default), interpolation(inter) {}
+: position(pos), size(siz), color(col), textureIndex(sprt), rotation(0.0f), tag("default"), renderType(RenderType::Default), interpolation(inter) {
+    // initialize the interpolation state when true
+    if(interpolation){
+        // set current state to be current 
+        this->currentState.posX = this->position.x;
+        this->currentState.posY = this->position.y;
+        // set the previous state to be current as well
+        this->previousState = this->currentState;
+    }
+}
 
 // define setter functions
 
