@@ -1,10 +1,7 @@
 #include <engine/text_renderer.hpp>
 
-#include <resourceSystems/resource_manager.hpp>
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <iostream>
 
 // check platform and then grab the Freetype library
 #ifdef __unix__ // Linux/Unix platform
@@ -36,7 +33,7 @@ TextRenderer::~TextRenderer(){
     glDeleteBuffers(1, &this->VBO);
 }
 
-void TextRenderer::drawText(std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
+void TextRenderer::drawText(std::map<char, ResourceManager::Character> &chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
     // set the shader and set the textColor
     this->textShader.SetVector4f("textColor", color, true);
 
@@ -47,7 +44,7 @@ void TextRenderer::drawText(std::string text, glm::vec2 position, glm::vec2 scal
     std::string::const_iterator c;
     for (c = text.begin(); c != text.end(); c++) 
     {
-        ResourceManager::Character ch = ResourceManager::Characters[*c];
+        ResourceManager::Character ch = chars[*c];
 
         float xpos = position.x + ch.Bearing.x * scale.x;
         float ypos = position.y - (ch.Size.y - ch.Bearing.y) * scale.y;

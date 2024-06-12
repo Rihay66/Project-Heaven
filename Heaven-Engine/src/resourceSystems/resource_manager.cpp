@@ -22,9 +22,9 @@
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
 std::vector<unsigned int>           ResourceManager::texIDList;
-std::map<char, ResourceManager::Character>           ResourceManager::Characters; 
+std::map<std::string, std::map<char, ResourceManager::Character>>           ResourceManager::Fonts; 
 
-Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name){
+Shader& ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name){
     // check the name for any special characters
     name = checkName(name);
     // load the shader from the given file
@@ -32,13 +32,13 @@ Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderF
     return Shaders[name];
 }
 
-Shader ResourceManager::GetShader(std::string name){
+Shader& ResourceManager::GetShader(std::string name){
     // check the name for any special characters
     name = checkName(name);
     return Shaders[name];
 }
 
-Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool alpha){
+Texture2D& ResourceManager::LoadTexture(const char *file, std::string name, bool alpha){
     // check the name for any special characters
     name = checkName(name);
     // load the texture from the given file and set the alpha flag
@@ -48,7 +48,31 @@ Texture2D ResourceManager::LoadTexture(const char *file, std::string name, bool 
     return Textures[name];
 }
 
-int ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize, bool isLinear){
+int ResourceManager::GetTexture(std::string name){
+
+    //*NOTE: The check is used to prevent using this function when no texture was binded to OpenGL
+    if(texIDList.size() <= 0){
+        std::cout << "ERROR: No textures were binded to OpenGL!" << std::endl;
+        return -1;
+    }
+
+    name = checkName(name);
+    unsigned int id = Textures[name].ID;
+
+    for(int i = 0; i < texIDList.size(); i++){
+        //check for id on the list and return it's location by iteration 
+        if(texIDList[i] == id)
+            return i;//exit out and return texture index     
+    }
+
+    // error the texture couldn't be found
+    std::cout << "ERROR: Couldn't find texture: " << name << ", in storage!" << std::endl; 
+    return -1;
+}
+
+std::map<char, ResourceManager::Character>& ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize, std::string name, bool isLinear){
+    // check the name for any special characters
+    name = checkName(name);
     
     // use free type to load font and set font size
     
@@ -58,7 +82,6 @@ int ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize
     FT_Error error = FT_Init_FreeType(&ft);
 	if (error){
         std::cout << "ERROR: Couldn't load Freetype | Error: " << error << std::endl;
-        return false;
 	}
 
     // load the font
@@ -67,13 +90,15 @@ int ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize
     error = FT_New_Face(ft, filename, 0, &face);
 	if (error){
 		std::cout << "ERROR: Couldn't load Font | Error: " << error << std::endl;
-        return false;
 	}
 
     // set font size
     FT_Set_Pixel_Sizes(face, 0, fontsize);
     // disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    // create font map
+    std::map<char, ResourceManager::Character> Characters;
 
     // load first 128 characters of ASCII set
     for (unsigned char c = 0; c < 128; c++){
@@ -125,32 +150,20 @@ int ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
 
+    // add characters to resources
+    Fonts[name] = Characters;
+
     //TODO: Create debug options for the ResourceManager class to display a console to show any errors or messages
     //Succesfully managed to load the font
     //std::cout << "MSG: Text Font loaded succesfully!\n";
-    return 0;
+    return Fonts[name];
 }
 
-int ResourceManager::GetTexture(std::string name){
-
-    //*NOTE: The check is used to prevent using this function when no texture was binded to OpenGL
-    if(texIDList.size() <= 0){
-        std::cout << "ERROR: No textures were binded to OpenGL!" << std::endl;
-        return -1;
-    }
-
+std::map<char, ResourceManager::Character>& ResourceManager::GetFontTexture(std::string name){
+    // check the name for any special characters
     name = checkName(name);
-    unsigned int id = Textures[name].ID;
 
-    for(int i = 0; i < texIDList.size(); i++){
-        //check for id on the list and return it's location by iteration 
-        if(texIDList[i] == id)
-            return i;//exit out and return texture index     
-    }
-
-    // error the texture couldn't be found
-    std::cout << "ERROR: Couldn't find texture: " << name << ", in storage!" << std::endl; 
-    return -1;
+    return Fonts[name];
 }
 
 bool ResourceManager::BindTextures(){
@@ -186,8 +199,11 @@ void ResourceManager::Clear(){
     for (auto iter : Textures)
         glDeleteTextures(1, &iter.second.ID);
     // (properly) delete all font textures
-    for (auto iter : Characters)
-        glDeleteTextures(1, &iter.second.TextureID);
+    for(auto i : Fonts){
+        for(auto x : i.second){
+            glDeleteTextures(1, &x.second.TextureID);
+        }
+    }
 
     // clear out the texture vector
     texIDList.clear();

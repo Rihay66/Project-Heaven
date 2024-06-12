@@ -36,12 +36,17 @@ class Controller {
 
         //* getter functions
 
-        // for getting the connection status of the gamepad
+        // for getting the set and connection status of the gamepad, returns true for a valid connection and false otherwise
         bool getGamepadConnection();
+
+        // for getting the set status of the gamepad, returns true for a valid set gamepad and false otherwise
+        bool getGamepadState();
 
         //* setter functions
 
-        // for setting the gamepad to a different one
+        /*  for setting a valid gamepad 
+            NOTE: the gamepad can be replaced
+        */
         void setGamepad(Gamepad *gamepad);
 
         //* helper functions

@@ -90,20 +90,20 @@ class SpriteRenderer{
         const void resetStats();
     public:
         // constructor & desconstructor
-        SpriteRenderer(Shader &shader, glm::uvec2 &spriteSize);
+        SpriteRenderer(Shader &shader, glm::uvec2 spriteSize);
         ~SpriteRenderer();
 
         // draw multiple pointer objects in a vector list, objects become batch rendered
-        void Draw2D(std::vector<GameObject*> &objs, double &alpha);
+        void Draw2D(std::vector<GameObject*> &objs, double alpha);
 
         // draw multiple non-pointer objects in a vector list, objects become batch rendered
-        void Draw2D(std::vector<GameObject> &objs, double &alpha);
+        void Draw2D(std::vector<GameObject> &objs, double alpha);
 
         // draw a single pointer object
-        void Draw2D(GameObject* &obj, double &alpha);
+        void Draw2D(GameObject* &obj, double alpha);
 
         // draw a single non-pointer object
-        void Draw2D(GameObject &obj, double &alpha);
+        void Draw2D(GameObject &obj, double alpha);
 
         // data struct for holding amount of draw calls and quad count
         struct RendererStats{
