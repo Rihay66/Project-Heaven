@@ -62,10 +62,6 @@ void GamepadManager::removeDisconnectedDevices(){
     }
 }
 
-void GamepadManager::clear(){
-    // clear resources
-}
-
 void GamepadManager::queryDevices(){
     // loop through all possible joysticks
     for(int i = 0; i < GLFW_JOYSTICK_LAST; i++){

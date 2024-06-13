@@ -73,6 +73,9 @@ struct Gamepad{
 #define XBOX_LEFT_TRIGGER 4
 #define XBOX_RIGHT_TRIGGER 5
 
+//? Generic specific button macros
+#define GENERIC_GLOBAL_BUTTON_LAST 14
+
 //TODO: implement controller reference
 // have a call back that reference GLFW input 
 

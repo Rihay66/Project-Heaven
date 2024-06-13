@@ -36,10 +36,7 @@ class GamepadManager{
 
         // to remove any disconnected devices 
         static void removeDisconnectedDevices();
-
-        // to clear any used resources
-        static void clear();
-
+        
     private:
         // private resource storage
 
