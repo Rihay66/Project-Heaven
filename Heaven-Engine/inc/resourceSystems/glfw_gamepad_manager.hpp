@@ -28,7 +28,7 @@ class GamepadManager{
 
         //* helper functions
 
-        // to update the query of devices, parameter is used for debugging or setting
+        // to update the query of devices, parameter is used for debugging or applying a setting
         static void updateQuery(char option = 'n');
 
         // to update the state of all gamepads, regardless of the flag 'isConnected'
@@ -36,7 +36,7 @@ class GamepadManager{
 
         // to remove any disconnected devices 
         static void removeDisconnectedDevices();
-        
+
     private:
         // private resource storage
 
@@ -48,11 +48,11 @@ class GamepadManager{
 
         //* private helper functions
 
-        /* list out devices
+        /* lists out devices
          verify that device is a "controller"
          add valid devices to storage
         */
-        static void queryDevices();
+        static void queryDevices(char option = 'n');
 
         // checks each connected device and sets their 'isConnection' flag to false if by state is disconnected
         static void checkGamepadConnection();

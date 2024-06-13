@@ -2,6 +2,9 @@
 .vs/
 .vscode/
 
+# VS Codium cache directory
+.cache/
+
 #ignore cmake build folder
 **/build
 build/

@@ -28,7 +28,7 @@ class Controller {
 
     public:
         // constructor
-        Controller(Gamepad *gamepad);
+        Controller(Gamepad* gamepad);
 
         // deconstructor
         ~Controller();
@@ -41,12 +41,15 @@ class Controller {
         // for getting the set status of the gamepad, returns true for a valid set gamepad and false otherwise
         bool getGamepadState();
 
+        // for getting the set gamepad that is stored, if not set then it returns a nullptr
+        Gamepad* getGamepad();
+
         //* setter functions
 
         /*  for setting a valid gamepad 
             NOTE: the gamepad can be replaced
         */
-        void setGamepad(Gamepad *gamepad);
+        void setGamepad(Gamepad* gamepad);
 
         //* helper functions
 
