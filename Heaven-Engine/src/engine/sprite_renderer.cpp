@@ -51,7 +51,7 @@ SpriteRenderer::~SpriteRenderer(){
     glDeleteBuffers(1, &this->quadEBO);
 }
 
-void SpriteRenderer::createQuad(GameObject::RenderType &type, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter){
+void SpriteRenderer::createQuad(GameObject::RenderType &type, glm::vec2 &size, float rotation, int &texIndex, glm::vec4 &color, State &inter){
 
     // check if not over the index count
     if (this->indexCount >= this->maxIndexCount){
@@ -207,7 +207,7 @@ void SpriteRenderer::Draw2D(std::vector<GameObject *> &gameObjects, double alpha
             interpolation.posY = gameObjects[i]->position.y;
         }
 
-        this->createQuad(gameObjects[i]->renderType, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color, interpolation);
+        this->createQuad(gameObjects[i]->renderType, gameObjects[i]->size, gameObjects[i]->getRotationRadians(), gameObjects[i]->textureIndex, gameObjects[i]->color, interpolation);
     }
 
     // Set dynamic vertex buffer
@@ -237,7 +237,7 @@ void SpriteRenderer::Draw2D(std::vector<GameObject> &gameObjects, double alpha){
             interpolation.posY = gameObjects[i].position.y;
         }
 
-        this->createQuad(gameObjects[i].renderType, gameObjects[i].size, gameObjects[i].rotation, gameObjects[i].textureIndex, gameObjects[i].color, interpolation);
+        this->createQuad(gameObjects[i].renderType, gameObjects[i].size, gameObjects[i].getRotationRadians(), gameObjects[i].textureIndex, gameObjects[i].color, interpolation);
     }
 
     // set dynamic vertex buffer
@@ -273,7 +273,7 @@ void SpriteRenderer::Draw2D(GameObject *&obj, double alpha)
     }
 
     // add a single object to the batch
-    this->createQuad(obj->renderType, obj->size, obj->rotation, obj->textureIndex, obj->color, interpolation);
+    this->createQuad(obj->renderType, obj->size, obj->getRotationRadians(), obj->textureIndex, obj->color, interpolation);
 
     // set dynamic vertex buffer
     this->endBatch();
@@ -296,7 +296,7 @@ void SpriteRenderer::Draw2D(GameObject &obj, double alpha){
     }
 
     // add a single object to the batch
-    this->createQuad(obj.renderType, obj.size, obj.rotation, obj.textureIndex, obj.color, interpolation);
+    this->createQuad(obj.renderType, obj.size, obj.getRotationRadians(), obj.textureIndex, obj.color, interpolation);
 
     // set dynamic vertex buffer
     this->endBatch();

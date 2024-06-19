@@ -1,5 +1,6 @@
 #include <gameObjects/game_object.hpp>
 
+#include <glm/trigonometric.hpp>
 #include <resourceSystems/tag_system.hpp>
 
 GameObject::GameObject(int sprt, glm::vec2 pos, glm::vec2 siz, glm::vec4 col, bool inter) 
@@ -33,6 +34,16 @@ void GameObject::setPreviousInterpolatedState(State st){
     this->previousState = st;
 }
 
+void GameObject::setRotation(float rot){
+    // translate rotation from degrees to radians
+    this->rotation = glm::radians(rot);
+}
+
+void GameObject::setRotationRadians(float rot){
+    // set rotation
+    this->rotation = rot;
+}
+
 // define getter functions
 
 std::string GameObject::getTag(){
@@ -49,5 +60,13 @@ State&  GameObject::getPreviousInterpolatedState(){
 
 bool GameObject::getInterpolationFlag(){
     return this->interpolation;
+}
+
+float GameObject::getRotation(){
+    return glm::degrees(this->rotation);
+}
+
+float GameObject::getRotationRadians(){
+    return this->rotation;
 }
 

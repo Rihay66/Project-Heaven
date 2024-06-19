@@ -38,7 +38,7 @@ void Physics::init(glm::vec2 gravity){
             b2BodyDef bodyDef;
             bodyDef.type = RbToB2Types(obj->rb.Type);
             bodyDef.position.Set(obj->position.x, obj->position.y);
-            bodyDef.angle = obj->rotation;
+            bodyDef.angle = obj->getRotationRadians();
 
             // create body
             b2Body* body = world->CreateBody(&bodyDef);
@@ -107,7 +107,7 @@ PhysicsObject* Physics::addPhysicsObject(PhysicsObject* obj){
             b2BodyDef bodyDef;
             bodyDef.type = RbToB2Types(obj->rb.Type);
             bodyDef.position.Set(obj->position.x, obj->position.y);
-            bodyDef.angle = obj->rotation;
+            bodyDef.angle = obj->getRotationRadians();
 
             // create body
             b2Body* body = world->CreateBody(&bodyDef);
@@ -188,7 +188,7 @@ void Physics::updatePhysics(){
         // update each rigidbody their position
         obj->position.x = position.x;
         obj->position.y = position.y;
-        obj->rotation = body->GetAngle();
+        obj->setRotationRadians(body->GetAngle());
 
 
         // update each rigidbody's state position

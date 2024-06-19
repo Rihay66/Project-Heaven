@@ -24,6 +24,8 @@ class GameObject{
         // reference to the local tag of the object
         std::string tag;
 
+        // z axis object rotation in raidians
+        float rotation;
     public:
         // define enum for how to render this object
         enum class RenderType {Default = 0, flipVertically, flipHorizontal, flipBoth};
@@ -35,8 +37,6 @@ class GameObject{
         glm::vec2 position, size;
         // visual attribute that modifies the object's texture color
         glm::vec4 color;
-        // z axis object rotation 
-        float rotation;
         // reference to the texture
         int textureIndex;
 
@@ -51,6 +51,12 @@ class GameObject{
         // set GameObject's previous state
         void setPreviousInterpolatedState(State st);
 
+        // set GameObjects's rotation from degrees to radians
+        void setRotation(float rot);
+
+        // set GameObject's rotation in radians
+        void setRotationRadians(float rot);
+
         //* Getter function
 
         // return the GameObject's interpolation flag
@@ -61,6 +67,12 @@ class GameObject{
 
         // return the GameObject's previous interpolated state 
         State& getPreviousInterpolatedState();
+
+        // return the GameObject's rotation in degrees
+        float getRotation();
+
+        // returns the GameObject's rotation in radians
+        float getRotationRadians();
 
         // return the GameObject's tag
         std::string getTag();
