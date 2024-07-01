@@ -4,7 +4,7 @@ A Lightweight 2D OpenGL based Engine called:
 
 ![](Heaven-Engine_logo.png)
 
-Current Version: 1.02-L-Dev
+Current Version: 1.02-L
 
 Features:
 
