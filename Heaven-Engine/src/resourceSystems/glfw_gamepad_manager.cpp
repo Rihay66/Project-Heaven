@@ -2,7 +2,6 @@
 
 // include standard library
 #include <iostream>
-#include <algorithm>
 
 // define static variables
 std::vector<Gamepad> GamepadManager::queriedGamepads;
@@ -62,11 +61,7 @@ void GamepadManager::removeDisconnectedDevices(){
     }
 }
 
-void GamepadManager::clear(){
-    // clear resources
-}
-
-void GamepadManager::queryDevices(){
+void GamepadManager::queryDevices(char option){
     // loop through all possible joysticks
     for(int i = 0; i < GLFW_JOYSTICK_LAST; i++){
         // check each joystick if they're present

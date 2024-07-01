@@ -5,7 +5,6 @@
 
 // include standard lib
 #include <vector>
-#include <algorithm>
 
 // include math and glad
 #include <glad/glad.h>
@@ -75,7 +74,7 @@ class SpriteRenderer{
 
         // used to draw a quad and to be stored in to the quad buffer 
         void createQuad(GameObject::RenderType &type, glm::vec2 &size, 
-        float &rotation, int &texIndex, glm::vec4 &color, State &inter);
+        float rotation, int &texIndex, glm::vec4 &color, State &inter);
 
         // used to set the quad vertex buffers
         void beginBatch();

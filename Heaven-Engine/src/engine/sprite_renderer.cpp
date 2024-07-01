@@ -51,7 +51,7 @@ SpriteRenderer::~SpriteRenderer(){
     glDeleteBuffers(1, &this->quadEBO);
 }
 
-void SpriteRenderer::createQuad(GameObject::RenderType &type, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter){
+void SpriteRenderer::createQuad(GameObject::RenderType &type, glm::vec2 &size, float rotation, int &texIndex, glm::vec4 &color, State &inter){
 
     // check if not over the index count
     if (this->indexCount >= this->maxIndexCount){
@@ -207,7 +207,7 @@ void SpriteRenderer::Draw2D(std::vector<GameObject *> &gameObjects, double alpha
             interpolation.posY = gameObjects[i]->position.y;
         }
 
-        this->createQuad(gameObjects[i]->renderType, gameObjects[i]->size, gameObjects[i]->rotation, gameObjects[i]->textureIndex, gameObjects[i]->color, interpolation);
+        this->createQuad(gameObjects[i]->renderType, gameObjects[i]->size, gameObjects[i]->getRotationRadians(), gameObjects[i]->textureIndex, gameObjects[i]->color, interpolation);
     }
 
     // Set dynamic vertex buffer
@@ -237,7 +237,7 @@ void SpriteRenderer::Draw2D(std::vector<GameObject> &gameObjects, double alpha){
             interpolation.posY = gameObjects[i].position.y;
         }
 
-        this->createQuad(gameObjects[i].renderType, gameObjects[i].size, gameObjects[i].rotation, gameObjects[i].textureIndex, gameObjects[i].color, interpolation);
+        this->createQuad(gameObjects[i].renderType, gameObjects[i].size, gameObjects[i].getRotationRadians(), gameObjects[i].textureIndex, gameObjects[i].color, interpolation);
     }
 
     // set dynamic vertex buffer
@@ -273,7 +273,7 @@ void SpriteRenderer::Draw2D(GameObject *&obj, double alpha)
     }
 
     // add a single object to the batch
-    this->createQuad(obj->renderType, obj->size, obj->rotation, obj->textureIndex, obj->color, interpolation);
+    this->createQuad(obj->renderType, obj->size, obj->getRotationRadians(), obj->textureIndex, obj->color, interpolation);
 
     // set dynamic vertex buffer
     this->endBatch();
@@ -296,7 +296,7 @@ void SpriteRenderer::Draw2D(GameObject &obj, double alpha){
     }
 
     // add a single object to the batch
-    this->createQuad(obj.renderType, obj.size, obj.rotation, obj.textureIndex, obj.color, interpolation);
+    this->createQuad(obj.renderType, obj.size, obj.getRotationRadians(), obj.textureIndex, obj.color, interpolation);
 
     // set dynamic vertex buffer
     this->endBatch();
@@ -315,8 +315,8 @@ void SpriteRenderer::initRenderData(){
     this->quadBuffer = new Vertex[this->maxVertexCount];
 
     // configure VAO/VBO/EBO
-    glCreateVertexArrays(1, &this->quadVAO);
-    glCreateBuffers(1, &this->quadVBO);
+    glGenVertexArrays(1, &this->quadVAO);
+    glGenBuffers(1, &this->quadVBO);
 
     glBindVertexArray(this->quadVAO);
 
@@ -324,20 +324,20 @@ void SpriteRenderer::initRenderData(){
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * this->maxVertexCount, nullptr, GL_DYNAMIC_DRAW);
 
     // vertex attribute
-    glEnableVertexArrayAttrib(this->quadVBO, 0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, position));
+    glEnableVertexAttribArray(0);
 
     // texture coordinates attribute
-    glEnableVertexArrayAttrib(this->quadVBO, 1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texCoords));
+    glEnableVertexAttribArray(1);
 
     // texture index attribute
-    glEnableVertexArrayAttrib(this->quadVBO, 2);
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, texIndex));
+    glEnableVertexAttribArray(2);
 
     // color attribute
-    glEnableVertexArrayAttrib(this->quadVBO, 3);
     glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, color));
+    glEnableVertexAttribArray(3);
 
     // indices buffer data
     unsigned int indices[maxIndexCount];
@@ -354,7 +354,7 @@ void SpriteRenderer::initRenderData(){
         offset += 4;
     }
 
-    glCreateBuffers(1, &this->quadEBO);
+    glGenBuffers(1, &this->quadEBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->quadEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }

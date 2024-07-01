@@ -1,3 +1,4 @@
+#include "utilities/glfw_gamepad_utils.hpp"
 #include <resourceSystems/glfw_gamepad.hpp>
 
 Controller* Controller::instance = nullptr;
@@ -62,6 +63,15 @@ bool Controller::getGamepadState(){
     return false;
 }
 
+Gamepad* Controller::getGamepad(){
+    // check that
+    if(pad != nullptr){
+        return pad;
+    }
+
+    return nullptr;
+}
+
 void Controller::setGamepad(Gamepad* gamepad){
     // check that reference to the gamepad exists
     if(gamepad != nullptr){
@@ -71,7 +81,7 @@ void Controller::setGamepad(Gamepad* gamepad){
 }
 
 bool Controller::getKeyInput(int key){
-    // check the that pad is set and the state is valid
+    // check that the pad is set and the state is valid
     if(pad != nullptr && pad->dev.isConnected){
         //then do input
         if(pad->state.buttons[key] == GLFW_PRESS){
@@ -83,7 +93,7 @@ bool Controller::getKeyInput(int key){
 }
 
 float Controller::getAxisRawInput(int key, float deadzone){
-    // check the that pad is set and the state is valid
+    // check that the pad is set and the state is valid
     if(pad != nullptr && pad->dev.isConnected){
         //check for positive and negative values above deadzone
         if(pad->state.axes[key] < -deadzone){

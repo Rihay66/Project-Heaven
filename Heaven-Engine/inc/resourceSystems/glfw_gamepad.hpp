@@ -6,12 +6,11 @@
 // include utilities
 #include <utilities/glfw_gamepad_utils.hpp>
 
-/* An abstract Controller class which keeps track 
+/* A Controller class which keeps track 
  of a passed gamepad. This class allows for getting
  input from the passed gamepad such as buttons and
  axes. It also sets up a callback that calls defined 
  functionality when a gamepad is diconnected. 
- !When using this class be sure to define onConnection()
 */
 class Controller {
     private:
@@ -29,7 +28,7 @@ class Controller {
 
     public:
         // constructor
-        Controller(Gamepad *gamepad);
+        Controller(Gamepad* gamepad);
 
         // deconstructor
         ~Controller();
@@ -42,12 +41,15 @@ class Controller {
         // for getting the set status of the gamepad, returns true for a valid set gamepad and false otherwise
         bool getGamepadState();
 
+        // for getting the set gamepad that is stored, if not set then it returns a nullptr
+        Gamepad* getGamepad();
+
         //* setter functions
 
         /*  for setting a valid gamepad 
             NOTE: the gamepad can be replaced
         */
-        void setGamepad(Gamepad *gamepad);
+        void setGamepad(Gamepad* gamepad);
 
         //* helper functions
 
@@ -65,7 +67,7 @@ class Controller {
 
         /* when the pad is connected, the user must provide what to do within their application
         */
-        virtual void onGamepadConnect() = 0;
+        virtual void onGamepadConnect() {};
 
         /* when the pad is disconnected
         */
