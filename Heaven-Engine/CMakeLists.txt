@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.15.0)
 set (CMAKE_CXX_STANDARD 17)
-project(Heaven-Engine VERSION 0.1.0 LANGUAGES C CXX)
-project(Heaven-Engine-s VERSION 0.1.0 LANGUAGES C CXX)
+project(Heaven-Engine VERSION 0.1.2 LANGUAGES C CXX)
+project(Heaven-Engine-s VERSION 0.1.2 LANGUAGES C CXX)
+project(Engine-Testing VERSION 0.1.0 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
 # Set the install prefix to the build folder's lib directory
@@ -95,7 +96,7 @@ if(UNIX)
     # Link against all libraries used
     target_link_libraries(Heaven-Engine PUBLIC ${LIBS} ${Xorg})
     target_link_libraries(Heaven-Engine-s PUBLIC ${LIBS} ${Xorg})
-endif(UNIX)
+endif ()
 
 # *WINDOWS version of finding the dependencies
 if(WIN32)
@@ -143,12 +144,12 @@ if(WIN32)
         # Grab GLM headers
         target_link_directories(Heaven-Engine PUBLIC ${GLM_INCLUDE_DIR})
         target_link_directories(Heaven-Engine-s PUBLIC ${GLM_INCLUDE_DIR})
-    endif(MSVC)
+    endif()
 
     # Link against OpenGL and GLM
     target_link_libraries(Heaven-Engine PRIVATE ${LIBS})
     target_link_libraries(Heaven-Engine-s PRIVATE ${LIBS})
-endif(WIN32)
+endif()
 
 # Install the library and CMake configuration files
 install(TARGETS Heaven-Engine EXPORT Heaven-EngineConfig
@@ -184,3 +185,89 @@ install(EXPORT Heaven-Engine-sConfig
 export(TARGETS Heaven-Engine FILE Heaven-Engine.cmake)
 
 export(TARGETS Heaven-Engine-s FILE Heaven-Engine-s.cmake)
+
+# Optionally, conditionally install the executable
+option(BUILD_ENGINE_TESTING "Build Engine-Testing executable" OFF)
+
+# Test program
+
+if(BUILD_ENGINE_TESTING)
+
+# Include all files
+file(GLOB_RECURSE SOURCE_FILES
+    ${CMAKE_SOURCE_DIR}/test/src/*.c
+    ${CMAKE_SOURCE_DIR}/test/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/test/*.cpp
+)
+
+file(GLOB_RECURSE HEADER_FILES
+    ${CMAKE_SOURCE_DIR}/test/inc/*.h
+    ${CMAKE_SOURCE_DIR}/test/inc/*.hpp
+)
+
+# Define resource folders
+set(SHADERS_DIR ${CMAKE_SOURCE_DIR}/shaders)
+
+# Define the destination build folder
+set(BUILD_DIR ${CMAKE_BINARY_DIR})
+
+# Check if detected OS is LINUX
+if(UNIX)
+
+# Create executable
+add_executable(Engine-Testing
+${HEADER_FILES}
+${SOURCE_FILES}
+)
+
+# Create folders and their sub files for runtime loading
+# Function to copy files if they are different
+function(copy_if_different SRC_DIR DEST_DIR)
+    file(GLOB_RECURSE FILES_LIST "${SRC_DIR}/*")
+    foreach(FILE_PATH ${FILES_LIST})
+        get_filename_component(FILE_NAME ${FILE_PATH} NAME)
+        set(DEST_FILE_PATH "${DEST_DIR}/${FILE_NAME}")
+        configure_file(${FILE_PATH} ${DEST_FILE_PATH} COPYONLY)
+    endforeach()
+endfunction()
+
+# Call the function for each resource folder
+copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
+
+# Link the extra packages their include directories to avoid linking errors
+target_include_directories(Engine-Testing PRIVATE Heaven-Engine)
+# Link the Heaven-Engine to executable
+target_link_libraries(Engine-Testing PRIVATE Heaven-Engine)
+
+endif ()
+
+if(WIN32)
+
+# Create executable
+add_executable(Engine-Testing
+${HEADER_FILES}
+${SOURCE_FILES}
+)
+
+# Create folders and their sub files for runtime loading
+# Function to copy files if they are different
+function(copy_if_different SRC_DIR DEST_DIR)
+    file(GLOB_RECURSE FILES_LIST "${SRC_DIR}/*")
+    foreach(FILE_PATH ${FILES_LIST})
+        get_filename_component(FILE_NAME ${FILE_PATH} NAME)
+        set(DEST_FILE_PATH "${DEST_DIR}/${FILE_NAME}")
+        configure_file(${FILE_PATH} ${DEST_FILE_PATH} COPYONLY)
+    endforeach()
+endfunction()
+
+# Call the function for each resource folder
+copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
+
+# Link the extra packages their include directories to avoid linking errors
+target_include_directories(Engine-Testing PRIVATE Heaven-Engine)
+# Link the Heaven-Engine to executable
+target_link_libraries(Engine-Testing PRIVATE Heaven-Engine)
+
+endif ()
+
+endif()
