@@ -6,7 +6,6 @@
 // include standard libraries
 #include <string>
 #include <vector>
-#include <iostream>
 
 // include gameobject class
 #include <gameObjects/game_object.hpp>

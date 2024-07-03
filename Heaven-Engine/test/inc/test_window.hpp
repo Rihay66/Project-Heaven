@@ -11,7 +11,7 @@ class TestWindow : public Window {
         ~TestWindow();
 
         void init() override;
-
+        void input() override;
         void update() override;
         void stepUpdate(double ts) override;
 

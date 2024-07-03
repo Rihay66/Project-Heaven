@@ -1,7 +1,8 @@
+#include <cstdlib>
 #include <resourceSystems/resource_manager.hpp>
 #include <utilities/convention_utils.hpp>
 
-#include <algorithm>
+#include <bits/stdc++.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -21,10 +22,14 @@
 
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
-std::vector<unsigned int>           ResourceManager::texIDList;
 std::map<std::string, std::map<char, ResourceManager::Character>>           ResourceManager::Fonts; 
+std::vector<unsigned int>           ResourceManager::texIDList;
+bool                                ResourceManager::isAutoClearSet = false;
+
 
 Shader& ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name){
+    // set up automatic clear()
+    setUpAutoClear();
     // check the name for any special characters
     name = checkName(name);
     // load the shader from the given file
@@ -39,6 +44,8 @@ Shader& ResourceManager::GetShader(std::string name){
 }
 
 Texture2D& ResourceManager::LoadTexture(const char *file, std::string name, bool alpha){
+    // set up automatic clear()
+    setUpAutoClear();
     // check the name for any special characters
     name = checkName(name);
     // load the texture from the given file and set the alpha flag
@@ -71,6 +78,9 @@ int ResourceManager::GetTexture(std::string name){
 }
 
 std::map<char, ResourceManager::Character>& ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize, std::string name, bool isLinear){
+    // set up automatic clear()
+    setUpAutoClear();
+    
     // check the name for any special characters
     name = checkName(name);
     
@@ -191,7 +201,7 @@ bool ResourceManager::BindTextures(){
     return true;
 }
 
-void ResourceManager::Clear(){
+void ResourceManager::clear(){
     // (properly) delete all shaders	
     for (auto iter : Shaders)
         glDeleteProgram(iter.second.ID);
@@ -278,7 +288,7 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha){
         std::cout << "ERROR: Failed to load texture file: " << file << " !\n";
         std::cout << "ERROR: " << stbi_failure_reason() << "\n";
 
-        // give hint to developer for possible fix
+        // give hint to user for possible fix
         std::cout << "HINT: Make sure file or folder name is all lowercase, or check if file exists in build folder" << std::endl;
         exit(-1);
     }
@@ -287,4 +297,11 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha){
     // and finally free image data
     stbi_image_free(data);
     return texture;
+}
+
+void ResourceManager::setUpAutoClear(){
+    // set up on exit to call the Clear()
+    if(!isAutoClearSet && std::atexit(clear) == 0){
+        isAutoClearSet = true; // disable calling this function again
+    }
 }

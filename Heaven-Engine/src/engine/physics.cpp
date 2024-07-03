@@ -5,25 +5,27 @@
 
 // init resources
 
-std::vector<TriggerObject*> Physics::triggerObjs;
-std::vector<PhysicsObject*> Physics::rigidbodyObjs;
-int32_t Physics::velocityIterations = 8;
-int32_t Physics::positionIterations = 4;
+std::vector<TriggerObject*>     Physics::triggerObjs;
+std::vector<PhysicsObject*>     Physics::rigidbodyObjs;
+int32_t                         Physics::velocityIterations = 8;
+int32_t                         Physics::positionIterations = 4;
+b2World*                        Physics::world = nullptr;
+State                           Physics::mState;
+bool                            Physics::isAutoClearSet = false;
 
-b2World* Physics::world = nullptr;
-
-State Physics::mState;
 
 void Physics::init(glm::vec2 gravity){
+    // set up automatic clear()
+    setUpAutoClear();
     // set up box 2d world
     if(world == nullptr){
         world = new b2World({gravity.x, gravity.y});
     }else{
         // display error
-        std::cout << "ERROR: Physics initialization must only be called once!" << "\n";
-        std::cout << "HINT: If more than one Physics initialization is called with intention make sure to clearWorld() before calling init() again" << std::endl;
+        std::cout << "WARNING: Physics initialization must only be called once!" << "\n";
+        //std::cout << "HINT: If more than one Physics initialization is called with intention make sure to clearWorld() before calling init() again" << std::endl;
         // cause crash to program that uses this physics engine
-        exit(-1);
+        return;
     }
 
     // check if there is an empty list of rigidbodies
@@ -69,6 +71,8 @@ void Physics::init(glm::vec2 gravity){
 }
 
 TriggerObject* Physics::addTriggerObject(TriggerObject* obj){
+    // set up automatic clear()
+    setUpAutoClear();
     // check if the object is valid
     if(obj && obj != nullptr){
         // check if object already exists in the list
@@ -92,6 +96,8 @@ TriggerObject* Physics::addTriggerObject(TriggerObject* obj){
 }
 
 PhysicsObject* Physics::addPhysicsObject(PhysicsObject* obj){
+    // set up automatic clear()
+    setUpAutoClear();
     // check if the object is valid
     if(obj && obj != nullptr){
         // check if object already exists in the list
@@ -143,6 +149,8 @@ PhysicsObject* Physics::addPhysicsObject(PhysicsObject* obj){
 }
 
 void Physics::setPhysicsVelocityIterations(int32_t iter){
+    // set up automatic clear()
+    setUpAutoClear();
     // check if given value is less than 1
     if(iter < 1){
         return; // stop function
@@ -153,7 +161,9 @@ void Physics::setPhysicsVelocityIterations(int32_t iter){
 }
 
 void Physics::setPhysicsPositionIterations(int32_t iter){
-        // check if given value is less than 1
+    // set up automatic clear()
+    setUpAutoClear();
+    // check if given value is less than 1
     if(iter < 1){
         return; // stop function
     }
@@ -245,41 +255,13 @@ void Physics::updateTriggers(){
     //TODO: Create a memory safe system to create and delete trigger objects 
 }
 
-void Physics::clearAll(){
-
-    //TODO: Properly refactor how the objects are free from memory
-    
-    // remove pointer from all lists
-
-    // remove all PhysicsObjects attached to the physics engine
-    for(PhysicsObject* obj : rigidbodyObjs){
-        delete obj;
-    }
-
+void Physics::clear(){
+    // remove reference to objects
+    triggerObjs.clear();
     rigidbodyObjs.clear();
 
-    // remove all TriggerObject attached to the physics engine
-    for(TriggerObject* obj : triggerObjs){
-        delete obj;
-    }
-
-    triggerObjs.clear();
-
-    // properly delete box 2d world
+    // delete the physics world
     delete world;
-}
-
-void Physics::clearWorld(){
-    // properly delete box 2d world
-    delete world;
-    // set world to nothing
-    world = nullptr;
-}
-
-void Physics::clearReference(){
-    // remove reference to pointers in all lists
-    rigidbodyObjs.clear();
-    triggerObjs.clear();
 }
 
 //TODO: Make it able to detect collision for rotation and rotation offsets
@@ -307,4 +289,11 @@ b2BodyType Physics::RbToB2Types(BodyType bodyType){
     // no type was set or there is a unknown body type being passed
     std::cout << "Warning: Unknown RB Body Type being passed!" << "\n";
     return b2_staticBody;
+}
+
+void Physics::setUpAutoClear(){
+    // set up on exit to call the Clear()
+    if(!isAutoClearSet && std::atexit(clear) == 0){
+        isAutoClearSet = true; // disable calling this function again
+    }
 }

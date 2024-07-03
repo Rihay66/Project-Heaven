@@ -31,11 +31,6 @@ class ResourceManager{
             unsigned int Advance;   // horizontal offset to advance to next glyph
         };
 
-        // resource storage
-
-        static std::map<std::string, Shader> Shaders;
-        static std::map<std::string, Texture2D> Textures;
-        static std::map<std::string, std::map<char, Character>> Fonts;
 
         // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
         static Shader& LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
@@ -51,11 +46,12 @@ class ResourceManager{
         static std::map<char, Character>& GetFontTexture(std::string name);
         // binds all textures from the texture list to be used by OpenGL
         static bool BindTextures();
-        // properly de-allocates all loaded resources
-        static void Clear();
 
     private:
         // private resource storage
+        static std::map<std::string, Shader> Shaders;
+        static std::map<std::string, Texture2D> Textures;
+        static std::map<std::string, std::map<char, Character>> Fonts;
         static std::vector<unsigned int> texIDList;
 
         // private constructor, that is we do not want any actual resource manager objects. Its members and functions should be publicly available (static).
@@ -64,6 +60,14 @@ class ResourceManager{
         static Shader loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile = nullptr);
         // loads a single texture from file
         static Texture2D loadTextureFromFile(const char *file, bool alpha);
+        // properly de-allocates all loaded resources
+        static void clear();
+
+        //! Currently EXPERIMENTAL, may cause exceptions or segfaults
+        // private boolean to track automatic clear()
+        static bool isAutoClearSet;
+        // set up automatic de-allocation of loaded resources
+        static void setUpAutoClear();
 };
 
 #endif

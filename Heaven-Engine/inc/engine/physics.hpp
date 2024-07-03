@@ -4,7 +4,6 @@
 #define PHYSICS_HPP
 
 #include <vector>
-#include <math.h>
 
 #include <gameObjects/physics_object.hpp>
 #include <gameObjects/trigger_object.hpp>
@@ -20,8 +19,8 @@ class b2World;
 
 /* Static Singleton Physics class that hosts functions to add
  either TriggerObject or PhysicsObject into the physics engine.
- Objects can be added at any time after init() (not recommended).
- Use update functions to update TriggerObjects and PhysicsObjects.
+ Objects can be added at any time after init(). Use update 
+ functions to update TriggerObjects and PhysicsObjects.
  (NOTE: update functions don't work until init() has been called once)
 */
 class Physics{
@@ -29,7 +28,7 @@ class Physics{
         //* Initializer functions
 
         /* initializer function to initialize the physics world and physicsObject
-        * NOTE: Must be called once! If intentionally calling init again make sure to clearWorld() before calling init() again
+        * NOTE: Must be called once. Displays a warning that init() was called again!
         */
         static void init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
 
@@ -68,23 +67,6 @@ class Physics{
         */
         static void updateWorld(float deltaTime);
 
-        //* Cleaner functions
-
-        /* clear and delete objects
-        * NOTE: Deleteting a class that inherent either trigger or physics object will cause a memory leak
-        */
-        static void clearAll();
-
-        /* delete world
-        * NOTE: Make sure to delete trigger and physics objects properly
-        */
-        static void clearWorld();
-
-        /* clears reference to physics and trigger objects 
-        * NOTE: Make sure to delete such references
-        */
-        static void clearReference();
-
         //* Helper functions
 
         // simple check for aabb collision check
@@ -93,6 +75,8 @@ class Physics{
         // enum translate between box2d and rigidbodyObject class
         static b2BodyType RbToB2Types(BodyType bodyType);
     private:
+        // private reference storage
+
         // list of different trigger objects 
         static std::vector<TriggerObject*> triggerObjs;
         // list of different rigidbody
@@ -111,6 +95,17 @@ class Physics{
 
         // private constructor
         Physics() {};
+
+        //* Clear function
+        
+        // dereference all reference to objects and delete the physics world
+        static void clear();
+
+        //! Currently EXPERIMENTAL, may cause exceptions or segfaults
+        // private boolean to track automatic clear()
+        static bool isAutoClearSet;
+        // set up automatic de-allocation of loaded resources
+        static void setUpAutoClear();
 };
 
 #endif
