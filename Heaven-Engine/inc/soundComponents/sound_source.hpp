@@ -53,10 +53,10 @@ class SoundSource{
         //* helper functions
 
         // plays the given sound, also sets the given buffer to be current
-        void play(const unsigned int sound, bool playOnce = false);
+        void play(const unsigned int sound, bool playAgainWhenFinished = false);
         
         // plays a pre-given sound
-        void play(bool playOnce = false);
+        void play(bool playAgainWhenFinished = false);
 
         // stops current sound
         void stop();

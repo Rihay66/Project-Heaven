@@ -5,7 +5,12 @@
 
 #include <window/glfw_window.hpp>
 
+#include <soundComponents/sound_source.hpp>
+
 class TestWindow : public Window {
+    private:
+        SoundSource* source;
+
     public:
         TestWindow(int w, int h);
         ~TestWindow();

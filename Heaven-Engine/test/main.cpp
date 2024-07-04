@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[]){
 
-    TestWindow* window = new TestWindow(800, 600);
+    TestWindow* window = new TestWindow(320, 200);
 
     window->initializeWindow();
 

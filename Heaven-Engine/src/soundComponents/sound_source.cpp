@@ -1,5 +1,8 @@
 #include <soundComponents/sound_source.hpp>
 
+// include the sound manager for auto clear
+#include <engine/sound_manager.hpp>
+
 void SoundSource::setPitch(float p){
     // check if parameter is within a range
     if(p > 0.0f && p < 1.0f){
@@ -41,7 +44,7 @@ unsigned int SoundSource::getBuffer(){
     return this->buffer;
 }
 
-void SoundSource::play(const unsigned int sound, bool playOnce){
+void SoundSource::play(const unsigned int sound, bool playAgainWhenFinished){
     // create a state variable
     ALint state;
     // check if it's a different buffer
@@ -49,7 +52,7 @@ void SoundSource::play(const unsigned int sound, bool playOnce){
         setBuffer(sound);
     }
 
-    if(playOnce){
+    if(playAgainWhenFinished){
         alGetSourcei(source, AL_SOURCE_STATE, &state);
         // check if the source is done playing a sound
         if(state != AL_PLAYING){
@@ -62,12 +65,12 @@ void SoundSource::play(const unsigned int sound, bool playOnce){
     }
 }
 
-void SoundSource::play(bool playOnce){
+void SoundSource::play(bool playAgainWhenFinished){
     // create a state variable
     ALint state;
     // check if sound buffer is not set to default value
     if(buffer != 0){
-        if (playOnce){
+        if (playAgainWhenFinished){
             alGetSourcei(source, AL_SOURCE_STATE, &state);
             // check if the source is done playing a sound
             if (state != AL_PLAYING){
@@ -94,7 +97,10 @@ void SoundSource::restartSound(){
 
 
 SoundSource::SoundSource(){
-    // genretate OpenAL source
+    // initialize OpenAL
+    SoundManager::initDevice();
+
+    // generate OpenAL source
     alGenSources(1, &source);
     alSourcef(source, AL_PITCH, pitch);
     alSourcef(source, AL_GAIN, gain);
@@ -102,10 +108,9 @@ SoundSource::SoundSource(){
     alSource3f(source, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
     alSourcei(source, AL_LOOPING, loopSound);
     alSourcei(source, AL_BUFFER, buffer);
+    
+    // add self to sound manager as reference
+    SoundManager::addSource(source);
 }
 
-SoundSource::~SoundSource(){
-    // remove source
-    alDeleteSources(1, &source);
-}
-
+SoundSource::~SoundSource(){}

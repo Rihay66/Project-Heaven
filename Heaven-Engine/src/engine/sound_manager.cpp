@@ -1,20 +1,41 @@
+#include <AL/al.h>
 #include <engine/sound_manager.hpp>
 
 // include standard output library
 #include <iostream>
 
 // instantiate static variables
-SoundDevice* SoundManager::device;
-std::map<std::string, SoundBuffer*> SoundManager::sounds;
+SoundDevice*                            SoundManager::device;
+std::map<std::string, SoundBuffer*>     SoundManager::sounds;
+std::vector<unsigned int>               SoundManager::sources;
+bool                                    SoundManager::isAutoClearSet = false;
 
-void SoundManager::init(){
+void SoundManager::initDevice(){
+    // set up automatic clear()
+    setUpAutoClear();
+
+    // init sound device
+    
+    // check if sound device is already initialized
+    if(device != nullptr)
+        return; // don't do anything
+
     // init sound device
     device = new SoundDevice();
 }
 
-void SoundManager::close(){
+void SoundManager::clear(){
     // try and catch any errors
     try{
+        // clear all sound sources
+        for(auto& source : sources){
+            // check if it's a valid source
+            if(alIsSource(source)){
+                // remove source
+                alDeleteSources(1, &source);
+            }
+        }
+
         // clear all sound buffers
         for(auto& iter : sounds){
             delete iter.second;
@@ -47,6 +68,12 @@ unsigned int SoundManager::getSoundFromBufferInColleciton(std::string collection
 }
 
 SoundBuffer* SoundManager::createSoundCollection(std::string name){
+    // set up automatic clear()
+    setUpAutoClear();
+
+    // set up device
+    initDevice();
+
     // check if buffer is not already initialized 
     if(sounds[name] != nullptr){
         // give a warning
@@ -65,6 +92,12 @@ SoundBuffer* SoundManager::createSoundCollection(std::string name){
 }
 
 SoundBuffer* SoundManager::createSoundCollection(std::string collectionName, std::string soundName, const char* filename){
+    // set up automatic clear()
+    setUpAutoClear();
+
+    // set up device
+    initDevice();
+
     // create the buffer
     createSoundCollection(collectionName);
 
@@ -77,6 +110,12 @@ SoundBuffer* SoundManager::createSoundCollection(std::string collectionName, std
 }
 
 unsigned int SoundManager::addSoundToBuffer(std::string collectionName, std::string soundName, const char* filename){
+    // set up automatic clear()
+    setUpAutoClear();
+
+    // set up device
+    initDevice();
+    
     // check if buffer exists
     if(sounds[collectionName] != nullptr){
         if(sounds[collectionName]->addSound(soundName, filename) == 0){
@@ -86,6 +125,30 @@ unsigned int SoundManager::addSoundToBuffer(std::string collectionName, std::str
     }else{
         return -1;
     }
+}
+
+void SoundManager::addSource(unsigned int source){
+    // check if source is valid
+    if(!alIsSource(source)){
+        std::cout << "ERROR: invalid sound source added to sound manager!\n";
+        return; // stop function
+    }
+
+    // set up automatic clear()
+    setUpAutoClear();
+
+    // set up device
+    initDevice();
+
+    // check if source already exists
+    for(auto& i : sources){
+        if(i == source){
+            return; // stop function
+        }
+    }
+
+    // if it doesn't exist then add
+    sources.push_back(source);
 }
 
 void SoundManager::removeSoundCollection(std::string name){
@@ -107,4 +170,11 @@ void SoundManager::removeSoundFromBuffer(std::string collectionName, std::string
 
     // remove sound
     sounds[collectionName]->removeSound(soundName);
+}
+
+void SoundManager::setUpAutoClear(){
+    // set up on exit to call the Clear()
+    if(!isAutoClearSet && std::atexit(clear) == 0){
+        isAutoClearSet = true; // disable calling this function again
+    }
 }

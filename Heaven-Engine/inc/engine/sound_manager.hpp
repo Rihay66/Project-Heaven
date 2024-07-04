@@ -6,7 +6,7 @@
 // include standard libraries
 #include <map>
 
-// include necessary 
+// include necessary components
 #include <soundComponents/sound_device.hpp>
 #include <soundComponents/sound_buffer.hpp>
 
@@ -20,12 +20,8 @@
 */
 class SoundManager{
     public:
-
-        // initializes the sound device
-        static void init();
-
-        // closes and clear the sound device and all sound buffers
-        static void close();
+        // initializes the sound device and OpenAL
+        static void initDevice();
 
         //* getter functions
 
@@ -46,6 +42,9 @@ class SoundManager{
         // add a new sound to the buffer, and if collection doesn't exist returns -1
         static unsigned int addSoundToBuffer(std::string collectionName, std::string soundName, const char* filename);
 
+        // store a sound source reference for automatic deletion
+        static void addSource(unsigned int source);
+
         //* remover functions
 
         // to remove a whole collection of sounds
@@ -58,10 +57,22 @@ class SoundManager{
         static SoundDevice* device;
 
         // private static storage for sound buffers as a collection
+ 
         static std::map<std::string, SoundBuffer*> sounds;
+        // private static reference storage of sound sources
+        static std::vector<unsigned int> sources;
+    
+        // closes and clear the sound device, sound buffers, and sound sources
+        static void clear();
 
         // constructor
         SoundManager() {};
+
+        //! Currently EXPERIMENTAL, may cause exceptions or segfaults
+        // private boolean to track automatic clear()
+        static bool isAutoClearSet;
+        // set up automatic de-allocation of loaded resources
+        static void setUpAutoClear();
 };
 
 #endif

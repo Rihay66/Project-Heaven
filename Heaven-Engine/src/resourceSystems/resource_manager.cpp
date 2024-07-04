@@ -194,7 +194,7 @@ bool ResourceManager::BindTextures(){
     // check OpenGL errors
     int errorCode = glGetError();
     if(errorCode != GL_NO_ERROR){
-        std::cout << "Warning: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
+        std::cout << "WARNING: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
         return false;
     }
 
@@ -213,6 +213,12 @@ void ResourceManager::clear(){
         for(auto x : i.second){
             glDeleteTextures(1, &x.second.TextureID);
         }
+    }
+
+    // check for any OpenGL errors
+    int errorCode = glGetError();
+    if(errorCode != GL_NO_ERROR){
+        std::cout << "ERROR: an OpenGL texture or shader deletion error, ERROR Code: " << errorCode << std::endl;
     }
 
     // clear out the texture vector
