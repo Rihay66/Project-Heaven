@@ -14,9 +14,9 @@ State                           Physics::mState;
 bool                            Physics::isAutoClearSet = false;
 
 
-void Physics::init(glm::vec2 gravity){
+void Physics::Init(glm::vec2 gravity){
     // set up automatic clear()
-    setUpAutoClear();
+    SetUpAutoClear();
     // set up box 2d world
     if(world == nullptr){
         world = new b2World({gravity.x, gravity.y});
@@ -70,9 +70,9 @@ void Physics::init(glm::vec2 gravity){
     }
 }
 
-TriggerObject* Physics::addTriggerObject(TriggerObject* obj){
+TriggerObject* Physics::AddTriggerObject(TriggerObject* obj){
     // set up automatic clear()
-    setUpAutoClear();
+    SetUpAutoClear();
     // check if the object is valid
     if(obj && obj != nullptr){
         // check if object already exists in the list
@@ -95,9 +95,9 @@ TriggerObject* Physics::addTriggerObject(TriggerObject* obj){
     return obj;
 }
 
-PhysicsObject* Physics::addPhysicsObject(PhysicsObject* obj){
+PhysicsObject* Physics::AddPhysicsObject(PhysicsObject* obj){
     // set up automatic clear()
-    setUpAutoClear();
+    SetUpAutoClear();
     // check if the object is valid
     if(obj && obj != nullptr){
         // check if object already exists in the list
@@ -148,9 +148,9 @@ PhysicsObject* Physics::addPhysicsObject(PhysicsObject* obj){
     return obj;
 }
 
-void Physics::setPhysicsVelocityIterations(int32_t iter){
+void Physics::SetPhysicsVelocityIterations(int32_t iter){
     // set up automatic clear()
-    setUpAutoClear();
+    SetUpAutoClear();
     // check if given value is less than 1
     if(iter < 1){
         return; // stop function
@@ -160,9 +160,9 @@ void Physics::setPhysicsVelocityIterations(int32_t iter){
     velocityIterations = iter;
 }
 
-void Physics::setPhysicsPositionIterations(int32_t iter){
+void Physics::SetPhysicsPositionIterations(int32_t iter){
     // set up automatic clear()
-    setUpAutoClear();
+    SetUpAutoClear();
     // check if given value is less than 1
     if(iter < 1){
         return; // stop function
@@ -172,14 +172,14 @@ void Physics::setPhysicsPositionIterations(int32_t iter){
     positionIterations = iter;
 }
 
-void Physics::updateWorld(float deltaTime){
+void Physics::UpdateWorld(float deltaTime){
     if(rigidbodyObjs.size() > 0 && world != nullptr){
         // update any collisions detection, but not update the rigidbodies position
         world->Step(deltaTime, velocityIterations, positionIterations);
     }
 }
 
-void Physics::updatePhysics(){
+void Physics::UpdatePhysics(){
     if(rigidbodyObjs.size() <= 0 && world != nullptr){
         //TODO: Create debug options for the Physics class to display a console to show any errors or messages
         return; //stop function
@@ -228,7 +228,7 @@ void Physics::updatePhysics(){
     */
 }
 
-void Physics::updateTriggers(){
+void Physics::UpdateTriggers(){
     //TODO: Refactor checking for trigger collsion using space partitioning
 
     if(triggerObjs.size() <= 0){
@@ -240,7 +240,7 @@ void Physics::updateTriggers(){
     for (TriggerObject *trigObj : triggerObjs){
         for (PhysicsObject *rigidObj : rigidbodyObjs){
             // check for aabb colllision
-            if (aabbCollision(trigObj, rigidObj)){
+            if (AABBCollision(trigObj, rigidObj)){
                 // call the trigger's collision callback
                 trigObj->triggerCollisionCallback(rigidObj);
             }
@@ -255,7 +255,7 @@ void Physics::updateTriggers(){
     //TODO: Create a memory safe system to create and delete trigger objects 
 }
 
-void Physics::clear(){
+void Physics::Clear(){
     // remove reference to objects
     triggerObjs.clear();
     rigidbodyObjs.clear();
@@ -265,7 +265,7 @@ void Physics::clear(){
 }
 
 //TODO: Make it able to detect collision for rotation and rotation offsets
-bool Physics::aabbCollision(GameObject* a, GameObject* b){
+bool Physics::AABBCollision(GameObject* a, GameObject* b){
     // calculate the sides of the quad with the offset considered
 
     // check for no overlap
@@ -291,9 +291,9 @@ b2BodyType Physics::RbToB2Types(BodyType bodyType){
     return b2_staticBody;
 }
 
-void Physics::setUpAutoClear(){
+void Physics::SetUpAutoClear(){
     // set up on exit to call the Clear()
-    if(!isAutoClearSet && std::atexit(clear) == 0){
+    if(!isAutoClearSet && std::atexit(Clear) == 0){
         isAutoClearSet = true; // disable calling this function again
     }
 }

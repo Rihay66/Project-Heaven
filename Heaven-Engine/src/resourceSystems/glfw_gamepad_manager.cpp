@@ -6,11 +6,11 @@
 // define static variables
 std::vector<Gamepad> GamepadManager::queriedGamepads;
 
-int GamepadManager::getGamepadAmount(){
+int GamepadManager::GetGamepadAmount(){
     return queriedGamepads.size();
 }
 
-Gamepad* GamepadManager::getGamepad(int index){
+Gamepad* GamepadManager::GetGamepad(int index){
     // check if index is within range
     if(index >= 0 && index < queriedGamepads.size()){
         return &queriedGamepads.at(index);
@@ -20,7 +20,7 @@ Gamepad* GamepadManager::getGamepad(int index){
     return nullptr;
 }
 
-void GamepadManager::updateQuery(char option){
+void GamepadManager::UpdateQuery(char option){
     //TODO: include the option to add debug options
 
     // check that GLFW has been initialized
@@ -29,13 +29,13 @@ void GamepadManager::updateQuery(char option){
     }
 
     // query for new devices and verify device are gamepads
-    queryDevices();
+    QueryDevices();
 
     // check any disconnected devices by state
-    checkGamepadConnection();
+    CheckGamepadConnection();
 }
 
-void GamepadManager::updateGamepadsState(){
+void GamepadManager::UpdateGamepadsState(){
     // check that GLFW has been initialized
     if(glfwGetError(NULL) == GLFW_NOT_INITIALIZED){
         return; // stop function
@@ -48,7 +48,7 @@ void GamepadManager::updateGamepadsState(){
     }
 }
 
-void GamepadManager::removeDisconnectedDevices(){
+void GamepadManager::RemoveDisconnectedDevices(){
     // remove any devices that have a 'isConnected' flag set to be false and by state is disconnected
     
     // loop through all current gamepads
@@ -61,13 +61,13 @@ void GamepadManager::removeDisconnectedDevices(){
     }
 }
 
-void GamepadManager::queryDevices(char option){
+void GamepadManager::QueryDevices(char option){
     // loop through all possible joysticks
     for(int i = 0; i < GLFW_JOYSTICK_LAST; i++){
         // check each joystick if they're present
         if(glfwJoystickIsGamepad(i) == GLFW_TRUE){
             // check if gamepad already exists, if yes then skip this joystick
-            if(checkGamepadExistance(i))
+            if(CheckGamepadExistance(i))
                 continue; // skip iteration
             
             // create a gamepad
@@ -86,7 +86,7 @@ void GamepadManager::queryDevices(char option){
     }
 }
 
-void GamepadManager::checkGamepadConnection(){
+void GamepadManager::CheckGamepadConnection(){
     // loop through all available gamepads
     for(int i = 0; i < queriedGamepads.size(); i++){
         // check their connection 
@@ -106,7 +106,7 @@ void GamepadManager::checkGamepadConnection(){
     }
 }
 
-bool GamepadManager::checkGamepadExistance(int id){
+bool GamepadManager::CheckGamepadExistance(int id){
     // check given id if it exists within list of "queriedGamepads"
     for(int i = 0; i < queriedGamepads.size(); i++){
         if(queriedGamepads.at(i).dev.ID == id){

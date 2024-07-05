@@ -22,12 +22,12 @@ void TestWindow::init(){
     source = new SoundSource();
 
     // Load a sound
-    SoundManager::createSoundCollection("test", "lofi", "sounds/lofi.wav");
+    SoundManager::CreateSoundCollection("test", "lofi", "sounds/lofi.wav");
 
-    source->setBuffer(SoundManager::getSoundFromBufferInColleciton("test", "lofi"));
+    source->setBuffer(SoundManager::GetSoundFromBufferInColleciton("test", "lofi"));
 
     // init physics
-    Physics::init();
+    Physics::Init();
 }
 
 void TestWindow::input(){

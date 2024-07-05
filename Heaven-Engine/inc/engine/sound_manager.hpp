@@ -21,37 +21,37 @@
 class SoundManager{
     public:
         // initializes the sound device and OpenAL
-        static void initDevice();
+        static void InitDevice();
 
         //* getter functions
 
         // get the buffer from the collection
-        static SoundBuffer* getBufferFromCollection(std::string name);
+        static SoundBuffer* GetBufferFromCollection(std::string name);
 
         // get sound from the buffer that in the collection, returns -1 if collection is not found
-        static unsigned int getSoundFromBufferInColleciton(std::string collectionName, std::string soundName);
+        static unsigned int GetSoundFromBufferInColleciton(std::string collectionName, std::string soundName);
 
         //* adder/setter functions 
 
         // instantiates a new buffer that is empty 
-        static SoundBuffer* createSoundCollection(std::string name);
+        static SoundBuffer* CreateSoundCollection(std::string name);
 
         // create a new buffer and allow for loading of one sound into the buffer
-        static SoundBuffer* createSoundCollection(std::string collectionName, std::string soundName, const char* filename);
+        static SoundBuffer* CreateSoundCollection(std::string collectionName, std::string soundName, const char* filename);
 
         // add a new sound to the buffer, and if collection doesn't exist returns -1
-        static unsigned int addSoundToBuffer(std::string collectionName, std::string soundName, const char* filename);
+        static unsigned int AddSoundToBuffer(std::string collectionName, std::string soundName, const char* filename);
 
         // store a sound source reference for automatic deletion
-        static void addSource(unsigned int source);
+        static void AddSource(unsigned int source);
 
         //* remover functions
 
         // to remove a whole collection of sounds
-        static void removeSoundCollection(std::string name);
+        static void RemoveSoundCollection(std::string name);
 
         // to remove a single sound from a collection
-        static void removeSoundFromBuffer(std::string collectionName, std::string soundName);
+        static void RemoveSoundFromBuffer(std::string collectionName, std::string soundName);
     private:
         // private static storage for sound device
         static SoundDevice* device;
@@ -63,7 +63,7 @@ class SoundManager{
         static std::vector<unsigned int> sources;
     
         // closes and clear the sound device, sound buffers, and sound sources
-        static void clear();
+        static void Clear();
 
         // constructor
         SoundManager() {};
@@ -72,7 +72,7 @@ class SoundManager{
         // private boolean to track automatic clear()
         static bool isAutoClearSet;
         // set up automatic de-allocation of loaded resources
-        static void setUpAutoClear();
+        static void SetUpAutoClear();
 };
 
 #endif

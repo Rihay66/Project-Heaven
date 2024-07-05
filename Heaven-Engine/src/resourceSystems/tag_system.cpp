@@ -3,7 +3,7 @@
 // instantiate static resources
 std::vector<TagSystem::objectTag> TagSystem::tagPool;
 
-void TagSystem::addTag(std::string tagName, GameObject* gameObj){
+void TagSystem::AddTag(std::string tagName, GameObject* gameObj){
     // add a new object to the pool with the tag
     
     //!Check if object and tag already exist in the tagPool
@@ -37,7 +37,7 @@ void TagSystem::addTag(std::string tagName, GameObject* gameObj){
     tagPool.push_back(temp);
 }
 
-void TagSystem::replaceTag(std::string target, GameObject* gameObj){
+void TagSystem::ReplaceTag(std::string target, GameObject* gameObj){
     // loop to find object and replace it's tag
     for(int i = 0; i < tagPool.size(); i++){
         if(tagPool[i].obj == gameObj){
@@ -50,7 +50,7 @@ void TagSystem::replaceTag(std::string target, GameObject* gameObj){
     }
 }
 
-std::string TagSystem::getTagByGameObject(GameObject* gameObj){
+std::string TagSystem::GetTagByGameObject(GameObject* gameObj){
     // loop to find object and return it's tag
     for(int i = 0; i < tagPool.size(); i++){
         if(tagPool[i].obj == gameObj){
@@ -63,7 +63,7 @@ std::string TagSystem::getTagByGameObject(GameObject* gameObj){
     return nullptr;
 }
 
-std::vector<GameObject*> TagSystem::getObjectsByTag(std::string target){
+std::vector<GameObject*> TagSystem::GetObjectsByTag(std::string target){
     // create temporary pool that will contain objects with similar given target tag
     std::vector<GameObject*> pool;
 
@@ -80,7 +80,7 @@ std::vector<GameObject*> TagSystem::getObjectsByTag(std::string target){
 }
 
 //TODO: Refactor to use binary search for the target
-bool TagSystem::checkObjectByTag(std::string target, GameObject* gameObj){
+bool TagSystem::CheckObjectByTag(std::string target, GameObject* gameObj){
     // linear loop to find tag and then compare if the object is the same as in tag pool
     for(int i = 0; i < tagPool.size(); i++){
         if(tagPool[i].name.compare(target) == 0 && tagPool[i].obj == gameObj){
@@ -93,7 +93,7 @@ bool TagSystem::checkObjectByTag(std::string target, GameObject* gameObj){
     return false;
 }
 
-int TagSystem::getAmountOfObjects(){
+int TagSystem::GetAmountOfObjects(){
     // exit function if the list is empty
     if(tagPool.size() <= 0)
         return -1; // stop function from here
@@ -102,7 +102,7 @@ int TagSystem::getAmountOfObjects(){
     return tagPool.size();
 }
 
-void TagSystem::removeObject(GameObject* gameObj){
+void TagSystem::RemoveObject(GameObject* gameObj){
     // loop to find object to remove from list
     for(int i = 0; i < tagPool.size(); i++){
         if(tagPool[i].obj == gameObj){
@@ -113,7 +113,7 @@ void TagSystem::removeObject(GameObject* gameObj){
     }
 }
 
-void TagSystem::removeObjectsWithTag(std::string& tagName){
+void TagSystem::RemoveObjectsWithTag(std::string& tagName){
     // loop to find objects with the passed tag
     for(int i = 0; i < tagPool.size(); i++){
         if(tagPool[i].name.compare(tagName) == 0){
@@ -123,7 +123,7 @@ void TagSystem::removeObjectsWithTag(std::string& tagName){
     }
 }
 
-void TagSystem::clear(){
+void TagSystem::Clear(){
     // remove references to pointers
     tagPool.clear();
 }

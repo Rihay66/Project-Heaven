@@ -20,34 +20,37 @@ class TagSystem{
         //* adder Funcs
 
         // add a tag and object to the resource pool, if object already exists then replace it's tag
-        static void addTag(std::string tagName, GameObject* gameObj);
+        static void AddTag(std::string tagName, GameObject* gameObj);
 
         //* helper Funcs
         
         // get object from the list and replace the tag of in the tag pool, not the object's tag itself
-        static void replaceTag(std::string tagName, GameObject* gameObj);
+        static void ReplaceTag(std::string tagName, GameObject* gameObj);
 
         //* getter Funcs
 
         // get a tag from a object in the tag pool
-        static std::string getTagByGameObject(GameObject* gameObj);
+        static std::string GetTagByGameObject(GameObject* gameObj);
+
         // get objects from the tag pool by tag
-        static std::vector<GameObject*> getObjectsByTag(std::string tagName);
+        static std::vector<GameObject*> GetObjectsByTag(std::string tagName);
+
         // check if tag pertains to a passed object that exists in tag pool
-        static bool checkObjectByTag(std::string target, GameObject* gameObj);
+        static bool CheckObjectByTag(std::string target, GameObject* gameObj);
+
         // get amount of objects in the tag system
-        static int getAmountOfObjects();
+        static int GetAmountOfObjects();
 
         //* remover Funcs
 
         // get object and remove from list
-        static void removeObject(GameObject* gameObj);
+        static void RemoveObject(GameObject* gameObj);
 
         // get and remove objects with a certain tag
-        static void removeObjectsWithTag(std::string& tagName);
+        static void RemoveObjectsWithTag(std::string& tagName);
 
-        // remove references and clear tag pool
-        static void clear();
+        // clear tag pool of reference to objects
+        static void Clear();
 
     private:
         // define data type that contains both tag and gameobject

@@ -30,47 +30,47 @@ class Physics{
         /* initializer function to initialize the physics world and physicsObject
         * NOTE: Must be called once. Displays a warning that init() was called again!
         */
-        static void init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
+        static void Init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
 
         //* Adder functions
 
         // add trigger object to the physics engine
-        static TriggerObject* addTriggerObject(TriggerObject* obj);
+        static TriggerObject* AddTriggerObject(TriggerObject* obj);
 
         // add physics object to the physics engine
-        static PhysicsObject* addPhysicsObject(PhysicsObject* obj);
+        static PhysicsObject* AddPhysicsObject(PhysicsObject* obj);
 
         //* Setter functions
 
         /* set the physics velocity iteration, by default value is 8
         * NOTE: Passed value cannot be less than 1
         */
-        static void setPhysicsVelocityIterations(int32_t iter);
+        static void SetPhysicsVelocityIterations(int32_t iter);
 
         /* set the physics position iteration, by default value is 4
         * NOTE: Passed value cannot be less than 1
         */
-        static void setPhysicsPositionIterations(int32_t iter);
+        static void SetPhysicsPositionIterations(int32_t iter);
 
         //* Update functions
 
         /* check all physics object and update their positions and rotations
         *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
-        static void updatePhysics();
+        static void UpdatePhysics();
 
         // check all trigger objects
-        static void updateTriggers();
+        static void UpdateTriggers();
 
         /* updates physics world which updates physics objects 
         *  NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
-        static void updateWorld(float deltaTime);
+        static void UpdateWorld(float deltaTime);
 
         //* Helper functions
 
         // simple check for aabb collision check
-        static bool aabbCollision(GameObject* a, GameObject* b);
+        static bool AABBCollision(GameObject* a, GameObject* b);
 
         // enum translate between box2d and rigidbodyObject class
         static b2BodyType RbToB2Types(BodyType bodyType);
@@ -99,13 +99,13 @@ class Physics{
         //* Clear function
         
         // dereference all reference to objects and delete the physics world
-        static void clear();
+        static void Clear();
 
         //! Currently EXPERIMENTAL, may cause exceptions or segfaults
         // private boolean to track automatic clear()
         static bool isAutoClearSet;
         // set up automatic de-allocation of loaded resources
-        static void setUpAutoClear();
+        static void SetUpAutoClear();
 };
 
 #endif

@@ -14,6 +14,8 @@ SpriteRenderer::SpriteRenderer(Shader &shader, glm::uvec2 spriteSize){
     // grab the uniform location of 'image' in the shader, the name 'iamge' is explicit
     auto loc = glGetUniformLocation(this->shader.ID, "image");
 
+    // check for error
+
     // set up array to the size of the max number of textures
     int samplers[this->maxTextureSlots];
 

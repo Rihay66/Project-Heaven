@@ -21,21 +21,21 @@ class GamepadManager{
         //* getter functions
 
         // returns the number of devices that identify as "Gamepads"
-        static int getGamepadAmount();
+        static int GetGamepadAmount();
 
         // returns a gamepad reference at the determined index, default gets the first gamepad
-        static Gamepad* getGamepad(int index = 0);
+        static Gamepad* GetGamepad(int index = 0);
 
         //* helper functions
 
         // to update the query of devices, parameter is used for debugging or applying a setting
-        static void updateQuery(char option = 'n');
+        static void UpdateQuery(char option = 'n');
 
         // to update the state of all gamepads, regardless of the flag 'isConnected'
-        static void updateGamepadsState();
+        static void UpdateGamepadsState();
 
         // to remove any disconnected devices 
-        static void removeDisconnectedDevices();
+        static void RemoveDisconnectedDevices();
 
     private:
         // private resource storage
@@ -52,13 +52,13 @@ class GamepadManager{
          verify that device is a "controller"
          add valid devices to storage
         */
-        static void queryDevices(char option = 'n');
+        static void QueryDevices(char option = 'n');
 
         // checks each connected device and sets their 'isConnection' flag to false if by state is disconnected
-        static void checkGamepadConnection();
+        static void CheckGamepadConnection();
 
         // returns the state of existance of a ID within the list of gamepads
-        static bool checkGamepadExistance(int id);
+        static bool CheckGamepadExistance(int id);
 };
 
 #endif

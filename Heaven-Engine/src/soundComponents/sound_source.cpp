@@ -98,7 +98,7 @@ void SoundSource::restartSound(){
 
 SoundSource::SoundSource(){
     // initialize OpenAL
-    SoundManager::initDevice();
+    SoundManager::InitDevice();
 
     // generate OpenAL source
     alGenSources(1, &source);
@@ -110,7 +110,7 @@ SoundSource::SoundSource(){
     alSourcei(source, AL_BUFFER, buffer);
     
     // add self to sound manager as reference
-    SoundManager::addSource(source);
+    SoundManager::AddSource(source);
 }
 
 SoundSource::~SoundSource(){}
