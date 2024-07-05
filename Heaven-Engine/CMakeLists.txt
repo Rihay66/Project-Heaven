@@ -269,10 +269,38 @@ copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
 copy_if_different(${TEXTURES_DIR} ${BUILD_DIR}/textures)
 copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/sounds)
 
+if(MSVC) # msvc
+
+#GLM
+find_package(GLM CONFIG REQUIRED)
+
+#GLFW
+find_package(GLFW3 CONFIG REQUIRED)
+
+#box2d
+find_package(BOX2D CONFIG REQUIRED)
+
+# Find OpenAL
+find_package(OpenAL CONFIG REQUIRED)
+
+# Find SNDFile
+find_package(SndFile CONFIG REQUIRED)
+
+#Find Freetype
+find_package(Freetype REQUIRED)
+
+# Link the extra packages their include directories to avoid linking errors
+target_include_directories(Engine-Testing PRIVATE Heaven-Engine-s glm::glm glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+# Link the Heaven-Engine to executable
+target_link_libraries(Engine-Testing PRIVATE Heaven-Engine-s glm::glm glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+
+else () # mingw
+
 # Link the extra packages their include directories to avoid linking errors
 target_include_directories(Engine-Testing PRIVATE Heaven-Engine)
 # Link the Heaven-Engine to executable
 target_link_libraries(Engine-Testing PRIVATE Heaven-Engine)
+endif()
 
 endif ()
 

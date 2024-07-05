@@ -2,7 +2,6 @@
 #include <resourceSystems/resource_manager.hpp>
 #include <utilities/convention_utils.hpp>
 
-#include <bits/stdc++.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -203,22 +202,18 @@ bool ResourceManager::BindTextures(){
 
 void ResourceManager::clear(){
     // (properly) delete all shaders	
-    for (auto iter : Shaders)
+    for (auto iter : Shaders) {
         glDeleteProgram(iter.second.ID);
+    }
+
     // (properly) delete all textures
     for (auto iter : Textures)
         glDeleteTextures(1, &iter.second.ID);
     // (properly) delete all font textures
     for(auto i : Fonts){
-        for(auto x : i.second){
+        for(const auto& x : i.second){
             glDeleteTextures(1, &x.second.TextureID);
         }
-    }
-
-    // check for any OpenGL errors
-    int errorCode = glGetError();
-    if(errorCode != GL_NO_ERROR){
-        std::cout << "ERROR: an OpenGL texture or shader deletion error, ERROR Code: " << errorCode << std::endl;
     }
 
     // clear out the texture vector
