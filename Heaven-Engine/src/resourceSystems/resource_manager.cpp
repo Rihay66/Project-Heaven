@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <resourceSystems/resource_manager.hpp>
 #include <utilities/convention_utils.hpp>
 

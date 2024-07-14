@@ -12,8 +12,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 // include shader and texture classes
-#include <gameObjects/game_object.hpp>
-#include <resourceSystems/resource_manager.hpp>
+#include <utilities/interpolation_utils.hpp>
+#include <resourceSystems/shader.hpp>
+
+//TODO: Rewrite the comments for clarity and proper format
 
 /* A static singleton Sprite Rendering Class used to 
  render 2D quads. This class uses mainly the 
@@ -24,20 +26,22 @@
 */
 class SpriteRenderer{    
     public:
+        // initialize the rendererm which requires a loaded shader and optionally changeable sprite size of all rendered objects
+        static void Init(Shader& shader, glm::uvec2 spriteSize = {10.0f, 10.0f});
 
-        // draw multiple pointer objects in a vector list, objects become batch rendered
-        static void Draw2D(std::vector<GameObject*> &objs, double alpha);
+        //TODO: Allow for setting custom base quads corner positions
 
-        // draw multiple non-pointer objects in a vector list, objects become batch rendered
-        static void Draw2D(std::vector<GameObject> &objs, double alpha);
+        // draw single a quad utilizing given raw data, without interpolation
+        static void Draw(int texIndex, glm::vec2 pos, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f));
 
-        // draw a single pointer object
-        static void Draw2D(GameObject* &obj, double alpha);
+        /* store a single quad utilizing given raw data, without interpolation
+            !Requires the Flush() in order to render what was stored
+        */
+        static void Stack(int texIndex, glm::vec2 pos, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f));
+        
+        // used to tell opengl to render the stored quads in the buffer
+        static void Flush();
 
-        // draw a single non-pointer object
-        static void Draw2D(GameObject &obj, double alpha);
-
-    private:
         // data struct for holding amount of draw calls and quad count
         struct RendererStats{
             int quadCount = 0, drawCount = 0;
@@ -45,6 +49,16 @@ class SpriteRenderer{
 
         // contain reference to amont of quads and amount of draw calls
         static RendererStats stats;
+    private:
+
+        // data struct of standard quad's vertex information
+        struct Vertex{
+            glm::vec2 position;
+            glm::vec2 texCoords;
+            float texIndex;
+            glm::vec4 color;
+        };
+
 
         // reference to the model size
         static glm::uvec2 spriteSize;
@@ -57,22 +71,14 @@ class SpriteRenderer{
         static unsigned int quadVBO;
         static unsigned int quadEBO;
 
-        // data struct of standard quad's vertex information
-        struct Vertex{
-            glm::vec2 position;
-            glm::vec2 texCoords;
-            float texIndex;
-            glm::vec4 color;
-        };
+        // counter to track the number of vertices of quads
+        static unsigned int indexCount;
 
         // stores max number of quads as a buffer
         static Vertex* quadBuffer;
 
         // stores the amount of wanted quad buffers
         static Vertex* quadBufferPtr;  
-
-        // counter to track the number of vertices of quads
-        static unsigned int indexCount;
 
         // stores the amount of quads to render
         const static int maxQuadCount = 10000;
@@ -83,35 +89,34 @@ class SpriteRenderer{
         const static int maxTextureSlots = 32;
 
         // used to store offsets of quad vertex positions
-        glm::vec4 quadVertexPositions[4];
+        const static glm::vec4 quadVertexPositions[];
 
-        // a overwrittable State struct, used in linear interpolation
-        State interpolation;
-
-        // a overwrittable transform matrix
-        glm::mat4 transform;
+        // private constructor 
+        SpriteRenderer() {}
 
         // initial setup for rendering, setups the rendering of quads and their buffer data
         static void initRenderData();
 
         // used to draw a quad and to be stored in to the quad buffer 
-        void createQuad(GameObject::RenderType &type, glm::vec2 &size, 
-        float rotation, int &texIndex, glm::vec4 &color, State &inter);
+        static void createQuad(glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter);
 
         // used to set the quad vertex buffers
         static void beginBatch();
         
-        // used to calculate amount of quads to be rendered
-        static void endBatch();
-
-        // used to tell opengl to render the triangles
-        static void flush();
-
-        // private constructor 
-        static SpriteRenderer() {}
+        // used to calculate amount of quads to be rendered, returns false for there are no quads and true for there are quads available
+        static bool endBatch();
 
         // resets stats such as draw calls and amount quads
-        const void resetStats();
+        const static void resetStats();
+
+        // used to clean up resources
+        static void clear();
+
+        //! Currently EXPERIMENTAL, may cause exceptions or segfaults
+        // private boolean to track automatic clear()
+        static bool isAutoClearSet;
+        // set up automatic de-allocation of loaded resources
+        static void setUpAutoClear();
 };
 
 #endif

@@ -6,9 +6,11 @@
 #include <window/glfw_window.hpp>
 
 #include <soundComponents/sound_source.hpp>
+#include <cameras/ortho_camera.hpp>
 
 class TestWindow : public Window {
     private:
+        OrthoCamera* cam;
         SoundSource* source;
 
     public:
