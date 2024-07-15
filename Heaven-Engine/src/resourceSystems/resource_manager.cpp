@@ -161,6 +161,9 @@ std::map<char, ResourceManager::Character>& ResourceManager::LoadFontTexture(con
     // add characters to resources
     Fonts[name] = Characters;
 
+    // rebind non-font textures
+    BindTextures();
+
     //TODO: Create debug options for the ResourceManager class to display a console to show any errors or messages
     //Succesfully managed to load the font
     //std::cout << "MSG: Text Font loaded succesfully!\n";

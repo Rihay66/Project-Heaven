@@ -1,3 +1,4 @@
+#include "resourceSystems/resource_manager.hpp"
 #include <engine/text_renderer.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -73,6 +74,9 @@ void TextRenderer::drawText(std::map<char, ResourceManager::Character> &chars, s
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
         position.x += (ch.Advance >> 6) * scale.x; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
     }
+
+    // rebind non-font textures
+    ResourceManager::BindTextures();
 }
 
 void TextRenderer::initTextRenderingData(){

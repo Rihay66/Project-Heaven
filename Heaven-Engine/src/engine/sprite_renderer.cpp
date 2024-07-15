@@ -4,7 +4,6 @@
 #include "resourceSystems/resource_manager.hpp"
 
 // Standard library
-#include <glm/fwd.hpp>
 #include <iostream>
 
 // initialize static variables
@@ -61,7 +60,7 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
     initRenderData(); 
 }
 
-void SpriteRenderer::Draw(int texIndex, glm::vec2 pos, glm::vec2 size, float rot, glm::vec4 color){
+void SpriteRenderer::Draw(int texIndex, glm::vec2 pos, glm::vec2 size, float rot, glm::vec4 color, const glm::vec4 vertexPositions[]){
     //? check if buffer hasn't been set up
     if(quadBuffer == nullptr){
         //! Display error
@@ -74,28 +73,20 @@ void SpriteRenderer::Draw(int texIndex, glm::vec2 pos, glm::vec2 size, float rot
     // init the buffer
     beginBatch();
 
-    //? binding textures
-    ResourceManager::BindTextures();
-
     // create the quad to render
-    State interpolation;
-    interpolation.posX = pos.x;
-    interpolation.posY = pos.y;
-    createQuad(size, rot, texIndex, color, interpolation);
+    createQuad(pos, size, rot, texIndex, color, vertexPositions);
 
     // render
     Flush();
 }
 
-void SpriteRenderer::Stack(int texIndex, glm::vec2 pos, glm::vec2 size, float rot, glm::vec4 color){
+void SpriteRenderer::Stack(int texIndex, glm::vec2 pos, glm::vec2 size, float rot, glm::vec4 color, const glm::vec4 vertexPositions[]){
     //? check if buffer hasn't been set up
     if(quadBuffer == nullptr){
         //! Display error
         std::cout << "ERROR: Missing render buffer initialization!\n";
         return; // stop function
     }
-
-    //TODO: Find a way if a flushed happened, to avoid stacking when there isn't a flush command
 
     // check if the buffer pointer hans't been set up
     if(quadBufferPtr == nullptr){
@@ -108,10 +99,7 @@ void SpriteRenderer::Stack(int texIndex, glm::vec2 pos, glm::vec2 size, float ro
     // if not then add a quad to the buffer pointer
 
     // create the quad to render
-    State interpolation;
-    interpolation.posX = pos.x;
-    interpolation.posY = pos.y;
-    createQuad(size, rot, texIndex, color, interpolation);
+    createQuad(pos, size, rot, texIndex, color, vertexPositions);
 }
 
 void SpriteRenderer::Flush(){
@@ -142,22 +130,22 @@ void SpriteRenderer::Flush(){
     indexCount = 0;
 }
 
-void SpriteRenderer::createQuad(glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter){
+void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, const glm::vec4 vertexPositions[]){
     // check if not over the index count
     if (indexCount >= maxIndexCount){
         // flush what's left and start another batch
         endBatch();
-        Flush();
+        Flush();  
         beginBatch();
     }
 
     // create model transform
-    glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(inter.posX, inter.posY, 0.0f)) 
+    glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f)) 
     * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) 
     * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
 
     quadBufferPtr->position =
-        (transform * quadVertexPositions[0]) *
+        (transform * vertexPositions[0]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {0.0f, 0.0f};
@@ -166,7 +154,7 @@ void SpriteRenderer::createQuad(glm::vec2 &size, float &rotation, int &texIndex,
     quadBufferPtr++;
 
     quadBufferPtr->position =
-        (transform * quadVertexPositions[1]) *
+        (transform * vertexPositions[1]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {-1.0f, 0.0f};
@@ -175,7 +163,7 @@ void SpriteRenderer::createQuad(glm::vec2 &size, float &rotation, int &texIndex,
     quadBufferPtr++;
 
     quadBufferPtr->position =
-        (transform * quadVertexPositions[2]) *
+        (transform * vertexPositions[2]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {0.0f, 1.0f};
@@ -184,7 +172,7 @@ void SpriteRenderer::createQuad(glm::vec2 &size, float &rotation, int &texIndex,
     quadBufferPtr++;
 
     quadBufferPtr->position =
-        (transform * quadVertexPositions[3]) *
+        (transform * vertexPositions[3]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
     quadBufferPtr->texCoords = {-1.0f, 1.0f};

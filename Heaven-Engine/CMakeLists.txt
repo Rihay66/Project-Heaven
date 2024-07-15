@@ -207,6 +207,7 @@ file(GLOB_RECURSE HEADER_FILES
 
 # Define resource folders
 set(SHADERS_DIR ${CMAKE_SOURCE_DIR}/shaders)
+set(FONTS_DIR ${CMAKE_SOURCE_DIR}/fonts)
 set(TEXTURES_DIR "${CMAKE_SOURCE_DIR}/test/textures")
 set(SOUNDS_DIR "${CMAKE_SOURCE_DIR}/test/sounds")
 
@@ -237,6 +238,7 @@ endfunction()
 copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
 copy_if_different(${TEXTURES_DIR} ${BUILD_DIR}/textures)
 copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/sounds)
+copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
 
 # Link the extra packages their include directories to avoid linking errors
 target_include_directories(Engine-Testing PRIVATE Heaven-Engine)
@@ -268,6 +270,7 @@ endfunction()
 copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
 copy_if_different(${TEXTURES_DIR} ${BUILD_DIR}/textures)
 copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/sounds)
+copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
 
 if(MSVC) # msvc
 

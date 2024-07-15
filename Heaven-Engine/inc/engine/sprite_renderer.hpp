@@ -3,16 +3,12 @@
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
 
-// include standard lib
-#include <vector>
-
 // include math and glad
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 // include shader and texture classes
-#include <utilities/interpolation_utils.hpp>
 #include <resourceSystems/shader.hpp>
 
 //TODO: Rewrite the comments for clarity and proper format
@@ -32,14 +28,15 @@ class SpriteRenderer{
         //TODO: Allow for setting custom base quads corner positions
 
         // draw single a quad utilizing given raw data, without interpolation
-        static void Draw(int texIndex, glm::vec2 pos, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f));
+        static void Draw(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const glm::vec4 vertexPositions[] = quadVertexPositions);
 
         /* store a single quad utilizing given raw data, without interpolation
-            !Requires the Flush() in order to render what was stored
+            !Requires the Flush() after this function in order to render what was stored
+            !Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
         */
-        static void Stack(int texIndex, glm::vec2 pos, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f));
+        static void Stack(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const glm::vec4 vertexPositions[] = quadVertexPositions);
         
-        // used to tell opengl to render the stored quads in the buffer
+        // used to tell the GPU to render the stored quads in the buffer
         static void Flush();
 
         // data struct for holding amount of draw calls and quad count
@@ -67,9 +64,7 @@ class SpriteRenderer{
         static Shader shader;
 
         // stores data of a quad
-        static unsigned int quadVAO;
-        static unsigned int quadVBO;
-        static unsigned int quadEBO;
+        static unsigned int quadVAO, quadVBO, quadEBO;
 
         // counter to track the number of vertices of quads
         static unsigned int indexCount;
@@ -81,9 +76,10 @@ class SpriteRenderer{
         static Vertex* quadBufferPtr;  
 
         // stores the amount of quads to render
-        const static int maxQuadCount = 10000;
-        const static int maxVertexCount = maxQuadCount * 4;
-        const static int maxIndexCount = maxQuadCount * 6;
+        const static int 
+        maxQuadCount = 100, 
+        maxVertexCount = maxQuadCount * 4, 
+        maxIndexCount = maxQuadCount * 6;
 
         // stores maximum amount of textures there can be
         const static int maxTextureSlots = 32;
@@ -98,7 +94,7 @@ class SpriteRenderer{
         static void initRenderData();
 
         // used to draw a quad and to be stored in to the quad buffer 
-        static void createQuad(glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, State &inter);
+        static void createQuad(glm::vec2& position, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, const glm::vec4 vertexPositions[]);
 
         // used to set the quad vertex buffers
         static void beginBatch();
