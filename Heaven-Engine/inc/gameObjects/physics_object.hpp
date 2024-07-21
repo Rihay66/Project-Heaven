@@ -13,7 +13,7 @@
  and adding additional functionality of the object.
 */
 class PhysicsObject : public GameObject{
-    private: 
+    protected: 
         // used as a "destroyed" flag for internal use
         bool isDestroyed;
 

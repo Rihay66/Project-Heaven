@@ -176,6 +176,10 @@ void Physics::updatePhysics(){
     }
 
     for (PhysicsObject *obj : rigidbodyObjs){
+        // check if the object has been destroyed
+        if(obj->getDestroyedStatus())
+            continue; // skip destroyed object
+
         // retrieve the body from each rigidbody
         b2Body *body = obj->physicBody();
         
@@ -189,7 +193,6 @@ void Physics::updatePhysics(){
         obj->position.x = position.x;
         obj->position.y = position.y;
         obj->setRotationRadians(body->GetAngle());
-
 
         // update each rigidbody's state position
         mState.posX = position.x;
