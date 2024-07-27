@@ -1,6 +1,5 @@
 #include "../inc/test_window.hpp"
 #include "engine/text_renderer.hpp"
-#include "gameObjects/physics_object.hpp"
 #include "resourceSystems/resource_manager.hpp"
 #include <engine/sprite_renderer.hpp>
 #include <engine/physics.hpp>
@@ -12,7 +11,8 @@ TestWindow::TestWindow(int w, int h) : Window(w, h){
 }
 
 TestWindow::~TestWindow(){
-
+    delete cam;
+    delete text;
 }
 
 std::string TestWindow::GetFrameTime(){
@@ -98,7 +98,7 @@ void TestWindow::render(double alpha){
         }
     }
 
-    //SpriteRenderer::Flush();
+    SpriteRenderer::Flush();
 
     text->drawText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(1.0f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
     

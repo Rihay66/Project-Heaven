@@ -217,9 +217,6 @@ void ResourceManager::clear(){
             glDeleteTextures(1, &x.second.TextureID);
         }
     }
-
-    // clear out the texture vector
-    texIDList.clear();
 }
 
 Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile){
@@ -230,9 +227,6 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
     // create interface objs to get file
     std::ifstream vertexShaderFile;
     std::ifstream fragmentShaderFile;
-    // ensure ifstream objects can throw exceptions
-    vertexShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-    fragmentShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     try
     {
         // open files

@@ -77,7 +77,7 @@ class SpriteRenderer{
 
         // stores the amount of quads to render
         const static int 
-        maxQuadCount = 100, 
+        maxQuadCount = 10000, 
         maxVertexCount = maxQuadCount * 4, 
         maxIndexCount = maxQuadCount * 6;
 
