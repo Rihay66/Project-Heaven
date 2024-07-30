@@ -1,3 +1,4 @@
+#include <GLFW/glfw3.h>
 #include <window/glfw_window.hpp>
 
 #include <iostream>
@@ -13,62 +14,67 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 // constructor, initializes GLFW and GLAD then creates a window with the passed parameters
-Window::Window(int w, int h, const char* name) : App_State(ACTIVE), width(w), height(h), windowName(name){}
+Window::Window(int w, int h, const char* name) : width(w), height(h), windowName(name){}
 
 // destructor
 Window::~Window(){
+    // destroy window context
+    glfwDestroyWindow(handle);
     // delete any pointers
     glfwTerminate();
 }
 
 void Window::initializeWindow(){
     // allow the initialization of the window to be called ONLY once
-    std::call_once(onceFlag, [this]{
-        // init GLFW
-        if(!glfwInit()){
-            std::cout << "Failed to initialize GLFW!" << std::endl;
-            glfwTerminate();
-            exit(-1);
-        }
 
-        // set specific opengl version to 4.5
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-        // set up opengl window profile
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // check if the handle is already set 
+    if(handle != nullptr)
+        return; // stop function
+
+    // init GLFW
+    if(!glfwInit()){
+        std::cout << "Failed to initialize GLFW!" << std::endl;
+        glfwTerminate();
+        exit(-1);
+    }
+
+    // set specific opengl version to 4.5
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    // set up opengl window profile
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
-        // add additional hints
-        additionalWindowOptions();
+    // add additional hints
+    additionalWindowOptions();
 
-        // create the window and check for errors
-        handle = glfwCreateWindow(width, height, windowName, NULL, NULL);
-        if(!handle){
-            std::cout << "Failed to create window!" << std::endl;
-            glfwTerminate();
-            exit(-1);
-        }
+    // create the window and check for errors
+    handle = glfwCreateWindow(width, height, windowName, NULL, NULL);
+    if(!handle){
+        std::cout << "Failed to create window!" << std::endl;
+        glfwTerminate();
+        exit(-1);
+    }
 
-        // create window
-        glfwMakeContextCurrent((GLFWwindow*)handle);
+    // create window
+    glfwMakeContextCurrent(handle);
 
-        // load glad
-        if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
-            std::cout << "Failed to init GLAD!" << std::endl;
-            exit(-1);
-        }
+    // load glad
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
+        std::cout << "Failed to init GLAD!" << std::endl;
+        exit(-1);
+    }
 
-        // set up call back to update the opengl window
-        glfwSetFramebufferSizeCallback((GLFWwindow*)handle, framebuffer_size_callback);
-        // set openGL window size
-        glViewport(0, 0, width, height);
-        // disable vsync
-        glfwSwapInterval(0);
+    // set up call back to update the opengl window
+    glfwSetFramebufferSizeCallback(handle, framebuffer_size_callback);
+    // set openGL window size
+    glViewport(0, 0, width, height);
+    // disable vsync
+    glfwSwapInterval(0);
 
-        setUpOpenGL();
+    setUpOpenGL();
 
-        //TODO: Create debug options for the window class to display a console to show any errors or messages
-        //std::cout << "MSG: Window successfully created" << std::endl;
-    });
+    //TODO: Create debug options for the window class to display a console to show any errors or messages
+    //std::cout << "MSG: Window successfully created" << std::endl;
 }
 
 void Window::setTargetTimeStep(double time){
@@ -100,22 +106,6 @@ void Window::setUpOpenGL(){
 void Window::getInput(){
 
     //TODO: Make the terminal msgs be optional
-    // debug enabler button - toggle
-    if(glfwGetKey((GLFWwindow*)handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS && !pressed){
-        isDebug = !isDebug;
-        // check the isDebug value and set the proper app state
-        if(isDebug){
-            App_State = DEBUG;
-            std::cout << "MSG: DEBUG IS ENABLED!" << std::endl;
-        }
-        else{
-            App_State = ACTIVE;
-            std::cout << "MSG: DEBUG IS DISABLED!" << std::endl;
-        }
-        pressed = !pressed;
-    }else if(glfwGetKey((GLFWwindow*)handle, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE && pressed){
-        pressed = !pressed;
-    }
 
     // call additional input
     this->input();

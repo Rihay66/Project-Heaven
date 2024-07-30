@@ -4,19 +4,13 @@
 #define WINDOW_HPP
 
 // check platform
-#ifdef __unix__ // Linux platform
-    #include <unistd.h>
-#elif defined(_WIN32) || defined(WIN32) // Windows platform
+#if defined(_WIN32) || defined(WIN32) // Windows platform
     #include <windows.h>
 #endif
-
-// include standard libraries
-#include <mutex>
 
 // GLFW and OPENGL libraries
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <utilities/application_state_utils.hpp>
 
 //TODO: Give more information about the class 
 
@@ -29,8 +23,8 @@
 class Window{
     private:
         // set up vars for calculating delta time and the fixed time step
-	    double lastFrame = 0, currentFrame = 0, frameDuration = 0, accumulator = 0, 
-        alpha = 0, threadSleepTime = 0;
+	      double lastFrame = 0, currentFrame = 0, frameDuration = 0, accumulator = 0, 
+          alpha = 0, threadSleepTime = 0;
 
         // vars storing and referencing to window size, width x height
         unsigned int width, height;
@@ -52,10 +46,7 @@ class Window{
         double DeltaTime = 0;
 
         // window handle
-        const GLFWwindow* handle;
-
-        // flag var for tracking the initialization of the window
-        std::once_flag onceFlag;
+        GLFWwindow* handle = nullptr;
 
     protected:
         // used to set the target frame time between frame, aka max frame time
@@ -64,10 +55,6 @@ class Window{
         void setFixedTimeStep(double time);
         // used to get windows's base input and calls input()
         void getInput();
-
-        //TODO: Refactor the window state system to allow for robust changing input or going to debug, etc...
-        // state of the window application 
-        APP_STATE App_State;
 
     public:
         // constructor, in
@@ -88,7 +75,7 @@ class Window{
         //* Getters functions
         
         // used to grab the window handle context, without being able to modify the context directly
-        GLFWwindow* getWindowHandle() {return (GLFWwindow*)this->handle;}
+        GLFWwindow* getWindowHandle() {return this->handle;}
 
         /* returns the current deltatime, can be overwritten
           !Overwritting may need further modifications to the update() and stepUpdate() as it may cause unintended behavior
