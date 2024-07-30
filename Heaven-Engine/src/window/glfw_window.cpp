@@ -1,4 +1,3 @@
-#include <GLFW/glfw3.h>
 #include <window/glfw_window.hpp>
 
 #include <iostream>
