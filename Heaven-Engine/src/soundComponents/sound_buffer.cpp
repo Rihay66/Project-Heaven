@@ -135,9 +135,10 @@ SoundBuffer::SoundBuffer(){}
 
 SoundBuffer::~SoundBuffer(){
     // delete all sound buffers
-    for (auto& i : soundBuffers) {
-        if (!removeSound(i.str)) {
-            fprintf(stderr, "ERROR: Failed to remove buffer | %s, %i\n", i.str.c_str(), i.buffer);
+    //? Loop through all available sound buffers until there is none
+    for (int i = 0; i < soundBuffers.size();) {
+        if (!removeSound(soundBuffers.at(i).str)) {
+            fprintf(stderr, "ERROR: Failed to remove buffer | %s, %i\n", soundBuffers.at(i).str.c_str(), soundBuffers.at(i).buffer);
         }
     }
     
@@ -146,6 +147,4 @@ SoundBuffer::~SoundBuffer(){
     if(err != AL_NO_ERROR){
         fprintf(stderr, "ERROR: Sound Buffer Deconstructor OpenAL Error: %s\n", alGetString(err));
     }
-
-    soundBuffers.clear();
 }

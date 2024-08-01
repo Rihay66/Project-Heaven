@@ -22,8 +22,7 @@ std::string TestWindow::GetFrameTime(){
     if(this->timeDiff >= 1.0 / 30.0){
         //display frame per second & frame time
         std::string FPS = "" + std::to_string((1.0 / this->timeDiff) * this->counter);
-        int pos = FPS.find(".");
-        FPS = FPS.substr(0, pos);
+        FPS = FPS.substr(0, FPS.find("."));
         this->prevTime = this->currentTime;
         this->counter = 0;
         //Return text
@@ -57,6 +56,8 @@ void TestWindow::init(){
 
     // Load a sound
     SoundManager::CreateSoundCollection("test", "lofi", "sounds/lofi.wav");
+    // Load another sound
+    SoundManager::AddSoundToBuffer("test", "music", "sounds/music.wav");
 
     source->setBuffer(SoundManager::GetSoundFromBufferInColleciton("test", "lofi"));
 

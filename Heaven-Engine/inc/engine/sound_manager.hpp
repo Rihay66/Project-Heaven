@@ -33,13 +33,13 @@ class SoundManager{
 
         //* adder/setter functions 
 
-        // instantiates a new buffer that is empty 
+        // instantiates a new buffer collection that is empty 
         static SoundBuffer* CreateSoundCollection(std::string name);
 
-        // create a new buffer and allow for loading of one sound into the buffer
+        // create a new buffer collection and allow for loading of one sound into the buffer collection
         static SoundBuffer* CreateSoundCollection(std::string collectionName, std::string soundName, const char* filename);
 
-        // add a new sound to the buffer, and if collection doesn't exist returns -1
+        // add a new sound buffer to a existing buffer collection, and if collection doesn't exist returns -1
         static unsigned int AddSoundToBuffer(std::string collectionName, std::string soundName, const char* filename);
 
         // store a sound source reference for automatic deletion
@@ -57,8 +57,8 @@ class SoundManager{
         static SoundDevice* device;
 
         // private static storage for sound buffers as a collection
- 
         static std::map<std::string, SoundBuffer*> sounds;
+        
         // private static reference storage of sound sources
         static std::vector<unsigned int> sources;
     
