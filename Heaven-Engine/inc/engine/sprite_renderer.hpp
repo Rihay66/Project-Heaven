@@ -22,7 +22,7 @@
 */
 class SpriteRenderer{    
     public:
-        // initialize the rendererm which requires a loaded shader and optionally changeable sprite size of all rendered objects
+        // initialize the renderer which requires a loaded shader and optionally changeable sprite size of all rendered objects
         static void Init(Shader& shader, glm::uvec2 spriteSize = {10.0f, 10.0f});
 
         //TODO: Allow for setting custom base quads corner positions

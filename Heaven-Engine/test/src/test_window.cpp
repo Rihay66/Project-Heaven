@@ -12,7 +12,7 @@ TestWindow::TestWindow(int w, int h) : Window(w, h){
 
 TestWindow::~TestWindow(){
     delete cam;
-    delete text;
+    delete source;
 }
 
 std::string TestWindow::GetFrameTime(){
@@ -49,7 +49,7 @@ void TestWindow::init(){
     SpriteRenderer::Init(ResourceManager::GetShader("test"), glm::uvec2(30.0f));
 
     // init the text renderer
-    text = new TextRenderer(getWidth(), getHeight(), ResourceManager::GetShader("text"));
+    TextRenderer::Init(getWidth(), getHeight(), ResourceManager::GetShader("text"));
 
     // Create a sound source
     source = new SoundSource();
@@ -79,8 +79,8 @@ void TestWindow::update(){
 
 void TestWindow::stepUpdate(double ts){
     //update physics
-    //Physics::UpdateWorld(ts);
-    //Physics::UpdatePhysics();
+    Physics::UpdateWorld(ts);
+    Physics::UpdatePhysics();
     // play sound
     source->play(true);
 }
@@ -101,7 +101,7 @@ void TestWindow::render(double alpha){
 
     SpriteRenderer::Flush();
 
-    text->drawText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(1.0f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
+    TextRenderer::DrawText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(1.0f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
     
     //std::cout << "Quad Count: " << SpriteRenderer::stats.quadCount << "\n";
     //std::cout << "Draw Count: " << SpriteRenderer::stats.drawCount << "\n";

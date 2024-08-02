@@ -1,8 +1,7 @@
 #pragma once
 
-#ifndef XBOX_UTILS_HPP
-#define XBOX_UTILS_HPP
- 
+#ifndef GLFW_GAMEPAD_UTILS_HPP
+#define GLFW_GAMEPAD_UTILS_HPP
 // include GLFW
 #include <GLFW/glfw3.h>
 

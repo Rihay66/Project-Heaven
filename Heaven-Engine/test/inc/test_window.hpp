@@ -7,18 +7,16 @@
 
 #include <soundComponents/sound_source.hpp>
 #include <cameras/ortho_camera.hpp>
-#include <engine/text_renderer.hpp>
 
 class TestWindow : public Window {
     private:
         OrthoCamera* cam;
         SoundSource* source;
-        TextRenderer* text;
 
         //vars used for frame profiling
         double prevTime = 0.0;
         double currentTime = 0.0;
-        double timeDiff;
+        double timeDiff = 0.0;
         unsigned int counter = 0;
 
         std::string frame;

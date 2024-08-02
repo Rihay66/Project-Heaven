@@ -13,33 +13,44 @@
     #include FT_FREETYPE_H
 #endif
 
+// init static variables
+unsigned int    TextRenderer::VAO;
+unsigned int    TextRenderer::VBO;
+Shader          TextRenderer::textShader;
+bool            TextRenderer::isAutoClearSet = false;
+
 //TODO: Redo text renderer to use a batch rendering solution
 
-TextRenderer::TextRenderer(unsigned int width, unsigned int height,
- Shader& shader) : textShader(shader){
+void TextRenderer::Init(unsigned int width, unsigned int height,
+ Shader& shader){
+    // set up auto clear
+    setUpAutoClear();
+
     // create projection to be centered on the screen
     glm::mat4 projection = glm::ortho(-(static_cast<float>(width) / 2.0f), (static_cast<float>(width) / 2.0f), 
         -(static_cast<float>(height) / 2.0f), (static_cast<float>(height) / 2.0f), -1.0f, 1.0f);
 
+    // set shader
+    textShader = shader;
+
     // configure shader
-    this->textShader.SetMatrix4("projection", projection, true);
+    textShader.SetMatrix4("projection", projection, true);
 
     // configure VAO/VBO for positioning and texturing
     initTextRenderingData();
 }
 
-TextRenderer::~TextRenderer(){
-    // delete quad buffer data 
-    glDeleteVertexArrays(1, &this->VAO);
-    glDeleteBuffers(1, &this->VBO);
-}
 
-void TextRenderer::drawText(std::map<char, ResourceManager::Character> &chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
+void TextRenderer::DrawText(std::map<char, ResourceManager::Character> &chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
+    // check if the text renderer has been set
+    if(isAutoClearSet == false)
+        return;    
+
     // set the shader and set the textColor
-    this->textShader.SetVector4f("textColor", color, true);
+    textShader.SetVector4f("textColor", color, true);
 
     // bind this VAO
-    glBindVertexArray(this->VAO);
+    glBindVertexArray(VAO);
 
     // iterate through all characters
     std::string::const_iterator c;
@@ -67,7 +78,7 @@ void TextRenderer::drawText(std::map<char, ResourceManager::Character> &chars, s
         // render glyph texture over quad
         glBindTexture(GL_TEXTURE_2D, ch.TextureID);
         // update content of VBO memory
-        glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // be sure to use glBufferSubData and not glBufferData
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -81,11 +92,11 @@ void TextRenderer::drawText(std::map<char, ResourceManager::Character> &chars, s
 
 void TextRenderer::initTextRenderingData(){
     // configure VAO/VBO for texture quads
-    glCreateVertexArrays(1, &this->VAO);
-    glBindVertexArray(this->VAO);
+    glCreateVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
 
-    glCreateBuffers(1, &this->VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+    glCreateBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
     
     glEnableVertexAttribArray(0);
@@ -93,4 +104,17 @@ void TextRenderer::initTextRenderingData(){
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+}
+
+void TextRenderer::clear(){
+    // delete quad buffer data 
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+}
+
+void TextRenderer::setUpAutoClear(){
+    // set up on exit to call the Clear()
+    if(!isAutoClearSet && std::atexit(clear) == 0){
+        isAutoClearSet = true; // disable calling this function again
+    }
 }

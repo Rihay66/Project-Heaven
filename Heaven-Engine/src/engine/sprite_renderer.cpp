@@ -1,8 +1,5 @@
 #include <engine/sprite_renderer.hpp>
 
-// include the resource manager
-#include "resourceSystems/resource_manager.hpp"
-
 // Standard library
 #include <iostream>
 
