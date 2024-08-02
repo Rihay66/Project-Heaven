@@ -26,6 +26,10 @@ void TextRenderer::Init(unsigned int width, unsigned int height,
     // set up auto clear
     setUpAutoClear();
 
+    // when auto clear is set, stop re-initializing rendering data
+    if(isAutoClearSet)
+        return;
+
     // create projection to be centered on the screen
     glm::mat4 projection = glm::ortho(-(static_cast<float>(width) / 2.0f), (static_cast<float>(width) / 2.0f), 
         -(static_cast<float>(height) / 2.0f), (static_cast<float>(height) / 2.0f), -1.0f, 1.0f);
