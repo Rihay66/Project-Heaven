@@ -1,16 +1,16 @@
-#include <engine/physics.hpp>
+#include <systems/physics.hpp>
 
 // include standard library for debugging
 #include <iostream>
 
 // init resources
 
-std::vector<TriggerObject*>     Physics::triggerObjs;
-std::vector<PhysicsObject*>     Physics::rigidbodyObjs;
+//std::vector<TriggerObject*>     Physics::triggerObjs;
+//std::vector<PhysicsObject*>     Physics::rigidbodyObjs;
 int32_t                         Physics::velocityIterations = 8;
 int32_t                         Physics::positionIterations = 4;
 b2World*                        Physics::world = nullptr;
-State                           Physics::mState;
+//State                           Physics::mState;
 bool                            Physics::isAutoClearSet = false;
 
 
@@ -27,7 +27,7 @@ void Physics::Init(glm::vec2 gravity){
         // cause crash to program that uses this physics engine
         return;
     }
-
+    /*
     // check if there is an empty list of rigidbodies
     if(rigidbodyObjs.size() <= 0){
         //TODO: Create debug options for the Physics class to display a console to show any errors or messages
@@ -68,8 +68,10 @@ void Physics::Init(glm::vec2 gravity){
         //TODO: Create debug options for the Physics class to display a console to show any errors or messages
         //std::cout << "Warning: list of trigger objects is ZERO!!!" << "\n";
     }
+    */
 }
 
+/*
 TriggerObject* Physics::AddTriggerObject(TriggerObject* obj){
     // set up automatic clear()
     SetUpAutoClear();
@@ -147,6 +149,7 @@ PhysicsObject* Physics::AddPhysicsObject(PhysicsObject* obj){
     // return the same object given
     return obj;
 }
+*/
 
 void Physics::SetPhysicsVelocityIterations(int32_t iter){
     // set up automatic clear()
@@ -173,13 +176,16 @@ void Physics::SetPhysicsPositionIterations(int32_t iter){
 }
 
 void Physics::UpdateWorld(float deltaTime){
+    /*
     if(rigidbodyObjs.size() > 0 && world != nullptr){
         // update any collisions detection, but not update the rigidbodies position
         world->Step(deltaTime, velocityIterations, positionIterations);
     }
+    */
 }
 
 void Physics::UpdatePhysics(){
+    /*
     if(rigidbodyObjs.size() <= 0 && world != nullptr){
         //TODO: Create debug options for the Physics class to display a console to show any errors or messages
         return; //stop function
@@ -210,7 +216,7 @@ void Physics::UpdatePhysics(){
 
     //TODO: Create a memory safe system to create and delete rigidbody objects 
 
-    /*
+    
     // Remove rigidbodies that are set to be destroyed
     for (PhysicsObject *obj : rigidbodyObjs){
         if (obj->isDestroyed)
@@ -230,7 +236,7 @@ void Physics::UpdatePhysics(){
 
 void Physics::UpdateTriggers(){
     //TODO: Refactor checking for trigger collsion using space partitioning
-
+    /*
     if(triggerObjs.size() <= 0){
         //TODO: Create debug options for the Physics class to display a console to show any errors or messages
         return; // stop function
@@ -253,17 +259,19 @@ void Physics::UpdateTriggers(){
     }
 
     //TODO: Create a memory safe system to create and delete trigger objects 
+    */
 }
 
 void Physics::Clear(){
     // remove reference to objects
-    triggerObjs.clear();
-    rigidbodyObjs.clear();
+    //triggerObjs.clear();
+    //rigidbodyObjs.clear();
 
     // delete the physics world
     delete world;
 }
 
+/*
 //TODO: Make it able to detect collision for rotation and rotation offsets
 bool Physics::AABBCollision(GameObject* a, GameObject* b){
     // calculate the sides of the quad with the offset considered
@@ -290,6 +298,7 @@ b2BodyType Physics::RbToB2Types(BodyType bodyType){
     std::cout << "Warning: Unknown RB Body Type being passed!" << "\n";
     return b2_staticBody;
 }
+*/
 
 void Physics::SetUpAutoClear(){
     // set up on exit to call the Clear()

@@ -1,5 +1,4 @@
-#include <AL/al.h>
-#include <engine/sound_manager.hpp>
+#include <resourceSystems/sound_manager.hpp>
 
 // include standard output library
 #include <iostream>

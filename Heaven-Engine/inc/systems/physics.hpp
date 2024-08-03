@@ -5,8 +5,13 @@
 
 #include <vector>
 
-#include <gameObjects/physics_object.hpp>
-#include <gameObjects/trigger_object.hpp>
+//TODO: Move this system to work with ECS 
+
+//? Temporary inclusion of components
+#include <entitySystem/defaultComponents.hpp>
+
+// include GLM
+#include <glm/glm.hpp>
 
 // include box2d library
 #include <box2d/b2_world.h>
@@ -35,10 +40,10 @@ class Physics{
         //* Adder functions
 
         // add trigger object to the physics engine
-        static TriggerObject* AddTriggerObject(TriggerObject* obj);
+        //static TriggerObject* AddTriggerObject(TriggerObject* obj);
 
         // add physics object to the physics engine
-        static PhysicsObject* AddPhysicsObject(PhysicsObject* obj);
+        //static PhysicsObject* AddPhysicsObject(PhysicsObject* obj);
 
         //* Setter functions
 
@@ -70,17 +75,17 @@ class Physics{
         //* Helper functions
 
         // simple check for aabb collision check
-        static bool AABBCollision(GameObject* a, GameObject* b);
+        //static bool AABBCollision(GameObject* a, GameObject* b);
 
         // enum translate between box2d and rigidbodyObject class
-        static b2BodyType RbToB2Types(BodyType bodyType);
+        //static b2BodyType RbToB2Types(BodyType bodyType);
     private:
         // private reference storage
 
         // list of different trigger objects 
-        static std::vector<TriggerObject*> triggerObjs;
+        //static std::vector<TriggerObject*> triggerObjs;
         // list of different rigidbody
-        static std::vector<PhysicsObject*> rigidbodyObjs;
+        //static std::vector<PhysicsObject*> rigidbodyObjs;
 
         //* physics iteration values
 
@@ -91,7 +96,7 @@ class Physics{
         static b2World* world;
 
         // overwrittable State struct
-        static State mState;
+        //static State mState;
 
         // private constructor
         Physics() {};

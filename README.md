@@ -4,7 +4,7 @@ A Lightweight 2D OpenGL based Engine called:
 
 ![](Heaven-Engine_logo.png)
 
-Current Version: 1.03-F-Dev
+Current Version: 1.03-G-Dev
 
 Features:
 
@@ -17,6 +17,8 @@ Features:
 What's Coming?
 
 [] Documentation and Tutorial on how to use
+
+[] Entity Component System
 
 [] Unit Testing 
 
@@ -38,8 +40,8 @@ This project has yet to include contributors, though GitHub issues can be made t
 This Project is under the MIT License.
 
 Additional Information:
-* Games/Software made using the "Heaven-Engine", the "Heaven-Engine"'s license does not apply to the content made with it. If this software's shared or static library is included in
-  the content of your software, so it's required to include a copyright notice and license statement as part of your documentation.
+* Games/Software made using the "Heaven-Engine", the "Heaven-Engine"'s license does not apply to the content made with it. If this software's shared or static binary library is included in
+  the content of your software, then it's required to include a copyright notice and license statement as part of your documentation.
 
 Additional Restriction:
 * If the software is directly modified, the source code is changed, thus, the modified software will no longer hold the name "Heaven-Engine" nor "Project-Heaven".

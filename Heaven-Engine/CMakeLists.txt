@@ -10,12 +10,16 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 
 # Grab all source files
 file(GLOB_RECURSE ENGINE
-    ${CMAKE_SOURCE_DIR}/src/engine/*.c
-    ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/systems/*.c
+    ${CMAKE_SOURCE_DIR}/src/systems/*.cpp)
 
-file(GLOB_RECURSE GAMEOBJS
-    ${CMAKE_SOURCE_DIR}/src/gameObjects/*.c
-    ${CMAKE_SOURCE_DIR}/src/gameObjects/*.cpp)
+file(GLOB_RECURSE ECS
+    ${CMAKE_SOURCE_DIR}/src/entitySystem/*.c
+    ${CMAKE_SOURCE_DIR}/src/entitySystem/*.cpp)
+
+file(GLOB_RECURSE STB
+    ${CMAKE_SOURCE_DIR}/src/stb/*.c
+    ${CMAKE_SOURCE_DIR}/src/stb/*.cpp)
 
 file(GLOB_RECURSE CAMERAS 
     ${CMAKE_SOURCE_DIR}/src/cameras/*.c
@@ -46,8 +50,8 @@ file(GLOB_RECURSE UTILITY
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # Create both shared and static libraries
-add_library(Heaven-Engine SHARED ${ENGINE} ${GAMEOBJS} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDCOMPONENTS})
-add_library(Heaven-Engine-s STATIC ${ENGINE} ${GAMEOBJS} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDCOMPONENTS})
+add_library(Heaven-Engine SHARED ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDCOMPONENTS})
+add_library(Heaven-Engine-s STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDCOMPONENTS})
 
 # Include directories for header files
 target_include_directories(Heaven-Engine PUBLIC

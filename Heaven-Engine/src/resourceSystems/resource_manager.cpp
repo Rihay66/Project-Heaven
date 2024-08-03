@@ -14,7 +14,7 @@
     #include FT_FREETYPE_H
 #endif
 
-#include <resourceSystems/stb_image.h>
+#include <stb/stb_image.h>
 
 // instantiate static variables
 

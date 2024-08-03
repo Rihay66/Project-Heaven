@@ -11,7 +11,7 @@
 class TestWindow : public Window {
     private:
         OrthoCamera* cam;
-        SoundSource* source;
+        SoundSource source;
 
         //vars used for frame profiling
         double prevTime = 0.0;

@@ -4,17 +4,14 @@
 #define TAG_SYSTEM_HPP
 
 // include standard libraries
-#include <string>
-#include <vector>
-
-// include gameobject class
-#include <gameObjects/game_object.hpp>
+//#include <string>
+//#include <vector>
 
 /* A Static singleton TagSystem class that hosts several
  functions to add, edit, find GameObjects that have a set tag 
  to a static tag pool. All functions and tag pool are static.
  This Class has no public constructor defined.
-*/
+
 class TagSystem{
     public:
         //* adder Funcs
@@ -44,7 +41,7 @@ class TagSystem{
         //* remover Funcs
 
         // get object and remove from list
-        static void RemoveObject(GameObject* gameObj);
+        //static void RemoveObject(GameObject* gameObj);
 
         // get and remove objects with a certain tag
         static void RemoveObjectsWithTag(std::string& tagName);
@@ -56,7 +53,7 @@ class TagSystem{
         // define data type that contains both tag and gameobject
         struct objectTag{
             std::string name;
-            GameObject* obj;
+            //GameObject* obj;
         };
 
         // static resource. Contains GameObjects alongside with their assigned tag
@@ -65,5 +62,5 @@ class TagSystem{
         // private constructor
         TagSystem(){}
 };
-
+*/
 #endif

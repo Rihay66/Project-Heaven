@@ -1,9 +1,8 @@
 #include "../inc/test_window.hpp"
-#include "engine/text_renderer.hpp"
+#include "systems/text_renderer.hpp"
 #include "resourceSystems/resource_manager.hpp"
-#include <engine/sprite_renderer.hpp>
-#include <engine/physics.hpp>
-#include <engine/sound_manager.hpp>
+#include <systems/sprite_renderer.hpp>
+#include <resourceSystems/sound_manager.hpp>
 #include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
@@ -12,7 +11,6 @@ TestWindow::TestWindow(int w, int h) : Window(w, h){
 
 TestWindow::~TestWindow(){
     delete cam;
-    delete source;
 }
 
 std::string TestWindow::GetFrameTime(){
@@ -51,18 +49,12 @@ void TestWindow::init(){
     // init the text renderer
     TextRenderer::Init(getWidth(), getHeight(), ResourceManager::GetShader("text"));
 
-    // Create a sound source
-    source = new SoundSource();
-
     // Load a sound
     SoundManager::CreateSoundCollection("test", "lofi", "sounds/lofi.wav");
     // Load another sound
     SoundManager::AddSoundToBuffer("test", "music", "sounds/music.wav");
 
-    source->setBuffer(SoundManager::GetSoundFromBufferInColleciton("test", "lofi"));
-
-    // init physics
-    Physics::Init(glm::vec2(0.0f));
+    source.setBuffer(SoundManager::GetSoundFromBufferInColleciton("test", "lofi"));
 }
 
 void TestWindow::input(){
@@ -78,11 +70,8 @@ void TestWindow::update(){
 }
 
 void TestWindow::stepUpdate(double ts){
-    //update physics
-    Physics::UpdateWorld(ts);
-    Physics::UpdatePhysics();
     // play sound
-    source->play(true);
+    source.play(true);
 }
 
 void TestWindow::render(double alpha){

@@ -1,7 +1,7 @@
 #include <soundComponents/sound_source.hpp>
 
 // include the sound manager for auto clear
-#include <engine/sound_manager.hpp>
+#include <resourceSystems/sound_manager.hpp>
 
 void SoundSource::setPitch(float p){
     // check if parameter is within a range
