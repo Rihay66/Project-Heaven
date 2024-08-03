@@ -1,6 +1,6 @@
 #include <engine/sprite_renderer.hpp>
 
-// Standard library
+// standard library for debug outputs
 #include <iostream>
 
 // initialize static variables
@@ -26,6 +26,12 @@ glm::uvec2                          SpriteRenderer::spriteSize;
 bool                                SpriteRenderer::isAutoClearSet = false;
 
 void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
+    // when auto clear is set, stop re-initializing rendering data
+    if(isAutoClearSet){
+        std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
+        return;
+    }
+
     // set up automatic clear()
     setUpAutoClear();
 

@@ -98,9 +98,10 @@ void TestWindow::render(double alpha){
             SpriteRenderer::Stack(ResourceManager::GetTexture("test"), glm::vec2(x, y), glm::vec2(0.5f), 0.0f);
         }
     }
-
+    
     SpriteRenderer::Flush();
-
+    
+    // init the text renderer
     TextRenderer::DrawText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(1.0f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
     
     //std::cout << "Quad Count: " << SpriteRenderer::stats.quadCount << "\n";

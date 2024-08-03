@@ -1,8 +1,10 @@
-#include "resourceSystems/resource_manager.hpp"
 #include <engine/text_renderer.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+// standard library for debug outputs
+#include <iostream>
 
 // check platform and then grab the Freetype library
 #ifdef __unix__ // Linux/Unix platform
@@ -23,12 +25,14 @@ bool            TextRenderer::isAutoClearSet = false;
 
 void TextRenderer::Init(unsigned int width, unsigned int height,
  Shader& shader){
+    // when auto clear is set, stop re-initializing rendering data
+    if(isAutoClearSet){
+        std::cout << "Warning: Initialization of Text Renderer being called more than once!\n";
+        return;
+    }
+
     // set up auto clear
     setUpAutoClear();
-
-    // when auto clear is set, stop re-initializing rendering data
-    if(isAutoClearSet)
-        return;
 
     // create projection to be centered on the screen
     glm::mat4 projection = glm::ortho(-(static_cast<float>(width) / 2.0f), (static_cast<float>(width) / 2.0f), 
@@ -46,9 +50,11 @@ void TextRenderer::Init(unsigned int width, unsigned int height,
 
 
 void TextRenderer::DrawText(std::map<char, ResourceManager::Character> &chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
-    // check if the text renderer has been set
-    if(isAutoClearSet == false)
-        return;    
+    // check if the text renderer has been set  
+    if(!isAutoClearSet){
+        std::cout << "ERROR: Missing text render data initialization!\n";
+        return;
+    }
 
     // set the shader and set the textColor
     textShader.SetVector4f("textColor", color, true);
