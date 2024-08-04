@@ -8,7 +8,7 @@
 //TODO: Move this system to work with ECS 
 
 //? Temporary inclusion of components
-#include <entitySystem/defaultComponents.hpp>
+#include <ecs/default_components.hpp>
 
 // include GLM
 #include <glm/glm.hpp>

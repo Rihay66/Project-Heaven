@@ -14,8 +14,8 @@ file(GLOB_RECURSE ENGINE
     ${CMAKE_SOURCE_DIR}/src/systems/*.cpp)
 
 file(GLOB_RECURSE ECS
-    ${CMAKE_SOURCE_DIR}/src/entitySystem/*.c
-    ${CMAKE_SOURCE_DIR}/src/entitySystem/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/ecs/*.c
+    ${CMAKE_SOURCE_DIR}/src/ecs/*.cpp)
 
 file(GLOB_RECURSE STB
     ${CMAKE_SOURCE_DIR}/src/stb/*.c

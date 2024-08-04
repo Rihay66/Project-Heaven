@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef DEFAULTCOMPONENTS_HPP
-#define DEFAULTCOMPONENTS_HPP
+#ifndef DEFAULT_COMPONENTS_HPP
+#define DEFAULT_COMPONENTS_HPP
 
 // include GLM
 #include <glm/glm.hpp>
