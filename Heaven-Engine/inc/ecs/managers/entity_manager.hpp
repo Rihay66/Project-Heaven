@@ -6,8 +6,8 @@
 #include <queue>
 #include <array>
 
-#include <ecs/entity.hpp>
-#include <ecs/signature.hpp>
+#include <ecs/types/entity.hpp>
+#include <ecs/types/signature.hpp>
 
 /* Entity Manager distribtutes entity IDs and
 keeps record of which entities are in use and

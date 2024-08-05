@@ -36,7 +36,7 @@ class ResourceManager{
         // retrieves a stored sader
         static Shader& GetShader(std::string name);
         // loads (and generates) a texture from file
-        static Texture2D& LoadTexture(const char *file, std::string name, bool alpha = false);
+        static Texture& LoadTexture(const char *file, std::string name, bool alpha = false);
         // retrieves a stored texture on the texList vector
         static int GetTexture(std::string name);
         // loads (and generates) a text texture from file
@@ -49,7 +49,7 @@ class ResourceManager{
     private:
         // private resource storage
         static std::map<std::string, Shader> Shaders;
-        static std::map<std::string, Texture2D> Textures;
+        static std::map<std::string, Texture> Textures;
         static std::map<std::string, std::map<char, Character>> Fonts;
         static std::vector<unsigned int> texIDList;
 
@@ -58,7 +58,7 @@ class ResourceManager{
         // loads and generates a shader from file
         static Shader loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile = nullptr);
         // loads a single texture from file
-        static Texture2D loadTextureFromFile(const char *file, bool alpha);
+        static Texture loadTextureFromFile(const char *file, bool alpha);
         // properly de-allocates all loaded resources
         static void clear();
 

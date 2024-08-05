@@ -1,4 +1,4 @@
-#include <resourceSystems/sound_manager.hpp>
+#include <resourceSystems/managers/sound_manager.hpp>
 
 // include standard output library
 #include <iostream>

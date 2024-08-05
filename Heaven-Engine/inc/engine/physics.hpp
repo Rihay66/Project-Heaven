@@ -9,6 +9,7 @@
 
 //? Temporary inclusion of components
 #include <ecs/default_components.hpp>
+#include <ecs/types/system.hpp>
 
 // include GLM
 #include <glm/glm.hpp>
@@ -28,7 +29,7 @@ class b2World;
  functions to update TriggerObjects and PhysicsObjects.
  (NOTE: update functions don't work until init() has been called once)
 */
-class Physics{
+class Physics : public System{
     public:
         //* Initializer functions
 

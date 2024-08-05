@@ -1,4 +1,4 @@
-#include <resourceSystems/resource_manager.hpp>
+#include <resourceSystems/managers/resource_manager.hpp>
 #include <utilities/convention_utils.hpp>
 
 #include <iostream>
@@ -18,7 +18,7 @@
 
 // instantiate static variables
 
-std::map<std::string, Texture2D>    ResourceManager::Textures;
+std::map<std::string, Texture>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
 std::map<std::string, std::map<char, ResourceManager::Character>>           ResourceManager::Fonts; 
 std::vector<unsigned int>           ResourceManager::texIDList;
@@ -41,7 +41,7 @@ Shader& ResourceManager::GetShader(std::string name){
     return Shaders[name];
 }
 
-Texture2D& ResourceManager::LoadTexture(const char *file, std::string name, bool alpha){
+Texture& ResourceManager::LoadTexture(const char *file, std::string name, bool alpha){
     // set up automatic clear()
     setUpAutoClear();
     // check the name for any special characters
@@ -269,9 +269,9 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
     return shader;
 }
 
-Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha){
+Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha){
     // create texture object
-    Texture2D texture;
+    Texture texture;
     if (alpha)
     {
         texture.Internal_Format = GL_RGBA;

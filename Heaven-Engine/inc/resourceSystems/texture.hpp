@@ -10,7 +10,7 @@
  It also hosts utility variables for easy management and modifiability.
  The class requires an image size and a path to the texture.
 */
-class Texture2D{
+class Texture{
 public:
     // holds the ID of the texture object, used for all texture operations to reference to this particular texture
     unsigned int ID;
@@ -25,7 +25,7 @@ public:
     unsigned int Filter_Min; // filtering mode if texture pixels < screen pixels
     unsigned int Filter_Max; // filtering mode if texture pixels > screen pixels
     // constructor (sets default texture modes)
-    Texture2D();
+    Texture();
     // generates texture from image data
     void Generate(unsigned int width, unsigned int height, unsigned char* data);
 };

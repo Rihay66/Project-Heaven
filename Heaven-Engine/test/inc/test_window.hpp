@@ -3,15 +3,21 @@
 #ifndef TEST_WINDOW_HPP
 #define TEST_WINDOW_HPP
 
+#include <vector>
+
 #include <window/glfw_window.hpp>
 
 #include <soundComponents/sound_source.hpp>
 #include <cameras/ortho_camera.hpp>
+#include <ecs/ecs.hpp>
 
 class TestWindow : public Window {
     private:
         OrthoCamera* cam;
         SoundSource source;
+
+        // entity storage
+        std::vector<Entity> entities;
 
         //vars used for frame profiling
         double prevTime = 0.0;

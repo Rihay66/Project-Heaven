@@ -28,6 +28,15 @@ struct Transform2D{
     glm::vec2 scale;
 };
 
+// 2D texture component
+struct Texture2D {
+    int texIndex;
+};
+
+struct Renderer2D {
+    glm::vec4 color;
+};
+
 // physics components
 struct Rigidbody{
     BodyType Type = BodyType::Dynamic;

@@ -7,7 +7,7 @@
 #include <array>
 #include <cstddef>
 
-#include <ecs/entity.hpp>
+#include <ecs/types/entity.hpp>
 
 /* an interface so that the Component Mananger can tell 
 a generic ComponentArray that an Entity has been destroyed
@@ -32,18 +32,18 @@ class ComponentArray : public IComponentArray{
         that are mathcing the maximum number of entities allowed to exist
         simultaneously, so that each entity has a unique spot
         */
-        std::array<T, MAX_ENTITIES> componentArray;
+        std::array<T, MAX_ENTITIES> componentArray{};
 
         //TODO: Transition to use an array to allow for performance searches
 
         // map from an entity ID to an array index
-        std::unordered_map<Entity, size_t> entityToIndexMap;
+        std::unordered_map<Entity, size_t> entityToIndexMap{};
 
         // map from an array index to an entity ID
-        std::unordered_map<Entity, size_t> indexToEntityMap;
+        std::unordered_map<Entity, size_t> indexToEntityMap{};
 
         // total size of valid entries in the array
-        size_t size;
+        size_t size{};
     
     public:
         // give an entity a component

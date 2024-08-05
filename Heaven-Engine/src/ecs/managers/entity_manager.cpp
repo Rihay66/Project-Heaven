@@ -1,11 +1,11 @@
-#include <ecs/entity_manager.hpp>
+#include <ecs/managers/entity_manager.hpp>
 
 //? include standard library for debug prints
 #include <iostream>
 
 EntityManager::EntityManager(){
     // initialize the queue with all possible entity IDs
-    for(Entity entity = 0; entity < MAX_ENTITIES; ++entity){
+    for(Entity entity = 0; entity < MAX_ENTITIES; entity++){
         availableEntities.push(entity);
     }
 }
@@ -20,7 +20,7 @@ Entity EntityManager::CreateEntity(){
     // take an ID from the front of the queue
     Entity id = availableEntities.front();
     availableEntities.pop();
-    ++livingEntityCount;
+    livingEntityCount++;
 
     return id;
 }
@@ -37,7 +37,7 @@ void EntityManager::DestroyEntity(Entity entity){
 
     // put the destroyed ID at the back of the queue
     availableEntities.push(entity);
-    --livingEntityCount;
+    livingEntityCount--;
 }
 
 void EntityManager::SetSignature(Entity entity, Signature signature){

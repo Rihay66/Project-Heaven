@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-// include shader and texture classes
+// include shader classes
 #include <resourceSystems/shader.hpp>
 
 //TODO: Rewrite the comments for clarity and proper format
@@ -46,8 +46,8 @@ class SpriteRenderer{
 
         // contain reference to amont of quads and amount of draw calls
         static RendererStats stats;
-    private:
 
+    private:
         // data struct of standard quad's vertex information
         struct Vertex{
             glm::vec2 position;
@@ -55,7 +55,6 @@ class SpriteRenderer{
             float texIndex;
             glm::vec4 color;
         };
-
 
         // reference to the model size
         static glm::uvec2 spriteSize;

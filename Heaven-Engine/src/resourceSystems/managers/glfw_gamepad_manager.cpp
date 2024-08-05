@@ -1,4 +1,4 @@
-#include <resourceSystems/glfw_gamepad_manager.hpp>
+#include <resourceSystems/managers/glfw_gamepad_manager.hpp>
 
 // include standard library
 #include <iostream>

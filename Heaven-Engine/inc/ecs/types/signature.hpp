@@ -3,7 +3,7 @@
 #ifndef SIGNATURE_HPP
 #define SIGNATURE_HPP
 
-#include <ecs/component.hpp>
+#include <ecs/types/component.hpp>
 #include <bitset>
 
 /* type alias to define a signature which allows for

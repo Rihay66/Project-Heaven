@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15.0)
 set (CMAKE_CXX_STANDARD 17)
-project(Heaven-Engine VERSION 0.1.2 LANGUAGES C CXX)
-project(Heaven-Engine-s VERSION 0.1.2 LANGUAGES C CXX)
+project(Heaven-Engine VERSION 0.1.3 LANGUAGES C CXX)
+project(Heaven-Engine-s VERSION 0.1.3 LANGUAGES C CXX)
 project(Engine-Testing VERSION 0.1.0 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
@@ -10,12 +10,16 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 
 # Grab all source files
 file(GLOB_RECURSE ENGINE
-    ${CMAKE_SOURCE_DIR}/src/systems/*.c
-    ${CMAKE_SOURCE_DIR}/src/systems/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/engine/*.c
+    ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
 
 file(GLOB_RECURSE ECS
     ${CMAKE_SOURCE_DIR}/src/ecs/*.c
-    ${CMAKE_SOURCE_DIR}/src/ecs/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/ecs/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.c
+    ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/systems/*.c
+    ${CMAKE_SOURCE_DIR}/src/systems/*.cpp)
 
 file(GLOB_RECURSE STB
     ${CMAKE_SOURCE_DIR}/src/stb/*.c
@@ -27,7 +31,9 @@ file(GLOB_RECURSE CAMERAS
 
 file(GLOB_RECURSE RESOURCESYS 
     ${CMAKE_SOURCE_DIR}/src/resourceSystems/*.c
-    ${CMAKE_SOURCE_DIR}/src/resourceSystems/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/resourceSystems/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/resourceSystems/managers/*.c
+    ${CMAKE_SOURCE_DIR}/src/resourceSystems/managers/*.cpp)
 
 file(GLOB_RECURSE WINDOW 
     ${CMAKE_SOURCE_DIR}/src/window/*.c

@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include <resourceSystems/resource_manager.hpp>
+#include <resourceSystems/managers/resource_manager.hpp>
 
 /* A static singleton Text Renderer Class used to render text. This Class
 uses a loaded font from the ResourceManager Class.

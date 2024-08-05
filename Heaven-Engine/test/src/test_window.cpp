@@ -1,8 +1,8 @@
 #include "../inc/test_window.hpp"
-#include "systems/text_renderer.hpp"
-#include "resourceSystems/resource_manager.hpp"
-#include <systems/sprite_renderer.hpp>
-#include <resourceSystems/sound_manager.hpp>
+#include "engine/text_renderer.hpp"
+#include "resourceSystems/managers/resource_manager.hpp"
+#include <engine/sprite_renderer.hpp>
+#include <resourceSystems/managers/sound_manager.hpp>
 #include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
@@ -30,6 +30,9 @@ std::string TestWindow::GetFrameTime(){
 }
 
 void TestWindow::init(){
+    // init ECS
+    ECS::Init();
+
     // Load a shader
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "test");
     ResourceManager::LoadShader("shaders/text.vs", "shaders/text.frag", nullptr, "text");
