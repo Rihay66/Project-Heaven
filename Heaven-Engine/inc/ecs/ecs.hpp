@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ecs/types/signature.hpp"
 #ifndef ECS_HPP
 #define ECS_HPP
 
@@ -39,7 +40,7 @@ class ECS{
         static void AddComponent(Entity entity, T component){
             componentManager->AddComponent<T>(entity,component);
 
-            const auto& signature = entityManager->GetSignature(entity); 
+            Signature signature = entityManager->GetSignature(entity); 
             signature.set(componentManager->GetComponentType<T>(), true);
             entityManager->SetSignature(entity, signature);
 
@@ -71,6 +72,8 @@ class ECS{
         }
 
         //* System Functions
+
+        //TODO: Change how the register system returns a shared pointer
 
         // register a system, returns system reference for external use
         template<typename T>

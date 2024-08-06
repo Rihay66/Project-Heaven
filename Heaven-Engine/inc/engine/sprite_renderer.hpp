@@ -3,12 +3,12 @@
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
 
-// include math and glad
+// include GLAD and GLM
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-// include shader classes
+// include shader class
 #include <resourceSystems/shader.hpp>
 
 //TODO: Rewrite the comments for clarity and proper format

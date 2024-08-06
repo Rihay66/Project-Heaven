@@ -4,10 +4,12 @@
 #define TEST_WINDOW_HPP
 
 #include <vector>
+#include <memory>
 
 #include <window/glfw_window.hpp>
 
-#include <soundComponents/sound_source.hpp>
+#include <systems/ecs_sprite_renderer.hpp>
+#include <soundEngine/sound_source.hpp>
 #include <cameras/ortho_camera.hpp>
 #include <ecs/ecs.hpp>
 
@@ -15,6 +17,7 @@ class TestWindow : public Window {
     private:
         OrthoCamera* cam;
         SoundSource source;
+        std::shared_ptr<ECS_SpriteRenderer> renderer;
 
         // entity storage
         std::vector<Entity> entities;

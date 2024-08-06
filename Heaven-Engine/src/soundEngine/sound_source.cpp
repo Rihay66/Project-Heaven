@@ -1,4 +1,4 @@
-#include <soundComponents/sound_source.hpp>
+#include <soundEngine/sound_source.hpp>
 
 // include the sound manager for auto clear
 #include <resourceSystems/managers/sound_manager.hpp>

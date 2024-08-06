@@ -1,4 +1,4 @@
-#include <soundComponents/sound_buffer.hpp>
+#include <soundEngine/sound_buffer.hpp>
 #include <utilities/convention_utils.hpp>
 
 #include <AL/alext.h>

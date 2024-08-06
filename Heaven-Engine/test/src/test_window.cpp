@@ -1,6 +1,8 @@
 #include "../inc/test_window.hpp"
+#include "ecs/default_components.hpp"
 #include "engine/text_renderer.hpp"
 #include "resourceSystems/managers/resource_manager.hpp"
+#include "systems/ecs_sprite_renderer.hpp"
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <iostream>
@@ -33,12 +35,18 @@ void TestWindow::init(){
     // init ECS
     ECS::Init();
 
+    // initialize ECS renderer
+    renderer = ECS::RegisterSystem<ECS_SpriteRenderer>();
+
+    // register components
+    renderer->registerComponents();
+
     // Load a shader
-    ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "test");
+    ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
     ResourceManager::LoadShader("shaders/text.vs", "shaders/text.frag", nullptr, "text");
 
     // set up camera
-    cam = new OrthoCamera(this->getWidth(), getHeight(), ResourceManager::GetShader("test"));
+    cam = new OrthoCamera(this->getWidth(), getHeight(), ResourceManager::GetShader("sprite"));
 
     // Load a texture
     ResourceManager::LoadTexture("textures/default.png", "test", true);
@@ -46,8 +54,8 @@ void TestWindow::init(){
     // Load a font
     ResourceManager::LoadFontTexture("fonts/Arcade.ttf", 36, "arcade", false);
 
-    // init the renderer
-    SpriteRenderer::Init(ResourceManager::GetShader("test"), glm::uvec2(30.0f));
+    // init the sprite renderer
+    SpriteRenderer::Init(ResourceManager::GetShader("sprite"), glm::vec2(30.0f));
 
     // init the text renderer
     TextRenderer::Init(getWidth(), getHeight(), ResourceManager::GetShader("text"));
@@ -58,6 +66,28 @@ void TestWindow::init(){
     SoundManager::AddSoundToBuffer("test", "music", "sounds/music.wav");
 
     source.setBuffer(SoundManager::GetSoundFromBufferInColleciton("test", "lofi"));
+
+    // create 100 entities
+    for(int i = 0; i < 100; i++){
+        for(int k = 0; k < 100; k++){
+            // create entity
+            Entity entity = ECS::CreateEntity();
+
+            ECS::AddComponent(entity, Transform2D{
+                .position = glm::vec2(i, k),
+                .rotation = 0.0f,
+                .scale = glm::vec2(0.5f)
+            });
+
+            ECS::AddComponent(entity, Texture2D{
+                .texIndex = ResourceManager::GetTexture("test")
+            });
+
+            ECS::AddComponent(entity, Renderer2D{
+                .color = glm::vec4(1.0f)
+            });
+        }
+    }
 }
 
 void TestWindow::input(){
@@ -82,17 +112,9 @@ void TestWindow::render(double alpha){
     //render background
     glClearColor(0.35f, 0.35f, 0.35f, 1.0f);
 
+    // render all entities
+    renderer->render(alpha);
 
-    // render 
-    for(int x = 0; x < 100; x++){
-        for(int y = 0; y < 100; y++){
-            // stack quads
-            SpriteRenderer::Stack(ResourceManager::GetTexture("test"), glm::vec2(x, y), glm::vec2(0.5f), 0.0f);
-        }
-    }
-    
-    SpriteRenderer::Flush();
-    
     // init the text renderer
     TextRenderer::DrawText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(1.0f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
     

@@ -84,9 +84,11 @@ class ComponentArray : public IComponentArray{
 
         // return a reference of the entity's component
         T& GetData(Entity entity){
+            /*
             if(entityToIndexMap.find(entity) == entityToIndexMap.end()){
-                return;
+                return 0;
             }
+            */
 
             return componentArray[entityToIndexMap[entity]];
         }
