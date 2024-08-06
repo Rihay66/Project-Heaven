@@ -33,7 +33,7 @@ std::string TestWindow::GetFrameTime(){
 
 void TestWindow::init(){
     // init ECS
-    ECS::Init();
+    ECS::Init('r');
 
     // initialize ECS renderer
     renderer = ECS::RegisterSystem<ECS_SpriteRenderer>();

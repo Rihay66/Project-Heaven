@@ -1,3 +1,5 @@
+#include "ecs/types/component.hpp"
+#include "ecs/types/signature.hpp"
 #include <ecs/managers/entity_manager.hpp>
 
 //? include standard library for debug prints
@@ -55,7 +57,7 @@ Signature EntityManager::GetSignature(Entity entity){
     if(entity > MAX_ENTITIES){
         //? display error
         std::cout << "ERROR: Entity out of range!\n"; 
-        return NULL;
+        return std::bitset<MAX_COMPONENTS>();
     }
 
     // get this entity's signature from the array

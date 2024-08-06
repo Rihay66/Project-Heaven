@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <iostream>
 
 #include <ecs/types/entity.hpp>
 #include <ecs/types/component.hpp>
@@ -25,13 +26,16 @@ class ComponentManager{
         // the component type to be assigned to the next registered component, starting from 0
         ComponentType nextComponentType{};
 
+        // private storage of debug option
+        char debugOption;
+
         // helper function to get the statically caster pointer to the component array of generic type T
     	template<typename T>
-	    std::shared_ptr<ComponentArray<T>> GetComponentArray()
-	    {
+	    std::shared_ptr<ComponentArray<T>> GetComponentArray(){
 		    const char* typeName = typeid(T).name();
 
-		    if(componentTypes.find(typeName) == componentTypes.end()){
+		    if(debugOption == 'd' && componentTypes.find(typeName) == componentTypes.end()){
+                std::cout << "ERROR: Failed to retrieve component array of type: " << typeName << "\n";
                 return nullptr;
             }
 
@@ -39,12 +43,18 @@ class ComponentManager{
 	    }
 
     public:
+        // public constructor
+        ComponentManager(char option = 'd'){
+            debugOption = option;
+        }
+
         // registers a new component to be tracked
         template<typename T>
         void RegisterComponent(){
             const char* typeName = typeid(T).name();
 
-            if(componentTypes.find(typeName) != componentTypes.end()){
+            if(debugOption == 'd' && componentTypes.find(typeName) != componentTypes.end()){
+                std::cout << "ERROR: Failed to register additional component: " << typeName << "\n";
                 return;
             }
 
@@ -52,7 +62,7 @@ class ComponentManager{
             componentTypes.insert({typeName, nextComponentType});
 
             // create a component array pointer and add it to the component arrays map
-            componentArrays.insert({typeName, std::make_shared<ComponentArray<T>>()});
+            componentArrays.insert({typeName, std::make_shared<ComponentArray<T>>(debugOption)});
 
             // increment the value so that the next component registered will be different
             nextComponentType++;
@@ -63,7 +73,8 @@ class ComponentManager{
         ComponentType GetComponentType(){
             const char* typeName = typeid(T).name();
 
-            if(componentTypes.find(typeName) == componentTypes.end()){
+            if(debugOption == 'd' && componentTypes.find(typeName) == componentTypes.end()){
+                std::cout << "ERROR: Failed to retrieve component type as component: " << typeName << " is NOT registered!\n";
                 return -1;
             }
 

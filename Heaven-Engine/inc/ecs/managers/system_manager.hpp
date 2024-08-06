@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <iostream>
 
 #include <ecs/types/system.hpp>
 #include <ecs/types/signature.hpp>
@@ -21,7 +22,16 @@ class SystemManager{
 
         // map from system type string pointer to a system pointer
         std::unordered_map<const char*, std::shared_ptr<System>> systems{};
+
+        // private storage of the debug option
+        char debugOption;
+
     public:
+        // public constructor
+        SystemManager(char option = 'd'){
+            debugOption = option;
+        }
+
         // register a system for use, returns a reference of the system for external use
         template<typename T>
         std::shared_ptr<T> RegisterSystem(){
@@ -42,7 +52,8 @@ class SystemManager{
         void SetSignature(Signature signature){
             const char* typeName = typeid(T).name();
 
-            if(systems.find(typeName) == systems.end()){
+            if(debugOption == 'd' && systems.find(typeName) == systems.end()){
+                std::cout << "ERROR: System: " << typeName << " already contains a signature\n";
                 return;
             }
 

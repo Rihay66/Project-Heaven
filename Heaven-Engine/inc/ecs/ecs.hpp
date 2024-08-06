@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ecs/types/signature.hpp"
 #ifndef ECS_HPP
 #define ECS_HPP
 
@@ -8,14 +7,16 @@
 #include <ecs/managers/component_manager.hpp>
 #include <ecs/managers/system_manager.hpp>
 
-/* ECS (aka coordinator)
+/* A static singleton ECS (aka coordinator) class that hosts
+ several function to create, manage, remove Entities, Components,
+ and Systems. 
 */
 class ECS{
     public:
         /* initialize the entity, component, and system managers
             this function also contains debug options
-            d - default, no debug outputs
-            r - repeats, outputs msg when function is called more than once
+            d - debug, debug outputs, error checking
+            r - release, skip any functional error checking and some debug outputs
         */
         static void Init(char debugOption = 'd');
 
@@ -52,7 +53,7 @@ class ECS{
         static void RemoveComponent(Entity entity){
             componentManager->RemoveComponent<T>(entity);
 
-            const auto& signature = entityManager->GetSignature(entity);
+            Signature signature = entityManager->GetSignature(entity);
             signature.set(componentManager->GetComponentType<T>(), false);
             entityManager->SetSignature(entity, signature);
 
@@ -73,14 +74,13 @@ class ECS{
 
         //* System Functions
 
-        //TODO: Change how the register system returns a shared pointer
-
         // register a system, returns system reference for external use
         template<typename T>
         static std::shared_ptr<T> RegisterSystem(){
             return systemManager->RegisterSystem<T>();
         }
 
+        // set the signatures that a system can use for in the entities
         template<typename T>
         static void SetSystemSignature(Signature signature){
             systemManager->SetSignature<T>(signature);
@@ -89,6 +89,7 @@ class ECS{
     private:
         // private constructor
         ECS() {}
+
         // private pointer storage of the entity manager
         static std::unique_ptr<EntityManager> entityManager;
 
@@ -97,7 +98,6 @@ class ECS{
 
         // private pointer storage of the system manager
         static std::unique_ptr<SystemManager> systemManager;
-
 };
 
 #endif

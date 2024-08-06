@@ -16,23 +16,23 @@ void ECS::Init(char debugOption){
     if(entityManager.get() == nullptr){
         entityManager = std::make_unique<EntityManager>();
     }else {
-        if(debugOption == 'r')
+        if(debugOption == 'd')
             std::cout << "ERROR: ECS being initialized more than once!\n";
         return;
     }
 
     if(componentManager.get() == nullptr){
-        componentManager = std::make_unique<ComponentManager>();
+        componentManager = std::make_unique<ComponentManager>(debugOption);
     }else {
-        if(debugOption == 'r')
+        if(debugOption == 'd')
             std::cout << "ERROR: ECS being initialized more than once!\n";
         return;
     }
 
     if(systemManager.get() == nullptr){
-        systemManager = std::make_unique<SystemManager>();
+        systemManager = std::make_unique<SystemManager>(debugOption);
     }else {
-        if(debugOption == 'r')
+        if(debugOption == 'd')
             std::cout << "ERROR: ECS being initialized more than once!\n";
         return;
     }

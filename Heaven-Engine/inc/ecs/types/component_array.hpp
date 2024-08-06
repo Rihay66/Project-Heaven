@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <array>
 #include <cstddef>
+#include <iostream>
+#include <stdexcept>
 
 #include <ecs/types/entity.hpp>
 
@@ -34,8 +36,6 @@ class ComponentArray : public IComponentArray{
         */
         std::array<T, MAX_ENTITIES> componentArray{};
 
-        //TODO: Transition to use an array to allow for performance searches
-
         // map from an entity ID to an array index
         std::unordered_map<Entity, size_t> entityToIndexMap{};
 
@@ -44,11 +44,20 @@ class ComponentArray : public IComponentArray{
 
         // total size of valid entries in the array
         size_t size{};
-    
+
+        // private storage of the debug option
+        char debugOption;
+        
     public:
+        // public constructor
+        ComponentArray(char option = 'd'){
+            debugOption = option;
+        }
+
         // give an entity a component
         void InsertData(Entity entity, T component){
-            if(entityToIndexMap.find(entity) != entityToIndexMap.end()){
+            if(debugOption == 'd' && entityToIndexMap.find(entity) != entityToIndexMap.end()){
+                std::cout << "ERROR: Entity already contains given component!\n";
                 return;
             }
 
@@ -62,7 +71,8 @@ class ComponentArray : public IComponentArray{
 
         // remove an entity's component
         void RemoveData(Entity entity){
-            if(entityToIndexMap.find(entity) == entityToIndexMap.end()){
+            if(debugOption == 'd' && entityToIndexMap.find(entity) == entityToIndexMap.end()){
+                std::cout << "ERROR: Entity doesn't have such component to remove!\n";
                 return;
             }
 
@@ -84,11 +94,9 @@ class ComponentArray : public IComponentArray{
 
         // return a reference of the entity's component
         T& GetData(Entity entity){
-            /*
-            if(entityToIndexMap.find(entity) == entityToIndexMap.end()){
-                return 0;
+            if(debugOption == 'd' && entityToIndexMap.find(entity) == entityToIndexMap.end()){
+                throw std::invalid_argument("ERROR: Can't find entity with a component!");
             }
-            */
 
             return componentArray[entityToIndexMap[entity]];
         }
