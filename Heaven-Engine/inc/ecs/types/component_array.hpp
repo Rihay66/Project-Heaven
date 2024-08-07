@@ -40,7 +40,7 @@ class ComponentArray : public IComponentArray{
         std::unordered_map<Entity, size_t> entityToIndexMap{};
 
         // map from an array index to an entity ID
-        std::unordered_map<Entity, size_t> indexToEntityMap{};
+        std::unordered_map<size_t, Entity> indexToEntityMap{};
 
         // total size of valid entries in the array
         size_t size{};

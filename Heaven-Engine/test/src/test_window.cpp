@@ -8,7 +8,7 @@
 #include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
-    setTargetTimeStep(1.0f/5000.0f);
+    setTargetTimeStep(1.0f/8000.0f);
 }
 
 TestWindow::~TestWindow(){
@@ -35,11 +35,17 @@ void TestWindow::init(){
     // init ECS
     ECS::Init('r');
 
+    // register components
+    ECS::RegisterComponent<Transform2D>();
+    ECS::RegisterComponent<Texture2D>();
+    ECS::RegisterComponent<Renderer2D>();
+
     // initialize ECS renderer
     renderer = ECS::RegisterSystem<ECS_SpriteRenderer>();
 
-    // register components
-    renderer->registerComponents();
+    // register signature to render system
+    ECS::SetSystemSignature<ECS_SpriteRenderer>(ECS::GetComponentType<Transform2D>(), 
+        ECS::GetComponentType<Texture2D>(), ECS::GetComponentType<Renderer2D>());
 
     // Load a shader
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");

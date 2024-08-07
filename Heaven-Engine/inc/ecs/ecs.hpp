@@ -3,6 +3,8 @@
 #ifndef ECS_HPP
 #define ECS_HPP
 
+#include <type_traits>
+
 #include <ecs/managers/entity_manager.hpp>
 #include <ecs/managers/component_manager.hpp>
 #include <ecs/managers/system_manager.hpp>
@@ -80,10 +82,36 @@ class ECS{
             return systemManager->RegisterSystem<T>();
         }
 
-        // set the signatures that a system can use for in the entities
+        /* set the signatures that a system can use for in the entities
+
+        */
         template<typename T>
         static void SetSystemSignature(Signature signature){
             systemManager->SetSignature<T>(signature);
+        }
+
+        /* set the signatures that a system can use for in the entities
+            
+        */
+        template<typename T, typename... Args>
+        static void SetSystemSignature(Args... args){
+            // check if args are of type ComponentType
+            static_assert((std::is_same_v<Args, ComponentType> && ...), "ERROR: Invalid signature argument as all component types are of std::uint8_t"); 
+            
+            // check the amount of arguments to the max components
+            static_assert(sizeof...(args) < MAX_COMPONENTS, "ERROR: Too many specified signature component types, the max is 32");
+
+            // create signature to fill
+            Signature sig;
+            // get value and grab amount of all arguments
+            ComponentType arguments[] = { args... };
+
+            // loop through all arguments and populate signature
+            for(int i = 0; i < sizeof...(args); i++){
+                sig.set(arguments[i]);
+            }
+
+            systemManager->SetSignature<T>(sig);
         }
 
     private:
