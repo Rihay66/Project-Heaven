@@ -2,12 +2,13 @@
 #include "ecs/default_components.hpp"
 #include "engine/text_renderer.hpp"
 #include "resourceSystems/managers/resource_manager.hpp"
-#include "systems/ecs_sprite_renderer.hpp"
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
+#include <engine/physics.hpp>
 #include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
+    setFixedTimeStep(1.0/60.0f);
     setTargetTimeStep(1.0f/8000.0f);
 }
 
@@ -33,19 +34,27 @@ std::string TestWindow::GetFrameTime(){
 
 void TestWindow::init(){
     // init ECS
-    ECS::Init('r');
+    ECS::Init();
 
     // register components
     ECS::RegisterComponent<Transform2D>();
     ECS::RegisterComponent<Texture2D>();
     ECS::RegisterComponent<Renderer2D>();
+    ECS::RegisterComponent<Rigidbody>();
+    ECS::RegisterComponent<BoxCollider>();
 
     // initialize ECS renderer
     renderer = ECS::RegisterSystem<ECS_SpriteRenderer>();
 
+    // initialize ECS Physics
+    physics = ECS::RegisterSystem<ECS_Physics>();
+
     // register signature to render system
     ECS::SetSystemSignature<ECS_SpriteRenderer>(ECS::GetComponentType<Transform2D>(), 
         ECS::GetComponentType<Texture2D>(), ECS::GetComponentType<Renderer2D>());
+
+    ECS::SetSystemSignature<ECS_Physics>(ECS::GetComponentType<Transform2D>(), 
+        ECS::GetComponentType<Rigidbody>(), ECS::GetComponentType<BoxCollider>());
 
     // Load a shader
     ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
@@ -72,28 +81,59 @@ void TestWindow::init(){
     SoundManager::AddSoundToBuffer("test", "music", "sounds/music.wav");
 
     source.setBuffer(SoundManager::GetSoundFromBufferInColleciton("test", "lofi"));
+    
+    // init physics
+    Physics::Init();
 
     // create 100 entities
-    for(int i = 0; i < 100; i++){
-        for(int k = 0; k < 100; k++){
-            // create entity
-            Entity entity = ECS::CreateEntity();
+    for(int i = 0; i < 2; i++){
+        // create entity
+        Entity entity = ECS::CreateEntity();
 
-            ECS::AddComponent(entity, Transform2D{
-                .position = glm::vec2(i, k),
-                .rotation = 0.0f,
-                .scale = glm::vec2(0.5f)
-            });
+        ECS::AddComponent(entity, Transform2D{
+            .position = glm::vec2(20, (i * 2) + 10),
+            .rotation = 0.0f,
+            .size = glm::vec2(1.0f)
+        });
 
-            ECS::AddComponent(entity, Texture2D{
-                .texIndex = ResourceManager::GetTexture("test")
-            });
+        ECS::AddComponent(entity, Texture2D{
+            .texIndex = ResourceManager::GetTexture("test")
+        });
 
-            ECS::AddComponent(entity, Renderer2D{
-                .color = glm::vec4(1.0f)
-            });
-        }
+        ECS::AddComponent(entity, Renderer2D{
+            .color = glm::vec4(1.0f)
+        });
+
+        ECS::AddComponent(entity, Rigidbody{});
+
+        ECS::AddComponent(entity, BoxCollider{});
+
+        // store entity
+        entities.push_back(entity);
     }
+
+    // change one of the physics objects to be static
+
+    auto& rb = ECS::GetComponent<Rigidbody>(entities[1]);
+
+    rb.Type = BodyType::Dynamic;
+
+    auto& transform = ECS::GetComponent<Transform2D>(entities[1]);
+
+    transform.position = transform.position + glm::vec2(0.0f, 10.0f);
+
+    auto& render = ECS::GetComponent<Renderer2D>(entities[1]);
+    render.color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+    auto& groundTransform = ECS::GetComponent<Transform2D>(entities[0]);
+
+    groundTransform.size = glm::vec2(5.0f, 1.0f);
+
+    // register all the entities into the ECS physics
+    for(Entity& entity : entities){
+        physics->registerEntity(entity);
+    }
+
 }
 
 void TestWindow::input(){
@@ -111,6 +151,19 @@ void TestWindow::update(){
 void TestWindow::stepUpdate(double ts){
     // play sound
     source.play(true);
+
+    //* Move one of the entities
+    if(glfwGetKey(getWindowHandle(), GLFW_KEY_W) == GLFW_PRESS){
+        // make red object jump up
+        b2Body* body = (b2Body*)ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody;
+
+        // move
+        body->ApplyForce({0.0f, 50.0f}, body->GetWorldCenter(), true);
+    }
+
+    // update physics
+    Physics::UpdateWorld(ts);
+    physics->update();
 }
 
 void TestWindow::render(double alpha){
@@ -122,7 +175,7 @@ void TestWindow::render(double alpha){
     renderer->render(alpha);
 
     // init the text renderer
-    TextRenderer::DrawText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(1.0f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
+    TextRenderer::DrawText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(getWidth() / 2.3f, getHeight() / 2.3f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
     
     //std::cout << "Quad Count: " << SpriteRenderer::stats.quadCount << "\n";
     //std::cout << "Draw Count: " << SpriteRenderer::stats.drawCount << "\n";

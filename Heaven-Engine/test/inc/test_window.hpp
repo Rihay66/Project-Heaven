@@ -8,6 +8,7 @@
 #include <window/glfw_window.hpp>
 
 #include <systems/ecs_sprite_renderer.hpp>
+#include <systems/ecs_physics.hpp>
 #include <soundEngine/sound_source.hpp>
 #include <cameras/ortho_camera.hpp>
 #include <ecs/ecs.hpp>
@@ -17,6 +18,7 @@ class TestWindow : public Window {
         OrthoCamera* cam;
         SoundSource source;
         ECS_2DRenderer renderer;
+        ECS_2DPhysics physics;
 
         // entity storage
         std::vector<Entity> entities;

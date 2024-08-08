@@ -15,8 +15,6 @@
 */
 class ECS_SpriteRenderer : public System{
     public:
-        //TODO: 
-
         // render all entities added
         void render(double alpha);
 };

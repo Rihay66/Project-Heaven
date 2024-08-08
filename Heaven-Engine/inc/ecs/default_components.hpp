@@ -18,14 +18,14 @@ enum class BodyType {Static = 0, Dynamic, Kinematic };
 struct Transform{
     glm::vec3 position;
     glm::vec3 rotation;
-    glm::vec3 scale;
+    glm::vec3 size;
 };
 
 // 2D transform component
 struct Transform2D{
     glm::vec2 position;
     float rotation;
-    glm::vec2 scale;
+    glm::vec2 size;
 };
 
 // 2D texture component
@@ -39,11 +39,12 @@ struct Renderer2D {
 
 // physics components
 struct Rigidbody{
-    BodyType Type = BodyType::Dynamic;
+    BodyType Type = BodyType::Static;
     bool fixedRotation = false;
 
     // storage for runtime
     void* runtimeBody = nullptr;
+
     // constructors
     Rigidbody() = default;
     Rigidbody(const Rigidbody&) = default;

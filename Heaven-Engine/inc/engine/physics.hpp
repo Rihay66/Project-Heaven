@@ -9,7 +9,6 @@
 
 //? Temporary inclusion of components
 #include <ecs/default_components.hpp>
-#include <ecs/types/system.hpp>
 
 // include GLM
 #include <glm/glm.hpp>
@@ -23,13 +22,20 @@
 // redeclare the box2d b2World class for engine use
 class b2World;
 
+// define a Physics 'Object'
+struct PhysicsObject {
+  Transform2D* transform;
+  BoxCollider* collider;
+  Rigidbody* rb;
+};
+
 /* Static Singleton Physics class that hosts functions to add
  either TriggerObject or PhysicsObject into the physics engine.
  Objects can be added at any time after init(). Use update 
  functions to update TriggerObjects and PhysicsObjects.
  (NOTE: update functions don't work until init() has been called once)
 */
-class Physics : public System{
+class Physics {
     public:
         //* Initializer functions
 
@@ -43,8 +49,11 @@ class Physics : public System{
         // add trigger object to the physics engine
         //static TriggerObject* AddTriggerObject(TriggerObject* obj);
 
-        // add physics object to the physics engine
-        //static PhysicsObject* AddPhysicsObject(PhysicsObject* obj);
+        // create a Physics Object to the physics engine, returns reference of the Physics Object 
+        static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider& collider, Rigidbody& rigidbody);
+
+        // register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        static void RegisterPhysicsObject(Transform2D& transform, BoxCollider& collider, Rigidbody& rigidbody);
 
         //* Setter functions
 
@@ -65,6 +74,11 @@ class Physics : public System{
         */
         static void UpdatePhysics();
 
+        /* check given components and update given transform and rigidbody components
+        *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        */
+        static void UpdateRegisteredObject(Transform2D& transform, Rigidbody& rigidbody);
+
         // check all trigger objects
         static void UpdateTriggers();
 
@@ -75,18 +89,17 @@ class Physics : public System{
 
         //* Helper functions
 
+        //TODO: Make a function that destroys a specified body
+
         // simple check for aabb collision check
         //static bool AABBCollision(GameObject* a, GameObject* b);
 
         // enum translate between box2d and rigidbodyObject class
-        //static b2BodyType RbToB2Types(BodyType bodyType);
-    private:
-        // private reference storage
+        static b2BodyType RbToB2Types(BodyType bodyType);
 
-        // list of different trigger objects 
-        //static std::vector<TriggerObject*> triggerObjs;
-        // list of different rigidbody
-        //static std::vector<PhysicsObject*> rigidbodyObjs;
+    private:
+        // private reference storage of all Physics Objects
+        static std::vector<PhysicsObject> physicsObjs;
 
         //* physics iteration values
 
@@ -95,9 +108,6 @@ class Physics : public System{
 
         // reference to physics world
         static b2World* world;
-
-        // overwrittable State struct
-        //static State mState;
 
         // private constructor
         Physics() {};
