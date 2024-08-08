@@ -1,3 +1,4 @@
+#include "ecs/default_components.hpp"
 #include <box2d/b2_body.h>
 #include <engine/physics.hpp>
 
@@ -10,12 +11,10 @@
 
 // init resources
 
-//std::vector<TriggerObject*>     Physics::triggerObjs;
 std::vector<PhysicsObject>      Physics::physicsObjs;
 int32_t                         Physics::velocityIterations = 8;
 int32_t                         Physics::positionIterations = 4;
 b2World*                        Physics::world = nullptr;
-//State                           Physics::mState;
 bool                            Physics::isAutoClearSet = false;
 
 // template function 
@@ -36,33 +35,6 @@ void Physics::Init(glm::vec2 gravity){
         return;
     }
 }
-
-/*
-TriggerObject* Physics::AddTriggerObject(TriggerObject* obj){
-    // set up automatic clear()
-    SetUpAutoClear();
-    // check if the object is valid
-    if(obj && obj != nullptr){
-        // check if object already exists in the list
-        for(int i = 0; i < triggerObjs.size(); i++){
-            if(triggerObjs[i] == obj){
-                return nullptr; // object already exists so stop function and return nothing
-            }
-        }
-
-        // object is valid then add to list
-        triggerObjs.push_back(obj);
-
-    }else{
-        //TODO: Create debug options for the Physics class to display a console to show any errors or messages
-        // return nothing
-        return nullptr;
-    }
-
-    // return the same object given
-    return obj;
-}
-*/
 
 PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider& collider, Rigidbody& rigidbody){
     // check if object already exists
@@ -226,34 +198,6 @@ void Physics::UpdateRegisteredObject(Transform2D &transform, Rigidbody &rigidbod
     transform.rotation = body->GetAngle();
 }
 
-void Physics::UpdateTriggers(){
-    //TODO: Refactor checking for trigger collsion using space partitioning
-    /*
-    if(triggerObjs.size() <= 0){
-        //TODO: Create debug options for the Physics class to display a console to show any errors or messages
-        return; // stop function
-    }
-
-    // loop use each trigger will collide only with rigidbody objects
-    for (TriggerObject *trigObj : triggerObjs){
-        for (PhysicsObject *rigidObj : rigidbodyObjs){
-            // check for aabb colllision
-            if (AABBCollision(trigObj, rigidObj)){
-                // call the trigger's collision callback
-                trigObj->triggerCollisionCallback(rigidObj);
-            }
-        }
-        // check if trigger is a exit trigger
-        if (trigObj->getTriggerType() == TriggerType::Exit){
-            // call to check objects that collided with the exit trigger
-            trigObj->exitTriggerObjectCheck();
-        }
-    }
-
-    //TODO: Create a memory safe system to create and delete trigger objects 
-    */
-}
-
 void Physics::Clear(){
     // remove reference to components of each Physics object
     for(PhysicsObject& obj : physicsObjs){
@@ -270,19 +214,16 @@ void Physics::Clear(){
     delete world;
 }
 
-/*
-//TODO: Make it able to detect collision for rotation and rotation offsets
-bool Physics::AABBCollision(GameObject* a, GameObject* b){
-    // calculate the sides of the quad with the offset considered
+bool Physics::AABBCollision(Transform2D& a, Transform2D& b){
+    //TODO: calculate the sides of the quad with the offset considered
 
     // check for no overlap
-    bool collisionX = (a->position.x + a->size.x / 2.0f) >= (b->position.x - b->size.x / 2.0f) && (a->position.x - a->size.x / 2.0f) <= (b->position.x + b->size.x / 2.0f);
-    bool collisionY = (a->position.y + a->size.y / 2.0f) >= (b->position.y - b->size.y / 2.0f) && (a->position.y - a->size.y / 2.0f) <= (b->position.y + b->size.y / 2.0f);
+    bool collisionX = (a.position.x + a.size.x / 2.0f) >= (b.position.x - b.size.x / 2.0f) && (a.position.x - a.size.x / 2.0f) <= (b.position.x + b.size.x / 2.0f);
+    bool collisionY = (a.position.y + a.size.y / 2.0f) >= (b.position.y - b.size.y / 2.0f) && (a.position.y - a.size.y / 2.0f) <= (b.position.y + b.size.y / 2.0f);
 
     // if the quad overlap on both axes, a collision is detected
     return collisionX && collisionY;
 }
-*/
 
 b2BodyType Physics::RbToB2Types(BodyType bodyType){
     switch (bodyType){

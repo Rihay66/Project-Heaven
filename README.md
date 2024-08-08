@@ -4,7 +4,7 @@ A Lightweight 2D OpenGL based Engine called:
 
 ![](Heaven-Engine_logo.png)
 
-Current Version: 1.03-J-Dev
+Current Version: 1.03-K-Dev
 
 Features:
 
@@ -12,13 +12,12 @@ Features:
 * Batch Rendering solution
 * Box2D for physics simulation
 * OpenAL-based sound engine
+* Entity Component System
 * Controller-Support
 
 What's Coming?
 
 [] Documentation and Tutorial on how to use
-
-[] Entity Component System
 
 [] Unit Testing 
 

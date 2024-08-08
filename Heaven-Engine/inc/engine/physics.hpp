@@ -30,9 +30,9 @@ struct PhysicsObject {
 };
 
 /* Static Singleton Physics class that hosts functions to add
- either TriggerObject or PhysicsObject into the physics engine.
+ either PhysicsObject into the physics engine.
  Objects can be added at any time after init(). Use update 
- functions to update TriggerObjects and PhysicsObjects.
+ functions to update PhysicsObjects.
  (NOTE: update functions don't work until init() has been called once)
 */
 class Physics {
@@ -45,9 +45,6 @@ class Physics {
         static void Init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
 
         //* Adder functions
-
-        // add trigger object to the physics engine
-        //static TriggerObject* AddTriggerObject(TriggerObject* obj);
 
         // create a Physics Object to the physics engine, returns reference of the Physics Object 
         static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider& collider, Rigidbody& rigidbody);
@@ -79,9 +76,6 @@ class Physics {
         */
         static void UpdateRegisteredObject(Transform2D& transform, Rigidbody& rigidbody);
 
-        // check all trigger objects
-        static void UpdateTriggers();
-
         /* updates physics world which updates physics objects 
         *  NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
@@ -91,8 +85,10 @@ class Physics {
 
         //TODO: Make a function that destroys a specified body
 
+        //TODO: Make a OBB function to allow detecting rotational collisions
+
         // simple check for aabb collision check
-        //static bool AABBCollision(GameObject* a, GameObject* b);
+        static bool AABBCollision(Transform2D& a, Transform2D& b);
 
         // enum translate between box2d and rigidbodyObject class
         static b2BodyType RbToB2Types(BodyType bodyType);

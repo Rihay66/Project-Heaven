@@ -34,7 +34,7 @@ std::string TestWindow::GetFrameTime(){
 
 void TestWindow::init(){
     // init ECS
-    ECS::Init();
+    ECS::Init('r');
 
     // register components
     ECS::RegisterComponent<Transform2D>();
