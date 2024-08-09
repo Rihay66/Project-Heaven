@@ -1,8 +1,13 @@
-#include <resourceSystems/tag_system.hpp>
-/*
-// instantiate static resources
-std::vector<TagSystem::objectTag> TagSystem::tagPool;
+#include <resourceSystems/managers/tag_manager.hpp>
 
+// include standard output library
+#include <iostream>
+
+// instantiate static resources
+std::multimap<std::string, std::pair<std::any, const char*>>            TagManager::tagPool;
+bool                                                                    TagManager::isAutoClearSet = false;
+
+/*
 void TagSystem::AddTag(std::string tagName, GameObject* gameObj){
     // add a new object to the pool with the tag
     
@@ -123,8 +128,15 @@ void TagSystem::RemoveObjectsWithTag(std::string& tagName){
     }
 }
 
-void TagSystem::Clear(){
-    // remove references to pointers
-    tagPool.clear();
-}
 */
+void TagManager::Clear(){
+    // remove references to pointers
+
+}
+
+void TagManager::SetUpAutoClear(){
+    // set up on exit to call the Clear()
+    if(!isAutoClearSet && std::atexit(Clear) == 0){
+        isAutoClearSet = true; // disable calling this function again
+    }
+}
