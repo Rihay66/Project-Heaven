@@ -11,13 +11,14 @@
 #include <stdexcept>
 #include <string> 
 #include <cstring>
+#include <vector>
+#include <functional>
 //? debug print
 #include <iostream>
 
 /* A Static singleton TagSystem class that hosts several
- functions to add, edit, find GameObjects that have a set tag 
- to a static tag pool. All functions and tag pool are static.
- This Class has no public constructor defined.
+ functions to add, edit, find arbitrary types that have a set tag 
+ to a static tag pool.
 */
 class TagManager{
     public:
@@ -31,12 +32,17 @@ class TagManager{
 
         //* getter Funcs
 
-        // get the object associated with type
+        /* get a list of all of given type with given tag
+        ! Throws runtime errors
+        */
         template<typename T>
-        static T& GetTag(const std::string& tag){
+        static std::vector<std::reference_wrapper<T>> GetAllWithTag(const std::string& tag){
             //TODO: Optimize finding the key, maybe switch the tagPool to a vector<>
-
-            //TODO: Optimize search for tag and type
+            
+            // check if map is not empty
+            if(tagPool.empty()){
+                throw std::runtime_error("ERROR: Tag pool empty!");
+            }
 
             // iterate through the map
             auto const& iter = tagPool.find(tag);
@@ -46,57 +52,178 @@ class TagManager{
                 throw std::runtime_error("ERROR: Tag not found");
             }
 
-            // handle any bad casting
+            // grab the type name
             const char* typeName = typeid(T).name();
+            // create list to store references to variables or objects
+            std::vector<std::reference_wrapper<T>> tempList;
+           
+            //TODO: Optimize search for tag and type
+
+            // iterate through the map and find the element
             for(auto const& pair : tagPool){
                 if(pair.first.compare(tag) == 0 && std::strcmp(typeName, pair.second.second) == 0){
-                    return std::any_cast<std::shared_ptr<std::reference_wrapper<T>>>(pair.second.first)->get();
+                    tempList.push_back(std::any_cast<std::shared_ptr<std::reference_wrapper<T>>>(pair.second.first)->get());
                 } 
             }
 
-            throw std::runtime_error("ERROR: Type mismatch!");
+            // check if list is not empty
+            if(!tempList.empty()){
+                return tempList;
+            }
+
+            // else throw a mismatch error
+            throw std::runtime_error("ERROR: List being retrieved is empty by either Type mismatched or object doesn't exist!");
         }
 
-        // get a tag from a object in the tag pool
-        //static std::string GetTagByGameObject(GameObject* gameObj);
+        // get a tag from a exisiting variable or object in the tag pool
+        template<typename T>
+        static std::string GetTagOfElement(T& ref){
+            // iterate through the tag pool
+            for(auto iter = tagPool.begin(); iter != tagPool.end(); iter++){
+                try{
+                    // grab each element's std::shared_ptr
 
-        // get objects from the tag pool by tag
-        //static std::vector<GameObject*> GetObjectsByTag(std::string tagName);
+                    // grab the std::shared_ptr of iteration
+                    auto& temp = 
+                        std::any_cast<std::shared_ptr<std::reference_wrapper<T>>>(iter->second.first)->get();
 
-        // check if tag pertains to a passed object that exists in tag pool
-        //static bool CheckObjectByTag(std::string target, GameObject* gameObj);
+                    // check if both given variable or object and tag pool have the same reference
+                    if(std::addressof(temp) == std::addressof(ref)){
+                        return iter->first;
+                    }
+
+                }catch(const std::bad_any_cast&){
+                    // skip iteration
+                    continue;
+                }
+            }
+
+            return "";
+        }
+
+        // check if tag pertains to a variable or object that exists in tag pool
+        template<typename T>
+        static bool CheckElementByTag(const std::string& target, T& ref){
+            // iterate through the tag pool
+            for(auto iter = tagPool.begin(); iter != tagPool.end(); iter++){
+                try{
+                    // grab each element's std::shared_ptr
+
+                    // grab the std::shared_ptr of iteration
+                    auto& temp = 
+                        std::any_cast<std::shared_ptr<std::reference_wrapper<T>>>(iter->second.first)->get();
+                    
+                    // check if it has the same tag and tag pool iteration have the same reference
+                    if(target.compare(iter->first) == 0 && std::addressof(temp) == std::addressof(ref)){
+                        return true;
+                    }
+
+                }catch(const std::bad_any_cast&){
+                    // skip iteration
+                    continue;
+                }
+            }
+
+            return false;
+        }
 
         // get amount of objects in the tag system
-        //static int GetAmountOfObjects();
+        static int GetAmountOfObjects();
 
         //* helper Funcs
         
-        // get object from the list and replace the tag of in the tag pool, not the object's tag itself
-        //static void ReplaceTag(std::string tagName, GameObject* gameObj);
+        /* get variable or object from the list and replace the tag of in the tag pool
+        * NOTE: The type's tag being replaced causes all of the type's previous tag to be removed 
+        */
+        template<typename T>
+        static void ReplaceElementTag(const std::string& tagName, T& ref){
+            // find object and remove completely from tag pool
+            if(TagManager::RemoveObject(ref)){
+                // add as a new object
+                TagManager::AddTag(tagName, ref);
+            }else{
+                // throw an error
+                throw std::runtime_error("ERROR: Couldn't find variable or object in tag pool!");
+            }
+        }
 
         //* remover Funcs
 
-        // get object and remove from list
-        //static void RemoveObject(GameObject* gameObj);
+        // get object reference and remove from list, returns true if object was succesfully removed and false otherwise
+        template<typename T>
+        static bool RemoveObject(T& ref){
+            // create boolean
+            bool state = false;
 
-        // get and remove objects with a certain tag
-        //static void RemoveObjectsWithTag(std::string& tagName);
+            // iterate through the map
+            for(auto iter = tagPool.begin(); iter != tagPool.end();){
+                try{
+                    // grab each element's std::shared_ptr
 
-        // clear tag pool of reference to objects
-        static void Clear();
+                    // grab the exact reference of iteration
+                    auto& temp = 
+                        std::any_cast<std::shared_ptr<std::reference_wrapper<T>>>(iter->second.first)->get();
+                    
+                    // compare if both given reference and element are the same
+                    if(std::addressof(temp) == std::addressof(ref)){
+                        
+                        // reset shared_ptr
+                        auto ptr = std::any_cast<std::shared_ptr<std::reference_wrapper<T>>>(iter->second.first);
+                        ptr.reset();
+
+                        // erase element from tag pool
+                        iter = tagPool.erase(iter);
+
+                        // change state to be true
+                        state = true;
+                    }
+
+                    // continue loop
+                    iter++;
+                    
+                }catch(const std::bad_any_cast&){
+                    // continue loop
+                    iter++;
+                }
+            }
+
+            // return state
+            return state;
+        }
+
+        // remove elements with the given type and tag
+        template<typename T>
+        static void RemoveElementsByTag(const std::string& tag){
+            // iterate through the map
+            for(auto iter = tagPool.begin(); iter != tagPool.end();){
+                // check if elements has the given tag and type
+                if(iter->first.compare(tag) == 0 && std::strcmp(typeid(T).name(), iter->second.second) == 0){
+                    // try to remove element
+                    try{
+                        // grab the std::shared_ptr of iteration
+                        auto ptr = 
+                            std::any_cast<std::shared_ptr<std::reference_wrapper<T>>>(iter->second.first);
+                        // remove reference to object
+                        ptr.reset();
+
+                        // erase element
+                        iter = tagPool.erase(iter);
+
+                    }catch(const std::bad_any_cast&){
+                        // continue the loop
+                        iter++;
+                    }
+                }else{
+                    iter++;
+                }
+            }
+        }
 
     private:
         // static resource. Contains reference alongside with their assigned tag
-
         static std::multimap<std::string, std::pair<std::any, const char*>> tagPool;
 
         // private constructor
         TagManager(){}
-
-        //! Currently EXPERIMENTAL, may cause exceptions or segfaults
-        // private boolean to track automatic clear()
-        static bool isAutoClearSet;
-        // set up automatic de-allocation of loaded resources
-        static void SetUpAutoClear();
 };
 #endif
