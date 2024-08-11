@@ -279,6 +279,9 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha){
     }
     // load image
     int width, height, nrChannels;
+    // tell stb_image to flip vertically the image
+    stbi_set_flip_vertically_on_load(true);
+    // load the texture file
     unsigned char* data = stbi_load(file, &width, &height, &nrChannels, 0);
     // check file if it has been found
     if(!data){

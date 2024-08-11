@@ -65,6 +65,7 @@ void TestWindow::init(){
 
     // Load a texture
     ResourceManager::LoadTexture("textures/default.png", "test", true);
+    ResourceManager::LoadTexture("textures/logo.png", "logo", true);
 
     // Load a font
     ResourceManager::LoadFontTexture("fonts/Arcade.ttf", 36, "arcade", false);
@@ -122,8 +123,8 @@ void TestWindow::init(){
 
     transform.position = transform.position + glm::vec2(0.0f, 10.0f);
 
-    auto& render = ECS::GetComponent<Renderer2D>(entities[1]);
-    render.color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    auto& tex = ECS::GetComponent<Texture2D>(entities[1]);
+    tex.texIndex = ResourceManager::GetTexture("logo");
 
     auto& groundTransform = ECS::GetComponent<Transform2D>(entities[0]);
 

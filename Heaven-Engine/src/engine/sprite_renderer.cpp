@@ -6,10 +6,10 @@
 // initialize static variables
 SpriteRenderer::RendererStats       SpriteRenderer::stats;
 const glm::vec4                     SpriteRenderer::quadVertexPositions[4] = {
-    {0.5f, 0.5f, 0.0f, 1.0f},
-    {-0.5f, 0.5f, 0.0f, 1.0f},
+    {-0.5f, -0.5f, 0.0f, 1.0f},
     {0.5f, -0.5f, 0.0f, 1.0f},
-    {-0.5f, -0.5f, 0.0f, 1.0f}};
+    {0.5f, 0.5f, 0.0f, 1.0f},
+    {-0.5f, 0.5f, 0.0f, 1.0f}};
 // initialize buffer
 SpriteRenderer::Vertex*             SpriteRenderer::quadBuffer = nullptr;
 SpriteRenderer::Vertex*             SpriteRenderer::quadBufferPtr = nullptr;
@@ -160,7 +160,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
         (transform * vertexPositions[1]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {-1.0f, 0.0f};
+    quadBufferPtr->texCoords = {1.0f, 0.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
     quadBufferPtr++;
@@ -169,7 +169,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
         (transform * vertexPositions[2]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {0.0f, 1.0f};
+    quadBufferPtr->texCoords = {1.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
     quadBufferPtr++;
@@ -178,7 +178,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
         (transform * vertexPositions[3]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {-1.0f, 1.0f};
+    quadBufferPtr->texCoords = {0.0f, 1.0f};
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
     quadBufferPtr++;
@@ -231,7 +231,7 @@ void SpriteRenderer::initRenderData(){
 
         indices[i + 3] = 2 + offset;
         indices[i + 4] = 3 + offset;
-        indices[i + 5] = 1 + offset;
+        indices[i + 5] = 0 + offset;
 
         offset += 4;
     }
