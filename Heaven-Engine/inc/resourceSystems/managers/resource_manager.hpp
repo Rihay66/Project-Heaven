@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <array>
 
 // include necessary classes such as texture and shader classes
 #include <resourceSystems/texture.hpp>
@@ -21,7 +22,6 @@
 class ResourceManager{
     public:
         // TODO: Allow for multiple fonts to be loaded in 
-        // TODO: Move resource storage to be encapsulated
 
         // holds all state information relevant to a character as loaded using FreeType
         struct Character{
@@ -31,26 +31,38 @@ class ResourceManager{
             unsigned int Advance;   // horizontal offset to advance to next glyph
         };
 
+        // define a sub texture that contains oordinates of a specific texture
+        struct SubTexture{
+            std::array<glm::vec2, 4> TexCoords;
+        };
+
         // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
         static Shader& LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
-        // retrieves a stored sader
+        // retrieves a stored shader
         static Shader& GetShader(std::string name);
         // loads (and generates) a texture from file
         static Texture& LoadTexture(const char *file, std::string name, bool alpha = false);
-        // retrieves a stored texture on the texList vector
-        static int GetTexture(std::string name);
+        // retrieves a stored texture's ID
+        static int GetTextureIndex(std::string name);
+        // retrieves a stored texture
+        static Texture& GetTexture(std::string name);
+        // binds all textures from the texture list to be used by OpenGL
+        static bool BindTextures();
         // loads (and generates) a text texture from file
         static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool isLinear = true);
         // retrieves a stored font texture map that contains characters and associated font
         static std::map<char, Character>& GetFontTexture(std::string name);
-        // binds all textures from the texture list to be used by OpenGL
-        static bool BindTextures();
+        // use a loaded texture to create a sub texture
+        static std::array<glm::vec2, 4>& LoadSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize = {1, 1});
+        // retrieve a stored sub texture
+        static std::array<glm::vec2, 4>& GetSubTexture(std::string name);
 
     private:
         // private resource storage
         static std::map<std::string, Shader> Shaders;
         static std::map<std::string, Texture> Textures;
         static std::map<std::string, std::map<char, Character>> Fonts;
+        static std::map<std::string, SubTexture> SubTextures;
         static std::vector<unsigned int> texIDList;
 
         // private constructor, that is we do not want any actual resource manager objects. Its members and functions should be publicly available (static).

@@ -1,5 +1,5 @@
+#include <array>
 #include <resourceSystems/managers/resource_manager.hpp>
-#include <utilities/convention_utils.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -18,42 +18,37 @@
 
 // instantiate static variables
 
-std::map<std::string, Texture>    ResourceManager::Textures;
-std::map<std::string, Shader>       ResourceManager::Shaders;
+std::map<std::string, Shader>                                               ResourceManager::Shaders;
+std::map<std::string, Texture>                                              ResourceManager::Textures;
 std::map<std::string, std::map<char, ResourceManager::Character>>           ResourceManager::Fonts; 
-std::vector<unsigned int>           ResourceManager::texIDList;
-bool                                ResourceManager::isAutoClearSet = false;
+std::map<std::string, ResourceManager::SubTexture>                          ResourceManager::SubTextures;
+std::vector<unsigned int>                                                   ResourceManager::texIDList;
+bool                                                                        ResourceManager::isAutoClearSet = false;
 
 
 Shader& ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name){
     // set up automatic clear()
     setUpAutoClear();
-    // check the name for any special characters
-    name = checkName(name);
     // load the shader from the given file
     Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
     return Shaders[name];
 }
 
 Shader& ResourceManager::GetShader(std::string name){
-    // check the name for any special characters
-    name = checkName(name);
     return Shaders[name];
 }
 
 Texture& ResourceManager::LoadTexture(const char *file, std::string name, bool alpha){
     // set up automatic clear()
     setUpAutoClear();
-    // check the name for any special characters
-    name = checkName(name);
     // load the texture from the given file and set the alpha flag
     Textures[name] = loadTextureFromFile(file, alpha);
     // add texture ID to list
-    texIDList.push_back(Textures[name].ID);
+    texIDList.push_back(Textures[name].GetID());
     return Textures[name];
 }
 
-int ResourceManager::GetTexture(std::string name){
+int ResourceManager::GetTextureIndex(std::string name){
 
     //*NOTE: The check is used to prevent using this function when no texture was binded to OpenGL
     if(texIDList.size() <= 0){
@@ -61,8 +56,7 @@ int ResourceManager::GetTexture(std::string name){
         return -1;
     }
 
-    name = checkName(name);
-    unsigned int id = Textures[name].ID;
+    unsigned int id = Textures[name].GetID();
 
     for(int i = 0; i < texIDList.size(); i++){
         //check for id on the list and return it's location by iteration 
@@ -75,13 +69,40 @@ int ResourceManager::GetTexture(std::string name){
     return -1;
 }
 
+Texture& ResourceManager::GetTexture(std::string name){
+    // check the name for any special characters
+    return Textures[name];
+}
+
+bool ResourceManager::BindTextures(){
+
+    // check if the texure list is not zero
+    if(texIDList.size() <= 0){
+        std::cout << "ERROR: No textures were loaded!" << std::endl;
+        return false;
+    }
+
+    // bind all the textures from first to last
+    for(int i = 0; i < texIDList.size(); i++){
+        // call to bind texture by their ID
+        glBindTextureUnit(i, texIDList[i]);
+    }
+
+    //TODO: Make a flag that allows to display warnings such as this
+    // check OpenGL errors
+    int errorCode = glGetError();
+    if(errorCode != GL_NO_ERROR){
+        std::cout << "WARNING: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
 std::map<char, ResourceManager::Character>& ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize, std::string name, bool isLinear){
     // set up automatic clear()
     setUpAutoClear();
-    
-    // check the name for any special characters
-    name = checkName(name);
-    
+
     // use free type to load font and set font size
     
     // initialize the FreeType2 library 
@@ -171,35 +192,30 @@ std::map<char, ResourceManager::Character>& ResourceManager::LoadFontTexture(con
 }
 
 std::map<char, ResourceManager::Character>& ResourceManager::GetFontTexture(std::string name){
-    // check the name for any special characters
-    name = checkName(name);
-
     return Fonts[name];
 }
 
-bool ResourceManager::BindTextures(){
+std::array<glm::vec2, 4>& ResourceManager::LoadSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize){
+    //create sub texture
+    SubTexture st;
 
-    // check if the texure list is not zero
-    if(texIDList.size() <= 0){
-        std::cout << "ERROR: No textures were loaded!" << std::endl;
-        return false;
-    }
+    // calculate the offset coordinate of the sub texture
+    glm::vec2 min = { (coordinates.x * cellSize.x) / (float)texture.GetWidth(), (coordinates.y * cellSize.y) / (float)texture.GetHeight()};
+    glm::vec2 max = { ((coordinates.x + spriteSize.x) * cellSize.x) / (float)texture.GetWidth(), ((coordinates.y + spriteSize.y) * cellSize.y) / (float)texture.GetHeight()};
 
-    // bind all the textures from first to last
-    for(int i = 0; i < texIDList.size(); i++){
-        // call to bind texture by their ID
-        glBindTextureUnit(i, texIDList[i]);
-    }
+    // set each tex coord the corresponding coordinates
+    st.TexCoords[0] = {min.x, min.y};
+    st.TexCoords[1] = {max.x, min.y};
+    st.TexCoords[2] = {max.x, max.y};
+    st.TexCoords[3] = {min.x, max.y};
 
-    //TODO: Make a flag that allows to display warnings such as this
-    // check OpenGL errors
-    int errorCode = glGetError();
-    if(errorCode != GL_NO_ERROR){
-        std::cout << "WARNING: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
-        return false;
-    }
+    // store sub texture
+    SubTextures[name] = st;
+    return SubTextures[name].TexCoords;
+}
 
-    return true;
+std::array<glm::vec2, 4>& ResourceManager::GetSubTexture(std::string name){
+    return SubTextures[name].TexCoords;
 }
 
 void ResourceManager::clear(){
@@ -210,7 +226,7 @@ void ResourceManager::clear(){
 
     // (properly) delete all textures
     for (auto iter : Textures)
-        glDeleteTextures(1, &iter.second.ID);
+        glDeleteTextures(1, &iter.second.GetID());
     // (properly) delete all font textures
     for(auto i : Fonts){
         for(const auto& x : i.second){
@@ -274,8 +290,8 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha){
     Texture texture;
     if (alpha)
     {
-        texture.Internal_Format = GL_RGBA;
-        texture.Image_Format = GL_RGBA;
+        texture.SetTextureInternalFormat(GL_RGBA);
+        texture.SetTextureImageFormat(GL_RGBA);
     }
     // load image
     int width, height, nrChannels;

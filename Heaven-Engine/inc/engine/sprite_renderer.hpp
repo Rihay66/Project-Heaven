@@ -8,6 +8,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+// include standard array library
+#include <array>
+
 // include shader class
 #include <resourceSystems/shader.hpp>
 
@@ -28,13 +31,13 @@ class SpriteRenderer{
         //TODO: Allow for setting custom base quads corner positions
 
         // draw single a quad utilizing given raw data, without interpolation
-        static void Draw(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const glm::vec4 vertexPositions[] = quadVertexPositions);
+        static void Draw(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
 
         /* store a single quad utilizing given raw data, without interpolation
             !Requires the Flush() after this function in order to render what was stored
             !Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
         */
-        static void Stack(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const glm::vec4 vertexPositions[] = quadVertexPositions);
+        static void Stack(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
         
         // used to tell the GPU to render the stored quads in the buffer
         static void Flush();
@@ -46,6 +49,12 @@ class SpriteRenderer{
 
         // contain reference to amont of quads and amount of draw calls
         static RendererStats stats;
+
+        // used to store default offsets of quad vertex positions
+        const static glm::vec4 quadVertexPositions[];
+        
+        // used to store default texture cooridinates
+        const static std::array<glm::vec2, 4>  textureCoordinates;
 
     private:
         // data struct of standard quad's vertex information
@@ -82,10 +91,7 @@ class SpriteRenderer{
 
         // stores maximum amount of textures there can be
         const static int maxTextureSlots = 32;
-
-        // used to store offsets of quad vertex positions
-        const static glm::vec4 quadVertexPositions[];
-
+        
         // private constructor 
         SpriteRenderer() {}
 
@@ -93,7 +99,7 @@ class SpriteRenderer{
         static void initRenderData();
 
         // used to draw a quad and to be stored in to the quad buffer 
-        static void createQuad(glm::vec2& position, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, const glm::vec4 vertexPositions[]);
+        static void createQuad(glm::vec2& position, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, std::array<glm::vec2, 4> texCoords, const glm::vec4 vertexPositions[]);
 
         // used to set the quad vertex buffers
         static void beginBatch();

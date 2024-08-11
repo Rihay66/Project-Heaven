@@ -1,3 +1,4 @@
+#include <array>
 #include <engine/sprite_renderer.hpp>
 
 // standard library for debug outputs
@@ -10,6 +11,12 @@ const glm::vec4                     SpriteRenderer::quadVertexPositions[4] = {
     {0.5f, -0.5f, 0.0f, 1.0f},
     {0.5f, 0.5f, 0.0f, 1.0f},
     {-0.5f, 0.5f, 0.0f, 1.0f}};
+const std::array<glm::vec2, 4>      SpriteRenderer::textureCoordinates = {{
+        {0.0f, 0.0f},
+        {1.0f, 0.0f},
+        {1.0f, 1.0f},
+        {0.0f, 1.0f}
+    }};;
 // initialize buffer
 SpriteRenderer::Vertex*             SpriteRenderer::quadBuffer = nullptr;
 SpriteRenderer::Vertex*             SpriteRenderer::quadBufferPtr = nullptr;
@@ -47,6 +54,8 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
     // set up array to the size of the max number of textures
     int samplers[maxTextureSlots];
 
+    //TODO: Create a simple white texture to be default
+
     // set up samplers array
     for (int i = 0; i < maxTextureSlots; i++)
     {
@@ -63,7 +72,7 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
     initRenderData(); 
 }
 
-void SpriteRenderer::Draw(int texIndex, glm::vec2 pos, glm::vec2 size, float rot, glm::vec4 color, const glm::vec4 vertexPositions[]){
+void SpriteRenderer::Draw(int texIndex, glm::vec2 pos, glm::vec2 size, float rot, glm::vec4 color,const std::array<glm::vec2, 4> texCoords ,const glm::vec4 vertexPositions[]){
     //? check if buffer hasn't been set up
     if(quadBuffer == nullptr){
         //! Display error
@@ -77,13 +86,13 @@ void SpriteRenderer::Draw(int texIndex, glm::vec2 pos, glm::vec2 size, float rot
     beginBatch();
 
     // create the quad to render
-    createQuad(pos, size, rot, texIndex, color, vertexPositions);
+    createQuad(pos, size, rot, texIndex, color, texCoords, vertexPositions);
 
     // render
     Flush();
 }
 
-void SpriteRenderer::Stack(int texIndex, glm::vec2 pos, glm::vec2 size, float rot, glm::vec4 color, const glm::vec4 vertexPositions[]){
+void SpriteRenderer::Stack(int texIndex, glm::vec2 pos, glm::vec2 size, float rot, glm::vec4 color, const std::array<glm::vec2, 4> texCoords, const glm::vec4 vertexPositions[]){
     //? check if buffer hasn't been set up
     if(quadBuffer == nullptr){
         //! Display error
@@ -102,7 +111,7 @@ void SpriteRenderer::Stack(int texIndex, glm::vec2 pos, glm::vec2 size, float ro
     // if not then add a quad to the buffer pointer
 
     // create the quad to render
-    createQuad(pos, size, rot, texIndex, color, vertexPositions);
+    createQuad(pos, size, rot, texIndex, color, texCoords, vertexPositions);
 }
 
 void SpriteRenderer::Flush(){
@@ -133,7 +142,7 @@ void SpriteRenderer::Flush(){
     indexCount = 0;
 }
 
-void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, const glm::vec4 vertexPositions[]){
+void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, const std::array<glm::vec2, 4> texCoords,const glm::vec4 vertexPositions[]){
     // check if not over the index count
     if (indexCount >= maxIndexCount){
         // flush what's left and start another batch
@@ -151,7 +160,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
         (transform * vertexPositions[0]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {0.0f, 0.0f};
+    quadBufferPtr->texCoords = texCoords[0];
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
     quadBufferPtr++;
@@ -160,7 +169,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
         (transform * vertexPositions[1]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {1.0f, 0.0f};
+    quadBufferPtr->texCoords = texCoords[1];
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
     quadBufferPtr++;
@@ -169,7 +178,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
         (transform * vertexPositions[2]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {1.0f, 1.0f};
+    quadBufferPtr->texCoords = texCoords[2];
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
     quadBufferPtr++;
@@ -178,7 +187,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
         (transform * vertexPositions[3]) *
         glm::scale(glm::mat4(1.0f),
                    glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
-    quadBufferPtr->texCoords = {0.0f, 1.0f};
+    quadBufferPtr->texCoords = texCoords[3];
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
     quadBufferPtr++;

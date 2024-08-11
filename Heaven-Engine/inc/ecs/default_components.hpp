@@ -6,6 +6,9 @@
 // include GLM
 #include <glm/glm.hpp>
 
+// include standard array library
+#include <array>
+
 // types of triggers that fufill a specific need
 enum class TriggerType {Enter = 0, Stay, Exit};
 
@@ -31,6 +34,12 @@ struct Transform2D{
 // 2D texture component
 struct Texture2D {
     int texIndex;
+    std::array<glm::vec2, 4> texCoords = {{
+        {0.0f, 0.0f},
+        {1.0f, 0.0f},
+        {1.0f, 1.0f},
+        {0.0f, 1.0f}
+    }};
 };
 
 struct Renderer2D {

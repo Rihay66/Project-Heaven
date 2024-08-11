@@ -1,5 +1,4 @@
 #include <soundEngine/sound_buffer.hpp>
-#include <utilities/convention_utils.hpp>
 
 #include <AL/alext.h>
 #include <sndfile.h>
@@ -94,9 +93,6 @@ ALuint SoundBuffer::addSound(std::string name, const char* filename){
         }
         return 0;
     }
-    
-    // check name convention
-    name = checkName(name);
 
     // add name to resources
     soundBuffers.push_back({name, buffer});

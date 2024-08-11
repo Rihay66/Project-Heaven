@@ -65,7 +65,10 @@ void TestWindow::init(){
 
     // Load a texture
     ResourceManager::LoadTexture("textures/default.png", "test", true);
-    ResourceManager::LoadTexture("textures/logo.png", "logo", true);
+    ResourceManager::LoadTexture("textures/sheet.png", "sheet", true);
+
+    // create a sub texture
+    ResourceManager::LoadSubTexture("test", ResourceManager::GetTexture("sheet"), {3,3}, {128, 128});
 
     // Load a font
     ResourceManager::LoadFontTexture("fonts/Arcade.ttf", 36, "arcade", false);
@@ -92,48 +95,30 @@ void TestWindow::init(){
         Entity entity = ECS::CreateEntity();
 
         ECS::AddComponent(entity, Transform2D{
-            .position = glm::vec2(20, (i * 2) + 10),
+            .position = glm::vec2(20, (i * 3) + 10),
             .rotation = 0.0f,
             .size = glm::vec2(1.0f)
-        });
-
-        ECS::AddComponent(entity, Texture2D{
-            .texIndex = ResourceManager::GetTexture("test")
         });
 
         ECS::AddComponent(entity, Renderer2D{
             .color = glm::vec4(1.0f)
         });
 
-        ECS::AddComponent(entity, Rigidbody{});
-
-        ECS::AddComponent(entity, BoxCollider{});
-
         // store entity
         entities.push_back(entity);
     }
 
-    // change one of the physics objects to be static
+    ECS::AddComponent(entities[0], Texture2D{
+        .texIndex = ResourceManager::GetTextureIndex("test")
+    });
 
-    auto& rb = ECS::GetComponent<Rigidbody>(entities[1]);
-
-    rb.Type = BodyType::Dynamic;
+    ECS::AddComponent(entities[1], Texture2D{
+        .texIndex = ResourceManager::GetTextureIndex("sheet"),
+        .texCoords = ResourceManager::GetSubTexture("test")
+    });
 
     auto& transform = ECS::GetComponent<Transform2D>(entities[1]);
-
-    transform.position = transform.position + glm::vec2(0.0f, 10.0f);
-
-    auto& tex = ECS::GetComponent<Texture2D>(entities[1]);
-    tex.texIndex = ResourceManager::GetTexture("logo");
-
-    auto& groundTransform = ECS::GetComponent<Transform2D>(entities[0]);
-
-    groundTransform.size = glm::vec2(5.0f, 1.0f);
-
-    // register all the entities into the ECS physics
-    for(Entity& entity : entities){
-        physics->registerEntity(entity);
-    }
+    transform.size = glm::vec2(5.0f);
 
 }
 

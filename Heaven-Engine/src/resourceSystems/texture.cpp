@@ -20,3 +20,23 @@ void Texture::Generate(unsigned int width, unsigned int height, unsigned char* d
     // create mipmap, when objects are far away, OpenGL will set the correct texture resolution
     glGenerateMipmap(GL_TEXTURE_2D);
 }
+
+void Texture::SetTextureInternalFormat(unsigned int format){
+    Internal_Format = format;
+}
+
+void Texture::SetTextureImageFormat(unsigned int format){
+    Image_Format = format;
+}
+
+unsigned int& Texture::GetID(){
+    return this->ID;
+}
+
+unsigned int Texture::GetWidth(){
+    return Width;
+}
+
+unsigned int Texture::GetHeight(){
+    return Height;
+}
