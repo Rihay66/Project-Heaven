@@ -2,9 +2,11 @@
 #include "ecs/default_components.hpp"
 #include "engine/text_renderer.hpp"
 #include "resourceSystems/managers/resource_manager.hpp"
+#include "systems/ecs_physics.hpp"
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <engine/physics.hpp>
+#include <utilities/rigidbody_utils.hpp>
 #include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
@@ -68,7 +70,7 @@ void TestWindow::init(){
     ResourceManager::LoadTexture("textures/sheet.png", "sheet", true);
 
     // create a sub texture
-    ResourceManager::LoadSubTexture("test", ResourceManager::GetTexture("sheet"), {3,3}, {128, 128});
+    ResourceManager::LoadSubTexture("test", ResourceManager::GetTexture("sheet"), {9,3}, {128, 128});
 
     // Load a font
     ResourceManager::LoadFontTexture("fonts/Arcade.ttf", 36, "arcade", false);
@@ -90,7 +92,7 @@ void TestWindow::init(){
     Physics::Init();
 
     // create 100 entities
-    for(int i = 0; i < 2; i++){
+    for(int i = 0; i < 3; i++){
         // create entity
         Entity entity = ECS::CreateEntity();
 
@@ -104,6 +106,12 @@ void TestWindow::init(){
             .color = glm::vec4(1.0f)
         });
 
+        ECS::AddComponent(entity, Rigidbody{
+            
+        });
+
+        ECS::AddComponent(entity, BoxCollider{});
+
         // store entity
         entities.push_back(entity);
     }
@@ -112,13 +120,28 @@ void TestWindow::init(){
         .texIndex = ResourceManager::GetTextureIndex("test")
     });
 
-    ECS::AddComponent(entities[1], Texture2D{
-        .texIndex = ResourceManager::GetTextureIndex("sheet"),
-        .texCoords = ResourceManager::GetSubTexture("test")
+    ECS::AddComponent(entities[2], Texture2D{
+        .texIndex = ResourceManager::GetTextureIndex("test")
     });
 
+    ECS::GetComponent<Transform2D>(entities[0]).size = glm::vec2 (10.0f, 1.0f);
+
+    ECS::AddComponent(entities[1], Texture2D{
+        .texIndex = ResourceManager::GetTextureIndex("test")
+    });
+
+    ECS::GetComponent<Rigidbody>(entities[1]).Type = BodyType::Dynamic;
+    ECS::GetComponent<Rigidbody>(entities[1]).fixedRotation = true;
+
+    ECS::GetComponent<Rigidbody>(entities[2]).Type = BodyType::Dynamic;
+
     auto& transform = ECS::GetComponent<Transform2D>(entities[1]);
-    transform.size = glm::vec2(5.0f);
+    transform.size = glm::vec2(2.0f);
+
+    // initialize all rigidbodies
+    for(auto const& i : entities){
+        physics->registerEntity(i);
+    }
 
 }
 
@@ -138,19 +161,29 @@ void TestWindow::stepUpdate(double ts){
     // play sound
     source.play(true);
 
-    //* Move one of the entities
-    if(glfwGetKey(getWindowHandle(), GLFW_KEY_W) == GLFW_PRESS){
-        // make red object jump up
-        b2Body* body = (b2Body*)ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody;
-
-        // move
-        if(body != nullptr)
-            body->ApplyForce({0.0f, 50.0f}, body->GetWorldCenter(), true);
-    }
-
     // update physics
     Physics::UpdateWorld(ts);
     physics->update();
+
+    //* Move one of the entities
+
+    // stop moving the entity
+    SetXLinearVelocity(0.0f, ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody);
+
+    if(glfwGetKey(getWindowHandle(), GLFW_KEY_W) == GLFW_PRESS){
+        // make red object jump up
+        ApplyForce({0.0f, 80.0f}, ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody);
+    }
+
+    if(glfwGetKey(getWindowHandle(), GLFW_KEY_A) == GLFW_PRESS){
+        // make red object jump up
+        ApplyLinearVelocity({-5.0f, 0.0f}, ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody);
+    }
+
+    if(glfwGetKey(getWindowHandle(), GLFW_KEY_D) == GLFW_PRESS){
+        // make red object jump up
+        ApplyLinearVelocity({5.0f, 0.0f}, ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody);
+    }
 }
 
 void TestWindow::render(double alpha){
