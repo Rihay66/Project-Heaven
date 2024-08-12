@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15.0)
-set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD 20)
 project(Heaven-Engine VERSION 0.1.3 LANGUAGES C CXX)
 project(Heaven-Engine-s VERSION 0.1.3 LANGUAGES C CXX)
 project(Engine-Testing VERSION 0.1.0 LANGUAGES C CXX)

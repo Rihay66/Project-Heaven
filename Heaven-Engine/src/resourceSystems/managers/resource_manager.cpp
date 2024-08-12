@@ -20,8 +20,8 @@
 
 std::map<std::string, Shader>                                               ResourceManager::Shaders;
 std::map<std::string, Texture>                                              ResourceManager::Textures;
-std::map<std::string, std::map<char, ResourceManager::Character>>           ResourceManager::Fonts; 
-std::map<std::string, ResourceManager::SubTexture>                          ResourceManager::SubTextures;
+std::map<std::string, std::map<char, Character>>           ResourceManager::Fonts; 
+std::map<std::string, SubTexture>                          ResourceManager::SubTextures;
 std::vector<unsigned int>                                                   ResourceManager::texIDList;
 bool                                                                        ResourceManager::isAutoClearSet = false;
 
@@ -99,7 +99,7 @@ bool ResourceManager::BindTextures(){
     return true;
 }
 
-std::map<char, ResourceManager::Character>& ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize, std::string name, bool isLinear){
+std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize, std::string name, bool isLinear){
     // set up automatic clear()
     setUpAutoClear();
 
@@ -127,7 +127,7 @@ std::map<char, ResourceManager::Character>& ResourceManager::LoadFontTexture(con
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     // create font map
-    std::map<char, ResourceManager::Character> Characters;
+    std::map<char, Character> Characters;
 
     // load first 128 characters of ASCII set
     for (unsigned char c = 0; c < 128; c++){
@@ -191,7 +191,7 @@ std::map<char, ResourceManager::Character>& ResourceManager::LoadFontTexture(con
     return Fonts[name];
 }
 
-std::map<char, ResourceManager::Character>& ResourceManager::GetFontTexture(std::string name){
+std::map<char, Character>& ResourceManager::GetFontTexture(std::string name){
     return Fonts[name];
 }
 

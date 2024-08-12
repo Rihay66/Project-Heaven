@@ -48,8 +48,7 @@ void TextRenderer::Init(unsigned int width, unsigned int height,
     initTextRenderingData();
 }
 
-
-void TextRenderer::DrawText(std::map<char, ResourceManager::Character> &chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
+void TextRenderer::DisplayText(std::map<char, Character>& chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
     // check if the text renderer has been set  
     if(!isAutoClearSet){
         std::cout << "ERROR: Missing text render data initialization!\n";
@@ -66,7 +65,7 @@ void TextRenderer::DrawText(std::map<char, ResourceManager::Character> &chars, s
     std::string::const_iterator c;
     for (c = text.begin(); c != text.end(); c++) 
     {
-        ResourceManager::Character ch = chars[*c];
+        Character ch = chars[*c];
 
         float xpos = position.x + ch.Bearing.x * scale.x;
         float ypos = position.y - (ch.Size.y - ch.Bearing.y) * scale.y;

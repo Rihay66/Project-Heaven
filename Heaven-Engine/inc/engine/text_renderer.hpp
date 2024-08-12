@@ -4,6 +4,7 @@
 #define TEXT_RENDERING_HPP
 
 #include <string>
+#include <map>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -22,7 +23,7 @@ class TextRenderer{
         static void Init(unsigned int width, unsigned int height, Shader& shader);
 
         // Requires a font set from the ResourceManager, along with attributes of the text being displayed
-        static void DrawText(std::map<char, ResourceManager::Character> &chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color = glm::vec4(1.0f));
+        static void DisplayText(std::map<char, Character>& chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color = glm::vec4(1.0f));
     private:
         // stores data of a quad
         static unsigned int VAO, VBO;

@@ -144,7 +144,8 @@ void TestWindow::stepUpdate(double ts){
         b2Body* body = (b2Body*)ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody;
 
         // move
-        body->ApplyForce({0.0f, 50.0f}, body->GetWorldCenter(), true);
+        if(body != nullptr)
+            body->ApplyForce({0.0f, 50.0f}, body->GetWorldCenter(), true);
     }
 
     // update physics
@@ -161,7 +162,7 @@ void TestWindow::render(double alpha){
     renderer->render(alpha);
 
     // init the text renderer
-    TextRenderer::DrawText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(getWidth() / 2.3f, getHeight() / 2.3f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
+    TextRenderer::DisplayText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(getWidth() / 2.3f, getHeight() / 2.3f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
     
     //std::cout << "Quad Count: " << SpriteRenderer::stats.quadCount << "\n";
     //std::cout << "Draw Count: " << SpriteRenderer::stats.drawCount << "\n";
