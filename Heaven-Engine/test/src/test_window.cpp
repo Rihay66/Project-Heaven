@@ -6,7 +6,6 @@
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <engine/physics.hpp>
-#include <utilities/rigidbody_utils.hpp>
 #include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
@@ -164,26 +163,6 @@ void TestWindow::stepUpdate(double ts){
     // update physics
     Physics::UpdateWorld(ts);
     physics->update();
-
-    //* Move one of the entities
-
-    // stop moving the entity
-    SetXLinearVelocity(0.0f, ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody);
-
-    if(glfwGetKey(getWindowHandle(), GLFW_KEY_W) == GLFW_PRESS){
-        // make red object jump up
-        ApplyForce({0.0f, 80.0f}, ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody);
-    }
-
-    if(glfwGetKey(getWindowHandle(), GLFW_KEY_A) == GLFW_PRESS){
-        // make red object jump up
-        ApplyLinearVelocity({-5.0f, 0.0f}, ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody);
-    }
-
-    if(glfwGetKey(getWindowHandle(), GLFW_KEY_D) == GLFW_PRESS){
-        // make red object jump up
-        ApplyLinearVelocity({5.0f, 0.0f}, ECS::GetComponent<Rigidbody>(entities[1]).runtimeBody);
-    }
 }
 
 void TestWindow::render(double alpha){
