@@ -4,7 +4,7 @@ A Lightweight 2D OpenGL based Engine called:
 
 ![](Heaven-Engine_logo.png)
 
-Current Version: 1.03-K-Dev
+Current Version: 1.03-O-Dev
 
 Features:
 
@@ -30,10 +30,10 @@ What's Coming?
 [] Further Optimizations
 
 # Documentation
-This project's documentation will be in the works and is expected to be completed by the end of Summer 2024.
+This project's documentation will be in the works and is expected to be completed by the end of Fall 2024.
 
 # Contribution
-This project has yet to include contributors, though GitHub issues can be made to highlight needed modifications to the engine.
+This project has yet to include contributors, though GitHub issues can be made to highlight needed modifications or fixes to the engine.
 
 # Licensing
 This Project is under the MIT License.

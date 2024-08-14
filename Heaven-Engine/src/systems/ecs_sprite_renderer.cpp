@@ -12,9 +12,9 @@ void ECS_SpriteRenderer::render(double alpha){
         auto& render = ECS::GetComponent<Renderer2D>(entity);
 
         // add to stack
-        SpriteRenderer::Stack(texture.texIndex, transform.position, transform.size, transform.rotation, render.color, texture.texCoords);
+        SpriteRenderer::StackQuad(texture.texIndex, transform.position, transform.size, transform.rotation, render.color, texture.texCoords);
     }
 
     // flush
-    SpriteRenderer::Flush();
+    SpriteRenderer::FlushQuads();
 }

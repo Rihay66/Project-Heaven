@@ -25,22 +25,49 @@
 */
 class SpriteRenderer{    
     public:
-        // initialize the renderer which requires a loaded shader and optionally changeable sprite size of all rendered objects
+        // initialize the quad renderer which requires a loaded shader and optionally changeable sprite size of all quad objects
         static void Init(Shader& shader, glm::uvec2 spriteSize = {10.0f, 10.0f});
+
+        /* initialize the quad and line renderer which requires two loaded shaders, and optionally changeable sprite size of all quad objects
+        ! Overloaded function
+        */
+        static void Init(Shader& quadShader, Shader& lineShader, glm::uvec2 spriteSize = {10.0f, 10.0f});
 
         //TODO: Allow for setting custom base quads corner positions
 
         // draw single a quad utilizing given raw data, without interpolation
-        static void Draw(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
+        static void DrawQuad(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
+
+        // draw a single line from two given points
+        static void DrawLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color = glm::vec4(1.0f));
+
+        // draw a single rectangle utilizing raw data and lines
+        static void DrawRect(glm::vec2 position, glm::vec2 size, glm::vec4 color = glm::vec4(1.0f));
 
         /* store a single quad utilizing given raw data, without interpolation
             !Requires the Flush() after this function in order to render what was stored
             !Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
         */
-        static void Stack(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
+        static void StackQuad(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
         
+        /* store a single line utilizing given points
+            !Requires the Flush() after this function in order to render what was stored
+        */
+        static void StackLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color = glm::vec4(1.0f));
+
         // used to tell the GPU to render the stored quads in the buffer
-        static void Flush();
+        static void FlushQuads();
+
+        // used to tell the GPU to render the stored lines in the buffer
+        static void FlushLines();
+
+        /* Set the width of all lines
+            !Can't be used to individually set the width of lines
+        */
+        static void SetLineWidth(float width);
+
+        // get the current width of all lines
+        static float GetLineWidth();
 
         // data struct for holding amount of draw calls and quad count
         struct RendererStats{
@@ -58,36 +85,65 @@ class SpriteRenderer{
 
     private:
         // data struct of standard quad's vertex information
-        struct Vertex{
+        struct QuadVertex{
             glm::vec2 position;
             glm::vec2 texCoords;
             float texIndex;
             glm::vec4 color;
         };
 
+        // data struct of standard line's vertex information
+        struct LineVertex{
+            glm::vec2 position;
+            glm::vec4 color;
+        };
+
         // reference to the model size
         static glm::uvec2 spriteSize;
 
-        // stores data of a passed in shader
-        static Shader shader;
+        // stores data of a passed in quad shader
+        static Shader quadShader;
+
+        //stores data of a line shader
+        static Shader lineShader;
 
         // stores data of a quad
         static unsigned int quadVAO, quadVBO, quadEBO;
 
+        // stores data of a line
+        static unsigned int lineVAO, lineVBO;
+
         // counter to track the number of vertices of quads
-        static unsigned int indexCount;
+        static unsigned int quadIndexCount;
 
         // stores max number of quads as a buffer
-        static Vertex* quadBuffer;
+        static QuadVertex* quadBuffer;
 
         // stores the amount of wanted quad buffers
-        static Vertex* quadBufferPtr;  
+        static QuadVertex* quadBufferPtr;  
+
+        // counter to track the number of vertices of lines
+        static unsigned int lineVertexCount;
+
+        // store the width of all lines
+        static unsigned int lineWidth;
+
+        // stores max number of lines as a buffer
+        static LineVertex* lineBuffer;
+        
+        // stores the amount of wanter line buffers
+        static LineVertex* lineBufferPtr;
 
         // stores the amount of quads to render
         const static int 
         maxQuadCount = 10000, 
-        maxVertexCount = maxQuadCount * 4, 
-        maxIndexCount = maxQuadCount * 6;
+        maxQuadVertexCount = maxQuadCount * 4, 
+        maxQuadIndexCount = maxQuadCount * 6;
+
+        // stores the amount of lines to render
+        const static int 
+        maxLineCount = 10000,
+        maxLineVertexCount = maxLineCount * 2;
 
         // stores maximum amount of textures there can be
         const static int maxTextureSlots = 32;
@@ -95,17 +151,33 @@ class SpriteRenderer{
         // private constructor 
         SpriteRenderer() {}
 
-        // initial setup for rendering, setups the rendering of quads and their buffer data
-        static void initRenderData();
+        // initial setup for quad rendering, sets ups the rendering of quads and their buffer data
+        static void initQuadRenderData();
 
-        // used to draw a quad and to be stored in to the quad buffer 
-        static void createQuad(glm::vec2& position, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, std::array<glm::vec2, 4> texCoords, const glm::vec4 vertexPositions[]);
+        // initial setup for line rendering, sets up the rendering of lines and their buffer data
+        static void initLineRenderData();
+
+        //* primative creation functions
+
+        // used to add a quad and be stored in to the quad buffer 
+        static void createQuad(glm::vec2& position, glm::vec2& size, float& rotation, int& texIndex, glm::vec4& color, std::array<glm::vec2, 4> texCoords, const glm::vec4 vertexPositions[]);
+
+        // used to add a line and be stored in to the line buffer
+        static void createLine(glm::vec2& p0, glm::vec2& p1, glm::vec4& color);
+
+        //* Batch functions
 
         // used to set the quad vertex buffers
-        static void beginBatch();
+        static void beginQuadBatch();
+
+        // used to set the line vertex buffers
+        static void beginLineBatch();
         
         // used to calculate amount of quads to be rendered, returns false for there are no quads and true for there are quads available
-        static bool endBatch();
+        static bool endQuadBatch();
+
+        // used to calculate amount of lines to be rendered, returns false for there are no lines and true for there are lines available
+        static bool endLineBatch();
 
         // resets stats such as draw calls and amount quads
         const static void resetStats();

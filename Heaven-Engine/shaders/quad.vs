@@ -10,8 +10,7 @@ out vec4 o_spriteColor;
 
 uniform mat4 projectionView;
 
-void main()
-{
+void main(){
     gl_Position = projectionView * vec4(vertex, 0.0, 1.0);
     o_TexCoords = texCoords;
     o_TexIndex = texIndex;

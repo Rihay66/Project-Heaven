@@ -23,22 +23,22 @@ class OrthoCamera{
         // reference to the window size
         unsigned int width, height;
 
-        // reference to the shader that can be changed at anytime
-        Shader shader;
-
     public:
         // reference to the camera position
         glm::vec3 position = glm::vec3(0.0f);
 
         // construcotr
-        OrthoCamera(unsigned int width, unsigned int height,
-        Shader &shader);
+        OrthoCamera(unsigned int width, unsigned int height);
 
         // destructor
         ~OrthoCamera();
 
-        // does calculations of the view and projection to create the ProjectionView
-        virtual void calculateProjectionView();
+        //TODO: Add setter and getters for setting the height and width, and maybe other vars
+
+        //* helper functions
+
+        // does calculations of the view and projection to create the ProjectionView and set to given shader
+        virtual void calculateProjectionView(Shader& shader);
 };
 
 #endif

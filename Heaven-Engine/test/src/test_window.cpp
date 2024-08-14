@@ -58,11 +58,16 @@ void TestWindow::init(){
         ECS::GetComponentType<Rigidbody>(), ECS::GetComponentType<BoxCollider>());
 
     // Load a shader
-    ResourceManager::LoadShader("shaders/sprite.vs", "shaders/sprite.frag", nullptr, "sprite");
+    ResourceManager::LoadShader("shaders/quad.vs", "shaders/quad.frag", nullptr, "sprite");
     ResourceManager::LoadShader("shaders/text.vs", "shaders/text.frag", nullptr, "text");
+    ResourceManager::LoadShader("shaders/line.vs", "shaders/line.frag", nullptr, "line");
 
-    // set up camera
-    cam = new OrthoCamera(this->getWidth(), getHeight(), ResourceManager::GetShader("sprite"));
+    // init camera
+    cam = new OrthoCamera(this->getWidth(), getHeight());
+
+    // calculate the projection for each shader
+    cam->calculateProjectionView(ResourceManager::GetShader("sprite"));
+    cam->calculateProjectionView(ResourceManager::GetShader("line"));
 
     // Load a texture
     ResourceManager::LoadTexture("textures/default.png", "test", true);
@@ -75,7 +80,7 @@ void TestWindow::init(){
     ResourceManager::LoadFontTexture("fonts/Arcade.ttf", 36, "arcade", false);
 
     // init the sprite renderer
-    SpriteRenderer::Init(ResourceManager::GetShader("sprite"), glm::vec2(30.0f));
+    SpriteRenderer::Init(ResourceManager::GetShader("sprite"), ResourceManager::GetShader("line"), glm::vec2(30.0f));
 
     // init the text renderer
     TextRenderer::Init(getWidth(), getHeight(), ResourceManager::GetShader("text"));
@@ -166,6 +171,7 @@ void TestWindow::stepUpdate(double ts){
 }
 
 void TestWindow::render(double alpha){
+    //! No need to recalculate projection if camera doesn't move
 
     //render background
     glClearColor(0.35f, 0.35f, 0.35f, 1.0f);
@@ -176,6 +182,8 @@ void TestWindow::render(double alpha){
     // init the text renderer
     TextRenderer::DisplayText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(getWidth() / 2.3f, getHeight() / 2.3f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
     
+    //? draw a line
+    SpriteRenderer::DrawRect(ECS::GetComponent<Transform2D>(entities[2]).position, glm::vec2(1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
     //std::cout << "Quad Count: " << SpriteRenderer::stats.quadCount << "\n";
     //std::cout << "Draw Count: " << SpriteRenderer::stats.drawCount << "\n";
 }
