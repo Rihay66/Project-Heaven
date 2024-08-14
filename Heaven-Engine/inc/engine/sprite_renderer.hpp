@@ -42,7 +42,7 @@ class SpriteRenderer{
         static void DrawLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color = glm::vec4(1.0f));
 
         // draw a single rectangle utilizing raw data and lines
-        static void DrawRect(glm::vec2 position, glm::vec2 size, glm::vec4 color = glm::vec4(1.0f));
+        static void DrawRect(glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f));
 
         /* store a single quad utilizing given raw data, without interpolation
             !Requires the Flush() after this function in order to render what was stored

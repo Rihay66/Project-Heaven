@@ -16,6 +16,14 @@ class ECS_Physics : public System{
 
         // update all registered entities
         void update();
+
+        //* debug functions
+
+        // draw the box collider of given entity
+        void renderBoxCollider(Entity entity);
+
+        // draw all the box colliders of all entites
+        void renderAllBoxColliders();
 };
 
 // create alias to easily refer to this system

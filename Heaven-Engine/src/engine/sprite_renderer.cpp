@@ -1,6 +1,7 @@
 #include <engine/sprite_renderer.hpp>
 
 // standard library for debug outputs
+#include <glm/ext/matrix_transform.hpp>
 #include <iostream>
 
 // initialize static variables
@@ -164,7 +165,7 @@ void SpriteRenderer::DrawLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color){
     FlushLines();
 }
 
-void SpriteRenderer::DrawRect(glm::vec2 position, glm::vec2 size, glm::vec4 color){
+void SpriteRenderer::DrawRect(glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color){
     //? check if buffer hasn't been set up
     if(lineBuffer == nullptr){
         //! Display error
@@ -176,15 +177,26 @@ void SpriteRenderer::DrawRect(glm::vec2 position, glm::vec2 size, glm::vec4 colo
     beginLineBatch();
 
     // create the lines that make up a rectangle to render
-    glm::vec2 p0 = glm::vec2(position.x - size.x * 0.5f, position.y - size.y * 0.5f);
-    glm::vec2 p1 = glm::vec2(position.x + size.x * 0.5f, position.y - size.y * 0.5f);
-    glm::vec2 p2 = glm::vec2(position.x + size.x * 0.5f, position.y + size.y * 0.5f);
-    glm::vec2 p3 = glm::vec2(position.x - size.x * 0.5f, position.y + size.y * 0.5f);
+    
+    // create array of vertices
+    glm::vec2 lineVertices[4];
 
-    createLine(p0, p1, color);
-    createLine(p1, p2, color);
-    createLine(p2, p3, color);
-    createLine(p3, p0, color);
+    // create the transform
+    glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position, 0.0f)) 
+    * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) 
+    * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
+
+    // set the vertices
+    for(int i = 0; i < 4; i++){
+        lineVertices[i] = transform * quadVertexPositions[i];
+    }
+    
+    //draw the lines to make up the rectangle
+
+    createLine(lineVertices[0], lineVertices[1], color);
+    createLine(lineVertices[1], lineVertices[2], color);
+    createLine(lineVertices[2], lineVertices[3], color);
+    createLine(lineVertices[3], lineVertices[0], color);
 
     // render
     FlushLines();    

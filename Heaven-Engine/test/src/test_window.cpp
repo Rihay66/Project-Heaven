@@ -137,6 +137,10 @@ void TestWindow::init(){
     ECS::GetComponent<Rigidbody>(entities[1]).Type = BodyType::Dynamic;
     ECS::GetComponent<Rigidbody>(entities[1]).fixedRotation = true;
 
+    ECS::GetComponent<Transform2D>(entities[1]).rotation = 0.5f;
+
+    ECS::GetComponent<BoxCollider>(entities[1]).size = glm::vec2(0.75f);
+
     ECS::GetComponent<Rigidbody>(entities[2]).Type = BodyType::Dynamic;
 
     auto& transform = ECS::GetComponent<Transform2D>(entities[1]);
@@ -183,7 +187,8 @@ void TestWindow::render(double alpha){
     TextRenderer::DisplayText(ResourceManager::GetFontTexture("arcade"), this->GetFrameTime(), glm::vec2(getWidth() / 2.3f, getHeight() / 2.3f), glm::vec2(1.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
     
     //? draw a line
-    SpriteRenderer::DrawRect(ECS::GetComponent<Transform2D>(entities[2]).position, glm::vec2(1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    physics->renderAllBoxColliders();
+
     //std::cout << "Quad Count: " << SpriteRenderer::stats.quadCount << "\n";
     //std::cout << "Draw Count: " << SpriteRenderer::stats.drawCount << "\n";
 }
