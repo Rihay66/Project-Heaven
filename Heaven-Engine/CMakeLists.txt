@@ -9,12 +9,19 @@ cmake_policy(SET CMP0072 NEW)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 
 # Check if ImGUI is set up
-file(GLOB RESULT ${CMAKE_SOURCE_DIR}/imgui)
+file(GLOB RESULT ${CMAKE_SOURCE_DIR}/imgui/*)
 list(LENGTH RESULT RES_LEN)
 if(RES_LEN EQUAL 0)
 # ImGUI directory empty throw an error
-message(SEND_ERROR "ERROR: ImGUI directory is Empty")
+message(SEND_ERROR "ERROR: ImGUI directory is Empty, verify that all git submodule were initialized and updated")
 endif()
+
+# Grab all ImGUI source files
+file(GLOB IMGUI
+    ${CMAKE_SOURCE_DIR}/imgui/*.cpp
+    ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_opengl3.cpp
+    ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_glfw.cpp
+)
 
 # Grab all source files
 file(GLOB_RECURSE ENGINE
@@ -64,17 +71,29 @@ file(GLOB_RECURSE UTILITY
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # Create both shared and static libraries
-add_library(Heaven-Engine SHARED ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDENGINE})
-add_library(Heaven-Engine-s STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDENGINE})
+add_library(Heaven-Engine SHARED ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDENGINE} ${IMGUI})
+add_library(Heaven-Engine-s STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDENGINE} ${IMGUI})
 
 # Include directories for header files
 target_include_directories(Heaven-Engine PUBLIC
     $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
-    $<INSTALL_INTERFACE:include>)
+    $<INSTALL_INTERFACE:include>
+)
+
+target_include_directories(Heaven-Engine PRIVATE
+    ${CMAKE_SOURCE_DIR}/imgui
+    ${CMAKE_SOURCE_DIR}/imgui/backends
+)
 
 target_include_directories(Heaven-Engine-s PUBLIC
     $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
-    $<INSTALL_INTERFACE:include>)
+    $<INSTALL_INTERFACE:include>
+)
+
+target_include_directories(Heaven-Engine-s PRIVATE
+    ${CMAKE_SOURCE_DIR}/imgui
+    ${CMAKE_SOURCE_DIR}/imgui/backends
+)
 
 # Find all dependencies needed to compile
 
@@ -232,6 +251,26 @@ set(SOUNDS_DIR "${CMAKE_SOURCE_DIR}/test/sounds")
 # Define the destination build folder
 set(BUILD_DIR ${CMAKE_BINARY_DIR})
 
+# Create folders and their sub files for runtime loading
+# Function to copy files if they are different
+function(copy_if_different SRC_DIR DEST_DIR)
+    # Remove the existing destination directory
+    if(EXISTS ${DEST_DIR})
+        file(REMOVE_RECURSE ${DEST_DIR})
+    endif()
+
+    # Create the destination directory if it doesn't exist
+    file(MAKE_DIRECTORY ${DEST_DIR})
+
+    # Copy over the files
+    file(GLOB_RECURSE FILES_LIST "${SRC_DIR}/*")
+    foreach(FILE_PATH ${FILES_LIST})
+        get_filename_component(FILE_NAME ${FILE_PATH} NAME)
+        set(DEST_FILE_PATH "${DEST_DIR}/${FILE_NAME}")
+        configure_file(${FILE_PATH} ${DEST_FILE_PATH} COPYONLY)
+    endforeach()
+endfunction()
+
 # Check if detected OS is LINUX
 if(UNIX)
 
@@ -240,17 +279,6 @@ add_executable(Engine-Testing
 ${HEADER_FILES}
 ${SOURCE_FILES}
 )
-
-# Create folders and their sub files for runtime loading
-# Function to copy files if they are different
-function(copy_if_different SRC_DIR DEST_DIR)
-    file(GLOB_RECURSE FILES_LIST "${SRC_DIR}/*")
-    foreach(FILE_PATH ${FILES_LIST})
-        get_filename_component(FILE_NAME ${FILE_PATH} NAME)
-        set(DEST_FILE_PATH "${DEST_DIR}/${FILE_NAME}")
-        configure_file(${FILE_PATH} ${DEST_FILE_PATH} COPYONLY)
-    endforeach()
-endfunction()
 
 # Call the function for each resource folder
 copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
@@ -272,17 +300,6 @@ add_executable(Engine-Testing
 ${HEADER_FILES}
 ${SOURCE_FILES}
 )
-
-# Create folders and their sub files for runtime loading
-# Function to copy files if they are different
-function(copy_if_different SRC_DIR DEST_DIR)
-    file(GLOB_RECURSE FILES_LIST "${SRC_DIR}/*")
-    foreach(FILE_PATH ${FILES_LIST})
-        get_filename_component(FILE_NAME ${FILE_PATH} NAME)
-        set(DEST_FILE_PATH "${DEST_DIR}/${FILE_NAME}")
-        configure_file(${FILE_PATH} ${DEST_FILE_PATH} COPYONLY)
-    endforeach()
-endfunction()
 
 # Call the function for each resource folder
 copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
