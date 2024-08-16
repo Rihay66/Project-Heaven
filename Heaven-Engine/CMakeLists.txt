@@ -8,6 +8,14 @@ cmake_policy(SET CMP0072 NEW)
 # Set the install prefix to the build folder's lib directory
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 
+# Check if ImGUI is set up
+file(GLOB RESULT ${CMAKE_SOURCE_DIR}/imgui)
+list(LENGTH RESULT RES_LEN)
+if(RES_LEN EQUAL 0)
+# ImGUI directory empty throw an error
+message(SEND_ERROR "ERROR: ImGUI directory is Empty")
+endif()
+
 # Grab all source files
 file(GLOB_RECURSE ENGINE
     ${CMAKE_SOURCE_DIR}/src/engine/*.c
