@@ -6,6 +6,7 @@
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <engine/physics.hpp>
+#include <utilities/glfw_observer.hpp>
 #include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
@@ -34,6 +35,9 @@ std::string TestWindow::GetFrameTime(){
 }
 
 void TestWindow::init(){
+    // init Observer
+    Observer::Init(getWindowHandle());
+
     // init ECS
     ECS::Init('r');
 
@@ -162,7 +166,10 @@ void TestWindow::input(){
 }
 
 void TestWindow::update(){
-
+    // begin observations to allow for observe functions
+    Observer::BeginObservations();
+    // show demo window
+    Observer::ObserveDemo();
 }
 
 void TestWindow::stepUpdate(double ts){
@@ -189,6 +196,9 @@ void TestWindow::render(double alpha){
     //? draw a line
     physics->renderAllBoxColliders();
 
+    // render observer
+    Observer::Render();
+    
     //std::cout << "Quad Count: " << SpriteRenderer::stats.quadCount << "\n";
     //std::cout << "Draw Count: " << SpriteRenderer::stats.drawCount << "\n";
 }
