@@ -67,7 +67,7 @@ file(GLOB_RECURSE UTILITY
     ${CMAKE_SOURCE_DIR}/src/utilities/*.cpp
 )
 
-# Include directory for your engine's headers
+# Include directory for engine's headers
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # Create both shared and static libraries
@@ -78,21 +78,15 @@ add_library(Heaven-Engine-s STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCE
 target_include_directories(Heaven-Engine PUBLIC
     $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include>
-)
-
-target_include_directories(Heaven-Engine PRIVATE
-    ${CMAKE_SOURCE_DIR}/imgui
-    ${CMAKE_SOURCE_DIR}/imgui/backends
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends>
 )
 
 target_include_directories(Heaven-Engine-s PUBLIC
     $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include>
-)
-
-target_include_directories(Heaven-Engine-s PRIVATE
-    ${CMAKE_SOURCE_DIR}/imgui
-    ${CMAKE_SOURCE_DIR}/imgui/backends
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends>
 )
 
 # Find all dependencies needed to compile

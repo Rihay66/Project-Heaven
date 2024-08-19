@@ -167,9 +167,9 @@ void TestWindow::input(){
 
 void TestWindow::update(){
     // begin observations to allow for observe functions
-    Observer::BeginObservations();
-    // show demo window
-    Observer::ObserveDemo();
+    Observer::NewObservations();
+    Observer::Observe("entity 2", 
+        ECS::GetComponent<Transform2D>(entities[2]));
 }
 
 void TestWindow::stepUpdate(double ts){
@@ -197,7 +197,7 @@ void TestWindow::render(double alpha){
     physics->renderAllBoxColliders();
 
     // render observer
-    Observer::Render();
+    Observer::FlushObservations();
     
     //std::cout << "Quad Count: " << SpriteRenderer::stats.quadCount << "\n";
     //std::cout << "Draw Count: " << SpriteRenderer::stats.drawCount << "\n";

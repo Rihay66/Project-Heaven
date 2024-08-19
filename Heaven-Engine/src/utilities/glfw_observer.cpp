@@ -1,8 +1,8 @@
 #include <utilities/glfw_observer.hpp>
 
 // include ImGUI implementation for GLFW and OpenGL
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 // include standard library
 #include <cstdlib>
@@ -29,7 +29,7 @@ void Observer::Init(GLFWwindow* handle){
     ImGui_ImplOpenGL3_Init();
 }
 
-void Observer::BeginObservations(){
+void Observer::NewObservations(){
     // start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -45,7 +45,7 @@ void Observer::ObserveDemo(){
     ImGui::ShowDemoWindow(); 
 }
 
-void Observer::Render(){
+void Observer::FlushObservations(){
     // check if frame wasn't created
     if(!isFrameCreated)
         return; // stop function
