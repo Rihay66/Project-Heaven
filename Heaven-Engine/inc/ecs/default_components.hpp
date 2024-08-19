@@ -9,8 +9,9 @@
 // include standard array library
 #include <array>
 
+//! Currently depricated
 // types of triggers that fufill a specific need
-enum class TriggerType {Enter = 0, Stay, Exit};
+//enum class TriggerType {Enter = 0, Stay, Exit};
 
 /* types of physics body types that fufill a specific need
 * Warning: Kinematic is yet to be fully implemented

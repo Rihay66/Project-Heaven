@@ -169,7 +169,7 @@ void TestWindow::update(){
     // begin observations to allow for observe functions
     Observer::NewObservations();
     Observer::Observe("entity 2", 
-        ECS::GetComponent<Transform2D>(entities[2]));
+        ECS::GetComponent<BoxCollider>(entities[2]));
 }
 
 void TestWindow::stepUpdate(double ts){
