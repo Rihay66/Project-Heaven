@@ -7,8 +7,8 @@
 #include <map>
 
 // include necessary components
-#include <soundEngine/sound_device.hpp>
-#include <soundEngine/sound_buffer.hpp>
+#include <sound/sound_device.hpp>
+#include <sound/sound_buffer.hpp>
 
 /* A Static singleton Sound Manager class that hosts several
  function to load sounds and enables playing sounds. 

@@ -1,4 +1,4 @@
-#include <resourceSystems/shader.hpp>
+#include <resourceSystems/resource_shader.hpp>
 
 #include <iostream>
 

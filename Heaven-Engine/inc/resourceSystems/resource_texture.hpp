@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TEXTURE_HPP
-#define TEXTURE_HPP
+#ifndef RESOURCE_TEXTURE_HPP
+#define RESOURCE_TEXTURE_HPP
 
 //include GLAD
 #include <glad/glad.h>

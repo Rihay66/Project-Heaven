@@ -10,8 +10,8 @@
 #include <array>
 
 // include necessary classes such as texture and shader classes
-#include <resourceSystems/texture.hpp>
-#include <resourceSystems/shader.hpp>
+#include <resourceSystems/resource_texture.hpp>
+#include <resourceSystems/resource_shader.hpp>
 
 // include resource definitions
 #include <resourceSystems/resource_types.hpp>

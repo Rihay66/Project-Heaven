@@ -1,4 +1,4 @@
-#include <soundEngine/sound_buffer.hpp>
+#include <sound/sound_buffer.hpp>
 
 #include <AL/alext.h>
 #include <sndfile.h>

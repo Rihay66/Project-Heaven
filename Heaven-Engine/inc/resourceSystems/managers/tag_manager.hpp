@@ -13,8 +13,6 @@
 #include <cstring>
 #include <vector>
 #include <functional>
-//? debug print
-#include <iostream>
 
 /* A Static singleton TagSystem class that hosts several
  functions to add, edit, find arbitrary types that have a set tag 

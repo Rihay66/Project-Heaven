@@ -5,10 +5,10 @@
 
 #include <vector>
 
-//TODO: Move this system to work with ECS 
-
 //? Temporary inclusion of components
-#include <ecs/default_components.hpp>
+#include <components/transform.hpp>
+#include <components/rigidbody.hpp>
+#include <components/boxcollider.hpp>
 
 // include GLM
 #include <glm/glm.hpp>
@@ -22,11 +22,13 @@
 // redeclare the box2d b2World class for engine use
 class b2World;
 
+//TODO: Remove the use of raw pointers when keeping a reference to a component
+
 // define a Physics 'Object'
 struct PhysicsObject {
   Transform2D* transform;
-  BoxCollider* collider;
-  Rigidbody* rb;
+  BoxCollider2D* collider;
+  Rigidbody2D* rb;
 };
 
 /* Static Singleton Physics class that hosts functions to add
@@ -47,10 +49,10 @@ class Physics {
         //* Adder functions
 
         // create a Physics Object to the physics engine, returns reference of the Physics Object 
-        static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider& collider, Rigidbody& rigidbody);
+        static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
         // register components that makes up a Physics Object to the physics engine, no Physics Object is created
-        static void RegisterPhysicsObject(Transform2D& transform, BoxCollider& collider, Rigidbody& rigidbody);
+        static void RegisterPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
         //* Setter functions
 
@@ -74,7 +76,7 @@ class Physics {
         /* check given components and update given transform and rigidbody components
         *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
-        static void UpdateRegisteredObject(Transform2D& transform, Rigidbody& rigidbody);
+        static void UpdateRegisteredObject(Transform2D& transform, Rigidbody2D& rigidbody);
 
         /* updates physics world which updates physics objects 
         *  NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()

@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef SHADER_HPP
-#define SHADER_HPP
+#ifndef RESOURCE_SHADER_HPP
+#define RESOURCE_SHADER_HPP
 
 // include standard libraries
 #include <string>

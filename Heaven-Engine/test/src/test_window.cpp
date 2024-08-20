@@ -1,4 +1,5 @@
 #include "../inc/test_window.hpp"
+#include "components/transform.hpp"
 #include "ecs/default_components.hpp"
 #include "engine/text_renderer.hpp"
 #include "resourceSystems/managers/resource_manager.hpp"
@@ -6,7 +7,7 @@
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <engine/physics.hpp>
-#include <utilities/glfw_observer.hpp>
+#include <observer/glfw_observer.hpp>
 #include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
@@ -45,8 +46,8 @@ void TestWindow::init(){
     ECS::RegisterComponent<Transform2D>();
     ECS::RegisterComponent<Texture2D>();
     ECS::RegisterComponent<Renderer2D>();
-    ECS::RegisterComponent<Rigidbody>();
-    ECS::RegisterComponent<BoxCollider>();
+    ECS::RegisterComponent<Rigidbody2D>();
+    ECS::RegisterComponent<BoxCollider2D>();
 
     // initialize ECS renderer
     renderer = ECS::RegisterSystem<ECS_SpriteRenderer>();
@@ -59,7 +60,7 @@ void TestWindow::init(){
         ECS::GetComponentType<Texture2D>(), ECS::GetComponentType<Renderer2D>());
 
     ECS::SetSystemSignature<ECS_Physics>(ECS::GetComponentType<Transform2D>(), 
-        ECS::GetComponentType<Rigidbody>(), ECS::GetComponentType<BoxCollider>());
+        ECS::GetComponentType<Rigidbody2D>(), ECS::GetComponentType<BoxCollider2D>());
 
     // Load a shader
     ResourceManager::LoadShader("shaders/quad.vs", "shaders/quad.frag", nullptr, "sprite");
@@ -67,7 +68,7 @@ void TestWindow::init(){
     ResourceManager::LoadShader("shaders/line.vs", "shaders/line.frag", nullptr, "line");
 
     // init camera
-    cam = new OrthoCamera(this->getWidth(), getHeight());
+    cam = new OrthoCamera(getWidth(), getHeight());
 
     // calculate the projection for each shader
     cam->calculateProjectionView(ResourceManager::GetShader("sprite"));
@@ -114,11 +115,11 @@ void TestWindow::init(){
             .color = glm::vec4(1.0f)
         });
 
-        ECS::AddComponent(entity, Rigidbody{
+        ECS::AddComponent(entity, Rigidbody2D{
             
         });
 
-        ECS::AddComponent(entity, BoxCollider{});
+        ECS::AddComponent(entity, BoxCollider2D{});
 
         // store entity
         entities.push_back(entity);
@@ -138,14 +139,14 @@ void TestWindow::init(){
         .texIndex = ResourceManager::GetTextureIndex("test")
     });
 
-    ECS::GetComponent<Rigidbody>(entities[1]).Type = BodyType::Dynamic;
-    ECS::GetComponent<Rigidbody>(entities[1]).fixedRotation = true;
+    ECS::GetComponent<Rigidbody2D>(entities[1]).Type = BodyType::Dynamic;
+    ECS::GetComponent<Rigidbody2D>(entities[1]).fixedRotation = true;
 
     ECS::GetComponent<Transform2D>(entities[1]).rotation = 0.5f;
 
-    ECS::GetComponent<BoxCollider>(entities[1]).size = glm::vec2(0.75f);
+    ECS::GetComponent<BoxCollider2D>(entities[1]).size = glm::vec2(0.75f);
 
-    ECS::GetComponent<Rigidbody>(entities[2]).Type = BodyType::Dynamic;
+    ECS::GetComponent<Rigidbody2D>(entities[2]).Type = BodyType::Dynamic;
 
     auto& transform = ECS::GetComponent<Transform2D>(entities[1]);
     transform.size = glm::vec2(2.0f);
@@ -169,7 +170,7 @@ void TestWindow::update(){
     // begin observations to allow for observe functions
     Observer::NewObservations();
     Observer::Observe("entity 2", 
-        ECS::GetComponent<BoxCollider>(entities[2]));
+        ECS::GetComponent<Transform2D>(entities[2]));
 }
 
 void TestWindow::stepUpdate(double ts){

@@ -117,8 +117,8 @@ class Observer {
                 // print each value
                 ImGui::Text("\tColor");
                 ImGui::Text("\t\tR: %.3f G: %.3f B: %.3f A: %.3f", temp.color.x, temp.color.y, temp.color.z, temp.color.w);
-            }else if constexpr(std::is_same_v<T, Rigidbody>){
-                Rigidbody& temp = t;
+            }else if constexpr(std::is_same_v<T, Rigidbody2D>){
+                Rigidbody2D& temp = t;
                 ImGui::Text("Rigidbody");
                 // print each value
                 ImGui::Text("\tBodyType");
@@ -141,8 +141,8 @@ class Observer {
                 //? print out the runtime body memory address
                 ImGui::Text("\tRuntimeBody");
                 ImGui::Text("\t\t%p", temp.runtimeBody);
-            }else if constexpr(std::is_same_v<T, BoxCollider>){
-                BoxCollider& temp = t;
+            }else if constexpr(std::is_same_v<T, BoxCollider2D>){
+                BoxCollider2D& temp = t;
                 ImGui::Text("BoxCollider");
                 // print each value
                 ImGui::Text("\tOffset");

@@ -1,4 +1,4 @@
-#include <resourceSystems/texture.hpp>
+#include <resourceSystems/resource_texture.hpp>
 
 Texture::Texture() : Width(0), Height(0), Internal_Format(GL_RGB), Image_Format(GL_RGB), Wrap_S(GL_REPEAT), Wrap_T(GL_REPEAT), Filter_Min(GL_NEAREST), Filter_Max(GL_NEAREST){
     glGenTextures(1, &this->ID);

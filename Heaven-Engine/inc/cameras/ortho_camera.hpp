@@ -3,7 +3,7 @@
 #ifndef ORTHO_CAMERA_HPP
 #define ORTHO_CAMERA_HPP
 
-#include <resourceSystems/shader.hpp>
+#include <resourceSystems/resource_shader.hpp>
 #include <glm/glm.hpp>
 
 /* Orthographic Camera class used for allowing 

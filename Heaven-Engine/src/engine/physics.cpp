@@ -1,5 +1,3 @@
-#include "ecs/default_components.hpp"
-#include <box2d/b2_body.h>
 #include <engine/physics.hpp>
 
 // include standard library for debugging
@@ -36,7 +34,7 @@ void Physics::Init(glm::vec2 gravity){
     }
 }
 
-PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider& collider, Rigidbody& rigidbody){
+PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody){
     // check if object already exists
     for(PhysicsObject& obj: physicsObjs){
         if(have_same_address(transform, obj.transform) 
@@ -91,7 +89,7 @@ PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider& 
     return obj;
 }
 
-void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider &collider, Rigidbody &rigidbody){
+void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &collider, Rigidbody2D &rigidbody){
     // check if world has been initialized
     if(world == nullptr){
         throw std::invalid_argument("ERROR: Physics hasn't been initialized");
@@ -181,7 +179,7 @@ void Physics::UpdatePhysics(){
     }
 }
 
-void Physics::UpdateRegisteredObject(Transform2D &transform, Rigidbody &rigidbody){
+void Physics::UpdateRegisteredObject(Transform2D &transform, Rigidbody2D &rigidbody){
     // check if body is not null
     if(rigidbody.runtimeBody == nullptr)
         return; // stop function

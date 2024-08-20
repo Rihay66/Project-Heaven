@@ -9,7 +9,7 @@
 
 #include <systems/ecs_sprite_renderer.hpp>
 #include <systems/ecs_physics.hpp>
-#include <soundEngine/sound_source.hpp>
+#include <sound/sound_source.hpp>
 #include <cameras/ortho_camera.hpp>
 #include <ecs/ecs.hpp>
 

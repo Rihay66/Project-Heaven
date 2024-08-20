@@ -58,21 +58,27 @@ file(GLOB_RECURSE GLAD
     ${CMAKE_SOURCE_DIR}/src/glad/*.c
     ${CMAKE_SOURCE_DIR}/src/glad/*.cpp)
 
-file(GLOB_RECURSE SOUNDENGINE
-    ${CMAKE_SOURCE_DIR}/src/soundEngine/*.c
-    ${CMAKE_SOURCE_DIR}/src/soundEngine/*.cpp)
+file(GLOB_RECURSE SOUND
+    ${CMAKE_SOURCE_DIR}/src/sound/*.c
+    ${CMAKE_SOURCE_DIR}/src/sound/*.cpp
+)
 
-file(GLOB_RECURSE UTILITY
-    ${CMAKE_SOURCE_DIR}/src/utilities/*.c
-    ${CMAKE_SOURCE_DIR}/src/utilities/*.cpp
+file(GLOB_RECURSE OBSERVER
+    ${CMAKE_SOURCE_DIR}/src/observer/*.c
+    ${CMAKE_SOURCE_DIR}/src/observer/*.cpp
+)
+
+file(GLOB_RECURSE INPUT
+    ${CMAKE_SOURCE_DIR}/src/input/*.c
+    ${CMAKE_SOURCE_DIR}/src/input/*.cpp
 )
 
 # Include directory for engine's headers
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # Create both shared and static libraries
-add_library(Heaven-Engine SHARED ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDENGINE} ${IMGUI})
-add_library(Heaven-Engine-s STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${UTILITY} ${GLAD} ${WINDOW} ${SOUNDENGINE} ${IMGUI})
+add_library(Heaven-Engine SHARED ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${OBSERVER} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
+add_library(Heaven-Engine-s STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${OBSERVER} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
 
 # Include directories for header files
 target_include_directories(Heaven-Engine PUBLIC

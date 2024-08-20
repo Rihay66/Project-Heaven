@@ -1,6 +1,6 @@
-#include <array>
 #include <resourceSystems/managers/resource_manager.hpp>
 
+#include <array>
 #include <iostream>
 #include <sstream>
 #include <fstream>

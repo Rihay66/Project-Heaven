@@ -1,4 +1,4 @@
-#include <soundEngine/sound_device.hpp>
+#include <sound/sound_device.hpp>
 
 #include <AL/al.h>
 

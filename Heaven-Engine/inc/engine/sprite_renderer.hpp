@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef RENDERER_HPP
-#define RENDERER_HPP
+#ifndef SPRITE_RENDERER_HPP
+#define SPRITE_RENDERER_HPP
 
 // include GLAD and GLM
 #include <glad/glad.h>
@@ -12,7 +12,7 @@
 #include <array>
 
 // include shader class
-#include <resourceSystems/shader.hpp>
+#include <resourceSystems/resource_shader.hpp>
 
 //TODO: Rewrite the comments for clarity and proper format
 

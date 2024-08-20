@@ -1,4 +1,4 @@
-#include <utilities/glfw_observer.hpp>
+#include <observer/glfw_observer.hpp>
 
 // include ImGUI implementation for GLFW and OpenGL
 #include <imgui_impl_glfw.h>
