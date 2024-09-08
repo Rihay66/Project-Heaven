@@ -4,7 +4,7 @@
 #define GLFW_GAMEPAD_HPP
 
 // include utilities
-#include <utilities/glfw_gamepad_utils.hpp>
+#include <input/glfw_gamepad_utils.hpp>
 
 /* A Controller class which keeps track 
  of a passed gamepad. This class allows for getting

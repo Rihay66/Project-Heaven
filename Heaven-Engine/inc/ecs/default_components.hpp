@@ -5,10 +5,10 @@
 
 //? include all "default" components
 
-#include <components/transform.hpp>
-#include <components/texture.hpp>
-#include <components/renderer.hpp>
-#include <components/rigidbody.hpp>
-#include <components/boxcollider.hpp>
+#include <ecs/components/transform.hpp>
+#include <ecs/components/texture.hpp>
+#include <ecs/components/renderer.hpp>
+#include <ecs/components/rigidbody.hpp>
+#include <ecs/components/boxcollider.hpp>
 
 #endif

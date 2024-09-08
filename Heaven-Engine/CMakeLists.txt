@@ -33,8 +33,8 @@ file(GLOB_RECURSE ECS
     ${CMAKE_SOURCE_DIR}/src/ecs/*.cpp
     ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.c
     ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/systems/*.c
-    ${CMAKE_SOURCE_DIR}/src/systems/*.cpp)
+    ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.c
+    ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.cpp)
 
 file(GLOB_RECURSE STB
     ${CMAKE_SOURCE_DIR}/src/stb/*.c
@@ -71,6 +71,8 @@ file(GLOB_RECURSE OBSERVER
 file(GLOB_RECURSE INPUT
     ${CMAKE_SOURCE_DIR}/src/input/*.c
     ${CMAKE_SOURCE_DIR}/src/input/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/input/managers/*.c
+    ${CMAKE_SOURCE_DIR}/src/input/managers/*.cpp
 )
 
 # Include directory for engine's headers
@@ -105,11 +107,8 @@ if(UNIX)
     # Find GLM package
     find_package(glm CONFIG REQUIRED)
 
-    # Find BOX2D
-    find_package(glfw3 CONFIG REQUIRED)
-
     # Find GLFW
-    find_package(box2d CONFIG REQUIRED)
+    find_package(glfw3 CONFIG REQUIRED)
 
     # Find OpenAL
     find_package(OpenAL CONFIG REQUIRED)

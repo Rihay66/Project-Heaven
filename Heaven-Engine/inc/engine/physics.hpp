@@ -6,18 +6,15 @@
 #include <vector>
 
 //? Temporary inclusion of components
-#include <components/transform.hpp>
-#include <components/rigidbody.hpp>
-#include <components/boxcollider.hpp>
+#include <ecs/components/transform.hpp>
+#include <ecs/components/rigidbody.hpp>
+#include <ecs/components/boxcollider.hpp>
 
 // include GLM
 #include <glm/glm.hpp>
 
 // include box2d library
-#include <box2d/b2_world.h>
-#include <box2d/b2_body.h>
-#include <box2d/b2_fixture.h>
-#include <box2d/b2_polygon_shape.h>
+#include <box2d/box2d.h>
 
 // redeclare the box2d b2World class for engine use
 class b2World;
@@ -56,15 +53,10 @@ class Physics {
 
         //* Setter functions
 
-        /* set the physics velocity iteration, by default value is 8
+        /* set the physics substep iteration, by default value is 4
         * NOTE: Passed value cannot be less than 1
         */
-        static void SetPhysicsVelocityIterations(int32_t iter);
-
-        /* set the physics position iteration, by default value is 4
-        * NOTE: Passed value cannot be less than 1
-        */
-        static void SetPhysicsPositionIterations(int32_t iter);
+        static void SetPhysicsSubStepIterations(int32_t iter);
 
         //* Update functions
 
@@ -101,11 +93,10 @@ class Physics {
 
         //* physics iteration values
 
-        static int32_t velocityIterations;
-        static int32_t positionIterations;
+        static int32_t substepIterations;
 
         // reference to physics world
-        static b2World* world;
+        static b2WorldId world;
 
         // private constructor
         Physics() {};

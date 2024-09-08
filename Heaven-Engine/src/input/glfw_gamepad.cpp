@@ -1,5 +1,5 @@
-#include "utilities/glfw_gamepad_utils.hpp"
-#include <resourceSystems/glfw_gamepad.hpp>
+#include <input/glfw_gamepad_utils.hpp>
+#include <input/glfw_gamepad.hpp>
 
 Controller* Controller::instance = nullptr;
 

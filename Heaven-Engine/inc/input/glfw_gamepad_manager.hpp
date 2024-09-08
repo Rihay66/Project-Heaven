@@ -7,7 +7,7 @@
 #include <vector>
 
 // include utilities
-#include <utilities/glfw_gamepad_utils.hpp>
+#include <input/glfw_gamepad_utils.hpp>
 
 /* A static singleton GamepadManager class that hosts 
  several functions to query for connected or disconnected 

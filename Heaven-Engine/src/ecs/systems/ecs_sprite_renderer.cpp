@@ -1,4 +1,4 @@
-#include <systems/ecs_sprite_renderer.hpp>
+#include <ecs/systems/ecs_sprite_renderer.hpp>
 
 // include standard components
 #include <ecs/default_components.hpp>

@@ -7,8 +7,8 @@
 
 #include <window/glfw_window.hpp>
 
-#include <systems/ecs_sprite_renderer.hpp>
-#include <systems/ecs_physics.hpp>
+#include <ecs/systems/ecs_sprite_renderer.hpp>
+#include <ecs/systems/ecs_physics.hpp>
 #include <sound/sound_source.hpp>
 #include <cameras/ortho_camera.hpp>
 #include <ecs/ecs.hpp>

@@ -1,9 +1,6 @@
 #include "../inc/test_window.hpp"
-#include "components/transform.hpp"
-#include "ecs/default_components.hpp"
 #include "engine/text_renderer.hpp"
 #include "resourceSystems/managers/resource_manager.hpp"
-#include "systems/ecs_physics.hpp"
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <engine/physics.hpp>

@@ -10,9 +10,8 @@
 // init resources
 
 std::vector<PhysicsObject>      Physics::physicsObjs;
-int32_t                         Physics::velocityIterations = 8;
-int32_t                         Physics::positionIterations = 4;
-b2World*                        Physics::world = nullptr;
+int32_t                         Physics::substepIterations = 4;
+b2WorldId                        Physics::world = b2_nullWorldId;
 bool                            Physics::isAutoClearSet = false;
 
 // template function 
@@ -23,10 +22,17 @@ void Physics::Init(glm::vec2 gravity){
     // set up automatic clear()
     SetUpAutoClear();
     // set up box 2d world
-    if(world == nullptr){
-        world = new b2World({gravity.x, gravity.y});
+    if(!b2World_IsValid(world)){
+        // physics is not set, then set it
+
+        //? Create a default world definition
+        b2WorldDef worldDef = b2DefaultWorldDef();
+        worldDef.gravity = {gravity.x, gravity.y};
+
+        // create the physics world
+        world = b2CreateWorld(&worldDef);
     }else{
-        // display error
+        // display error when world is set
         std::cout << "WARNING: Physics initialization must only be called once!" << "\n";
         //std::cout << "HINT: If more than one Physics initialization is called with intention make sure to clearWorld() before calling init() again" << std::endl;
         // cause crash to program that uses this physics engine
@@ -45,37 +51,40 @@ PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D
     }
 
     // check if world has been initialized
-    if(world == nullptr){
+    if(!b2World_IsValid(world)){
         throw std::invalid_argument("ERROR: Physics hasn't been initialized");
     }
 
     //* set up transform, collider, and rigidbody of object
 
     // create body
-    b2BodyDef bodyDef;
+    b2BodyDef bodyDef = b2DefaultBodyDef();
     bodyDef.type = RbToB2Types(rigidbody.Type);
-    bodyDef.position.Set(transform.position.x, transform.position.y);
+    bodyDef.position = (b2Vec2){transform.position.x, transform.position.y};
     //! rotation set is in radians
-    bodyDef.angle = transform.rotation;
-    b2Body* body = world->CreateBody(&bodyDef);
-    body->SetFixedRotation(rigidbody.fixedRotation);
+    bodyDef.rotation = b2MakeRot(transform.rotation);
+    bodyDef.fixedRotation = rigidbody.fixedRotation;
+
+    // create body 
+    b2BodyId body = b2CreateBody(world, &bodyDef);
     rigidbody.runtimeBody = body;
 
     //TODO: Create options to make either a box or circle collider
 
     // set up box collider
-    b2PolygonShape boxShape;
-    boxShape.SetAsBox(collider.size.x * abs(transform.size.x), collider.size.y * abs(transform.size.y),
+    b2Polygon boxShape = b2MakeOffsetBox(collider.size.x * abs(transform.size.x), collider.size.y * abs(transform.size.y),
      {collider.offset.x, collider.offset.y}, collider.rotationOffset);
 
     // set up physics material
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &boxShape;
-    fixtureDef.density = collider.density;
-    fixtureDef.friction = collider.friction;
-    fixtureDef.restitution = collider.restitution;
-    fixtureDef.restitutionThreshold = collider.restitutionThreshold;
-    body->CreateFixture(&fixtureDef);
+    b2ShapeDef shapeDef = b2DefaultShapeDef();
+    shapeDef.density = collider.density;
+
+    //TODO: Check for the value of both friction and restitution to be [0,1]
+
+    shapeDef.friction = collider.friction;
+    shapeDef.restitution = collider.restitution;
+    
+    b2ShapeId shapeID = b2CreatePolygonShape(body, &shapeDef, &boxShape);
 
     // create Physics object
     PhysicsObject obj;
@@ -91,44 +100,53 @@ PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D
 
 void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &collider, Rigidbody2D &rigidbody){
     // check if world has been initialized
-    if(world == nullptr){
+    if(!b2World_IsValid(world)){
         throw std::invalid_argument("ERROR: Physics hasn't been initialized");
     }
 
     //* set up transform, collider, and rigidbody of object
 
     // check if body is not null
-    if(rigidbody.runtimeBody != nullptr)
+    if(b2Body_IsValid(rigidbody.runtimeBody))
         return; // stop function
 
     // create body
-    b2BodyDef bodyDef;
+    b2BodyDef bodyDef = b2DefaultBodyDef();
     bodyDef.type = RbToB2Types(rigidbody.Type);
-    bodyDef.position.Set(transform.position.x, transform.position.y);
+    bodyDef.position = (b2Vec2){transform.position.x, transform.position.y};
     //! rotation set is in radians
-    bodyDef.angle = transform.rotation;
-    b2Body* body = world->CreateBody(&bodyDef);
-    body->SetFixedRotation(rigidbody.fixedRotation);
+    bodyDef.rotation = b2MakeRot(transform.rotation);
+    bodyDef.fixedRotation = rigidbody.fixedRotation;
+
+    // create body 
+    b2BodyId body = b2CreateBody(world, &bodyDef);
     rigidbody.runtimeBody = body;
 
     //TODO: Create options to make either a box or circle collider
 
     // set up box collider
-    b2PolygonShape boxShape;
-    boxShape.SetAsBox(collider.size.x * abs(transform.size.x), collider.size.y * abs(transform.size.y),
+    b2Polygon boxShape = b2MakeOffsetBox(collider.size.x * abs(transform.size.x), collider.size.y * abs(transform.size.y),
      {collider.offset.x, collider.offset.y}, collider.rotationOffset);
 
     // set up physics material
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &boxShape;
-    fixtureDef.density = collider.density;
-    fixtureDef.friction = collider.friction;
-    fixtureDef.restitution = collider.restitution;
-    fixtureDef.restitutionThreshold = collider.restitutionThreshold;
-    body->CreateFixture(&fixtureDef);
+    b2ShapeDef shapeDef = b2DefaultShapeDef();
+    shapeDef.density = collider.density;
+
+    //TODO: Check for the value of both friction and restitution to be [0,1]
+
+    shapeDef.friction = collider.friction;
+    shapeDef.restitution = collider.restitution;
+    
+    b2ShapeId shapeID = b2CreatePolygonShape(body, &shapeDef, &boxShape);
+
+    // create Physics object
+    PhysicsObject obj;
+    obj.transform = &transform;
+    obj.collider = &collider;
+    obj.rb = &rigidbody;
 }
 
-void Physics::SetPhysicsVelocityIterations(int32_t iter){
+void Physics::SetPhysicsSubStepIterations(int32_t iter){
     // set up automatic clear()
     SetUpAutoClear();
     // check if given value is less than 1
@@ -137,63 +155,50 @@ void Physics::SetPhysicsVelocityIterations(int32_t iter){
     }
 
     // set given value 
-    velocityIterations = iter;
-}
-
-void Physics::SetPhysicsPositionIterations(int32_t iter){
-    // set up automatic clear()
-    SetUpAutoClear();
-    // check if given value is less than 1
-    if(iter < 1){
-        return; // stop function
-    }
-
-    // set given value 
-    positionIterations = iter;
+    substepIterations = iter;
 }
 
 void Physics::UpdateWorld(float deltaTime){
-    if(world != nullptr){
+    if(b2World_IsValid(world)){
         // update any collisions detection, but not update the rigidbodies position
-        world->Step(deltaTime, velocityIterations, positionIterations);
+        b2World_Step(world, deltaTime, substepIterations);
     }
 }
 
 void Physics::UpdatePhysics(){
     // check if world has been initialized
-    if(world == nullptr)
+    if(!b2World_IsValid(world))
         return; // stop function
 
     // update each physics object
     for(PhysicsObject& obj : physicsObjs){
         // retrieve the body
-        b2Body* body = (b2Body*)obj.rb->runtimeBody;
-
+        b2BodyId id = obj.rb->runtimeBody;
         // get position change
-        const b2Vec2 position = body->GetPosition();
+        const b2Vec2 position = b2Body_GetPosition(id);
 
         // update each object's transform
         obj.transform->position.x = position.x;
         obj.transform->position.y = position.y;
-        obj.transform->rotation = body->GetAngle();
+        obj.transform->rotation = b2Rot_GetAngle(b2Body_GetRotation(id));
     }
 }
 
 void Physics::UpdateRegisteredObject(Transform2D &transform, Rigidbody2D &rigidbody){
     // check if body is not null
-    if(rigidbody.runtimeBody == nullptr)
+    if(!b2Body_IsValid(rigidbody.runtimeBody))
         return; // stop function
 
     // update the registered object
-    b2Body* body = (b2Body*)rigidbody.runtimeBody;
+    b2BodyId id = rigidbody.runtimeBody;
 
     // get position change
-    const b2Vec2 position = body->GetPosition();
+    const b2Vec2 position = b2Body_GetPosition(id);
 
     // update component transform
     transform.position.x = position.x;
     transform.position.y = position.y;
-    transform.rotation = body->GetAngle();
+    transform.rotation = b2Rot_GetAngle(b2Body_GetRotation(id));
 }
 
 void Physics::Clear(){
@@ -208,8 +213,8 @@ void Physics::Clear(){
         delete obj.rb;
     }
 
-    // delete the physics world
-    delete world;
+    // destroy the world
+    b2DestroyWorld(world);
 }
 
 bool Physics::AABBCollision(Transform2D& a, Transform2D& b){
