@@ -5,6 +5,7 @@
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <engine/physics.hpp>
 #include <observer/glfw_observer.hpp>
+#include <input/glfw_gamepad_manager.hpp>
 #include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
@@ -153,6 +154,9 @@ void TestWindow::init(){
         physics->registerEntity(i);
     }
 
+    // set up gamepad query
+    GamepadManager::InitializeQuery();
+
 }
 
 void TestWindow::input(){
@@ -172,7 +176,7 @@ void TestWindow::update(){
 
 void TestWindow::stepUpdate(double ts){
     // play sound
-    source.play(true);
+    //source.play(true);
 
     // update physics
     Physics::UpdateWorld(ts);
