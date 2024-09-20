@@ -41,6 +41,8 @@ class ECS{
         // add a specified component to an existing entity 
         template<typename T>
         static void AddComponent(Entity entity, T component){
+            //TODO: Check if such component type is registered in the first place to avoid seg faults
+
             componentManager->AddComponent<T>(entity,component);
 
             Signature signature = entityManager->GetSignature(entity); 

@@ -34,12 +34,23 @@ class GamepadManager{
         */
         static void SetGamepad(Gamepad& gamepad, int index = 0);
 
+        /*
+        */
+        static void UpdateGamepads();
+
     private:
+
+        // define prefered index along with a reference gamepad
+        struct PreferencePad{
+            unsigned int preferedIndex = 0;
+            Gamepad* gamepad = nullptr;
+        };
+
         // private resource storage
 
-        // define a list of gamepads queried
-        static std::vector<Gamepad> queriedGamepads;
-        // define a list of reference to gamepads given to be queried
+        // define a list to store reference of given unset gamepads that can be queried and set
+        static std::vector<PreferencePad> prefGamepads;
+        // define a list of gamepads detected by GLFW
         static std::array<std::shared_ptr<Gamepad>, 16> gamepads;
  
         // private constructor, that is to avoid any actual gamepad manager objects

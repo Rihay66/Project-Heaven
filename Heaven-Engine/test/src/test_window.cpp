@@ -1,5 +1,7 @@
 #include "../inc/test_window.hpp"
 #include "engine/text_renderer.hpp"
+#include "input/glfw_gamepad.hpp"
+#include "input/glfw_gamepad_manager.hpp"
 #include "resourceSystems/managers/resource_manager.hpp"
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
@@ -46,6 +48,7 @@ void TestWindow::init(){
     ECS::RegisterComponent<Renderer2D>();
     ECS::RegisterComponent<Rigidbody2D>();
     ECS::RegisterComponent<BoxCollider2D>();
+    ECS::RegisterComponent<Gamepad>();
 
     // initialize ECS renderer
     renderer = ECS::RegisterSystem<ECS_SpriteRenderer>();
@@ -138,7 +141,6 @@ void TestWindow::init(){
     });
 
     ECS::GetComponent<Rigidbody2D>(entities[1]).Type = BodyType::Dynamic;
-    ECS::GetComponent<Rigidbody2D>(entities[1]).fixedRotation = true;
 
     ECS::GetComponent<Transform2D>(entities[1]).rotation = 0.5f;
 
@@ -157,6 +159,13 @@ void TestWindow::init(){
     // set up gamepad query
     GamepadManager::InitializeQuery();
 
+    // give a entity the gamepad
+    ECS::AddComponent(entities[2], Gamepad{});
+
+    auto& gamepad = ECS::GetComponent<Gamepad>(entities[2]);
+
+    // set the entity's gamepad into the manager to be set
+    GamepadManager::SetGamepad(gamepad);
 }
 
 void TestWindow::input(){
