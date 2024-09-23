@@ -1,8 +1,12 @@
 #include "../inc/test_window.hpp"
+#include "ecs/components/renderer.hpp"
+#include "ecs/components/rigidbody.hpp"
+#include "ecs/components/transform.hpp"
 #include "engine/text_renderer.hpp"
 #include "input/glfw_gamepad.hpp"
 #include "input/glfw_gamepad_manager.hpp"
 #include "resourceSystems/managers/resource_manager.hpp"
+#include <box2d/box2d.h>
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <engine/physics.hpp>
@@ -12,7 +16,7 @@
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
     setFixedTimeStep(1.0/60.0f);
-    setTargetTimeStep(1.0f/8000.0f);
+    setTargetTimeStep(1.0f/60.0f);
 }
 
 TestWindow::~TestWindow(){
@@ -102,7 +106,7 @@ void TestWindow::init(){
     Physics::Init();
 
     // create 100 entities
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < 4; i++){
         // create entity
         Entity entity = ECS::CreateEntity();
 
@@ -134,6 +138,18 @@ void TestWindow::init(){
         .texIndex = ResourceManager::GetTextureIndex("test")
     });
 
+    ECS::AddComponent(entities[2], Renderer2D{
+        .color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)
+    });
+
+    ECS::AddComponent(entities[3], Texture2D{
+        .texIndex = ResourceManager::GetTextureIndex("test")
+    });
+
+    ECS::AddComponent(entities[3], Renderer2D{
+        .color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)
+    });
+
     ECS::GetComponent<Transform2D>(entities[0]).size = glm::vec2 (10.0f, 1.0f);
 
     ECS::AddComponent(entities[1], Texture2D{
@@ -147,6 +163,10 @@ void TestWindow::init(){
     ECS::GetComponent<BoxCollider2D>(entities[1]).size = glm::vec2(0.75f);
 
     ECS::GetComponent<Rigidbody2D>(entities[2]).Type = BodyType::Dynamic;
+    ECS::GetComponent<Rigidbody2D>(entities[2]).fixedRotation = true;
+
+    ECS::GetComponent<Rigidbody2D>(entities[3]).Type = BodyType::Dynamic;
+    ECS::GetComponent<Rigidbody2D>(entities[3]).fixedRotation = true;
 
     auto& transform = ECS::GetComponent<Transform2D>(entities[1]);
     transform.size = glm::vec2(2.0f);
@@ -159,23 +179,65 @@ void TestWindow::init(){
     // set up gamepad query
     GamepadManager::InitializeQuery();
 
-    // give a entity the gamepad
+    // give entity 4 the gamepad
     ECS::AddComponent(entities[2], Gamepad{});
+    // give entity 3 a gamepad
+    ECS::AddComponent(entities[3], Gamepad{});
 
-    auto& gamepad = ECS::GetComponent<Gamepad>(entities[2]);
+    auto& gamepad0 = ECS::GetComponent<Gamepad>(entities[2]);
+    auto& gamepad1 = ECS::GetComponent<Gamepad>(entities[3]);
 
     // set the entity's gamepad into the manager to be set
-    GamepadManager::SetGamepad(gamepad);
+    GamepadManager::SetGamepad(gamepad0, 0);
 
     //? debug
-    std::cout << "Entity gamepad component: " << gamepad.device.get() << "\n";
+    std::cout << "Entity gamepad component: " << gamepad0.device.get() << "\n";
+
+    // set the entity's gamepad into the manager to be set
+    GamepadManager::SetGamepad(gamepad1, 1);
+
+    //? debug
+    std::cout << "Entity gamepad component: " << gamepad1.device.get() << "\n";
 }
 
 void TestWindow::input(){
+    // poll inputs from gamepads
+    GamepadManager::PollInputs();
+
     // check for escape key to exit window
     if(glfwGetKey(this->getWindowHandle(), GLFW_KEY_ESCAPE) == GLFW_PRESS){
         // exit window
         glfwSetWindowShouldClose(this->getWindowHandle(), true);
+    }
+
+    //?Input for player 1
+
+    // check for input from controller
+    if(getKeyInput(ECS::GetComponent<Gamepad>(entities[2]), PLAYSTATION_BUTTON_DPAD_LEFT)){
+        // move left
+        b2Body_ApplyForce(ECS::GetComponent<Rigidbody2D>(entities[2]).runtimeBody, {-15, 0}, 
+            b2Body_GetWorldPoint(ECS::GetComponent<Rigidbody2D>(entities[2]).runtimeBody, {ECS::GetComponent<Transform2D>(entities[2]).position.x, ECS::GetComponent<Transform2D>(entities[2]).position.y}), true);
+    }
+
+    if(getKeyInput(ECS::GetComponent<Gamepad>(entities[2]), PLAYSTATION_BUTTON_DPAD_RIGHT)){
+        // move left
+        b2Body_ApplyForce(ECS::GetComponent<Rigidbody2D>(entities[2]).runtimeBody, {15, 0}, 
+            b2Body_GetWorldPoint(ECS::GetComponent<Rigidbody2D>(entities[2]).runtimeBody, {ECS::GetComponent<Transform2D>(entities[2]).position.x, ECS::GetComponent<Transform2D>(entities[2]).position.y}), true);
+    }
+
+    //? Input for player 2
+
+    // check for input from controller
+    if(getKeyInput(ECS::GetComponent<Gamepad>(entities[3]), PLAYSTATION_BUTTON_DPAD_LEFT)){
+        // move left
+        b2Body_ApplyForce(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {-15, 0}, 
+            b2Body_GetWorldPoint(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {ECS::GetComponent<Transform2D>(entities[3]).position.x, ECS::GetComponent<Transform2D>(entities[3]).position.y}), true);
+    }
+
+    if(getKeyInput(ECS::GetComponent<Gamepad>(entities[3]), PLAYSTATION_BUTTON_DPAD_RIGHT)){
+        // move left
+        b2Body_ApplyForce(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {15, 0}, 
+            b2Body_GetWorldPoint(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {ECS::GetComponent<Transform2D>(entities[3]).position.x, ECS::GetComponent<Transform2D>(entities[3]).position.y}), true);
     }
 }
 
@@ -184,6 +246,9 @@ void TestWindow::update(){
     Observer::NewObservations();
     Observer::Observe("entity 2", 
         ECS::GetComponent<Transform2D>(entities[2]));
+
+    Observer::Observe("entity 3", 
+        ECS::GetComponent<Transform2D>(entities[3]));
 }
 
 void TestWindow::stepUpdate(double ts){

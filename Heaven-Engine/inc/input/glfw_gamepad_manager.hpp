@@ -32,9 +32,9 @@ class GamepadManager{
         */
         static void SetGamepad(Gamepad& gamepad, int index = 0);
 
-        /*
+        /* polls input from the connected gamepads to allow for checking for inputs
         */
-        static void UpdateGamepads();
+        static void PollInputs();
 
     private:
         // private resource storage

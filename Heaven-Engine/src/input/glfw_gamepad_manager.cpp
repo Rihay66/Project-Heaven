@@ -15,7 +15,18 @@ template < typename T, typename U > bool have_same_address( const T& a, const U&
 */
 
 int GamepadManager::GetGamepadAmount(){
-    return devices.size();
+    // init var to contain actual amount of devices available
+    int amount = 0;
+
+    for(int i = 0; i < GLFW_JOYSTICK_LAST; i++){
+        if(devices.at(i) != nullptr){
+            amount++;
+        }else{
+            break; // stop loop
+        }
+    }
+
+    return amount;
 }
 
 void GamepadManager::InitializeQuery(){
@@ -68,7 +79,12 @@ void GamepadManager::SetGamepad(Gamepad& gamepad, int index){
     std::cout << "ERROR: Gamepad couldn't be set!\n";
 }
 
-void GamepadManager::UpdateGamepads(){
+void GamepadManager::PollInputs(){    
+    // check that GLFW has not been initialized
+    if(glfwGetError(NULL) == GLFW_NOT_INITIALIZED){
+        return; // stop function
+    }
+
     // loop through available gamepads
     for(int i = 0 ; devices.size(); i++){
         if(devices.at(i) != nullptr && devices.at(i)->isConnected){
