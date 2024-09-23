@@ -5,6 +5,7 @@
 
 // include GLFW
 #include <GLFW/glfw3.h>
+#include <memory>
 
 //TODO: define Heaven-Engine buttons for Xbox, Playstation, and even switch
 
@@ -63,14 +64,20 @@
 //? Gamepad macros
 constexpr int NULL_GAMEPAD = -1;
 
-// define structure of a gamepad
-struct Gamepad{
+// define structure of a game controller device
+struct ControllerDevice{
     // default is a non existant device
     int ID = NULL_GAMEPAD;
     // connection boolean
     bool isConnected = false;
     // define gamepad state holder, used to further verify gamepads
     GLFWgamepadstate state;
+};
+
+// define structure of a gamepad
+struct Gamepad{
+    // contain a shared reference of a controller device
+    std::shared_ptr<ControllerDevice> device;
 };
 
 //? Gamepad functions

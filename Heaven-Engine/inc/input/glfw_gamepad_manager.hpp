@@ -5,8 +5,6 @@
 
 // include standard libraries
 #include <array>
-#include <vector>
-#include <memory>
 
 #include <input/glfw_gamepad.hpp>
 
@@ -39,19 +37,10 @@ class GamepadManager{
         static void UpdateGamepads();
 
     private:
-
-        // define prefered index along with a reference gamepad
-        struct PreferencePad{
-            unsigned int preferedIndex = 0;
-            Gamepad* gamepad = nullptr;
-        };
-
         // private resource storage
 
-        // define a list to store reference of given unset gamepads that can be queried and set
-        static std::vector<PreferencePad> prefGamepads;
-        // define a list of gamepads detected by GLFW
-        static std::array<std::shared_ptr<Gamepad>, 16> gamepads;
+        // define a list of game controllers detected by GLFW
+        static std::array<std::shared_ptr<ControllerDevice>, 16> devices;
  
         // private constructor, that is to avoid any actual gamepad manager objects
         GamepadManager() {}
