@@ -1,18 +1,9 @@
-#include "input/glfw_gamepad.hpp"
-#include <GLFW/glfw3.h>
 #include <input/glfw_gamepad_manager.hpp>
 
-// include standard library
-#include <iostream>
-
 // define static variables
-std::array<std::shared_ptr<ControllerDevice>, 16>    GamepadManager::devices;
-
-// template function 
-/*
-template < typename T, typename U > bool have_same_address( const T& a, const U& b ) 
-{ return reinterpret_cast<const char*>( std::addressof(a) ) == reinterpret_cast<const char*>( std::addressof(b) ) ; }
-*/
+std::vector<GamepadManager::QueuedGamepad>              GamepadManager::queuedGamepads;
+std::array<std::shared_ptr<ControllerDevice>, 16>       GamepadManager::devices;
+bool                                                    GamepadManager::isAutoClearSet = false;
 
 int GamepadManager::GetGamepadAmount(){
     // init var to contain actual amount of devices available
@@ -35,7 +26,6 @@ void GamepadManager::InitializeQuery(){
         return; // stop function
     }
 
-    //TODO: Check pre-connected devices
     // check all slots for pre-connected devices
     for(int i = 0; i < GLFW_JOYSTICK_LAST; i++){
         // check if it is a gamepad and it's slot doesn't exist
@@ -46,8 +36,6 @@ void GamepadManager::InitializeQuery(){
             devices.at(i)->ID = i;
             // then set the connection to be true
             devices.at(i)->isConnected = true;
-            //? debug
-            std::cout << "Device Pre-Connected | ID: " << i << " Name: " << glfwGetGamepadName(i) << "\n";
         }
     }
 
@@ -56,27 +44,25 @@ void GamepadManager::InitializeQuery(){
 }
 
 void GamepadManager::SetGamepad(Gamepad& gamepad, int index){
-    //TODO: Could create a dynamic list of gamepads to be set
-
-    //? display all devices
-    for(int i = 0; i < devices.size(); i++){
-        if(devices.at(i) != nullptr){
-            std::cout << devices.at(i)->ID << "\n";
-        }
-    }
+    // set auto clear
+    setUpAutoClear();
 
     // check index is within range and if reference already exists
     if(index < GLFW_JOYSTICK_LAST && devices.at(index) != nullptr){
         // set the reference
         gamepad.device = devices.at(index);
 
-        //? debug
-        std::cout << "Gamepad Component set to: " << devices.at(index).get() << "\n";
-
         return; // stop function
+    }else if(index < GLFW_JOYSTICK_LAST && devices.at(index) == nullptr){
+        // queue the given gamepad
+        
+        QueuedGamepad qp;
+        qp.index = index;
+        qp.gamepad = &gamepad;
+
+        // add to queue
+        queuedGamepads.push_back(qp);
     }
-    // else do nothing
-    std::cout << "ERROR: Gamepad couldn't be set!\n";
 }
 
 void GamepadManager::PollInputs(){    
@@ -99,15 +85,9 @@ void GamepadManager::PollInputs(){
 void GamepadManager::connectionCheck(int jid, int event){
     // check event type
     if(event == GLFW_CONNECTED){
-        //? debug
-        std::cout << "Device Connected | ID: " << jid << " Name: " << glfwGetGamepadName(jid)<< "\n";
-
         // create or enable a gamepad
         enableGamepad(jid);
     }else if(event == GLFW_DISCONNECTED){
-        //? debug
-        std::cout << "Device Disconnected | ID: " << jid << "\n";
-
         // disable a gamepad
         disableGamepad(jid);
     }  
@@ -119,9 +99,6 @@ void GamepadManager::enableGamepad(int jid){
         if(devices.at(i) != nullptr && devices.at(i)->ID == jid){
             // gamepad exists, then set the connection to be true
             devices.at(i)->isConnected = true;
-
-            //? debug
-            std::cout << "Gamepad has been Re-enabled\n";
 
             // stop function
             return;
@@ -136,6 +113,17 @@ void GamepadManager::enableGamepad(int jid){
         devices.at(jid)->ID = jid;
         // then set the connection to be true
         devices.at(jid)->isConnected = true;
+
+        // loop in reverse through queued up gamepads that need to be set
+        for(int i = 0; i < queuedGamepads.size(); i++){
+            if(queuedGamepads.at(i).index == jid && queuedGamepads.at(i).gamepad != nullptr){
+                // set the gamepad
+                queuedGamepads.at(i).gamepad->device = devices.at(jid);
+                
+                // remove from list
+                queuedGamepads.erase(queuedGamepads.begin() + i);
+            }
+        }
     }
 }
 
@@ -144,5 +132,22 @@ void GamepadManager::disableGamepad(int jid){
     if(devices.at(jid) != nullptr){
         // turn off device
         devices.at(jid)->isConnected = false;
+    }
+}
+
+void GamepadManager::clear(){
+    // remove all reference of queued gamepads
+    for(QueuedGamepad& pad : queuedGamepads){
+        pad.gamepad = nullptr;
+    }
+
+    // clear the queued gamepad list
+    queuedGamepads.clear();
+}
+
+void GamepadManager::setUpAutoClear(){
+    // set up on exit to call the Clear()
+    if(!isAutoClearSet && std::atexit(clear) == 0){
+        isAutoClearSet = true; // disable calling this function again
     }
 }

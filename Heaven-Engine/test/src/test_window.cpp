@@ -190,14 +190,8 @@ void TestWindow::init(){
     // set the entity's gamepad into the manager to be set
     GamepadManager::SetGamepad(gamepad0, 0);
 
-    //? debug
-    std::cout << "Entity gamepad component: " << gamepad0.device.get() << "\n";
-
     // set the entity's gamepad into the manager to be set
     GamepadManager::SetGamepad(gamepad1, 1);
-
-    //? debug
-    std::cout << "Entity gamepad component: " << gamepad1.device.get() << "\n";
 }
 
 void TestWindow::input(){

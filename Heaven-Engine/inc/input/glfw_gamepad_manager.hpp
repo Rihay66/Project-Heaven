@@ -5,8 +5,11 @@
 
 // include standard libraries
 #include <array>
+#include <vector>
 
 #include <input/glfw_gamepad.hpp>
+
+//TODO: Add debug options to display info of the gamepads
 
 /* A static singleton GamepadManager class that hosts 
  several functions to query for connected or disconnected 
@@ -37,13 +40,27 @@ class GamepadManager{
         static void PollInputs();
 
     private:
-        // private resource storage
+        // define a queued gamepad that needs to be set
+        struct QueuedGamepad{
+            // wanted index to be set, default picks a NULL value
+            int index = -1;
+            // stored reference of the gamepad that needs to be set
+            Gamepad* gamepad = nullptr;
+        };
+
+        //* private resource storage
+
+        // define a dynamic list of yet to be set gamepads components from objects or entities
+        static std::vector<QueuedGamepad> queuedGamepads;
 
         // define a list of game controllers detected by GLFW
         static std::array<std::shared_ptr<ControllerDevice>, 16> devices;
  
         // private constructor, that is to avoid any actual gamepad manager objects
         GamepadManager() {}
+
+        // properly de-allocates all resources
+        static void clear();
 
         //* private helper functions
 
@@ -55,6 +72,12 @@ class GamepadManager{
 
         // disable gamepad reference when disconnected
         static void disableGamepad(int jid);
+
+        //! Currently EXPERIMENTAL, may cause exceptions or segfaults
+        // private boolean to track automatic clear()
+        static bool isAutoClearSet;
+        // set up automatic de-allocation of loaded resources
+        static void setUpAutoClear();
 };
 
 #endif
