@@ -73,8 +73,14 @@ class ComponentManager{
         ComponentType GetComponentType(){
             const char* typeName = typeid(T).name();
 
-            if(debugOption == 'd' && componentTypes.find(typeName) == componentTypes.end()){
+            if(componentTypes.find(typeName) == componentTypes.end()){
                 std::cout << "ERROR: Failed to retrieve component type as component: " << typeName << " is NOT registered!\n";
+                /* 
+                    * NOTE: ComponentType is a unsigned 8 bit int is between 0-255, this returns 255 (aka garbage value) though iff 
+                    * there are exactly 255 Component types registered this might cause issues as the ECS does check for the garbage 
+                    * value of 255. HINT: Work around is to not have that many components (check for redundancy) or refactor how the 
+                    * component system works.
+                */
                 return -1;
             }
 

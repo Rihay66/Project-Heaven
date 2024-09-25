@@ -18,7 +18,7 @@ class ECS{
         /* initialize the entity, component, and system managers
             this function also contains debug options
             d - debug, debug outputs, error checking
-            r - release, skip any functional error checking and some debug outputs
+            r - release, skip most functional error checking and some debug outputs (use )
         */
         static void Init(char debugOption = 'd');
 
@@ -41,7 +41,13 @@ class ECS{
         // add a specified component to an existing entity 
         template<typename T>
         static void AddComponent(Entity entity, T component){
-            //TODO: Check if such component type is registered in the first place to avoid seg faults
+            
+            //? check if component is not registered
+            if(componentManager->GetComponentType<T>() == 255){
+                std::cout << "ERROR: Failed to add component to entity: " <<  entity << " | component: " << typeid(T).name() << " isn't registered to ECS!" << "\n";
+                return;
+            }
+            // else add component to existing entity
 
             componentManager->AddComponent<T>(entity,component);
 
@@ -55,6 +61,13 @@ class ECS{
         // remove a component from an existing entity
         template<typename T>
         static void RemoveComponent(Entity entity){
+
+            //? check if component is not registered
+            if(componentManager->GetComponentType<T>() == 255){
+                std::cout << "ERROR: Failed to remove component to entity: " <<  entity << " | component: " << typeid(T).name() << " isn't registered to ECS!" << "\n";
+                return;
+            }
+
             componentManager->RemoveComponent<T>(entity);
 
             Signature signature = entityManager->GetSignature(entity);

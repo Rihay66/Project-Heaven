@@ -12,7 +12,6 @@
 #include <engine/physics.hpp>
 #include <observer/glfw_observer.hpp>
 #include <input/glfw_gamepad_manager.hpp>
-#include <iostream>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
     setFixedTimeStep(1.0/60.0f);
@@ -138,17 +137,13 @@ void TestWindow::init(){
         .texIndex = ResourceManager::GetTextureIndex("test")
     });
 
-    ECS::AddComponent(entities[2], Renderer2D{
-        .color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)
-    });
+    ECS::GetComponent<Renderer2D>(entities[2]).color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
     ECS::AddComponent(entities[3], Texture2D{
         .texIndex = ResourceManager::GetTextureIndex("test")
     });
 
-    ECS::AddComponent(entities[3], Renderer2D{
-        .color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)
-    });
+    ECS::GetComponent<Renderer2D>(entities[3]).color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
     ECS::GetComponent<Transform2D>(entities[0]).size = glm::vec2 (10.0f, 1.0f);
 
@@ -203,6 +198,25 @@ void TestWindow::input(){
         // exit window
         glfwSetWindowShouldClose(this->getWindowHandle(), true);
     }
+}
+
+void TestWindow::update(){
+    // begin observations to allow for observe functions
+    Observer::NewObservations();
+    Observer::Observe("entity 2", 
+        ECS::GetComponent<Transform2D>(entities[2]));
+
+    Observer::Observe("entity 3", 
+        ECS::GetComponent<Transform2D>(entities[3]));
+}
+
+void TestWindow::stepUpdate(double ts){
+    // play sound
+    //source.play(true);
+
+    // update physics
+    Physics::UpdateWorld(ts);
+    physics->update();
 
     //?Input for player 1
 
@@ -233,25 +247,6 @@ void TestWindow::input(){
         b2Body_ApplyForce(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {15, 0}, 
             b2Body_GetWorldPoint(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {ECS::GetComponent<Transform2D>(entities[3]).position.x, ECS::GetComponent<Transform2D>(entities[3]).position.y}), true);
     }
-}
-
-void TestWindow::update(){
-    // begin observations to allow for observe functions
-    Observer::NewObservations();
-    Observer::Observe("entity 2", 
-        ECS::GetComponent<Transform2D>(entities[2]));
-
-    Observer::Observe("entity 3", 
-        ECS::GetComponent<Transform2D>(entities[3]));
-}
-
-void TestWindow::stepUpdate(double ts){
-    // play sound
-    //source.play(true);
-
-    // update physics
-    Physics::UpdateWorld(ts);
-    physics->update();
 }
 
 void TestWindow::render(double alpha){
