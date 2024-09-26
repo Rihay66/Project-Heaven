@@ -63,11 +63,6 @@ file(GLOB_RECURSE SOUND
     ${CMAKE_SOURCE_DIR}/src/sound/*.cpp
 )
 
-file(GLOB_RECURSE OBSERVER
-    ${CMAKE_SOURCE_DIR}/src/observer/*.c
-    ${CMAKE_SOURCE_DIR}/src/observer/*.cpp
-)
-
 file(GLOB_RECURSE INPUT
     ${CMAKE_SOURCE_DIR}/src/input/*.c
     ${CMAKE_SOURCE_DIR}/src/input/*.cpp
@@ -79,8 +74,8 @@ file(GLOB_RECURSE INPUT
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # Create both shared and static libraries
-add_library(Heaven-Engine SHARED ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${OBSERVER} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
-add_library(Heaven-Engine-s STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${OBSERVER} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
+add_library(Heaven-Engine SHARED ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
+add_library(Heaven-Engine-s STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
 
 # Include directories for header files
 target_include_directories(Heaven-Engine PUBLIC

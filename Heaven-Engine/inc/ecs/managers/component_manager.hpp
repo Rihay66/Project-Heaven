@@ -68,7 +68,9 @@ class ComponentManager{
             nextComponentType++;
         }
 
-        // get component type of a existing component
+        /* get component type of a existing component
+        * NOTE: iff component doesn't exist, returning value is 255 (aka garbage value)
+        */ 
         template<typename T>
         ComponentType GetComponentType(){
             const char* typeName = typeid(T).name();

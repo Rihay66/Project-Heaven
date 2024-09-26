@@ -1,7 +1,5 @@
 #include "../inc/test_window.hpp"
-#include "ecs/components/renderer.hpp"
-#include "ecs/components/rigidbody.hpp"
-#include "ecs/components/transform.hpp"
+#include <ecs/default_components.hpp>
 #include "engine/text_renderer.hpp"
 #include "input/glfw_gamepad.hpp"
 #include "input/glfw_gamepad_manager.hpp"
@@ -10,7 +8,6 @@
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <engine/physics.hpp>
-#include <observer/glfw_observer.hpp>
 #include <input/glfw_gamepad_manager.hpp>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
@@ -39,9 +36,6 @@ std::string TestWindow::GetFrameTime(){
 }
 
 void TestWindow::init(){
-    // init Observer
-    Observer::Init(getWindowHandle());
-
     // init ECS
     ECS::Init('r');
 
@@ -201,13 +195,7 @@ void TestWindow::input(){
 }
 
 void TestWindow::update(){
-    // begin observations to allow for observe functions
-    Observer::NewObservations();
-    Observer::Observe("entity 2", 
-        ECS::GetComponent<Transform2D>(entities[2]));
 
-    Observer::Observe("entity 3", 
-        ECS::GetComponent<Transform2D>(entities[3]));
 }
 
 void TestWindow::stepUpdate(double ts){
@@ -263,9 +251,6 @@ void TestWindow::render(double alpha){
     
     //? draw a line
     physics->renderAllBoxColliders();
-
-    // render observer
-    Observer::FlushObservations();
     
     //std::cout << "Quad Count: " << SpriteRenderer::stats.quadCount << "\n";
     //std::cout << "Draw Count: " << SpriteRenderer::stats.drawCount << "\n";
