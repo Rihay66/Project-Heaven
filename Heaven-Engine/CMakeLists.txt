@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15.0)
+cmake_minimum_required(VERSION 3.30.0)
 set (CMAKE_CXX_STANDARD 20)
 project(Heaven-Engine VERSION 0.1.3 LANGUAGES C CXX)
 project(Heaven-Engine-s VERSION 0.1.3 LANGUAGES C CXX)
@@ -184,19 +184,35 @@ endif()
 
 # Install the library and CMake configuration files
 install(TARGETS Heaven-Engine EXPORT Heaven-EngineConfig
+    RUNTIME_DEPENDENCY_SET engine_depen
     ARCHIVE DESTINATION ${CMAKE_BINARY_DIR}
     LIBRARY DESTINATION ${CMAKE_BINARY_DIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
+
 # Install the library and CMake configuration files
 install(TARGETS Heaven-Engine-s EXPORT Heaven-Engine-sConfig
-    ARCHIVE DESTINATION ${CMAKE_BINARY_DIR}
-    LIBRARY DESTINATION ${CMAKE_BINARY_DIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+RUNTIME_DEPENDENCY_SET engine_depen-s
+ARCHIVE DESTINATION ${CMAKE_BINARY_DIR}
+LIBRARY DESTINATION ${CMAKE_BINARY_DIR}
+RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+
+# UNIX specifically include all dynamic or static libraries into the a bin folder
+if(UNIX)
+    # include all dependencies
+    install(RUNTIME_DEPENDENCY_SET engine_depen
+        DESTINATION ${CMAKE_BINARY_DIR}/bin    
+    )
+
+    # include all dependencies
+    install(RUNTIME_DEPENDENCY_SET engine_depen-s
+        DESTINATION ${CMAKE_BINARY_DIR}/bin    
+    )
+endif(UNIX)
 
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc/
