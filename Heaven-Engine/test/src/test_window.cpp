@@ -15,9 +15,7 @@ TestWindow::TestWindow(int w, int h) : Window(w, h){
     setTargetTimeStep(1.0f/60.0f);
 }
 
-TestWindow::~TestWindow(){
-    delete cam;
-}
+TestWindow::~TestWindow() {}
 
 std::string TestWindow::GetFrameTime(){
     this->currentTime = glfwGetTime();
@@ -65,12 +63,11 @@ void TestWindow::init(){
     ResourceManager::LoadShader("shaders/text.vs", "shaders/text.frag", nullptr, "text");
     ResourceManager::LoadShader("shaders/line.vs", "shaders/line.frag", nullptr, "line");
 
-    // init camera
-    cam = new OrthoCamera(getWidth(), getHeight());
-
+    // set the camera dimensions
+    cam.setDimensions(getWidth(), getHeight());
     // calculate the projection for each shader
-    cam->calculateProjectionView(ResourceManager::GetShader("sprite"));
-    cam->calculateProjectionView(ResourceManager::GetShader("line"));
+    cam.calculateProjectionView(ResourceManager::GetShader("sprite"));
+    cam.calculateProjectionView(ResourceManager::GetShader("line"));
 
     // Load a texture
     ResourceManager::LoadTexture("textures/default.png", "test", true);

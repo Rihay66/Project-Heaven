@@ -13,27 +13,34 @@
 */
 class OrthoCamera{
     protected:
-        // declare const vars
-        const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-        const glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
-
-        // maxtrix variable to be used to calculate the 
-        glm::mat4 projection, view, projectionView, transform;
+        // storage for the projection view of a orthographic projection
+        glm::mat4 projectionView;
 
         // reference to the window size
-        unsigned int width, height;
+        unsigned int width = 0, height = 0;
 
     public:
         // reference to the camera position
         glm::vec3 position = glm::vec3(0.0f);
 
-        // construcotr
-        OrthoCamera(unsigned int width, unsigned int height);
+        //* setter functions
+        
+        // set both the width and height
+        void setDimensions(unsigned int w, unsigned int h);
 
-        // destructor
-        ~OrthoCamera();
+        // set the width
+        void setWidth(unsigned int w);
+        
+        // set the height
+        void setHeight(unsigned int h);
 
-        //TODO: Add setter and getters for setting the height and width, and maybe other vars
+        //* getter functions
+
+        // get the width
+        unsigned int getWidth();
+
+        // get the height
+        unsigned int getHeight();
 
         //* helper functions
 

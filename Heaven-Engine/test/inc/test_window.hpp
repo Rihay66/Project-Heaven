@@ -15,7 +15,7 @@
 
 class TestWindow : public Window {
     private:
-        OrthoCamera* cam;
+        OrthoCamera cam;
         SoundSource source;
         ECS_2DRenderer renderer;
         ECS_2DPhysics physics;
