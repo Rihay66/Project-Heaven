@@ -1,6 +1,6 @@
 #include <input/glfw_gamepad.hpp>
 
-bool getKeyInput(Gamepad &pad, int key){
+bool getButtonInput(Gamepad &pad, int key){
     // check if gamepad is set and connected
     if(pad.device != nullptr && pad.device->isConnected){
         // check state of given key

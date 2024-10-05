@@ -1,14 +1,13 @@
 #include "../inc/test_window.hpp"
 #include <ecs/default_components.hpp>
 #include "engine/text_renderer.hpp"
-#include "input/glfw_gamepad.hpp"
-#include "input/glfw_gamepad_manager.hpp"
+#include "input/glfw_keyboard.hpp"
 #include "resourceSystems/managers/resource_manager.hpp"
-#include <box2d/box2d.h>
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/sound_manager.hpp>
 #include <engine/physics.hpp>
 #include <input/glfw_gamepad_manager.hpp>
+#include <input/glfw_keyboard_manager.hpp>
 
 TestWindow::TestWindow(int w, int h) : Window(w, h){
     setFixedTimeStep(1.0/60.0f);
@@ -178,6 +177,9 @@ void TestWindow::init(){
 
     // set the entity's gamepad into the manager to be set
     GamepadManager::SetGamepad(gamepad1, 1);
+
+    // set the keyboard
+    KeyboardManager::SetWindowHandle(getWindowHandle());
 }
 
 void TestWindow::input(){
@@ -206,14 +208,14 @@ void TestWindow::stepUpdate(double ts){
     //?Input for player 1
 
     // check for input from controller
-    if(getKeyInput(ECS::GetComponent<Gamepad>(entities[2]), PLAYSTATION_BUTTON_DPAD_LEFT)){
+    if(getKeyInput(GLFW_KEY_A)){
         // move left
         b2Body_ApplyForce(ECS::GetComponent<Rigidbody2D>(entities[2]).runtimeBody, {-15, 0}, 
             b2Body_GetWorldPoint(ECS::GetComponent<Rigidbody2D>(entities[2]).runtimeBody, {ECS::GetComponent<Transform2D>(entities[2]).position.x, ECS::GetComponent<Transform2D>(entities[2]).position.y}), true);
     }
 
-    if(getKeyInput(ECS::GetComponent<Gamepad>(entities[2]), PLAYSTATION_BUTTON_DPAD_RIGHT)){
-        // move left
+    if(getKeyInput(GLFW_KEY_D)){
+        // move right
         b2Body_ApplyForce(ECS::GetComponent<Rigidbody2D>(entities[2]).runtimeBody, {15, 0}, 
             b2Body_GetWorldPoint(ECS::GetComponent<Rigidbody2D>(entities[2]).runtimeBody, {ECS::GetComponent<Transform2D>(entities[2]).position.x, ECS::GetComponent<Transform2D>(entities[2]).position.y}), true);
     }
@@ -221,13 +223,13 @@ void TestWindow::stepUpdate(double ts){
     //? Input for player 2
 
     // check for input from controller
-    if(getKeyInput(ECS::GetComponent<Gamepad>(entities[3]), PLAYSTATION_BUTTON_DPAD_LEFT)){
+    if(getButtonInput(ECS::GetComponent<Gamepad>(entities[3]), PLAYSTATION_BUTTON_DPAD_LEFT)){
         // move left
         b2Body_ApplyForce(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {-15, 0}, 
             b2Body_GetWorldPoint(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {ECS::GetComponent<Transform2D>(entities[3]).position.x, ECS::GetComponent<Transform2D>(entities[3]).position.y}), true);
     }
 
-    if(getKeyInput(ECS::GetComponent<Gamepad>(entities[3]), PLAYSTATION_BUTTON_DPAD_RIGHT)){
+    if(getButtonInput(ECS::GetComponent<Gamepad>(entities[3]), PLAYSTATION_BUTTON_DPAD_RIGHT)){
         // move left
         b2Body_ApplyForce(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {15, 0}, 
             b2Body_GetWorldPoint(ECS::GetComponent<Rigidbody2D>(entities[3]).runtimeBody, {ECS::GetComponent<Transform2D>(entities[3]).position.x, ECS::GetComponent<Transform2D>(entities[3]).position.y}), true);

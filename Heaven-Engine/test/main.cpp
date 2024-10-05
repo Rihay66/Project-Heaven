@@ -2,13 +2,11 @@
 
 int main(int argc, char* argv[]){
 
-    TestWindow* window = new TestWindow(1280, 720);
+    TestWindow window(1280, 720);
 
-    window->initializeWindow();
+    window.initializeWindow();
 
-    window->runtime();
-
-    delete window;
+    window.runtime();
 
     return 0;
 }
