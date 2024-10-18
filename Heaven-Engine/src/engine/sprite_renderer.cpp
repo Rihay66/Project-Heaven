@@ -440,8 +440,6 @@ void SpriteRenderer::initLineRenderData(){
     if(lineBuffer != nullptr)
         exit(-1); // avoid re-initalize the render data
 
-    //TODO: Make a seperate amount of lines to render
-
     // configure the buffer
     lineBuffer = new LineVertex[maxLineVertexCount];
 
@@ -520,8 +518,6 @@ void SpriteRenderer::clear(){
     delete[] quadBuffer;
     quadBufferPtr = nullptr;
     delete quadBufferPtr;
-
-    //TODO: Move line buffer deletion to be in a seperate function
 
     // delete all line buffers
     delete[] lineBuffer;

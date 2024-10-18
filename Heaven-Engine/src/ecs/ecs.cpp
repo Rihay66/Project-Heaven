@@ -11,8 +11,6 @@ std::unique_ptr<SystemManager> ECS::systemManager;
 void ECS::Init(char debugOption){
     // check each ECS manager if they've been initialized
 
-    //TODO: Find a cleaner way to avoid reinitialization of each manager
-
     if(entityManager.get() == nullptr){
         entityManager = std::make_unique<EntityManager>();
     }else {

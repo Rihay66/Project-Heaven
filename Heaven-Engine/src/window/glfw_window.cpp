@@ -3,10 +3,6 @@
 #include <iostream>
 #include <chrono>
 
-// static vars for tracking input
-static bool isDebug = false;
-static bool pressed = false;
-
 // callback function to move the OpenGL viewport to the GLFW window's position
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
@@ -173,8 +169,10 @@ void Window::runtime(){
 
         // end timing the frame
         frameEnd = std::chrono::steady_clock::now();
+
         // calculate the duration of the frame
         frameDuration = std::chrono::duration<double>(frameEnd - frameStart).count();
+
         // calculate the time to sleep to achieve the desired time step
         threadSleepTime = targetTimeStep - frameDuration;
         if(threadSleepTime > 0){

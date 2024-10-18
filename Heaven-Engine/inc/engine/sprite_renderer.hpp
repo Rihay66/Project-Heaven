@@ -33,8 +33,6 @@ class SpriteRenderer{
         */
         static void Init(Shader& quadShader, Shader& lineShader, glm::uvec2 spriteSize = {10.0f, 10.0f});
 
-        //TODO: Allow for setting custom base quads corner positions
-
         // draw single a quad utilizing given raw data, without interpolation
         static void DrawQuad(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
 

@@ -79,12 +79,24 @@ PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D
     b2ShapeDef shapeDef = b2DefaultShapeDef();
     shapeDef.density = collider.density;
 
-    //TODO: Check for the value of both friction and restitution to be [0,1]
+    // check that given friction is within a value range [0,1]
+    if(collider.friction > 0.0f && collider.friction <= 1.0f){
+        shapeDef.friction = collider.friction;
+    }else{
+        // give a default value
+        shapeDef.friction = 0.5f;
+    }
 
-    shapeDef.friction = collider.friction;
-    shapeDef.restitution = collider.restitution;
+    // check that given restitution is within a value range [0,1]
+    if(collider.restitution > 0.0f && collider.restitution <= 1.0f){
+        shapeDef.restitution = collider.restitution;
+    }else{
+        // give a default value
+        shapeDef.restitution = 0.0f;
+    }
     
-    b2ShapeId shapeID = b2CreatePolygonShape(body, &shapeDef, &boxShape);
+    // create shape
+    b2CreatePolygonShape(body, &shapeDef, &boxShape);
 
     // create Physics object
     PhysicsObject obj;
@@ -132,12 +144,24 @@ void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &colli
     b2ShapeDef shapeDef = b2DefaultShapeDef();
     shapeDef.density = collider.density;
 
-    //TODO: Check for the value of both friction and restitution to be [0,1]
+    // check that given friction is within a value range [0,1]
+    if(collider.friction > 0.0f && collider.friction <= 1.0f){
+        shapeDef.friction = collider.friction;
+    }else{
+        // give a default value
+        shapeDef.friction = 0.5f;
+    }
 
-    shapeDef.friction = collider.friction;
-    shapeDef.restitution = collider.restitution;
-    
-    b2ShapeId shapeID = b2CreatePolygonShape(body, &shapeDef, &boxShape);
+    // check that given restitution is within a value range [0,1]
+    if(collider.restitution > 0.0f && collider.restitution <= 1.0f){
+        shapeDef.restitution = collider.restitution;
+    }else{
+        // give a default value
+        shapeDef.restitution = 0.0f;
+    }
+
+    // create shape
+    b2CreatePolygonShape(body, &shapeDef, &boxShape);
 
     // create Physics object
     PhysicsObject obj;
@@ -218,8 +242,6 @@ void Physics::Clear(){
 }
 
 bool Physics::AABBCollision(Transform2D& a, Transform2D& b){
-    //TODO: calculate the sides of the quad with the offset considered
-
     // check for no overlap
     bool collisionX = (a.position.x + a.size.x / 2.0f) >= (b.position.x - b.size.x / 2.0f) && (a.position.x - a.size.x / 2.0f) <= (b.position.x + b.size.x / 2.0f);
     bool collisionY = (a.position.y + a.size.y / 2.0f) >= (b.position.y - b.size.y / 2.0f) && (a.position.y - a.size.y / 2.0f) <= (b.position.y + b.size.y / 2.0f);

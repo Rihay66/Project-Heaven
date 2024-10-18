@@ -199,7 +199,7 @@ void TestWindow::update(){
 
 void TestWindow::stepUpdate(double ts){
     // play sound
-    //source.play(true);
+    source.play(true);
 
     // update physics
     Physics::UpdateWorld(ts);

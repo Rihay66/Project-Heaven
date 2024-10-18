@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.30.0)
+cmake_minimum_required(VERSION 3.28.0)
 set (CMAKE_CXX_STANDARD 20)
-project(Heaven-Engine VERSION 0.1.3 LANGUAGES C CXX)
-project(Heaven-Engine-s VERSION 0.1.3 LANGUAGES C CXX)
-project(Engine-Testing VERSION 0.1.0 LANGUAGES C CXX)
+project(Heaven-Engine VERSION 1.1.0 LANGUAGES C CXX)
+project(Heaven-Engine-s VERSION 1.1.0 LANGUAGES C CXX)
+project(Engine-Testing VERSION 0.0.1 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
 # Set the install prefix to the build folder's lib directory
