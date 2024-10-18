@@ -15,8 +15,8 @@
 #include <functional>
 
 /* A Static singleton TagSystem class that hosts several
- functions to add, edit, find arbitrary types that have a set tag 
- to a static tag pool.
+ functions to add, replace,and find arbitrary types that 
+ have a set tag to a static tag pool.
 */
 class TagManager{
     public:
@@ -35,7 +35,7 @@ class TagManager{
         */
         template<typename T>
         static std::vector<std::reference_wrapper<T>> GetAllWithTag(const std::string& tag){
-            //TODO: Optimize finding the key, maybe switch the tagPool to a vector<>
+            //TODO: Optimize finding the tag, maybe switch the tagPool to a array<>
             
             // check if map is not empty
             if(tagPool.empty()){
@@ -54,8 +54,6 @@ class TagManager{
             const char* typeName = typeid(T).name();
             // create list to store references to variables or objects
             std::vector<std::reference_wrapper<T>> tempList;
-           
-            //TODO: Optimize search for tag and type
 
             // iterate through the map and find the element
             for(auto const& pair : tagPool){

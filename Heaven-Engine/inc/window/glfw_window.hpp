@@ -8,19 +8,15 @@
     #include <windows.h>
 #endif
 
-// include standard libraries
-
-// GLFW and OPENGL libraries
+// GLAD and GLFW libraries
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-//TODO: Give more information about the class 
-
-/* Window class used for creating a graphical window
- that is used to hold all that makes up an application.
+/* Window class used for creating a graphical context 
+ window that is used to allow for OpenGL capabilities.
  The window class provides various functions and most 
  functions are overwrittable. 
- !It is recommended to inherit this class
+ !It is recommended to inherit this class and override functions
 */
 class Window{
     private:
@@ -34,12 +30,12 @@ class Window{
         // var storing and referencing to the window name
         const char* windowName;
 
-        /*Fixed rate that updates the stepUpdate(), adjust accordingly as needed
+        /* Fixed rate that updates the stepUpdate(), adjust accordingly as needed
          !Default value is 0.16ms
         */
         double fixedTimeStep = 1.0f / 60.0f;
 
-        /*Fixed rate that updates application, adjust accordingly as needed
+        /* Fixed rate that updates application, adjust accordingly as needed
          !Default value is 0.16ms
         */
         double targetTimeStep = 1.0f / 60.0f;
@@ -49,9 +45,6 @@ class Window{
 
         // window handle
         GLFWwindow* handle = nullptr;
-
-        // flag var for tracking the initialization of the window
-        //std::once_flag onceFlag;
 
     protected:
         // used to set the target frame time between frame, aka max frame time

@@ -3,11 +3,11 @@
 #ifndef GLFW_GAMEPAD_HPP
 #define GLFW_GAMEPAD_HPP
 
-// include GLFW
-#include <GLFW/glfw3.h>
+// include standard memory library
 #include <memory>
 
-//TODO: define Heaven-Engine buttons for Xbox, Playstation, and even switch
+// include GLFW
+#include <GLFW/glfw3.h>
 
 //? Playstation specific button macros
 
@@ -35,6 +35,7 @@
 #define PLAYSTATION_R2_TRIGGER_RIGHT 5
 
 //? Xbox specific button macros
+
 #define XBOX_BUTTON_A 0
 #define XBOX_BUTTON_B 1
 #define XBOX_BUTTON_X 2
@@ -57,6 +58,31 @@
 #define XBOX_JOYSTICK_RIGHT_Y 3
 #define XBOX_LEFT_TRIGGER 4
 #define XBOX_RIGHT_TRIGGER 5
+
+//? Nintendo specific button macros
+
+#define NINTENDO_BUTTON_B 0
+#define NINTENDO_BUTTON_A 1
+#define NINTENDO_BUTTON_Y 2
+#define NINTENDO_BUTTON_X 3
+#define NINTENDO_BUTTON_LEFT_BUMPER 4
+#define NINTENDO_BUTTON_RIGHT_BUMPER 5
+#define NINTENDO_BUTTON_MINUS 6
+#define NINTENDO_BUTTON_PLUS 7
+#define NINTENDO_BUTTON_GUIDE 8
+#define NINTENDO_BUTTON_LEFT_THUMB 9
+#define NINTENDO_BUTTON_RIGHT_THUMB 10
+#define NINTENDO_BUTTON_DPAD_UP 11
+#define NINTENDO_BUTTON_DPAD_RIGHT 12
+#define NINTENDO_BUTTON_DPAD_DOWN 13
+#define NINTENDO_BUTTON_DPAD_LEFT 14
+
+#define NINTENDO_JOYSTICK_LEFT_X 0
+#define NINTENDO_JOYSTICK_LEFT_Y 1
+#define NINTENDO_JOYSTICK_RIGHT_X 2
+#define NINTENDO_JOYSTICK_RIGHT_Y 3
+#define NINTENDO_LEFT_TRIGGER 4
+#define NINTENDO_RIGHT_TRIGGER 5
 
 //? Generic specific button macros
 #define GENERIC_GLOBAL_BUTTON_LAST 14

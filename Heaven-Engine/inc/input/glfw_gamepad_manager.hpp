@@ -7,6 +7,7 @@
 #include <array>
 #include <vector>
 
+// include gamepad
 #include <input/glfw_gamepad.hpp>
 
 //TODO: Add debug options to display info of the gamepads

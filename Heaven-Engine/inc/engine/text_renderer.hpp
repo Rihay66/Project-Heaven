@@ -3,18 +3,21 @@
 #ifndef TEXT_RENDERING_HPP
 #define TEXT_RENDERING_HPP
 
+// include standard libraries
 #include <string>
 #include <map>
 
+// include GLAD and GLM
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+// include resource manager
 #include <resourceSystems/managers/resource_manager.hpp>
 
-/* A static singleton Text Renderer Class used to render text. This Class
-uses a loaded font from the ResourceManager Class.
-* NOTE: Text is rendered in the center of the screen
-! This Class is unoptimized and not very flexible thus 
+/* A static singleton Text Renderer Class used to render text
+ with a given font. This Class uses a loaded font from the 
+ ResourceManager Class.
+ ! This Class is unoptimized and not very flexible thus 
  take into consideration of its current design
 */
 class TextRenderer{
@@ -24,6 +27,7 @@ class TextRenderer{
 
         // Requires a font set from the ResourceManager, along with attributes of the text being displayed
         static void DisplayText(std::map<char, Character>& chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color = glm::vec4(1.0f));
+    
     private:
         // stores data of a quad
         static unsigned int VAO, VBO;

@@ -14,13 +14,10 @@
 // include shader class
 #include <resourceSystems/resource_shader.hpp>
 
-//TODO: Rewrite the comments for clarity and proper format
-
 /* A static singleton Sprite Rendering Class used to 
- render 2D quads. This class uses mainly the 
- GameObject Class to represent each quad. 
- This class utilizes batch rendering when
- rendering a LIST of GameObjects. 
+ render 2D primatives. This class uses given raw data to 
+ represent and render a 2D primative. This class utilizes 
+ batch rendering when rendering a stack of 2D primatives. 
 !Requires a shader class and a standard sprite size 
 */
 class SpriteRenderer{    
@@ -32,6 +29,8 @@ class SpriteRenderer{
         ! Overloaded function
         */
         static void Init(Shader& quadShader, Shader& lineShader, glm::uvec2 spriteSize = {10.0f, 10.0f});
+        
+        //* draw primative functions
 
         // draw single a quad utilizing given raw data, without interpolation
         static void DrawQuad(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
@@ -41,6 +40,8 @@ class SpriteRenderer{
 
         // draw a single rectangle utilizing raw data and lines
         static void DrawRect(glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f));
+
+        //* stack primative functions
 
         /* store a single quad utilizing given raw data, without interpolation
             !Requires the Flush() after this function in order to render what was stored
@@ -53,16 +54,22 @@ class SpriteRenderer{
         */
         static void StackLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color = glm::vec4(1.0f));
 
+        //* flush functions
+
         // used to tell the GPU to render the stored quads in the buffer
         static void FlushQuads();
 
         // used to tell the GPU to render the stored lines in the buffer
         static void FlushLines();
 
+        //* getter functions
+
         /* Set the width of all lines
             !Can't be used to individually set the width of lines
         */
         static void SetLineWidth(float width);
+
+        //* setter functions
 
         // get the current width of all lines
         static float GetLineWidth();
@@ -75,13 +82,13 @@ class SpriteRenderer{
         // contain reference to amont of quads and amount of draw calls
         static RendererStats stats;
 
+    private:
         // used to store default offsets of quad vertex positions
         const static glm::vec4 quadVertexPositions[];
         
         // used to store default texture cooridinates
         const static std::array<glm::vec2, 4>  textureCoordinates;
 
-    private:
         // data struct of standard quad's vertex information
         struct QuadVertex{
             glm::vec2 position;

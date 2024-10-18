@@ -3,13 +3,17 @@
 #ifndef ORTHO_CAMERA_HPP
 #define ORTHO_CAMERA_HPP
 
-#include <resourceSystems/resource_shader.hpp>
+// include GLM
 #include <glm/glm.hpp>
 
-/* Orthographic Camera class used for allowing 
+// include shader
+#include <resourceSystems/resource_shader.hpp>
+
+/* Orthographic Camera class is used for allowing 
  perception of what's being rendered in a Orthographic
- manner, the class can be modified and changed to allow
- desired perception of the scene.  
+ manner. The class can be modified and changed to allow
+ desired perception of the scene. 
+ ! Requires a shader class and a window width and height
 */
 class OrthoCamera{
     protected:
