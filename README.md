@@ -1,8 +1,8 @@
 # Project-Heaven
 A Lightweight 2D OpenGL based Engine called:
-# Heaven-Engine
+# 3Sisters-Engine
 
-![](Heaven-Engine_logo.png)
+![](3Sisters-Engine_logo.png)
 
 Current Version: 1.1-Dev
 
