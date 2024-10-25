@@ -1,10 +1,10 @@
 # Project-Heaven
 A Lightweight 2D OpenGL based Engine called:
-# Heaven-Engine
+# 3Sisters-Engine
 
-![](Heaven-Engine_logo.png)
+![](3Sisters-Engine_logo.png)
 
-Current Version: 1.02-O
+Current Version: 1.1
 
 Features:
 
@@ -12,6 +12,7 @@ Features:
 * Batch Rendering solution
 * Box2D for physics simulation
 * OpenAL-based sound engine
+* Entity Component System
 * Controller-Support
 
 What's Coming?
@@ -29,17 +30,17 @@ What's Coming?
 [] Further Optimizations
 
 # Documentation
-This project's documentation will be in the works and is expected to be completed by the end of Summer 2024.
+This project's documentation will be in the works and is expected to be completed by the end of Fall 2024.
 
 # Contribution
-This project has yet to include contributors, though GitHub issues can be made to highlight needed modifications to the engine.
+This project has yet to include contributors, though GitHub issues can be made to highlight needed modifications or fixes to the engine.
 
 # Licensing
 This Project is under the MIT License.
 
 Additional Information:
-* Games/Software made using the "Heaven-Engine", the "Heaven-Engine"'s license does not apply to the content made with it. If this software's shared or static library is included in
-  the content of your software, so it's required to include a copyright notice and license statement as part of your documentation.
+* Games/Software made using the "Heaven-Engine", the "Heaven-Engine"'s license does not apply to the content made with it. If this software's shared or static binary library is included in
+  the content of your software, then it's required to include a copyright notice and license statement as part of your documentation.
 
 Additional Restriction:
 * If the software is directly modified, the source code is changed, thus, the modified software will no longer hold the name "Heaven-Engine" nor "Project-Heaven".
