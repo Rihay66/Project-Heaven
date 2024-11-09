@@ -31,7 +31,8 @@ struct PhysicsObject {
 /* Static Singleton Physics class that hosts functions to add
  either PhysicsObject into the physics engine.
  Objects can be added at any time after init(). Use update 
- functions to update PhysicsObjects.
+ functions to update PhysicsObjects. All functions and 
+ resources are static and no public constructor is defined.  
  (NOTE: update functions don't work until init() has been called once)
 */
 class Physics {

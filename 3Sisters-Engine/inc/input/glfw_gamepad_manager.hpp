@@ -17,7 +17,8 @@
  Gamepads. Each obtained connected controller are stored for
  reference to allow for further usage of the gamepad.
  This class keeps track of all connected or diconnected 
- devices. 
+ devices. All functions and resources are static and no 
+ public constructor is defined.  
 */
 class GamepadManager{
     public:

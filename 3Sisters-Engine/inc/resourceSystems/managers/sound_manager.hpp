@@ -15,8 +15,7 @@
  Each loaded sound is also stored for future reference 
  by string handles as well stored within a collection 
  that contains a number of sounds. All functions and 
- resources are static and no public 
- constructor is defined.  
+ resources are static and no public constructor is defined.  
 */
 class SoundManager{
     public:

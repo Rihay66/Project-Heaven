@@ -8,9 +8,10 @@
 #include <input/glfw_keyboard.hpp>
 
 /* A static singleton KeyboardManager that hosts 
-several functions to hold and keep a reference of 
-the window handle to allow for simplified keyboard
-inputs.
+ several functions to hold and keep a reference of 
+ the window handle to allow for simplified keyboard
+ inputs. All functions and resources are static and 
+ no public constructor is defined.  
 */
 class KeyboardManager {
     public:

@@ -15,8 +15,9 @@
 #include <resourceSystems/managers/resource_manager.hpp>
 
 /* A static singleton Text Renderer Class used to render text
- with a given font. This Class uses a loaded font from the 
- ResourceManager Class.
+ with a given font. This Class utilizes fonts loaded from the 
+ ResourceManager Class. All functions and resources are static 
+ and no public constructor is defined.  
  ! This Class is unoptimized and not very flexible thus 
  take into consideration of its current design
 */

@@ -19,7 +19,7 @@ class ECS_SpriteRenderer : public System{
         void render(double alpha);
 };
 
-// create an aliasto easily refer to this system
+// create an alias to easily refer to this system
 using ECS_2DRenderer = std::shared_ptr<ECS_SpriteRenderer>;
 
 #endif
