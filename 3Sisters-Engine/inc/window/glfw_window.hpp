@@ -12,7 +12,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-/* Window class used for creating a graphical context 
+/* Window abstract class used for creating a graphical context 
  window that is used to allow for OpenGL capabilities.
  The window class provides various functions and most 
  functions are overwrittable. 
@@ -107,19 +107,19 @@ class Window{
         virtual void runtime();
 
         // used as a forward of getInput() to add additional input or event checks
-        virtual void input();
+        virtual void input() = 0;
 
         // used to call classes that handle the loading of shaders, textures, and objects
-        virtual void init(); 
+        virtual void init() = 0; 
         
         // used to update logic, custom events, and other
-        virtual void update();
+        virtual void update() = 0;
 
         // used to update Physics, ticks systems, or other at a fixed time step
-        virtual void stepUpdate(double ts);
+        virtual void stepUpdate(double ts) = 0;
 
         // used to render things on the screen 
-        virtual void render(double alpha); 
+        virtual void render(double alpha) = 0; 
 };
 
 #endif
