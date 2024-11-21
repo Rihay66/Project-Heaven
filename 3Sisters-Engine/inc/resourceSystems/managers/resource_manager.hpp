@@ -19,25 +19,25 @@
 /* A static singleton Resource Manager class that hosts several
  functions to load Textures and Shaders. Each loaded texture
  and/or shader is also stored for future reference by string
- handles. All functions and resources are static and no 
- public constructor is defined. 
+ handles. All functions and resources are static and no
+ public constructor is defined.
 */
 class ResourceManager{
     public:
         //* loader functions
-        
+
         // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
         static Shader& LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
 
         // loads (and generates) a texture from file
-        static Texture& LoadTexture(const char *file, std::string name, bool alpha = false);
-        
+        static Texture& LoadTexture(const char *file, std::string name);
+
         // loads (and generates) a text texture from file
         static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool isLinear = true);
 
         // use a loaded texture to create a sub texture
         static std::array<glm::vec2, 4>& LoadSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize = {1, 1});
-        
+
         //* getter functions
 
         // retrieves a stored shader

@@ -1,5 +1,6 @@
 #include <resourceSystems/managers/resource_manager.hpp>
 
+#include <cstring>
 #include <array>
 #include <iostream>
 #include <sstream>
@@ -20,7 +21,7 @@
 
 std::map<std::string, Shader>                                               ResourceManager::Shaders;
 std::map<std::string, Texture>                                              ResourceManager::Textures;
-std::map<std::string, std::map<char, Character>>           ResourceManager::Fonts; 
+std::map<std::string, std::map<char, Character>>           ResourceManager::Fonts;
 std::map<std::string, SubTexture>                          ResourceManager::SubTextures;
 std::vector<unsigned int>                                                   ResourceManager::texIDList;
 bool                                                                        ResourceManager::isAutoClearSet = false;
@@ -38,11 +39,36 @@ Shader& ResourceManager::GetShader(std::string name){
     return Shaders[name];
 }
 
-Texture& ResourceManager::LoadTexture(const char *file, std::string name, bool alpha){
+Texture& ResourceManager::LoadTexture(const char *file, std::string name){
     // set up automatic clear()
     setUpAutoClear();
-    // load the texture from the given file and set the alpha flag
-    Textures[name] = loadTextureFromFile(file, alpha);
+    // determine the alpha of the file by checking image file extension
+    size_t fileNameLength = strlen(file);
+    size_t fileExtension = 0;
+    char fileImageformat[6];
+    // find the position of the '.' in file name
+    for(int i = fileNameLength - 1; i >= 0; i--){
+        // check every position until finding '.'
+        if(file[i] == '.'){
+            fileExtension = fileNameLength - (i + 1);
+            for(int i = 0 ; i < fileExtension; i++){
+                fileImageformat[i] = file[(fileNameLength - fileExtension) + i];
+            }
+            break;
+        }
+    }
+
+    //TODO: Refactor to have a more readable way to check for certain image format that have alpha compositing
+
+    // check file extension of the following to set alpha to be true, otherwise alpha is false
+    if(strcmp(fileImageformat, "png") == 0 || strcmp(fileImageformat, "tiff") == 0){
+        // load texture with alpha
+        Textures[name] = loadTextureFromFile(file, true);
+    }else{
+        // load texture with no alpha
+        Textures[name] = loadTextureFromFile(file, false);
+    }
+
     // add texture ID to list
     texIDList.push_back(Textures[name].GetID());
     return Textures[name];
@@ -59,13 +85,13 @@ int ResourceManager::GetTextureIndex(std::string name){
     unsigned int id = Textures[name].GetID();
 
     for(int i = 0; i < texIDList.size(); i++){
-        //check for id on the list and return it's location by iteration 
+        //check for id on the list and return it's location by iteration
         if(texIDList[i] == id)
-            return i;//exit out and return texture index     
+            return i;//exit out and return texture index
     }
 
     // error the texture couldn't be found
-    std::cout << "ERROR: Couldn't find texture: " << name << ", in storage!" << std::endl; 
+    std::cout << "ERROR: Couldn't find texture: " << name << ", in storage!" << std::endl;
     return -1;
 }
 
@@ -104,8 +130,8 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
     setUpAutoClear();
 
     // use free type to load font and set font size
-    
-    // initialize the FreeType2 library 
+
+    // initialize the FreeType2 library
     FT_Library ft;
     // grab and check for errors
     FT_Error error = FT_Init_FreeType(&ft);
@@ -114,7 +140,7 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
 	}
 
     // load the font
-    FT_Face face; 
+    FT_Face face;
     // grab and check for errors
     error = FT_New_Face(ft, filename, 0, &face);
 	if (error){
@@ -153,7 +179,7 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
         // set texture options
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        
+
         //Check for linear flag then set the texture filter
         if(isLinear){
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -219,7 +245,7 @@ std::array<glm::vec2, 4>& ResourceManager::GetSubTexture(std::string name){
 }
 
 void ResourceManager::clear(){
-    // (properly) delete all shaders	
+    // (properly) delete all shaders
     for (auto iter : Shaders) {
         glDeleteProgram(iter.second.ID);
     }

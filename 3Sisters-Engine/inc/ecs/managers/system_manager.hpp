@@ -13,7 +13,7 @@
 /* System Manager manages record of registered
 systems and their signatures. Each system needs
 a signature in order for the manager to add the
-appropriate entities. 
+appropriate entities.
 */
 class SystemManager{
     private:

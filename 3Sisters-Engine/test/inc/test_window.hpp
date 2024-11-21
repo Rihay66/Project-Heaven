@@ -8,7 +8,7 @@
 class TestWindow : public Window {
     private:
 
-      public:
+    public:
         TestWindow(int w, int h);
         ~TestWindow();
 
