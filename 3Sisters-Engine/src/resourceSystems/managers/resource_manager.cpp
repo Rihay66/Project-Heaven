@@ -45,12 +45,18 @@ Texture& ResourceManager::LoadTexture(const char *file, std::string name){
     // determine the alpha of the file by checking image file extension
     size_t fileNameLength = strlen(file);
     size_t fileExtension = 0;
-    char fileImageformat[6];
+    char fileImageformat[5];
     // find the position of the '.' in file name
     for(int i = fileNameLength - 1; i >= 0; i--){
         // check every position until finding '.'
         if(file[i] == '.'){
             fileExtension = fileNameLength - (i + 1);
+            // check if the file extension is within commmon length
+            if(fileExtension > (size_t)(sizeof(fileExtension)/sizeof(char))){
+                std::cout << "ERROR: Unknown image format extension: " << file << "\n";
+                break;
+            }
+            // get the file extension name
             for(int i = 0 ; i < fileExtension; i++){
                 fileImageformat[i] = file[(fileNameLength - fileExtension) + i];
             }
