@@ -37,6 +37,9 @@ class ResourceManager{
 
         // use a loaded texture to create a sub texture
         static std::array<glm::vec2, 4>& LoadSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize = {1, 1});
+        
+        // create a white texture that is named "default"
+        static void GenerateWhiteTexture();
 
         //* getter functions
 
@@ -67,7 +70,9 @@ class ResourceManager{
         static std::map<std::string, std::map<char, Character>> Fonts;
         static std::map<std::string, SubTexture> SubTextures;
         static std::vector<unsigned int> texIDList;
-
+        // (caveman way) track if the white texture has been generated 
+        static bool doesWhiteTexExist;
+        
         // private constructor, that is we do not want any actual resource manager objects. Its members and functions should be publicly available (static).
         ResourceManager() {}
         // loads and generates a shader from file
@@ -76,7 +81,7 @@ class ResourceManager{
         static Texture loadTextureFromFile(const char *file, bool alpha);
         // properly de-allocates all loaded resources
         static void clear();
-
+        
         //! Currently EXPERIMENTAL, may cause exceptions or segfaults
         // private boolean to track automatic clear()
         static bool isAutoClearSet;

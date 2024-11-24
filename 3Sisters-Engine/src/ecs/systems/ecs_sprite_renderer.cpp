@@ -8,11 +8,10 @@ void ECS_SpriteRenderer::render(double alpha){
     for(auto const& entity : entities){
         // grab entity components
         auto& transform = ECS::GetComponent<Transform2D>(entity);
-        auto& texture = ECS::GetComponent<Texture2D>(entity);
-        auto& render = ECS::GetComponent<Renderer2D>(entity);
+        auto& material = ECS::GetComponent<Material2D>(entity);
 
         // add to stack
-        SpriteRenderer::StackQuad(texture.texIndex, transform.position, transform.size, transform.rotation, render.color, texture.texCoords);
+        SpriteRenderer::StackQuad(material.texIndex, transform.position, transform.size, transform.rotation, material.color, material.texCoords);
     }
 
     // flush

@@ -10,7 +10,7 @@
 #include <engine/sprite_renderer.hpp>
 
 /* ECS_SpriteRenderer class is a ECS system that
- allows entities with the necessary components to 
+ allows entities with the necessary components to
  be rendered using the SpriteRenderer static class
 */
 class ECS_SpriteRenderer : public System{
@@ -20,6 +20,6 @@ class ECS_SpriteRenderer : public System{
 };
 
 // create an alias to easily refer to this system
-using ECS_2DRenderer = std::shared_ptr<ECS_SpriteRenderer>;
+using ECS_SpriteRendererPtr = std::shared_ptr<ECS_SpriteRenderer>;
 
 #endif
