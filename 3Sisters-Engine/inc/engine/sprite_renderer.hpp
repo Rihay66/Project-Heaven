@@ -18,7 +18,9 @@
  render 2D primatives. This class uses given raw data to 
  represent and render a 2D primative. This class utilizes 
  batch rendering when rendering a stack of 2D primatives. 
-!Requires a shader class and a standard sprite size 
+ All functions and resources are static and no public 
+ constructor is defined.  
+ !Requires a shader class and a standard sprite size 
 */
 class SpriteRenderer{    
     public:
@@ -32,13 +34,13 @@ class SpriteRenderer{
         
         //* draw primative functions
 
-        // draw single a quad utilizing given raw data, without interpolation
+        // draw a singular quad utilizing given raw data, without interpolation
         static void DrawQuad(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
 
         // draw a single line from two given points
         static void DrawLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color = glm::vec4(1.0f));
 
-        // draw a single rectangle utilizing raw data and lines
+        // draw a single wireframe rectangle utilizing raw data and lines
         static void DrawRect(glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f));
 
         //* stack primative functions

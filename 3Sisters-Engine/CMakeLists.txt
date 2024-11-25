@@ -8,12 +8,15 @@ cmake_policy(SET CMP0072 NEW)
 # Set the install prefix to the build folder's lib directory
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 
+# Optionally, include ImGUI and any module that requires ImGUI
+option(BUILD_IMGUI "Build ImGUI into engine binary" OFF)
+
+if(BUILD_IMGUI)
+
 # Check if ImGUI is set up
 file(GLOB RESULT ${CMAKE_SOURCE_DIR}/imgui/*)
 list(LENGTH RESULT RES_LEN)
 if(RES_LEN EQUAL 0)
-
-# TODO: If ImGui is added to engine then allow for grabing those source files else ignore compiling imGUI
 
 # ImGUI directory empty throw an error
 message(SEND_ERROR "ERROR: ImGUI directory is Empty, verify that all git submodule were initialized and updated")
@@ -25,6 +28,10 @@ file(GLOB IMGUI
     ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_opengl3.cpp
     ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_glfw.cpp
 )
+
+# ? Any module's source that requires ImGui need to be placed here
+
+endif()
 
 # Grab all source files
 file(GLOB_RECURSE ENGINE

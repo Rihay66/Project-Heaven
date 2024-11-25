@@ -6,8 +6,7 @@
 //? include all "default" components
 
 #include <ecs/components/transform.hpp>
-#include <ecs/components/texture.hpp>
-#include <ecs/components/renderer.hpp>
+#include <ecs/components/material.hpp>
 #include <ecs/components/rigidbody.hpp>
 #include <ecs/components/boxcollider.hpp>
 

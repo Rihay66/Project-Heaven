@@ -11,7 +11,8 @@
 
 /* A static singleton ECS (aka coordinator) class that hosts
  several function to create, manage, remove Entities, Components,
- and Systems. 
+ and Systems. All functions and resources are static and no public 
+ constructor is defined.  
 */
 class ECS{
     public:

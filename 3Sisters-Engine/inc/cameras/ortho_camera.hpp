@@ -24,7 +24,7 @@ class OrthoCamera{
         unsigned int width = 0, height = 0;
 
     public:
-        // reference to the camera position
+        // reference to the camera's position
         glm::vec3 position = glm::vec3(0.0f);
 
         //* setter functions

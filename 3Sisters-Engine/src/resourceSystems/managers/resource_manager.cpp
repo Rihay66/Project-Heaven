@@ -1,5 +1,6 @@
 #include <resourceSystems/managers/resource_manager.hpp>
 
+#include <cstring>
 #include <array>
 #include <iostream>
 #include <sstream>
@@ -20,9 +21,10 @@
 
 std::map<std::string, Shader>                                               ResourceManager::Shaders;
 std::map<std::string, Texture>                                              ResourceManager::Textures;
-std::map<std::string, std::map<char, Character>>           ResourceManager::Fonts; 
+std::map<std::string, std::map<char, Character>>           ResourceManager::Fonts;
 std::map<std::string, SubTexture>                          ResourceManager::SubTextures;
 std::vector<unsigned int>                                                   ResourceManager::texIDList;
+bool                                                                        ResourceManager::doesWhiteTexExist = false;
 bool                                                                        ResourceManager::isAutoClearSet = false;
 
 
@@ -34,69 +36,49 @@ Shader& ResourceManager::LoadShader(const char *vShaderFile, const char *fShader
     return Shaders[name];
 }
 
-Shader& ResourceManager::GetShader(std::string name){
-    return Shaders[name];
-}
-
-Texture& ResourceManager::LoadTexture(const char *file, std::string name, bool alpha){
+Texture& ResourceManager::LoadTexture(const char *file, std::string name){
     // set up automatic clear()
     setUpAutoClear();
-    // load the texture from the given file and set the alpha flag
-    Textures[name] = loadTextureFromFile(file, alpha);
+    // determine the alpha of the file by checking image file extension
+    size_t fileNameLength = strlen(file);
+    size_t fileExtension = 0;
+    char fileImageformat[5];
+    // find the position of the '.' in file name
+    for(int i = fileNameLength - 1; i >= 0; i--){
+        // check every position until finding '.'
+        if(file[i] == '.'){
+            fileExtension = fileNameLength - (i + 1);
+            // check if the file extension is within commmon length
+            if(fileExtension > (size_t)(sizeof(fileExtension)/sizeof(char))){
+                std::cout << "ERROR: Unknown image format extension: " << file << "\n";
+                break;
+            }
+            // get the file extension name
+            for(int i = 0 ; i < fileExtension; i++){
+                fileImageformat[i] = file[(fileNameLength - fileExtension) + i];
+            }
+            break;
+        }
+    }
+
+    //TODO: Refactor to have a more readable way to check for certain image format that have alpha compositing
+
+    // check file extension of the following to set alpha to be true, otherwise alpha is false
+    if(strcmp(fileImageformat, "png") == 0 || strcmp(fileImageformat, "jpeg") == 0){
+        // load texture with alpha
+        Textures.insert({name ,loadTextureFromFile(file, true)});
+    }else{
+        // load texture with no alpha
+        Textures.insert({name ,loadTextureFromFile(file, false)});
+    }
+
     // add texture ID to list
     texIDList.push_back(Textures[name].GetID());
+
+    //? bind the textures
+    BindTextures();
+
     return Textures[name];
-}
-
-int ResourceManager::GetTextureIndex(std::string name){
-
-    //*NOTE: The check is used to prevent using this function when no texture was binded to OpenGL
-    if(texIDList.size() <= 0){
-        std::cout << "ERROR: No textures were binded to OpenGL!" << std::endl;
-        return -1;
-    }
-
-    unsigned int id = Textures[name].GetID();
-
-    for(int i = 0; i < texIDList.size(); i++){
-        //check for id on the list and return it's location by iteration 
-        if(texIDList[i] == id)
-            return i;//exit out and return texture index     
-    }
-
-    // error the texture couldn't be found
-    std::cout << "ERROR: Couldn't find texture: " << name << ", in storage!" << std::endl; 
-    return -1;
-}
-
-Texture& ResourceManager::GetTexture(std::string name){
-    // check the name for any special characters
-    return Textures[name];
-}
-
-bool ResourceManager::BindTextures(){
-
-    // check if the texure list is not zero
-    if(texIDList.size() <= 0){
-        std::cout << "ERROR: No textures were loaded!" << std::endl;
-        return false;
-    }
-
-    // bind all the textures from first to last
-    for(int i = 0; i < texIDList.size(); i++){
-        // call to bind texture by their ID
-        glBindTextureUnit(i, texIDList[i]);
-    }
-
-    //TODO: Make a flag that allows to display warnings such as this
-    // check OpenGL errors
-    int errorCode = glGetError();
-    if(errorCode != GL_NO_ERROR){
-        std::cout << "WARNING: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
-        return false;
-    }
-
-    return true;
 }
 
 std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename, unsigned int fontsize, std::string name, bool isLinear){
@@ -104,8 +86,8 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
     setUpAutoClear();
 
     // use free type to load font and set font size
-    
-    // initialize the FreeType2 library 
+
+    // initialize the FreeType2 library
     FT_Library ft;
     // grab and check for errors
     FT_Error error = FT_Init_FreeType(&ft);
@@ -114,7 +96,7 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
 	}
 
     // load the font
-    FT_Face face; 
+    FT_Face face;
     // grab and check for errors
     error = FT_New_Face(ft, filename, 0, &face);
 	if (error){
@@ -153,7 +135,7 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
         // set texture options
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        
+
         //Check for linear flag then set the texture filter
         if(isLinear){
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -191,10 +173,6 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
     return Fonts[name];
 }
 
-std::map<char, Character>& ResourceManager::GetFontTexture(std::string name){
-    return Fonts[name];
-}
-
 std::array<glm::vec2, 4>& ResourceManager::LoadSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize){
     //create sub texture
     SubTexture st;
@@ -214,25 +192,98 @@ std::array<glm::vec2, 4>& ResourceManager::LoadSubTexture(std::string name, Text
     return SubTextures[name].TexCoords;
 }
 
+void ResourceManager::GenerateWhiteTexture(){
+    if(!doesWhiteTexExist){
+        // create white texture
+        Texture whiteTexture;
+        
+        // create data for a white texture
+        auto data = new unsigned char[16 * 16 * 4];;
+        for(int i = 0; i < (int)(16 * 16 * 4); i++){
+            data[i] = 255;
+        }
+        
+        whiteTexture.SetTextureInternalFormat(GL_RGBA);
+        whiteTexture.SetTextureImageFormat(GL_RGBA);
+        
+        // generate the texture
+        whiteTexture.Generate(16, 16, data);
+        
+        // add texture to storage with name "default"
+        Textures.insert({"default", whiteTexture});
+        
+        // add texture ID to list
+        texIDList.push_back(Textures["default"].GetID());
+
+        //? bind the textures
+        BindTextures();
+        
+        // turn of ability to call this function again
+        doesWhiteTexExist = true;
+    }
+}
+
+Shader& ResourceManager::GetShader(std::string name){
+    return Shaders[name];
+}
+
+int ResourceManager::GetTextureIndex(std::string name){
+
+    //*NOTE: The check is used to prevent using this function when no texture was binded to OpenGL
+    if(texIDList.size() <= 0){
+        std::cout << "ERROR: No textures were binded to OpenGL!" << std::endl;
+        return -1;
+    }
+
+    unsigned int id = Textures[name].GetID();
+
+    for(int i = 0; i < texIDList.size(); i++){
+        //check for id on the list and return it's location by iteration
+        if(texIDList[i] == id)
+            return i;//exit out and return texture index
+    }
+
+    // error the texture couldn't be found
+    std::cout << "ERROR: Couldn't find texture: " << name << ", in storage!" << std::endl;
+    return -1;
+}
+
+Texture& ResourceManager::GetTexture(std::string name){
+    // check the name for any special characters
+    return Textures[name];
+}
+
+std::map<char, Character>& ResourceManager::GetFontTexture(std::string name){
+    return Fonts[name];
+}
+
 std::array<glm::vec2, 4>& ResourceManager::GetSubTexture(std::string name){
     return SubTextures[name].TexCoords;
 }
 
-void ResourceManager::clear(){
-    // (properly) delete all shaders	
-    for (auto iter : Shaders) {
-        glDeleteProgram(iter.second.ID);
+bool ResourceManager::BindTextures(){
+
+    // check if the texure list is not zero
+    if(texIDList.size() <= 0){
+        std::cout << "ERROR: No textures were loaded!" << std::endl;
+        return false;
     }
 
-    // (properly) delete all textures
-    for (auto iter : Textures)
-        glDeleteTextures(1, &iter.second.GetID());
-    // (properly) delete all font textures
-    for(auto i : Fonts){
-        for(const auto& x : i.second){
-            glDeleteTextures(1, &x.second.TextureID);
-        }
+    // bind all the textures from first to last
+    for(int i = 0; i < texIDList.size(); i++){
+        // call to bind texture by their ID
+        glBindTextureUnit(i, texIDList[i]);
     }
+
+    //TODO: Make a flag that allows to display warnings such as this
+    // check OpenGL errors
+    int errorCode = glGetError();
+    if(errorCode != GL_NO_ERROR){
+        std::cout << "WARNING: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
+        return false;
+    }
+
+    return true;
 }
 
 Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile){
@@ -305,7 +356,7 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha){
         std::cout << "ERROR: " << stbi_failure_reason() << "\n";
 
         // give hint to user for possible fix
-        std::cout << "HINT: Make sure file or folder name is all lowercase, or check if file exists in build folder" << std::endl;
+        std::cout << "HINT: Make sure file or folder name is all lowercase, or check if file exists in build folder, or file format is unsupported" << std::endl;
         exit(-1);
     }
     // now generate texture
@@ -313,6 +364,23 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha){
     // and finally free image data
     stbi_image_free(data);
     return texture;
+}
+
+void ResourceManager::clear(){
+    // (properly) delete all shaders
+    for (auto iter : Shaders) {
+        glDeleteProgram(iter.second.ID);
+    }
+
+    // (properly) delete all textures
+    for (auto iter : Textures)
+        glDeleteTextures(1, &iter.second.GetID());
+    // (properly) delete all font textures
+    for(auto i : Fonts){
+        for(const auto& x : i.second){
+            glDeleteTextures(1, &x.second.TextureID);
+        }
+    }
 }
 
 void ResourceManager::setUpAutoClear(){

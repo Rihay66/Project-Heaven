@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <type_traits>
 #include <iostream>
 
 #include <ecs/types/system.hpp>
@@ -35,6 +36,8 @@ class SystemManager{
         // register a system for use, returns a reference of the system for external use
         template<typename T>
         std::shared_ptr<T> RegisterSystem(){
+            static_assert(std::is_base_of<System, T>::value, "ERROR: given type to register system does not inherit from System");
+
             const char* typeName = typeid(T).name();
 
             if(systems.find(typeName) != systems.end()){

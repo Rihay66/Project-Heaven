@@ -27,6 +27,6 @@ class ECS_Physics : public System{
 };
 
 // create alias to easily refer to this system
-using ECS_2DPhysics = std::shared_ptr<ECS_Physics>;
+using ECS_PhysicsPtr = std::shared_ptr<ECS_Physics>;
 
 #endif
