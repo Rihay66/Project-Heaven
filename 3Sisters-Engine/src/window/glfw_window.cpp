@@ -8,8 +8,10 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-// constructor, initializes GLFW and GLAD then creates a window with the passed parameters
-Window::Window(int w, int h, const char* name) : width(w), height(h), windowName(name){}
+// constructor
+Window::Window() {
+    
+}
 
 // destructor
 Window::~Window(){
@@ -20,7 +22,7 @@ Window::~Window(){
     glfwTerminate();
 }
 
-void Window::initializeWindow(){
+void Window::initializeWindow(int w, int h, const char* name){
     // allow the initialization of the window to be called ONLY once
 
     // check if the handle is already set 
@@ -33,6 +35,10 @@ void Window::initializeWindow(){
         glfwTerminate();
         exit(-1);
     }
+    
+    // set the width and height
+    width = w;
+    height = h;
 
     // set specific opengl version to 4.5
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -44,7 +50,7 @@ void Window::initializeWindow(){
     additionalWindowOptions();
 
     // create the window and check for errors
-    handle = glfwCreateWindow(width, height, windowName, NULL, NULL);
+    handle = glfwCreateWindow(width, height, name, NULL, NULL);
     if (!handle) {
         std::cout << "Failed to create window!" << std::endl;
         glfwTerminate();
@@ -100,15 +106,6 @@ void Window::setUpOpenGL(){
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void Window::getInput(){
-
-    //TODO: Make the terminal msgs be optional
-
-    // call additional input
-    this->input();
-}
-
-
 float Window::getDeltaTime(){
     // get current frame 
     currentFrame = glfwGetTime();
@@ -126,6 +123,13 @@ float Window::getDeltaTime(){
 
 // single threaded runtime of input(), update(), stepUpdate() and render()
 void Window::runtime(){
+    // check if GLFW has been initialized
+    if(handle == nullptr){
+        //! display error
+        std::cout << "ERROR: Window hasn't been initialized\n";
+        return; // stop function
+    }
+    
     //create local vars for timing
     std::chrono::steady_clock::time_point frameStart, frameEnd;
 
@@ -141,10 +145,7 @@ void Window::runtime(){
 
         // check for glfw events
         glfwPollEvents();
-
-        // check for main window input
-        getInput();
-
+        
         //  accumulate time and do stepUpdate()
         this->accumulator += this->DeltaTime;
         while(this->accumulator >= fixedTimeStep){
@@ -183,12 +184,6 @@ void Window::runtime(){
             while (std::chrono::high_resolution_clock::now() < end){}
         }
     }
-}
-
-// handle main window input function
-void Window::input(){
-    // here goes additional input 
-    // can be overwritten 
 }
 
 // initialization

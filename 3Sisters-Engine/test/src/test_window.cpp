@@ -1,24 +1,22 @@
 #include "../inc/test_window.hpp"
 
-TestWindow::TestWindow(int w, int h) : Window(w, h){
+TestWindow::TestWindow() : Window(){
 
 }
 
-TestWindow::~TestWindow() {}
-
-void TestWindow::init(){    
+TestWindow::~TestWindow() {
     
 }
 
-void TestWindow::input(){
-
-}
-
-void TestWindow::update(){
+void TestWindow::init(){    
 
 }
 
 void TestWindow::stepUpdate(double ts){
+
+}
+
+void TestWindow::update(){
 
 }
 

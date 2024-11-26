@@ -2,9 +2,9 @@
 
 int main(int argc, char* argv[]){
 
-    TestWindow window(1280, 720);
+    TestWindow window;
 
-    window.initializeWindow();
+    window.initializeWindow(1280, 720);
 
     window.runtime();
 
