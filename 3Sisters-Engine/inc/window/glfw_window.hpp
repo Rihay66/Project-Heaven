@@ -46,8 +46,17 @@ class Window{
     protected:
         // used to set the target frame time between frame, aka max frame time
         void setTargetTimeStep(double time);
+        
         // used to set the fixed frame time between frame
         void setFixedTimeStep(double time);
+        
+        // used for adding additional glfw window hints
+        virtual void additionalWindowOptions();
+
+        /* used for setting up OpenGL rendering
+         !Default is 2D rendering
+        */
+        virtual void setUpOpenGL();
 
         //TODO: Refactor the window state system to allow for robust changing input or going to debug, etc...
 
@@ -85,33 +94,25 @@ class Window{
 
         //* Virtual functions
 
-        // used for adding additional glfw window hints
-        virtual void additionalWindowOptions();
-
-        /* used for setting up OpenGL rendering
-         !Default is 2D rendering
-        */
-        virtual void setUpOpenGL();
-
-        /* Calls init() once, and then loops getDeltaTime(), update(), stepUpdate(), and render()
-          Can be overwriten depending on the need of the game or application
-         *NOTE: it is a single threaded function
-         *NOTE: calls GLFW poll events, swap buffers and clears the OpenGL color buffer
-         !If overwriten, may need to apply calculations of time step, fixed time step and accumulator yourself
-        */
-        virtual void runtime();
-
         // used to call classes that handle the loading of shaders, textures, and objects
         virtual void init() = 0;
 
         // used to update Physics, ticks systems, or other at a fixed time step
         virtual void stepUpdate(double ts) = 0;
         
-        // used to update logic, custom events, and other
+        // used to update logic, custom events, and other at the target time step
         virtual void update() = 0;
 
         // used to render things on the screen
         virtual void render(double alpha) = 0;
+        
+        /* Calls init() once, and then loops getDeltaTime(), update(), stepUpdate(), and render()
+          Can be overwriten depending on the need of the game or application
+         *NOTE: it is a single threaded function
+         *NOTE: calls GLFW poll events, swap buffers and clears the OpenGL color buffer
+         !If overwritten, may need to apply calculations of time step, fixed time step and accumulator yourself
+        */
+        void runtime();
 };
 
 #endif
