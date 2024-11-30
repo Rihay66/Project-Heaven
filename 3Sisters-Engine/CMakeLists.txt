@@ -71,6 +71,8 @@ file(GLOB_RECURSE GLAD
 file(GLOB_RECURSE SOUND
     ${CMAKE_SOURCE_DIR}/src/sound/*.c
     ${CMAKE_SOURCE_DIR}/src/sound/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/sound/managers/*.c
+    ${CMAKE_SOURCE_DIR}/src/sound/managers/*.cpp
 )
 
 file(GLOB_RECURSE INPUT
