@@ -63,7 +63,7 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
     quadShader.Use();
     
     // grab the uniform location of 'image' in the shader, the name 'image' is explicit
-    auto loc = glGetUniformLocation(quadShader.ID, "image");
+    auto loc = glGetUniformLocation(quadShader.getID(), "image");
 
     // set up array to the size of the max number of textures
     int samplers[maxTextureSlots];
@@ -103,7 +103,7 @@ void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
     quadShader.Use();
     
     // grab the uniform location of 'image' in the shader, the name 'image' is explicit
-    auto loc = glGetUniformLocation(quadShader.ID, "image");
+    auto loc = glGetUniformLocation(quadShader.getID(), "image");
 
     // set up array to the size of the max number of textures
     int samplers[maxTextureSlots];
