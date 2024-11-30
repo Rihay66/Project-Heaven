@@ -1,9 +1,11 @@
-#include "engine/interpolation.hpp"
 #include <engine/sprite_renderer.hpp>
 
 // standard library for debug outputs
-#include <glm/ext/matrix_transform.hpp>
 #include <iostream>
+
+// include additional GLM library
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
 
 // initialize static variables
 SpriteRenderer::RendererStats       SpriteRenderer::stats;
@@ -377,7 +379,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
 
     // create model transform
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f)) 
-    * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) 
+    * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), {0.0f, 0.0f, 1.0f}) 
     * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
 
     quadBufferPtr->position =

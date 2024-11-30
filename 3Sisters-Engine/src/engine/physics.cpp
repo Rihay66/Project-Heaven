@@ -7,6 +7,9 @@
 #include <memory>
 #include <stdexcept>
 
+// incldue GLM
+#include <glm/trigonometric.hpp>
+
 // init resources
 
 std::vector<PhysicsObject>      Physics::physicsObjs;
@@ -59,10 +62,10 @@ PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D
 
     // create body
     b2BodyDef bodyDef = b2DefaultBodyDef();
-    bodyDef.type = RbToB2Types(rigidbody.Type);
+    bodyDef.type = RbToB2Types(rigidbody.bodyType);
     bodyDef.position = (b2Vec2){transform.position.x, transform.position.y};
     //! rotation set is in radians
-    bodyDef.rotation = b2MakeRot(transform.rotation);
+    bodyDef.rotation = b2MakeRot(glm::radians(transform.rotation));
     bodyDef.fixedRotation = rigidbody.fixedRotation;
 
     // create body 
@@ -131,10 +134,10 @@ PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D
 
     // create body
     b2BodyDef bodyDef = b2DefaultBodyDef();
-    bodyDef.type = RbToB2Types(rigidbody.Type);
+    bodyDef.type = RbToB2Types(rigidbody.bodyType);
     bodyDef.position = (b2Vec2){transform.position.x, transform.position.y};
     //! rotation set is in radians
-    bodyDef.rotation = b2MakeRot(transform.rotation);
+    bodyDef.rotation = b2MakeRot(glm::radians(transform.rotation));
     bodyDef.fixedRotation = rigidbody.fixedRotation;
 
     // create body 
@@ -204,10 +207,10 @@ void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &colli
 
     // create body
     b2BodyDef bodyDef = b2DefaultBodyDef();
-    bodyDef.type = RbToB2Types(rigidbody.Type);
+    bodyDef.type = RbToB2Types(rigidbody.bodyType);
     bodyDef.position = (b2Vec2){transform.position.x, transform.position.y};
     //! rotation set is in radians
-    bodyDef.rotation = b2MakeRot(transform.rotation);
+    bodyDef.rotation = b2MakeRot(glm::degrees(transform.rotation));
     bodyDef.fixedRotation = rigidbody.fixedRotation;
 
     // create body 
@@ -264,10 +267,10 @@ void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &colli
 
     // create body
     b2BodyDef bodyDef = b2DefaultBodyDef();
-    bodyDef.type = RbToB2Types(rigidbody.Type);
+    bodyDef.type = RbToB2Types(rigidbody.bodyType);
     bodyDef.position = (b2Vec2){transform.position.x, transform.position.y};
     //! rotation set is in radians
-    bodyDef.rotation = b2MakeRot(transform.rotation);
+    bodyDef.rotation = b2MakeRot(glm::radians(transform.rotation));
     bodyDef.fixedRotation = rigidbody.fixedRotation;
 
     // create body 
@@ -352,7 +355,7 @@ void Physics::UpdatePhysics(){
         // update each object's transform
         obj.transform->position.x = position.x;
         obj.transform->position.y = position.y;
-        obj.transform->rotation = b2Rot_GetAngle(b2Body_GetRotation(id));
+        obj.transform->rotation = glm::degrees(b2Rot_GetAngle(b2Body_GetRotation(id)));
 
         // check if interpolation is set
         if(obj.inter != nullptr){
@@ -380,7 +383,7 @@ void Physics::UpdateRegisteredObject(Transform2D &transform, Rigidbody2D &rigidb
     // update component transform
     transform.position.x = position.x;
     transform.position.y = position.y;
-    transform.rotation = b2Rot_GetAngle(b2Body_GetRotation(id));
+    transform.rotation = glm::degrees(b2Rot_GetAngle(b2Body_GetRotation(id)));
 }
 
 void Physics::UpdateRegisteredObject(Transform2D &transform, Rigidbody2D &rigidbody, Interpolation& inter){
@@ -397,7 +400,7 @@ void Physics::UpdateRegisteredObject(Transform2D &transform, Rigidbody2D &rigidb
     // update component transform
     transform.position.x = position.x;
     transform.position.y = position.y;
-    transform.rotation = b2Rot_GetAngle(b2Body_GetRotation(id));
+    transform.rotation = glm::degrees(b2Rot_GetAngle(b2Body_GetRotation(id)));
 
     // update previous state 
     inter.previous = inter.current;
@@ -413,10 +416,12 @@ void Physics::Clear(){
         obj.transform = nullptr;
         obj.collider = nullptr;
         obj.rb = nullptr;
+        obj.inter = nullptr;
 
         delete obj.transform;
         delete obj.collider;
         delete obj.rb;
+        delete obj.inter;
     }
 
     // destroy the world
