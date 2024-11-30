@@ -174,7 +174,7 @@ if(WIN32)
         target_link_directories(3Sisters-Engine PUBLIC ${GLM_INCLUDE_DIR})
         target_link_directories(3Sisters-Engine-s PUBLIC ${GLM_INCLUDE_DIR})
 
-    else(MSVC)
+    else()
         # Put together all necessary libs into one variable
         set(LIBS opengl32 glm box2d glfw openal Freetype::Freetype sndfile)
 

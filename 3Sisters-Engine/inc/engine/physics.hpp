@@ -10,6 +10,9 @@
 #include <ecs/components/rigidbody.hpp>
 #include <ecs/components/boxcollider.hpp>
 
+// include interpolation
+#include "engine/interpolation.hpp"
+
 // include GLM
 #include <glm/glm.hpp>
 
@@ -26,6 +29,7 @@ struct PhysicsObject {
   Transform2D* transform;
   BoxCollider2D* collider;
   Rigidbody2D* rb;
+  Interpolation* inter = nullptr;
 };
 
 /* Static Singleton Physics class that hosts functions to add
@@ -49,8 +53,14 @@ class Physics {
         // create a Physics Object to the physics engine, returns reference of the Physics Object 
         static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
+        // create a Physics Object to the physics engine, returns reference of the Physics Object 
+        static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody, Interpolation& interpolation);
+
         // register components that makes up a Physics Object to the physics engine, no Physics Object is created
         static void RegisterPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
+
+        // register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        static void RegisterPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody, Interpolation& interpolation);
 
         //* Setter functions
 
@@ -70,6 +80,11 @@ class Physics {
         *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void UpdateRegisteredObject(Transform2D& transform, Rigidbody2D& rigidbody);
+
+        /* check given components and update given transform and rigidbody components
+        *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        */
+        static void UpdateRegisteredObject(Transform2D& transform, Rigidbody2D& rigidbody, Interpolation& inter);
 
         /* updates physics world which updates physics objects 
         *  NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()

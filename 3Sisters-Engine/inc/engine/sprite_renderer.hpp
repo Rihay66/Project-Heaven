@@ -14,6 +14,9 @@
 // include shader class
 #include <resourceSystems/resource_shader.hpp>
 
+// include interpolation
+#include <engine/interpolation.hpp>
+
 /* A static singleton Sprite Rendering Class used to 
  render 2D primatives. This class uses given raw data to 
  represent and render a 2D primative. This class utilizes 
@@ -24,6 +27,8 @@
 */
 class SpriteRenderer{    
     public:
+        //TODO: Move init() to be more seperate functions for quad and line rendering
+
         // initialize the quad renderer which requires a loaded shader and optionally changeable sprite size of all quad objects
         static void Init(Shader& shader, glm::uvec2 spriteSize = {10.0f, 10.0f});
 
@@ -36,6 +41,9 @@ class SpriteRenderer{
 
         // draw a singular quad utilizing given raw data, without interpolation
         static void DrawQuad(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
+
+        // draw a singular quad utilizing given raw data, with interpolation
+        static void DrawQuad(int texIndex, Interpolation inter, glm::vec2 size, float rotation, double alpha, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
 
         // draw a single line from two given points
         static void DrawLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color = glm::vec4(1.0f));
@@ -50,6 +58,12 @@ class SpriteRenderer{
             !Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
         */
         static void StackQuad(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
+        
+        /* store a single quad utilizing given raw data, with interpolation
+            !Requires the Flush() after this function in order to render what was stored
+            !Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
+        */
+        static void StackQuad(int texIndex, Interpolation inter, glm::vec2 size, float rotation, double alpha, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
         
         /* store a single line utilizing given points
             !Requires the Flush() after this function in order to render what was stored
@@ -111,7 +125,7 @@ class SpriteRenderer{
         // stores data of a passed in quad shader
         static Shader quadShader;
 
-        //stores data of a line shader
+        // stores data of a line shader
         static Shader lineShader;
 
         // stores data of a quad
@@ -154,6 +168,11 @@ class SpriteRenderer{
 
         // stores maximum amount of textures there can be
         const static int maxTextureSlots = 32;
+
+        /* overwrittable state holder
+            !Its defined and used to avoid having to make memory space every frame
+        */
+        static State interpolation;
         
         // private constructor 
         SpriteRenderer() {}

@@ -27,7 +27,7 @@ void OrthoCamera::calculateProjectionView(Shader& shader){
         0.0f, static_cast<float>(this->height), -1.0f, 1.0f);
 
     // set up the view by inversing the transform 
-    glm::mat4 view = glm::inverse(glm::translate(glm::mat4(1.0f), this->position) 
+    glm::mat4 view = glm::inverse(glm::translate(glm::mat4(1.0f), glm::vec3(this->position.x, this->position.y, 0.0f)) 
     * glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1)));
 
     // put together the projectionView

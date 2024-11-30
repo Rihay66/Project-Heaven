@@ -18,8 +18,8 @@ class ECS{
     public:
         /* initialize the entity, component, and system managers
             this function also contains debug options
-            d - debug, debug outputs, error checking
-            r - release, skip most functional error checking and some debug outputs (use )
+            d - debug, debug outputs, error checking (default).
+            r - release, skip most functional error checking and some debug outputs (use with caution).
         */
         static void Init(char debugOption = 'd');
 
@@ -82,6 +82,12 @@ class ECS{
         template<typename T>
         static T& GetComponent(Entity entity){
             return componentManager->GetComponent<T>(entity);
+        }
+
+        // check if entity has such component
+        template<typename T>
+        static bool CheckComponent(Entity entity){
+            return componentManager->CheckComponent<T>(entity);
         }
 
         // get component type of given component

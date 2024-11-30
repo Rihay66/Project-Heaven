@@ -16,10 +16,6 @@ struct BoxCollider2D{
     float friction = 0.5f;
     float restitution = 0.0f;
     float restitutionThreshold = 0.5f;
-
-    // constructors
-    BoxCollider2D() = default;
-    BoxCollider2D(const BoxCollider2D&) = default;
 };
 
 #endif

@@ -34,8 +34,12 @@ class ComponentManager{
 	    std::shared_ptr<ComponentArray<T>> GetComponentArray(){
 		    const char* typeName = typeid(T).name();
 
-		    if(debugOption == 'd' && componentTypes.find(typeName) == componentTypes.end()){
-                std::cout << "ERROR: Failed to retrieve component array of type: " << typeName << "\n";
+		    if(componentTypes.find(typeName) == componentTypes.end()){
+                //! display error
+                if(debugOption == 'd'){
+                    std::cout << "ERROR: Failed to retrieve component array of type: " << typeName << "\n";
+                }
+                
                 return nullptr;
             }
 
@@ -106,6 +110,12 @@ class ComponentManager{
         template<typename T>
         T& GetComponent(Entity entity){
             return GetComponentArray<T>()->GetData(entity);
+        }
+
+        // return if such component exists within given entity
+        template<typename T>
+        bool CheckComponent(Entity entity){
+            return GetComponentArray<T>()->CheckData(entity);
         }
 
         /* notify all component arrays that given entity is destroyed

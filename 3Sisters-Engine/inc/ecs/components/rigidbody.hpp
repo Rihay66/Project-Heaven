@@ -18,10 +18,6 @@ struct Rigidbody2D{
 
     // storage for runtime body
     b2BodyId runtimeBody = b2_nullBodyId;
-
-    // constructors
-    Rigidbody2D() = default;
-    Rigidbody2D(const Rigidbody2D&) = default;
 };
 
 
