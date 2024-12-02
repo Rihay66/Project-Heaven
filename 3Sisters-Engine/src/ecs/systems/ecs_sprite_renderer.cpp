@@ -1,3 +1,4 @@
+#include "engine/interpolation.hpp"
 #include <ecs/systems/ecs_sprite_renderer.hpp>
 
 // include standard components
@@ -11,7 +12,7 @@ void ECS_SpriteRenderer::render(double alpha){
         auto& material = ECS::GetComponent<Material2D>(entity);
 
         // check if entity has interpolation
-        if(ECS::CheckComponent<Interpolation>(entity)){
+        if((ECS::GetComponentType<Interpolation>() != 255) && ECS::CheckComponent<Interpolation>(entity)){
             // grab entity component
             auto& inter = ECS::GetComponent<Interpolation>(entity);
 

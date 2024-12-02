@@ -8,7 +8,7 @@
 
 void ECS_Physics::registerEntity(Entity entity){
     // check if entity contains interpolation
-    if(ECS::CheckComponent<Interpolation>(entity)){
+    if((ECS::GetComponentType<Interpolation>() != 255) && ECS::CheckComponent<Interpolation>(entity)){
         // create a physics object with interpolation
         Physics::RegisterPhysicsObject(ECS::GetComponent<Transform2D>(entity), 
         ECS::GetComponent<BoxCollider2D>(entity), 
@@ -33,7 +33,7 @@ void ECS_Physics::update(){
         auto& rb = ECS::GetComponent<Rigidbody2D>(entity);
         
         // check if entity has interpolation
-        if(ECS::CheckComponent<Interpolation>(entity)){
+        if((ECS::GetComponentType<Interpolation>() != 255) && ECS::CheckComponent<Interpolation>(entity)){
             auto& inter = ECS::GetComponent<Interpolation>(entity);
             // update entity
             Physics::UpdateRegisteredObject(transform, rb, inter);
