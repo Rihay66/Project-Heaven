@@ -2,9 +2,9 @@
 A Lightweight 2D OpenGL based Engine called:
 # 3Sisters-Engine
 
-![](3Sisters-Engine_logo.png)
+![](3Sisters_Engine_logo.png)
 
-Current Version: 1.1
+Current Version: 1.2-Dev
 
 Features:
 

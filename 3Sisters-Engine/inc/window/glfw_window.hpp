@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef WINDOW_HPP
-#define WINDOW_HPP
+#ifndef GLFW_WINDOW_HPP
+#define GLFW_WINDOW_HPP
 
 // check platform
 #if defined(_WIN32) || defined(WIN32) // Windows platform
