@@ -13,15 +13,11 @@ enum class BodyType {Static = 0, Dynamic, Kinematic };
 
 // 2D rigidbody component
 struct Rigidbody2D{
-    BodyType Type = BodyType::Static;
+    BodyType bodyType = BodyType::Static;
     bool fixedRotation = false;
 
     // storage for runtime body
     b2BodyId runtimeBody = b2_nullBodyId;
-
-    // constructors
-    Rigidbody2D() = default;
-    Rigidbody2D(const Rigidbody2D&) = default;
 };
 
 

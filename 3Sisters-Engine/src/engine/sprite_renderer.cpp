@@ -1,8 +1,11 @@
 #include <engine/sprite_renderer.hpp>
 
 // standard library for debug outputs
-#include <glm/ext/matrix_transform.hpp>
 #include <iostream>
+
+// include additional GLM library
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
 
 // initialize static variables
 SpriteRenderer::RendererStats       SpriteRenderer::stats;
@@ -38,6 +41,8 @@ Shader                              SpriteRenderer::quadShader;
 Shader                              SpriteRenderer::lineShader;
 // initialize "Universal" sprite size for all quads under this renderer
 glm::uvec2                          SpriteRenderer::spriteSize;
+// initialzie linear interpolation 
+State                       SpriteRenderer::interpolation;
 // initialize auto clear var
 bool                                SpriteRenderer::isAutoClearSet = false;
 
@@ -58,7 +63,7 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
     quadShader.Use();
     
     // grab the uniform location of 'image' in the shader, the name 'image' is explicit
-    auto loc = glGetUniformLocation(quadShader.ID, "image");
+    auto loc = glGetUniformLocation(quadShader.getID(), "image");
 
     // set up array to the size of the max number of textures
     int samplers[maxTextureSlots];
@@ -98,7 +103,7 @@ void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
     quadShader.Use();
     
     // grab the uniform location of 'image' in the shader, the name 'image' is explicit
-    auto loc = glGetUniformLocation(quadShader.ID, "image");
+    auto loc = glGetUniformLocation(quadShader.getID(), "image");
 
     // set up array to the size of the max number of textures
     int samplers[maxTextureSlots];
@@ -139,6 +144,32 @@ void SpriteRenderer::DrawQuad(int texIndex, glm::vec2 pos, glm::vec2 size, float
     resetStats();
     // init the buffer
     beginQuadBatch();
+
+    // create the quad to render
+    createQuad(pos, size, rot, texIndex, color, texCoords, vertexPositions);
+
+    // render
+    FlushQuads();
+}
+
+void SpriteRenderer::DrawQuad(int texIndex, Interpolation inter, glm::vec2 size, float rot, double alpha, glm::vec4 color, const std::array<glm::vec2, 4> texCoords ,const glm::vec4 vertexPositions[]){
+    //? check if buffer hasn't been set up
+    if(quadBuffer == nullptr){
+        //! Display error
+        std::cout << "ERROR: Missing render quad buffer initialization!\n";
+        return; // stop function
+    }
+
+    // reset render stats
+    resetStats();
+    // init the buffer
+    beginQuadBatch();
+
+    // calculate interpolation
+    interpolateState(interpolation, alpha, inter.previous, inter.current);
+
+    // create a vector contain position according to the interpolation
+    glm::vec2 pos = glm::vec2(interpolation.posX, interpolation.posY);
 
     // create the quad to render
     createQuad(pos, size, rot, texIndex, color, texCoords, vertexPositions);
@@ -219,6 +250,34 @@ void SpriteRenderer::StackQuad(int texIndex, glm::vec2 pos, glm::vec2 size, floa
     }
 
     // if not then add a quad to the buffer pointer
+
+    // create the quad to render
+    createQuad(pos, size, rot, texIndex, color, texCoords, vertexPositions);
+}
+
+void SpriteRenderer::StackQuad(int texIndex, Interpolation inter, glm::vec2 size, float rot, double alpha, glm::vec4 color, const std::array<glm::vec2, 4> texCoords, const glm::vec4 vertexPositions[]){
+    //? check if buffer hasn't been set up
+    if(quadBuffer == nullptr){
+        //! Display error
+        std::cout << "ERROR: Missing render buffer initialization!\n";
+        return; // stop function
+    }
+
+    // check if the buffer pointer hasn't been set up
+    if(quadBufferPtr == nullptr){
+        // reset render stats
+        resetStats();
+        // then initialize the batch
+        beginQuadBatch();
+    }
+
+    // if not then add a quad to the buffer pointer
+
+    // calculate interpolation
+    interpolateState(interpolation, alpha, inter.previous, inter.current);
+
+    // create a vector contain position according to the interpolation
+    glm::vec2 pos = glm::vec2(interpolation.posX, interpolation.posY);
 
     // create the quad to render
     createQuad(pos, size, rot, texIndex, color, texCoords, vertexPositions);
@@ -320,7 +379,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
 
     // create model transform
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f)) 
-    * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) 
+    * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), {0.0f, 0.0f, 1.0f}) 
     * glm::scale(glm::mat4(1.0f), {size.x, size.y, 0.0f});
 
     quadBufferPtr->position =

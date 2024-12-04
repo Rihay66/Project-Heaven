@@ -1,11 +1,29 @@
 #include <ecs/systems/ecs_physics.hpp>
 
 // include Sprite Renderer
+#include "ecs/components/transform.hpp"
+#include "engine/interpolation.hpp"
+#include "engine/physics.hpp"
 #include "engine/sprite_renderer.hpp"
 
 void ECS_Physics::registerEntity(Entity entity){
+    // check if entity contains interpolation
+    if((ECS::GetComponentType<Interpolation>() != 255) && ECS::CheckComponent<Interpolation>(entity)){
+        // create a physics object with interpolation
+        Physics::RegisterPhysicsObject(ECS::GetComponent<Transform2D>(entity), 
+        ECS::GetComponent<BoxCollider2D>(entity), 
+        ECS::GetComponent<Rigidbody2D>(entity), 
+        ECS::GetComponent<Interpolation>(entity)
+        );
+        // stop function
+        return;
+    }
+
+    // create a physics object without interpolation
     Physics::RegisterPhysicsObject(ECS::GetComponent<Transform2D>(entity), 
-     ECS::GetComponent<BoxCollider2D>(entity), ECS::GetComponent<Rigidbody2D>(entity));
+     ECS::GetComponent<BoxCollider2D>(entity), 
+     ECS::GetComponent<Rigidbody2D>(entity)
+    );
 }
 
 void ECS_Physics::update(){
@@ -13,6 +31,16 @@ void ECS_Physics::update(){
         // grab entity components
         auto& transform = ECS::GetComponent<Transform2D>(entity);
         auto& rb = ECS::GetComponent<Rigidbody2D>(entity);
+        
+        // check if entity has interpolation
+        if((ECS::GetComponentType<Interpolation>() != 255) && ECS::CheckComponent<Interpolation>(entity)){
+            auto& inter = ECS::GetComponent<Interpolation>(entity);
+            // update entity
+            Physics::UpdateRegisteredObject(transform, rb, inter);
+
+            // skip iteration
+            continue;
+        }
 
         // update entity
         Physics::UpdateRegisteredObject(transform, rb);

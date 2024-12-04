@@ -369,7 +369,7 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha){
 void ResourceManager::clear(){
     // (properly) delete all shaders
     for (auto iter : Shaders) {
-        glDeleteProgram(iter.second.ID);
+        glDeleteProgram(iter.second.getID());
     }
 
     // (properly) delete all textures

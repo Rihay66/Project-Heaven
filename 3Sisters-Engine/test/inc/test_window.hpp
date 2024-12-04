@@ -9,11 +9,10 @@ class TestWindow : public Window {
     private:
 
     public:
-        TestWindow(int w, int h);
+        TestWindow();
         ~TestWindow();
 
         void init() override;
-        void input() override;
         void update() override;
         void stepUpdate(double ts) override;
 

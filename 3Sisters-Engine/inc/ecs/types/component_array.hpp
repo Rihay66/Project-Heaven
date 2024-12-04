@@ -101,6 +101,12 @@ class ComponentArray : public IComponentArray{
             return componentArray[entityToIndexMap[entity]];
         }
 
+        // check if entity contains given component
+        bool CheckData(Entity entity){
+            // return true if entity has been found with component, otherwise false
+            return !(entityToIndexMap.find(entity) == entityToIndexMap.end());
+        }
+
         // remove an entity's component when destroyed
         void EntityDestroyed(Entity entity) override{
             if (entityToIndexMap.find(entity) != entityToIndexMap.end())
@@ -108,6 +114,7 @@ class ComponentArray : public IComponentArray{
 			    RemoveData(entity);
 		    }
         }
+
 };
 
 #endif

@@ -71,6 +71,8 @@ file(GLOB_RECURSE GLAD
 file(GLOB_RECURSE SOUND
     ${CMAKE_SOURCE_DIR}/src/sound/*.c
     ${CMAKE_SOURCE_DIR}/src/sound/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/sound/managers/*.c
+    ${CMAKE_SOURCE_DIR}/src/sound/managers/*.cpp
 )
 
 file(GLOB_RECURSE INPUT
@@ -174,7 +176,7 @@ if(WIN32)
         target_link_directories(3Sisters-Engine PUBLIC ${GLM_INCLUDE_DIR})
         target_link_directories(3Sisters-Engine-s PUBLIC ${GLM_INCLUDE_DIR})
 
-    else(MSVC)
+    else()
         # Put together all necessary libs into one variable
         set(LIBS opengl32 glm box2d glfw openal Freetype::Freetype sndfile)
 
