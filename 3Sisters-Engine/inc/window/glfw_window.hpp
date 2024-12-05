@@ -12,6 +12,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+namespace GLFW{
 /* Window abstract class used for creating a graphical context
  window that is used to allow for OpenGL capabilities.
  The window class provides various functions and most
@@ -21,8 +22,8 @@
 class Window{
     private:
         // set up vars for calculating delta time and the fixed time step
-	      double lastFrame = 0, currentFrame = 0, frameDuration = 0, accumulator = 0,
-        alpha = 0, threadSleepTime = 0;
+	    double lastFrame = 0, currentFrame = 0, frameDuration = 0, accumulator = 0,
+            alpha = 0, threadSleepTime = 0;
 
         // vars storing and referencing to window size, width x height
         unsigned int width, height;
@@ -115,4 +116,5 @@ class Window{
         void runtime();
 };
 
+}
 #endif

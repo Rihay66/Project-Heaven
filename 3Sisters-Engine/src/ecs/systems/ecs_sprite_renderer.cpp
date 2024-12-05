@@ -1,4 +1,3 @@
-#include "engine/interpolation.hpp"
 #include <ecs/systems/ecs_sprite_renderer.hpp>
 
 // include standard components

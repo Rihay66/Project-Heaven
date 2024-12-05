@@ -15,7 +15,7 @@
 #include <resourceSystems/resource_shader.hpp>
 
 // include interpolation
-#include <engine/interpolation.hpp>
+#include <engine/components/interpolation.hpp>
 
 /* A static singleton Sprite Rendering Class used to 
  render 2D primatives. This class uses given raw data to 

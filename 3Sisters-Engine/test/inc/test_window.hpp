@@ -5,6 +5,8 @@
 
 #include <window/glfw_window.hpp>
 
+using namespace GLFW;
+
 class TestWindow : public Window {
     private:
 

@@ -1,5 +1,9 @@
 #include <window/glfw_window.hpp>
 
+// include the namespace
+using namespace GLFW;
+
+// include standard libraries
 #include <iostream>
 #include <chrono>
 

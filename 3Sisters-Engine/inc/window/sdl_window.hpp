@@ -11,6 +11,7 @@
 // GLAD and SDL libraries
 #include <glad/glad.h>
 
+namespace SDL{
 /* Window abstract class used for creating a graphical context
  window that is used to allow for OpenGL capabilities.
  The window class provides various functions and most
@@ -29,5 +30,5 @@ class Window{
         // deconstructor
         ~Window();
 };
-
+}
 #endif
