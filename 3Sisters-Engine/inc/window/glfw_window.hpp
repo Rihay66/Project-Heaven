@@ -85,7 +85,7 @@ class Window{
         /* returns the current deltatime
             !Overwriting may need further modifications or accommodation to the update(), stepUpdate(), and render() as it may cause unintended behavior
         */
-        virtual float getDeltaTime();
+        virtual double getDeltaTime();
 
         // returns the width of the window
         unsigned int getWidth(){return this->width;}

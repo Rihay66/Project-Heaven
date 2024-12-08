@@ -208,6 +208,9 @@ void ResourceManager::GenerateWhiteTexture(){
         
         // generate the texture
         whiteTexture.Generate(16, 16, data);
+
+        //? delete generated data
+        delete[] data;
         
         // add texture to storage with name "default"
         Textures.insert({"default", whiteTexture});

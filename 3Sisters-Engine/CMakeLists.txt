@@ -27,6 +27,7 @@ file(GLOB IMGUI
     ${CMAKE_SOURCE_DIR}/imgui/*.cpp
     ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_opengl3.cpp
     ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_glfw.cpp
+    ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_sdl2.cpp
 )
 
 # ? Any module's source that requires ImGui need to be placed here
@@ -117,6 +118,9 @@ if(UNIX)
     # Find GLFW
     find_package(glfw3 CONFIG REQUIRED)
 
+    # Find SDL
+    find_package(SDL2 CONFIG REQUIRED)
+
     # Find OpenAL
     find_package(OpenAL CONFIG REQUIRED)
 
@@ -127,7 +131,7 @@ if(UNIX)
     find_package(Freetype REQUIRED)
 
     # Put together all necessary libs into one variable
-    set(LIBS OpenGL glm box2d glfw Freetype::Freetype sndfile)
+    set(LIBS OpenGL glm box2d glfw ${SDL2_LIBRARIES} Freetype::Freetype sndfile)
 
     # Get Xorg dependencies into one variable
     set(Xorg Xxf86vm X11 Xrandr pthread Xi openal udev ogg vorbis vorbisenc vorbisfile)
@@ -136,6 +140,10 @@ if(UNIX)
     target_link_directories(3Sisters-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
     target_link_directories(3Sisters-Engine-s PUBLIC ${GLFW3_INCLUDE_DIR})
 
+    # Grab SDL dirs
+    target_link_directories(3Sisters-Engine PUBLIC ${SDL2_INCLUDE_DIR})
+    target_link_directories(3Sisters-Engine-s PUBLIC ${SDL2_INCLUDE_DIR})
+
     # Link against all libraries used
     target_link_libraries(3Sisters-Engine PUBLIC ${LIBS} ${Xorg})
     target_link_libraries(3Sisters-Engine-s PUBLIC ${LIBS} ${Xorg})
@@ -143,16 +151,19 @@ endif ()
 
 # *WINDOWS version of finding the dependencies
 if(WIN32)
-    # OpenGL
+    # Find OpenGL
     find_package(OpenGL REQUIRED)
 
-    # GLM
+    # Find GLM
     find_package(glm CONFIG REQUIRED)
 
-    # GLFW
+    # Find GLFW
     find_package(GLFW3 REQUIRED)
 
-    # BOX2D
+    # Find SDL
+    find_package(SDL2 CONFIG REQUIRED)
+
+    # Find BOX2D
     find_package(BOX2D CONFIG REQUIRED)
 
     # Find OpenAL
@@ -166,7 +177,7 @@ if(WIN32)
 
     if(MSVC)
         # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm::glm box2d::box2d glfw OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+        set(LIBS opengl32 glm::glm box2d::box2d glfw OpenAL::OpenAL SDL2::SDL2 Freetype::Freetype SndFile::sndfile)
 
         # Grab GLFW headers
         target_link_directories(3Sisters-Engine PUBLIC ${GLFW_INCLUDE_DIR})
@@ -176,9 +187,13 @@ if(WIN32)
         target_link_directories(3Sisters-Engine PUBLIC ${GLM_INCLUDE_DIR})
         target_link_directories(3Sisters-Engine-s PUBLIC ${GLM_INCLUDE_DIR})
 
+         # Grab SDL dirs
+        target_link_directories(3Sisters-Engine PUBLIC ${SDL2_INCLUDE_DIR})
+        target_link_directories(3Sisters-Engine-s PUBLIC ${SDL2_INCLUDE_DIR})
+
     else()
         # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm box2d glfw openal Freetype::Freetype sndfile)
+        set(LIBS opengl32 glm box2d glfw ${SDL2_LIBRARIES} openal Freetype::Freetype sndfile)
 
         # Grab GLFW headers
         target_link_directories(3Sisters-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
@@ -187,6 +202,10 @@ if(WIN32)
         # Grab GLM headers
         target_link_directories(3Sisters-Engine PUBLIC ${GLM_INCLUDE_DIR})
         target_link_directories(3Sisters-Engine-s PUBLIC ${GLM_INCLUDE_DIR})
+
+         # Grab SDL dirs
+        target_link_directories(3Sisters-Engine PUBLIC ${SDL2_INCLUDE_DIR})
+        target_link_directories(3Sisters-Engine-s PUBLIC ${SDL2_INCLUDE_DIR})
     endif()
 
     # Link against OpenGL and GLM
@@ -337,6 +356,9 @@ find_package(GLM CONFIG REQUIRED)
 #GLFW
 find_package(GLFW3 CONFIG REQUIRED)
 
+# Find SDL
+find_package(SDL2 CONFIG REQUIRED)
+
 #box2d
 find_package(BOX2D CONFIG REQUIRED)
 
@@ -350,9 +372,9 @@ find_package(SndFile CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
 
 # Link the extra packages their include directories to avoid linking errors
-target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine-s glm::glm glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine-s SDL2::SDL2 glm::glm glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
 # Link the 3Sisters-Engine to executable
-target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine-s glm::glm glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine-s glm::glm SDL2::SDL2 glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
 
 else () # mingw
 
