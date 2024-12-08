@@ -26,16 +26,16 @@ class ResourceManager{
     public:
         //* loader functions
 
-        // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
+        // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader along with a name
         static Shader& LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
 
-        // loads (and generates) a texture from file
+        // loads (and generates) a texture from file along with a name
         static Texture& LoadTexture(const char *file, std::string name);
 
-        // loads (and generates) a text texture from file
+        // loads (and generates) a text texture from file along with a name
         static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool isLinear = true);
 
-        // use a loaded texture to create a sub texture
+        // use a loaded texture to create a sub texture along with a name
         static std::array<glm::vec2, 4>& LoadSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize = {1, 1});
         
         // create a white texture that is named "default"
@@ -62,6 +62,7 @@ class ResourceManager{
 
         // binds all textures from the texture list to be used by OpenGL
         static bool BindTextures();
+        
     private:
         // private resource storage
         static std::map<std::string, Shader> Shaders;
