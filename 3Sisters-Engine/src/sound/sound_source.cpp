@@ -110,7 +110,7 @@ SoundSource::SoundSource(){
     alSourcei(source, AL_BUFFER, buffer);
     
     // add self to sound manager as reference
-    SoundManager::AddSource(source);
+    SoundManager::AddSoundSource(source);
 }
 
 SoundSource::~SoundSource(){}

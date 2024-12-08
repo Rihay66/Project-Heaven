@@ -1,25 +1,19 @@
 #include <sound/sound_buffer.hpp>
 
 #include <AL/alext.h>
+#include <stdlib.h>
 #include <sndfile.h>
 #include <inttypes.h>
 #include <limits.h>
 
-ALuint SoundBuffer::getSound(std::string name){
-    for (int i = 0; i < this->soundBuffers.size(); i++) {
-        if (soundBuffers.at(i).str.compare(name) == 0) {
-            return soundBuffers.at(i).buffer;
-        }
-    }
-
-    return 0;
+ALuint SoundBuffer::getSound(){
+    return buffer;
 }
 
-ALuint SoundBuffer::addSound(std::string name, const char* filename){
+ALuint SoundBuffer::loadSound(const char* filename){
 
     // create local vars
     ALenum err, format;
-    ALuint buffer;
     SNDFILE* sndfile;
     SF_INFO sfinfo;
     short* membuf;
@@ -93,28 +87,13 @@ ALuint SoundBuffer::addSound(std::string name, const char* filename){
         }
         return 0;
     }
-
-    // add name to resources
-    soundBuffers.push_back({name, buffer});
     
     return buffer;
 } 
 
-bool SoundBuffer::removeSound(std::string name){
-    // check name is not empty
-    if (name.empty()) 
-        return false;
-    
-    // loop through to find name
-    for (int i = 0; i < this->soundBuffers.size(); i++) {
-        if (soundBuffers.at(i).str.compare(name) == 0) {
-            // delete the buffer
-            alDeleteBuffers(1, &soundBuffers.at(i).buffer);
-            // delete the element
-            auto index = soundBuffers.begin() + i;
-            soundBuffers.erase(index);
-        }
-    }
+bool SoundBuffer::removeSound(){
+    // delete the buffer
+    alDeleteBuffers(1, &buffer);
 
     // check for any OpenAL errors
     ALenum err = alGetError();
@@ -125,22 +104,4 @@ bool SoundBuffer::removeSound(std::string name){
     }
 
     return true;
-}
-
-SoundBuffer::SoundBuffer(){}
-
-SoundBuffer::~SoundBuffer(){
-    // delete all sound buffers
-    //? Loop through all available sound buffers until there is none
-    for (int i = 0; i < soundBuffers.size();) {
-        if (!removeSound(soundBuffers.at(i).str)) {
-            fprintf(stderr, "ERROR: Failed to remove buffer | %s, %i\n", soundBuffers.at(i).str.c_str(), soundBuffers.at(i).buffer);
-        }
-    }
-    
-    // check for any OpenAL errors
-    ALenum err = alGetError();
-    if(err != AL_NO_ERROR){
-        fprintf(stderr, "ERROR: Sound Buffer Deconstructor OpenAL Error: %s\n", alGetString(err));
-    }
 }

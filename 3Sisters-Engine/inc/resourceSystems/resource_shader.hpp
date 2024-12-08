@@ -22,6 +22,7 @@ class Shader{
 
         // checks if compilation or linking failed and if so, print the error logs
         void checkCompileErrors(unsigned int object, std::string type); 
+        
     public:
         // sets the current shader as active
         Shader& Use();

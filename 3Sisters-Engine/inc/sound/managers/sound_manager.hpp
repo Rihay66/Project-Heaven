@@ -5,17 +5,18 @@
 
 // include standard libraries
 #include <map>
+#include <vector>
 
 // include necessary components
 #include <sound/sound_device.hpp>
 #include <sound/sound_buffer.hpp>
 
 /* A Static singleton Sound Manager class that hosts several
- function to load sounds and enables playing sounds. 
+ function to load, retrieve, and store sounds. It also handles
+ initializing the sound device to enable playing sounds. 
  Each loaded sound is also stored for future reference 
- by string handles as well stored within a collection 
- that contains a number of sounds. All functions and 
- resources are static and no public constructor is defined.  
+ by string handles. All functions and resources are static 
+ and no public constructor is defined.  
 */
 class SoundManager{
     public:
@@ -24,39 +25,35 @@ class SoundManager{
 
         //* getter functions
 
-        // get the buffer from the collection
-        static SoundBuffer* GetBufferFromCollection(std::string name);
+        // get a loaded sound buffer by name
+        static SoundBuffer& GetSoundBuffer(std::string name);
 
-        // get sound from the buffer that in the collection, returns -1 if collection is not found
-        static unsigned int GetSoundFromBufferInColleciton(std::string collectionName, std::string soundName);
+        // get the raw buffer from a loaded sound buffer  by name
+        static unsigned int GetRawSoundBuffer(std::string name);
 
         //* adder/setter functions 
 
-        // instantiates a new buffer collection that is empty 
-        static SoundBuffer* CreateSoundCollection(std::string name);
+        // load a sound by file path to generate the sound buffer
+        static SoundBuffer& LoadSound(std::string name, const char* filename);
 
-        // create a new buffer collection and allow for loading of one sound into the buffer collection
-        static SoundBuffer* CreateSoundCollection(std::string collectionName, std::string soundName, const char* filename);
-
-        // add a new sound buffer to a existing buffer collection, and if collection doesn't exist returns -1
-        static unsigned int AddSoundToBuffer(std::string collectionName, std::string soundName, const char* filename);
-
-        // store a sound source reference for automatic deletion
-        static void AddSource(unsigned int source);
+        /* store a sound source reference for automatic deletion when program terminates
+        * NOTE: that the Sound Source class already includes itself for automatic deletion
+        */
+        static void AddSoundSource(unsigned int source);
 
         //* remover functions
 
-        // to remove a whole collection of sounds
-        static void RemoveSoundCollection(std::string name);
+        // to remove a loaded sound 
+        static void RemoveSound(std::string name);
 
-        // to remove a single sound from a collection
-        static void RemoveSoundFromBuffer(std::string collectionName, std::string soundName);
+        // to remove a sound source
+        static void RemoveSoundSource(unsigned int source);
     private:
         // private static storage for sound device
         static SoundDevice* device;
 
         // private static storage for sound buffers as a collection
-        static std::map<std::string, SoundBuffer*> sounds;
+        static std::map<std::string, SoundBuffer> sounds;
         
         // private static reference storage of sound sources
         static std::vector<unsigned int> sources;
