@@ -5,7 +5,7 @@
 
 /* Host several functions to allow for keyboard inputs
 */
-
+namespace GLFW{
 /* key callback of the keyboard which checks for the given key
 * NOTE: Checks if key was pressed
 */
@@ -20,5 +20,7 @@ bool getKeyInputDown(int key);
 * NOTE: Checks if key was released
 */
 bool getKeyInputUp(int key);
+
+}
 
 #endif

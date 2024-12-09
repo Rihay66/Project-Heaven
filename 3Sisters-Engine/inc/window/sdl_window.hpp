@@ -1,6 +1,5 @@
 #pragma once
 
-#include <SDL_events.h>
 #ifndef SDL_WINDOW_HPP
 #define SDL_WINDOW_HPP
 
@@ -8,6 +7,9 @@
 #if defined(_WIN32) || defined(WIN32) // Windows platform
     #include <windows.h>
 #endif
+
+// include SDL based input headers
+#include <input/sdl_keyboard.hpp>
 
 // GLAD and SDL libraries
 #include <glad/glad.h>
@@ -53,6 +55,9 @@ class Window{
 
         // private storage of SDL events
         SDL_Event eventHandle;
+
+        // private storage of keyboard state holder
+        KeyboardStateHolder* kState = nullptr;
     
     protected:
         // used to set the target frame time between frame, aka max frame time
@@ -85,7 +90,7 @@ class Window{
         /* used to initialize the window and it's contexts by default
           initializes SDL and creates a Window with OpenGL 4.5 capabilities
           !Overwriting is not recommended, however due note that runtime(), getDeltaTime(),
-          !setUpOpenGL() require SDL to be initialized and have a created window handle context
+          !setUpOpenGL() require SDL to be initialized and have a created window and GL context
         */
         virtual void initializeWindow(int w, int h, const char* name = "");
 
@@ -96,6 +101,16 @@ class Window{
 
         // return the height of the window
         unsigned int getHeight(){return this->height;}
+
+        /* return reference to the event handle
+        * NOTE: the event handle gets updated every frame 
+        */
+        SDL_Event& getEventState(){return this->eventHandle;}
+
+        /* returns a reference to the keyboard state holder that is updated by runtime()
+        *  
+        */
+        KeyboardStateHolder* getKeyboardState() {return this->kState;}
 
         //* Virtual functions
 

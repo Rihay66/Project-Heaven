@@ -1,3 +1,6 @@
+#include "input/sdl_keyboard.hpp"
+#include <SDL_keyboard.h>
+#include <SDL_stdinc.h>
 #include <window/sdl_window.hpp>
 
 // include standard libraries
@@ -12,6 +15,9 @@ Window::Window(){
 }
 
 Window::~Window(){
+    // delete the keyboard state holder
+    delete this->kState;
+
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(handle);
     SDL_Quit();
@@ -34,10 +40,6 @@ void Window::setFixedTimeStep(double time){
 }
 
 void Window::additionalWindowOptions(){
-    // ensure to not set a depth buffer as its not needed for 2D
-    //SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
-    //SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
-
     // Disable v-sync
     SDL_GL_SetSwapInterval(0);
 }
@@ -107,6 +109,10 @@ void Window::initializeWindow(int w, int h, const char* name){
     // add additional OpenGL capabilities
     setUpOpenGL();
 
+    // set up keyboard state holder
+    this->kState = new KeyboardStateHolder();
+    this->kState->keyboardState = (Uint8*)SDL_GetKeyboardState(NULL);
+
     // TODO: Create debug options for the window class to display to a console
     // show any errors or messages
     // std::cout << "MSG: Window successfully created\n";
@@ -136,9 +142,9 @@ void Window::render(double alpha){
 // single threaded runtime of input(), update(), stepUpdate() and render()
 void Window::runtime(){
     // check if GLFW has been initialized
-    if(handle == nullptr){
+    if(handle == nullptr || kState == nullptr){
         //! display error
-        std::cout << "ERROR: Window hasn't been initialized\n";
+        std::cout << "ERROR: Window or keyboard state holder hasn't been initialized\n";
         return; // stop function
     }
     
@@ -157,6 +163,10 @@ void Window::runtime(){
 
         // check for sdl events
         SDL_PollEvent(&eventHandle);
+
+        // grab the current keyboard state
+        this->kState->keyboardState = (Uint8*)SDL_GetKeyboardState(NULL);
+
         // check the sdl events relating the window
         switch (eventHandle.type) {
             case SDL_QUIT:
