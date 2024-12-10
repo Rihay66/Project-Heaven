@@ -1,8 +1,13 @@
 #include <input/glfw_gamepad_manager.hpp>
 
+//? include IO for debug prints
+#include <iostream>
+
+using namespace GLFW;
+
 // define static variables
 std::vector<GamepadManager::QueuedGamepad>              GamepadManager::queuedGamepads;
-std::array<std::shared_ptr<ControllerDevice>, 16>       GamepadManager::devices;
+std::array<std::shared_ptr<ControllerDevice>, 15>       GamepadManager::devices;
 bool                                                    GamepadManager::isAutoClearSet = false;
 
 int GamepadManager::GetGamepadAmount(){
@@ -23,6 +28,7 @@ int GamepadManager::GetGamepadAmount(){
 void GamepadManager::InitializeQuery(){
     // check that GLFW has not been initialized
     if(glfwGetError(NULL) == GLFW_NOT_INITIALIZED){
+        std::cout << "ERROR: GLFW is not initialized!\n";
         return; // stop function
     }
 
@@ -68,6 +74,7 @@ void GamepadManager::SetGamepad(Gamepad& gamepad, int index){
 void GamepadManager::PollInputs(){    
     // check that GLFW has not been initialized
     if(glfwGetError(NULL) == GLFW_NOT_INITIALIZED){
+        std::cout << "ERROR: GLFW is not initialized!\n";
         return; // stop function
     }
 

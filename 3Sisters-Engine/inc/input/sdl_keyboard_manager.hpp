@@ -3,8 +3,6 @@
 #ifndef SDL_KEYBOARD_MANAGER_HPP
 #define SDL_KEYBOARD_MANAGER_HPP
 
-#include <SDL2/SDL_events.h>
-
 #include <input/sdl_keyboard.hpp>
 
 namespace SDL{

@@ -9,6 +9,8 @@
 // include GLFW
 #include <GLFW/glfw3.h>
 
+namespace GLFW{
+
 //? Playstation specific button macros
 
 #define PLAYSTATION_BUTTON_CROSS 0
@@ -122,5 +124,7 @@ float getAxisRawInput(Gamepad& pad, int key, float deadzone = 0.5f);
 * NOTE: Requires a set gamepad
 */
 float getAxisInput(Gamepad& pad, int key, float deadzone = 0.5f);
+
+}
 
 #endif

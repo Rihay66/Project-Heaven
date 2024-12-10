@@ -22,20 +22,20 @@
 */
 class GamepadManager{
     public:
-        //* getter functions
-
-        // returns the number of devices that identify as "Gamepads"
-        static int GetGamepadAmount();
-
         //* helper functions
 
         // set query event callback, expands a list of connected and disconnected devices
         static void InitializeQuery();
 
+        //* getter functions
+
+        // returns the number of devices that identify as "Gamepads"
+        static int GetGamepadAmount();
+
         /* add a gamepad reference that can be filled from the list of queried gamepads
         * NOTE: By default picks the first gamepad
         */
-        static void SetGamepad(Gamepad& gamepad, int index = 0);
+        static void SetGamepad(GLFW::Gamepad& gamepad, int index = 0);
 
         /* polls input from the connected gamepads to allow for checking for inputs
         */
@@ -47,7 +47,7 @@ class GamepadManager{
             // wanted index to be set, default picks a NULL value
             int index = -1;
             // stored reference of the gamepad that needs to be set
-            Gamepad* gamepad = nullptr;
+            GLFW::Gamepad* gamepad = nullptr;
         };
 
         //* private resource storage
@@ -56,7 +56,7 @@ class GamepadManager{
         static std::vector<QueuedGamepad> queuedGamepads;
 
         // define a list of game controllers detected by GLFW
-        static std::array<std::shared_ptr<ControllerDevice>, 16> devices;
+        static std::array<std::shared_ptr<GLFW::ControllerDevice>, 15> devices;
  
         // private constructor, that is to avoid any actual gamepad manager objects
         GamepadManager() {}
