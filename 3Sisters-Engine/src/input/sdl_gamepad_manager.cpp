@@ -23,45 +23,67 @@ void GamepadManager::InitializeQuery(SDL_Event& event){
 
     // set the event handle 
     eventHandle = &event;
+}
 
-    // check all slots for pre-connected device
+int GamepadManager::GetGamepadAmount(){
+    // init var to contain actual amount of devices available
+    int amount = 0;
+
     for(int i = 0; i < 15; i++){
-        // check if slot is a game controller and it's slot doesn't exist
-        if(SDL_IsGameController(i) == SDL_TRUE && devices.at(i) == nullptr){
-            // create controller device
-
-            //set id
-
-            // set connection to be true
-
-            // set the game controller
+        if(devices.at(i) != nullptr){
+            amount++;
+        }else{
+            break; // stop loop
         }
     }
-    
+
+    return amount;
+}
+
+void GamepadManager::SetGamepad(Gamepad& gamepad, int index){
+    // set auto clear
+    setUpAutoClear();
+
+    // check index is within range and if reference already exists
+    if(index < 15 && devices.at(index) != nullptr){
+        // set the reference
+        gamepad.device = devices.at(index);
+
+        return; // stop function
+    }else if(index < 15 && devices.at(index) == nullptr){
+        // queue the given gamepad
+        
+        QueuedGamepad qp;
+        qp.index = index;
+        qp.gamepad = &gamepad;
+
+        // add to queue
+        queuedGamepads.push_back(qp);
+    }
 }
 
 void GamepadManager::PollIO(){
+    // check if the event handle is set meaning, there is intention of using the gamepad system
+    if(eventHandle == nullptr){
+        return; // stop functions
+    }
+
     // check if SDL and event handle hasn't been initialized
     if(SDL_WasInit(SDL_INIT_GAMECONTROLLER) == 0){
         std::cout << "ERROR: SDL is not initialized!\n";
-        return; // stop functions
-    }else if(eventHandle == nullptr){
-        std::cout << "ERROR: SDL event handle is not set!\n";
         return; // stop functions
     }
 
     // check for events
     switch(eventHandle->type){
         case SDL_CONTROLLERDEVICEADDED:
-            // check which device it was
+            // call for enable gamepad with the correspoding device
+            enableGamepad(eventHandle->cdevice.which);
 
-            // call for enable gamepad with the appropriate index
-            
             break;
         case SDL_CONTROLLERDEVICEREMOVED:
-            // check which device it was
-
-            // disable the gamepad
+            // disable the gamepad that was removed
+            disableGamepad(eventHandle->cdevice.which);
 
             break;
         default:
@@ -72,10 +94,13 @@ void GamepadManager::PollIO(){
 
 void GamepadManager::enableGamepad(int jid){
     // check if ID already exists
-    for(int i = 0; i < devices.size(); i++){
-        if(devices.at(i) != nullptr && devices.at(i)->ID == jid){
+    for(int i = 0; i < GetGamepadAmount(); i++){
+        if(devices.at(i)->ID == jid){
             // gamepad exists, then set the connection to be true
             devices.at(i)->isConnected = true;
+
+            // attempt to reopen
+            devices.at(jid)->controller = SDL_GameControllerOpen(jid);
 
             // stop function
             return;
@@ -91,7 +116,7 @@ void GamepadManager::enableGamepad(int jid){
         // then set the connection to be true
         devices.at(jid)->isConnected = true;
         // then set the game controller
-
+        devices.at(jid)->controller = SDL_GameControllerOpen(jid);
 
         // loop in reverse through queued up gamepads that need to be set
         for(int i = 0; i < queuedGamepads.size(); i++){
@@ -107,15 +132,32 @@ void GamepadManager::enableGamepad(int jid){
 }
 
 void GamepadManager::disableGamepad(int jid){
-    // check if ID already exists
-    if(devices.at(jid) != nullptr){
-        // turn off device
-        devices.at(jid)->isConnected = false;
+    // check for given ID which device was removed and properly close it
+    for(int i = 0; i < GetGamepadAmount(); i++){
+        // check which device matches the given id
+        if(SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(devices.at(i)->controller)) == jid){
+            // properly close the device
+            devices.at(i)->isConnected = false;
+            SDL_GameControllerClose(devices.at(i)->controller);
+
+            return; // stop function
+        }
     }
+    
 }
 
 void GamepadManager::clear(){
     // de-allocate resources
+
+    // remove all reference of queued gamepads
+    for(QueuedGamepad& pad : queuedGamepads){
+        pad.gamepad = nullptr;
+    }
+
+    // close all created SDL joysticks
+    for(int i = 0; i < GetGamepadAmount(); i++){
+        SDL_GameControllerClose(devices.at(i)->controller);
+    }
 }
 
 void GamepadManager::setUpAutoClear(){

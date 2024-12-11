@@ -29,6 +29,17 @@ class GamepadManager{
         // set query event callback, expands a list of connected and disconnected devices
         static void InitializeQuery(SDL_Event& handle);
 
+        //* getter functions
+
+        // returns the number of devices that identify as "Gamepads"
+        static int GetGamepadAmount();
+
+        /* add a gamepad reference that can be filled from the list of queried gamepads
+        * NOTE: By default picks the first gamepad
+        * NOTE: Multiple gamepads aiming to be the same index, only one will be set
+        */
+        static void SetGamepad(SDL::Gamepad& gamepad, int index = 0);
+
         /* polls event from gamepads such as connections and disconnects
         */
         static void PollIO();

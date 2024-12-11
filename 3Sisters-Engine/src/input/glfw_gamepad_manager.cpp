@@ -10,20 +10,6 @@ std::vector<GamepadManager::QueuedGamepad>              GamepadManager::queuedGa
 std::array<std::shared_ptr<ControllerDevice>, 15>       GamepadManager::devices;
 bool                                                    GamepadManager::isAutoClearSet = false;
 
-int GamepadManager::GetGamepadAmount(){
-    // init var to contain actual amount of devices available
-    int amount = 0;
-
-    for(int i = 0; i < GLFW_JOYSTICK_LAST; i++){
-        if(devices.at(i) != nullptr){
-            amount++;
-        }else{
-            break; // stop loop
-        }
-    }
-
-    return amount;
-}
 
 void GamepadManager::InitializeQuery(){
     // check that GLFW has not been initialized
@@ -47,6 +33,21 @@ void GamepadManager::InitializeQuery(){
 
     // throw ID into a connection or disconnect events
     glfwSetJoystickCallback(connectionCheck);
+}
+
+int GamepadManager::GetGamepadAmount(){
+    // init var to contain actual amount of devices available
+    int amount = 0;
+
+    for(int i = 0; i < GLFW_JOYSTICK_LAST; i++){
+        if(devices.at(i) != nullptr){
+            amount++;
+        }else{
+            break; // stop loop
+        }
+    }
+
+    return amount;
 }
 
 void GamepadManager::SetGamepad(Gamepad& gamepad, int index){

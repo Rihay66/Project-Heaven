@@ -1,6 +1,3 @@
-#include "input/sdl_keyboard.hpp"
-#include <SDL_keyboard.h>
-#include <SDL_stdinc.h>
 #include <window/sdl_window.hpp>
 
 // include standard libraries
@@ -161,14 +158,10 @@ void Window::runtime(){
         // get current frame
         currentFrame = SDL_GetPerformanceCounter();
 
-        // check for sdl events
-        SDL_PollEvent(&eventHandle);
-
-        // grab the current keyboard state
-        this->kState->keyboardState = (Uint8*)SDL_GetKeyboardState(NULL);
-
-        // check the sdl events relating the window
-        switch (eventHandle.type) {
+        // check for all queued sdl events
+        while(SDL_PollEvent(&eventHandle)){
+          // check the sdl events relating the window
+          switch (eventHandle.type) {
             case SDL_QUIT:
                 quit = true;
                 break;
@@ -181,7 +174,14 @@ void Window::runtime(){
                 break;
             default:
                 break;
+          }
+
+          // check for device IO events, works only when GamepadManager is initialized
+          GamepadManager::PollIO();
         }
+
+        // grab the current keyboard state
+        this->kState->keyboardState = (Uint8*)SDL_GetKeyboardState(NULL);
 
         //  accumulate time and do stepUpdate()
         this->accumulator += this->DeltaTime;
