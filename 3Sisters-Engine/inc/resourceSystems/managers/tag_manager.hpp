@@ -15,7 +15,7 @@
 #include <functional>
 
 /* A Static singleton TagSystem class that hosts several
- functions to add, replace,and find arbitrary types that 
+ functions to add, replace, and find arbitrary types that 
  have a set tag to a static tag pool.
 */
 class TagManager{
@@ -106,8 +106,7 @@ class TagManager{
                     // grab each element's std::shared_ptr
 
                     // grab the std::shared_ptr of iteration
-                    auto& temp = 
-                        std::any_cast<std::shared_ptr<std::reference_wrapper<T>>>(iter->second.first)->get();
+                    auto& temp = std::any_cast<std::shared_ptr<std::reference_wrapper<T>>>(iter->second.first)->get();
                     
                     // check if it has the same tag and tag pool iteration have the same reference
                     if(target.compare(iter->first) == 0 && std::addressof(temp) == std::addressof(ref)){

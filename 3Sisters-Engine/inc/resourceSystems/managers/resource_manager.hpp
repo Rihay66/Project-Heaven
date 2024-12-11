@@ -36,7 +36,7 @@ class ResourceManager{
         static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool isLinear = true);
 
         // use a loaded texture to create a sub texture along with a name
-        static std::array<glm::vec2, 4>& LoadSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize = {1, 1});
+        static std::array<glm::vec2, 4>& GenerateSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize = {1, 1});
         
         // create a white texture that is named "default"
         static void GenerateWhiteTexture();

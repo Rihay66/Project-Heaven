@@ -173,7 +173,7 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
     return Fonts[name];
 }
 
-std::array<glm::vec2, 4>& ResourceManager::LoadSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize){
+std::array<glm::vec2, 4>& ResourceManager::GenerateSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize){
     //create sub texture
     SubTexture st;
 
