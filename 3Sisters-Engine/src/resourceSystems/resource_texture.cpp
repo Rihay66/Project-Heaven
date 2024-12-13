@@ -28,6 +28,11 @@ void Texture::BindTexture(){
     glBindTexture(GL_TEXTURE_2D, this->ID);
 }
 
+void Texture::DeleteTexture(){
+    // delete the texture
+    glDeleteTextures(1, &ID);
+}
+
 void Texture::SetTextureInternalFormat(unsigned int format){
     Internal_Format = format;
 }

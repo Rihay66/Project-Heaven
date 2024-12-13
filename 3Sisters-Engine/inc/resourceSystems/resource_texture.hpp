@@ -41,6 +41,9 @@ class Texture{
         // bind the texture for rendering usage
         void BindTexture();
 
+        // delete the existing texture
+        void DeleteTexture();
+
         //* Setter functions
 
         // set the texture internal format

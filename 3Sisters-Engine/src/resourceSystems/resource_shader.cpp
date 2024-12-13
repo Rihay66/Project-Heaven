@@ -65,6 +65,11 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource, const
         glDeleteShader(gShader);
 }
 
+void Shader::DeleteShader(){
+    // delete the shader
+    glDeleteProgram(ID);
+}
+
 void Shader::SetFloat(const char *name, float value, bool useShader){
     if (useShader)
         this->Use();
