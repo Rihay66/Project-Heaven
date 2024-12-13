@@ -8,7 +8,8 @@
 
 /* Texture2D is able to store and configure a 2D texture in OpenGL.
  It also hosts utility variables for easy management and modifiability.
- The class requires an image size and a path to the texture.
+ The class requires an image size and image data of a texture file.
+ *NOTE: By default texture is set to be RGB format and Nearest filter
 */
 class Texture{
     private:
@@ -41,6 +42,10 @@ class Texture{
         void SetTextureInternalFormat(unsigned int format);
         // set the texture image format
         void SetTextureImageFormat(unsigned int format);
+        // set the minimum texture filter
+        void SetTextureFilterMin(unsigned int filter);
+        // set the maximum texture filter
+        void SetTextureFilterMax(unsigned int filter);
 
         //* Gettter functions
 

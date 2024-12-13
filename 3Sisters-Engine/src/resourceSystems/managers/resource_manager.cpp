@@ -36,7 +36,7 @@ Shader& ResourceManager::LoadShader(const char *vShaderFile, const char *fShader
     return Shaders[name];
 }
 
-Texture& ResourceManager::LoadTexture(const char *file, std::string name){
+Texture& ResourceManager::LoadTexture(const char *file, std::string name, bool isLinear){
     // set up automatic clear()
     setUpAutoClear();
     // determine the alpha of the file by checking image file extension
@@ -66,10 +66,10 @@ Texture& ResourceManager::LoadTexture(const char *file, std::string name){
     // check file extension of the following to set alpha to be true, otherwise alpha is false
     if(strcmp(fileImageformat, "png") == 0 || strcmp(fileImageformat, "jpeg") == 0){
         // load texture with alpha
-        Textures.insert({name ,loadTextureFromFile(file, true)});
+        Textures.insert({name ,loadTextureFromFile(file, true, isLinear)});
     }else{
         // load texture with no alpha
-        Textures.insert({name ,loadTextureFromFile(file, false)});
+        Textures.insert({name ,loadTextureFromFile(file, false, isLinear)});
     }
 
     // add texture ID to list
@@ -339,14 +339,21 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
     return shader;
 }
 
-Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha){
+Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha, bool isLinear){
     // create texture object
     Texture texture;
+    // set alpha
     if (alpha)
     {
         texture.SetTextureInternalFormat(GL_RGBA);
         texture.SetTextureImageFormat(GL_RGBA);
     }
+    // set filter
+    if(isLinear){
+        texture.SetTextureFilterMin(GL_LINEAR);
+        texture.SetTextureFilterMax(GL_LINEAR);
+    }
+
     // load image
     int width, height, nrChannels;
     // tell stb_image to flip vertically the image

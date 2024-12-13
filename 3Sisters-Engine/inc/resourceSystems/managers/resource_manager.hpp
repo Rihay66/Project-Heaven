@@ -29,11 +29,13 @@ class ResourceManager{
         // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader along with a name
         static Shader& LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
 
-        // loads (and generates) a texture from file along with a name
-        static Texture& LoadTexture(const char *file, std::string name);
+        /* loads (and generates) a texture from file along with a name and optional texture filter option
+        * NOTE: depending on the file type alpha is automatically set
+        */
+        static Texture& LoadTexture(const char *file, std::string name, bool linearFilter = false);
 
-        // loads (and generates) a text texture from file along with a name
-        static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool isLinear = true);
+        // loads (and generates) a text texture from file along with a name and optional texture filter option
+        static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool linearFilter = true);
 
         // use a loaded texture to create a sub texture along with a name
         static std::array<glm::vec2, 4>& GenerateSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize = {1, 1});
@@ -46,7 +48,7 @@ class ResourceManager{
         // retrieves a stored shader
         static Shader& GetShader(std::string name);
 
-        // retrieves a stored texture's ID
+        // retrieves a stored texture's ID index
         static int GetTextureIndex(std::string name);
 
         // retrieves a stored texture
@@ -79,7 +81,7 @@ class ResourceManager{
         // loads and generates a shader from file
         static Shader loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile = nullptr);
         // loads a single texture from file
-        static Texture loadTextureFromFile(const char *file, bool alpha);
+        static Texture loadTextureFromFile(const char *file, bool alpha, bool isLinear);
         // properly de-allocates all loaded resources
         static void clear();
         

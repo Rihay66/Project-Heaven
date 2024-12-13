@@ -1,12 +1,14 @@
 #include <resourceSystems/resource_texture.hpp>
 
-Texture::Texture() : Width(0), Height(0), Internal_Format(GL_RGB), Image_Format(GL_RGB), Wrap_S(GL_REPEAT), Wrap_T(GL_REPEAT), Filter_Min(GL_NEAREST), Filter_Max(GL_NEAREST){
-    glGenTextures(1, &this->ID);
-}
+Texture::Texture() : Width(0), Height(0), Internal_Format(GL_RGB), Image_Format(GL_RGB), 
+Wrap_S(GL_REPEAT), Wrap_T(GL_REPEAT), Filter_Min(GL_NEAREST), Filter_Max(GL_NEAREST) 
+{}
 
 void Texture::Generate(unsigned int width, unsigned int height, unsigned char* data){
     this->Width = width;
     this->Height = height;
+    // generate ID
+    glGenTextures(1, &this->ID);
     // create Texture
     glBindTexture(GL_TEXTURE_2D, this->ID);
     // set Texture wrap and filter modes
@@ -27,6 +29,14 @@ void Texture::SetTextureInternalFormat(unsigned int format){
 
 void Texture::SetTextureImageFormat(unsigned int format){
     Image_Format = format;
+}
+
+void Texture::SetTextureFilterMin(unsigned int filter){
+    Filter_Min = filter;
+}
+
+void Texture::SetTextureFilterMax(unsigned int filter){
+    Filter_Max = filter;
 }
 
 unsigned int& Texture::GetID(){
