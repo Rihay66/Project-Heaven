@@ -33,8 +33,13 @@ class Texture{
         // constructor (sets default texture modes)
         Texture();
 
+        //* Helper functions
+
         // generates texture from image data
         void Generate(unsigned int width, unsigned int height, unsigned char* data);
+
+        // bind the texture for rendering usage
+        void BindTexture();
 
         //* Setter functions
 
@@ -46,8 +51,12 @@ class Texture{
         void SetTextureFilterMin(unsigned int filter);
         // set the maximum texture filter
         void SetTextureFilterMax(unsigned int filter);
+        // set the wrap mode on the S axis
+        void SetWrapS(unsigned int mode);
+        // set the wrap mode on the T axis
+        void SetWrapT(unsigned int mode);
 
-        //* Gettter functions
+        //* Getter functions
 
         //retrieves the texture id
         unsigned int& GetID();

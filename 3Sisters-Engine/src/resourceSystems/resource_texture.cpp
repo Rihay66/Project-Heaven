@@ -9,7 +9,7 @@ void Texture::Generate(unsigned int width, unsigned int height, unsigned char* d
     this->Height = height;
     // generate ID
     glGenTextures(1, &this->ID);
-    // create Texture
+    // bind Texture
     glBindTexture(GL_TEXTURE_2D, this->ID);
     // set Texture wrap and filter modes
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->Wrap_S);
@@ -21,6 +21,11 @@ void Texture::Generate(unsigned int width, unsigned int height, unsigned char* d
     
     // create mipmap, when objects are far away, OpenGL will set the correct texture resolution
     glGenerateMipmap(GL_TEXTURE_2D);
+}
+
+void Texture::BindTexture(){
+    // bind texture
+    glBindTexture(GL_TEXTURE_2D, this->ID);
 }
 
 void Texture::SetTextureInternalFormat(unsigned int format){
@@ -37,6 +42,14 @@ void Texture::SetTextureFilterMin(unsigned int filter){
 
 void Texture::SetTextureFilterMax(unsigned int filter){
     Filter_Max = filter;
+}
+
+void Texture::SetWrapS(unsigned int mode){
+    Wrap_S = mode;
+}
+
+void Texture::SetWrapT(unsigned int mode){
+    Wrap_T = mode;
 }
 
 unsigned int& Texture::GetID(){
