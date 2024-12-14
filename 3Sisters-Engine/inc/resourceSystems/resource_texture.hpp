@@ -61,7 +61,7 @@ class Texture{
 
         //* Getter functions
 
-        //retrieves the texture id
+        // retrieves the texture id
         unsigned int& GetID();
         // retrieves the texture width
         unsigned int GetWidth();
