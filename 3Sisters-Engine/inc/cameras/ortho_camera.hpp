@@ -13,7 +13,7 @@
  perception of what's being rendered in a Orthographic
  manner. The class can be modified and changed to allow
  desired perception of the scene. 
- ! Requires a shader class and a window width and height
+ ! Requires a shader class and width and height
 */
 class OrthoCamera{
     protected:

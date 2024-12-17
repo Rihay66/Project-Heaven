@@ -27,8 +27,6 @@
 */
 class SpriteRenderer{    
     public:
-        //TODO: Move init() to be more seperate functions for quad and line rendering
-
         // initialize the quad renderer which requires a loaded shader and optionally changeable sprite size of all quad objects
         static void Init(Shader& shader, glm::uvec2 spriteSize = {10.0f, 10.0f});
 

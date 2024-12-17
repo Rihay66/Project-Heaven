@@ -5,6 +5,7 @@
 
 #include <type_traits>
 
+// include all ecs managers
 #include <ecs/managers/entity_manager.hpp>
 #include <ecs/managers/component_manager.hpp>
 #include <ecs/managers/system_manager.hpp>

@@ -26,7 +26,7 @@ class Shader{
     public:
         //* Helper functions
         
-        // sets the current shader as active
+        // sets the shader as active
         Shader& Use();
         
         // compiles the shader from given source code

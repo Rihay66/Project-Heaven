@@ -69,8 +69,6 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
     // set up array to the size of the max number of textures
     int samplers[maxTextureSlots];
 
-    //TODO: Create a simple white texture to be default
-
     // set up samplers array
     for (int i = 0; i < maxTextureSlots; i++)
     {
@@ -109,8 +107,6 @@ void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
 
     // set up array to the size of the max number of textures
     int samplers[maxTextureSlots];
-
-    //TODO: Create a simple white texture to be default
 
     // set up samplers array
     for (int i = 0; i < maxTextureSlots; i++)
