@@ -30,7 +30,7 @@ class ECS{
         static Entity CreateEntity();
 
         // destroy given Entity and remove attached components
-        void DestroyEntity(Entity entity);
+        static void DestroyEntity(Entity entity);
 
         //* Component Functions
         
