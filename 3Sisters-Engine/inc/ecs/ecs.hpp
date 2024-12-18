@@ -5,6 +5,7 @@
 
 #include <type_traits>
 
+// include all ecs managers
 #include <ecs/managers/entity_manager.hpp>
 #include <ecs/managers/component_manager.hpp>
 #include <ecs/managers/system_manager.hpp>
@@ -29,7 +30,7 @@ class ECS{
         static Entity CreateEntity();
 
         // destroy given Entity and remove attached components
-        void DestroyEntity(Entity entity);
+        static void DestroyEntity(Entity entity);
 
         //* Component Functions
         

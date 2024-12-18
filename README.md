@@ -2,9 +2,9 @@
 A Lightweight 2D OpenGL based Engine called:
 # 3Sisters-Engine
 
-![](3Sisters-Engine_logo.png)
+![](3Sisters_Engine_logo.png)
 
-Current Version: 1.1-B
+Current Version: 1.2-Candidate-A
 
 Features:
 
@@ -23,7 +23,7 @@ What's Coming?
 
 [] Setup scripts 
 
-[] SDL2 and GLFW3 options?
+[] SDL2 and GLFW3 options
 
 [] Cross-platform development environments (Only Windows and Unix/Linux)
 
@@ -39,15 +39,15 @@ This project has yet to include contributors, though GitHub issues can be made t
 This Project is under the MIT License.
 
 Additional Information:
-* Games/Software made using the "Heaven-Engine", the "Heaven-Engine"'s license does not apply to the content made with it. If this software's shared or static binary library is included in
+* Games/Software made using the "3Sisters-Engine", the "3Sisters-Engine"'s license does not apply to the content made with it. If this software's shared or static binary library is included in
   the content of your software, then it's required to include a copyright notice and license statement as part of your documentation.
 
 Additional Restriction:
-* If the software is directly modified, the source code is changed, thus, the modified software will no longer hold the name "Heaven-Engine" nor "Project-Heaven".
-  Names such as "Heaven-Engine-2", "Heaven-Project" and other variations are unrelated to the original software. However, the modified software must refer back
+* If the software is directly modified, the source code is changed, thus, the modified software will no longer hold the name "3Sisters-Engine" nor "Project-Heaven".
+  Names such as "3Sisters-Engine-2", "3Sisters-Project" and other variations are unrelated to the original software's identity. However, the modified software must refer back
   to the MIT-licensed original software and the reference must be documented.
 * If the software is directly modified, the source code is changed, thus, the modified software will no longer hold the original software's logo. Logos that are
-  modified, even a modified version of the original software's logo, is unrelated to the original software.
+  modified, even a modified version of the original software's logo, is unrelated to the original software's identity.
 
 Disclaimer:
 * The above explanations of this software's license terms and implications for its users do not constitute legal advice. The statements only reflect the author's understanding of the software's licensing terms; please refer to a lawyer if you have any questions.

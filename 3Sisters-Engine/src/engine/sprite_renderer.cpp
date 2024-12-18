@@ -44,17 +44,18 @@ glm::uvec2                          SpriteRenderer::spriteSize;
 // initialzie linear interpolation 
 State                       SpriteRenderer::interpolation;
 // initialize auto clear var
-bool                                SpriteRenderer::isAutoClearSet = false;
+bool                                SpriteRenderer::isAutoClearSetQuad = false;
+bool                                SpriteRenderer::isAutoClearSetLine = false;
 
 void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
     // when auto clear is set, stop re-initializing rendering data
-    if(isAutoClearSet){
+    if(isAutoClearSetQuad){
         std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
         return;
     }
 
     // set up automatic clear()
-    setUpAutoClear();
+    setUpAutoClearQuad();
 
     // set the shader reference
     quadShader = s;
@@ -67,8 +68,6 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
 
     // set up array to the size of the max number of textures
     int samplers[maxTextureSlots];
-
-    //TODO: Create a simple white texture to be default
 
     // set up samplers array
     for (int i = 0; i < maxTextureSlots; i++)
@@ -88,13 +87,14 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
 
 void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
     // when auto clear is set, stop re-initializing rendering data
-    if(isAutoClearSet){
+    if(isAutoClearSetQuad || isAutoClearSetLine){
         std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
         return;
     }
 
     // set up automatic clear()
-    setUpAutoClear();
+    setUpAutoClearQuad();
+    setUpAutoClearLine();
 
     // set the quad shader reference
     quadShader = q;
@@ -107,8 +107,6 @@ void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
 
     // set up array to the size of the max number of textures
     int samplers[maxTextureSlots];
-
-    //TODO: Create a simple white texture to be default
 
     // set up samplers array
     for (int i = 0; i < maxTextureSlots; i++)
@@ -127,6 +125,23 @@ void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
 
     // set up rendering of quads
     initQuadRenderData(); 
+
+    // set up rendering of lines
+    initLineRenderData();
+}
+
+void SpriteRenderer::Init(Shader& l){
+    // when auto clear is set, stop re-initializing rendering data
+    if(isAutoClearSetLine){
+        std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
+        return;
+    }
+
+    // set up automatic clear()
+    setUpAutoClearLine();
+
+    // set the line shader renference
+    lineShader = l;
 
     // set up rendering of lines
     initLineRenderData();
@@ -317,7 +332,8 @@ void SpriteRenderer::FlushQuads(){
     if(!endQuadBatch()){
         // there are no quads to render
         //! Display Warning
-        std::cout << "WARNING: No quad added to draw!\n";
+        //TODO: Make a debug option to show this warning
+        //std::cout << "WARNING: No quad added to draw!\n";
         return; // stop function
     }
 
@@ -345,7 +361,8 @@ void SpriteRenderer::FlushLines(){
     if(!endLineBatch()){
         // there are no lines to render
         //! Display Warning
-        std::cout << "WARNING: No line added to draw!\n";
+        //TODO: Make a debug option to show this warning
+        //std::cout << "WARNING: No line added to draw!\n";
         return; // stop function
     }
 
@@ -584,18 +601,28 @@ void SpriteRenderer::clear(){
     delete lineBufferPtr;
 
     // delete quad buffer data
-    glDeleteVertexArrays(1, &quadVAO);
-    glDeleteBuffers(1, &quadVBO);
-    glDeleteBuffers(1, &quadEBO);
-
+    if(isAutoClearSetQuad){
+        glDeleteVertexArrays(1, &quadVAO);
+        glDeleteBuffers(1, &quadVBO);
+        glDeleteBuffers(1, &quadEBO);
+    }
     // delete line buffer data
-    glDeleteVertexArrays(1, &lineVAO);
-    glDeleteBuffers(1, &lineVBO);
+    if(isAutoClearSetLine){
+        glDeleteVertexArrays(1, &lineVAO);
+        glDeleteBuffers(1, &lineVBO);
+    }
 }
 
-void SpriteRenderer::setUpAutoClear(){
+void SpriteRenderer::setUpAutoClearQuad(){
     // set up on exit to call the Clear()
-    if(!isAutoClearSet && std::atexit(clear) == 0){
-        isAutoClearSet = true; // disable calling this function again
+    if(!isAutoClearSetQuad && std::atexit(clear) == 0){
+        isAutoClearSetQuad = true; // disable calling this function again
+    }
+}
+
+void SpriteRenderer::setUpAutoClearLine(){
+    // set up on exit to call the Clear()
+    if(!isAutoClearSetLine && std::atexit(clear) == 0){
+        isAutoClearSetLine = true; // disable calling this function again
     }
 }

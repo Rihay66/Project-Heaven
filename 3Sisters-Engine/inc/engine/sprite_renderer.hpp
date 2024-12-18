@@ -15,7 +15,7 @@
 #include <resourceSystems/resource_shader.hpp>
 
 // include interpolation
-#include <engine/interpolation.hpp>
+#include <engine/components/interpolation.hpp>
 
 /* A static singleton Sprite Rendering Class used to 
  render 2D primatives. This class uses given raw data to 
@@ -27,8 +27,6 @@
 */
 class SpriteRenderer{    
     public:
-        //TODO: Move init() to be more seperate functions for quad and line rendering
-
         // initialize the quad renderer which requires a loaded shader and optionally changeable sprite size of all quad objects
         static void Init(Shader& shader, glm::uvec2 spriteSize = {10.0f, 10.0f});
 
@@ -37,6 +35,11 @@ class SpriteRenderer{
         */
         static void Init(Shader& quadShader, Shader& lineShader, glm::uvec2 spriteSize = {10.0f, 10.0f});
         
+        /* initialize the line renderer which requires a loaded shader
+        ! Overloaded function
+        */
+        static void Init(Shader& lineShader);
+
         //* draw primative functions
 
         // draw a singular quad utilizing given raw data, without interpolation
@@ -213,9 +216,12 @@ class SpriteRenderer{
 
         //! Currently EXPERIMENTAL, may cause exceptions or segfaults
         // private boolean to track automatic clear()
-        static bool isAutoClearSet;
+        static bool isAutoClearSetQuad;
+        static bool isAutoClearSetLine;
+        
         // set up automatic de-allocation of loaded resources
-        static void setUpAutoClear();
+        static void setUpAutoClearQuad();
+        static void setUpAutoClearLine();
 };
 
 #endif

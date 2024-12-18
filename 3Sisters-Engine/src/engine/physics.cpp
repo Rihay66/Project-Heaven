@@ -251,6 +251,9 @@ void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &colli
     obj.transform = &transform;
     obj.collider = &collider;
     obj.rb = &rigidbody;
+
+    // store object
+    physicsObjs.push_back(obj);
 }
 
 void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &collider, Rigidbody2D &rigidbody, Interpolation& interpolation){
@@ -319,6 +322,9 @@ void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &colli
     obj.collider = &collider;
     obj.rb = &rigidbody;
     obj.inter = &interpolation;
+
+    // store object
+    physicsObjs.push_back(obj);
 }
 
 void Physics::SetPhysicsSubStepIterations(int32_t iter){

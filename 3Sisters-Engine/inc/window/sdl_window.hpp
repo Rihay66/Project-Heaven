@@ -1,18 +1,22 @@
 #pragma once
 
-#ifndef GLFW_WINDOW_HPP
-#define GLFW_WINDOW_HPP
+#ifndef SDL_WINDOW_HPP
+#define SDL_WINDOW_HPP
 
 // check platform
 #if defined(_WIN32) || defined(WIN32) // Windows platform
     #include <windows.h>
 #endif
 
-// GLAD and GLFW libraries
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+// include SDL based input headers
+#include <input/sdl_keyboard.hpp>
+#include <input/sdl_gamepad_manager.hpp>
 
-namespace GLFW{
+// GLAD and SDL libraries
+#include <glad/glad.h>
+#include <SDL2/SDL.h>
+
+namespace SDL{
 /* Window abstract class used for creating a graphical context
  window that is used to allow for OpenGL capabilities.
  The window class provides various functions and most
@@ -26,7 +30,7 @@ class Window{
             alpha = 0, threadSleepTime = 0;
 
         // vars storing and referencing to window size, width x height
-        unsigned int width, height;
+        int width, height;
 
         /* Fixed rate that updates the stepUpdate(), adjust accordingly as needed
          !Default value is 16.6ms
@@ -41,17 +45,29 @@ class Window{
         // delta time variable for updating input, physics, and kind of movement
         double DeltaTime = 0;
 
-        // window handle
-        GLFWwindow* handle = nullptr;
+        // private variable to track window quit event
+        bool quit = false;
 
+        // private storage of window handle
+        SDL_Window* handle = nullptr;
+
+        // private storage of window context
+        SDL_GLContext context;
+
+        // private storage of SDL events
+        SDL_Event eventHandle;
+
+        // private storage of keyboard state holder
+        KeyboardStateHolder* kState = nullptr;
+    
     protected:
         // used to set the target frame time between frame, aka max frame time
         void setTargetTimeStep(double time);
         
         // used to set the fixed frame time between frame
         void setFixedTimeStep(double time);
-        
-        // used for adding additional glfw window hints
+
+        // used for adding additional sdl window hints
         virtual void additionalWindowOptions();
 
         /* used for setting up OpenGL rendering
@@ -65,33 +81,37 @@ class Window{
         // constructor
         Window();
 
-        // destructor
+        // deconstructor
         ~Window();
-
-        //* Initialization functions
+        
+        /* returns the current deltatime
+        */
+        double getDeltaTime();
 
         /* used to initialize the window and it's contexts by default
-          initializes GLFW and creates a Window with OpenGL 4.5 capabilities
+          initializes SDL and creates a Window with OpenGL 4.5 capabilities
           !Overwriting is not recommended, however due note that runtime(), getDeltaTime(),
-          !setUpOpenGL() require GLFW to be initialized and have a created window handle context
+          !setUpOpenGL() require SDL to be initialized and have a created window and GL context
         */
         virtual void initializeWindow(int w, int h, const char* name = "");
 
         //* Getters functions
-
-        // used to grab refernce to the window handle context
-        GLFWwindow* getWindowHandle() {return this->handle;}
-
-        /* returns the current deltatime
-            !Overwriting may need further modifications or accommodation to the update(), stepUpdate(), and render() as it may cause unintended behavior
-        */
-        virtual double getDeltaTime();
 
         // returns the width of the window
         unsigned int getWidth(){return this->width;}
 
         // return the height of the window
         unsigned int getHeight(){return this->height;}
+
+        /* return reference to the event handle
+        * NOTE: the event handle gets updated every frame 
+        */
+        SDL_Event& getEventState(){return this->eventHandle;}
+
+        /* returns a reference to the keyboard state holder that is updated by runtime()
+        *  
+        */
+        KeyboardStateHolder* getKeyboardState() {return this->kState;}
 
         //* Virtual functions
 
@@ -110,11 +130,10 @@ class Window{
         /* Calls init() once, and then loops getDeltaTime(), update(), stepUpdate(), and render()
           Can be overwriten depending on the need of the game or application
          *NOTE: it is a single threaded function
-         *NOTE: calls GLFW poll events, swap buffers and clears the OpenGL color buffer
+         *NOTE: calls SDL poll events, swap buffers and clears the OpenGL color buffer
          !If overwritten, may need to apply calculations of time step, fixed time step and accumulator yourself
         */
         void runtime();
 };
-
 }
 #endif

@@ -1,9 +1,11 @@
 #include <input/glfw_keyboard.hpp>
 
 // include Keyboard Manager
-# include <input/glfw_keyboard_manager.hpp>
+#include <input/glfw_keyboard_manager.hpp>
 
-bool getKeyInput(int key){
+using namespace GLFW;
+
+bool GLFW::getKeyInput(int key){
     // check for input using GLFW
     if(glfwGetKey(&KeyboardManager::GetWindowHandle(), key) == GLFW_PRESS){
         // return true if the key was pressed
@@ -14,7 +16,7 @@ bool getKeyInput(int key){
     return false;
 }
 
-bool getKeyInputDown(int key){
+bool GLFW::getKeyInputDown(int key){
     // check for input using GLFW
     if(glfwGetKey(&KeyboardManager::GetWindowHandle(), key) == GLFW_PRESS){
         // return true if the key was pressed
@@ -25,7 +27,7 @@ bool getKeyInputDown(int key){
     return false;
 }
 
-bool getKeyInputUp(int key){
+bool GLFW::getKeyInputUp(int key){
     // check for input using GLFW
     if(glfwGetKey(&KeyboardManager::GetWindowHandle(), key) == GLFW_RELEASE){
         // return true if the key was pressed

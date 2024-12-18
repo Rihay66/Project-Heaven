@@ -24,13 +24,18 @@ class Shader{
         void checkCompileErrors(unsigned int object, std::string type); 
         
     public:
-        // sets the current shader as active
+        //* Helper functions
+        
+        // sets the shader as active
         Shader& Use();
         
         // compiles the shader from given source code
         void Compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource = nullptr); // note: geometry source code is optional 
     
-        /* setter utility functions
+        // deletes the loaded shader
+        void DeleteShader();
+
+        /* Setter utility functions
         * NOTE: Allow for setting variables in the loaded shader
         */
 
@@ -44,7 +49,7 @@ class Shader{
         void    SetVector4f (const char* name, const glm::vec4& value, bool useShader = false);
         void    SetMatrix4  (const char* name, const glm::mat4& matrix, bool useShader = false);
 
-        //* getter functions
+        //* Getter functions
         unsigned int getID();
 };
 

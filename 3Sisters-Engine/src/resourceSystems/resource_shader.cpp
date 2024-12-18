@@ -6,22 +6,18 @@
 void Shader::checkCompileErrors(unsigned int object, std::string type){
     int success;
     char infoLog[1024];
-    if (type != "PROGRAM")
-    {
+    if (type != "PROGRAM"){
         glGetShaderiv(object, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
+        if (!success){
             glGetShaderInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
                 << infoLog << "\n -- --------------------------------------------------- -- "
                 << std::endl;
         }
     }
-    else
-    {
+    else{
         glGetProgramiv(object, GL_LINK_STATUS, &success);
-        if (!success)
-        {
+        if (!success){
             glGetProgramInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
                 << infoLog << "\n -- --------------------------------------------------- -- "
@@ -48,8 +44,7 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource, const
     glCompileShader(sFragment);
     checkCompileErrors(sFragment, "FRAGMENT");
     // if geometry shader source code is given, also compile geometry shader
-    if (geometrySource != nullptr)
-    {
+    if (geometrySource != nullptr){
         gShader = glCreateShader(GL_GEOMETRY_SHADER);
         glShaderSource(gShader, 1, &geometrySource, NULL);
         glCompileShader(gShader);
@@ -68,6 +63,11 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource, const
     glDeleteShader(sFragment);
     if (geometrySource != nullptr)
         glDeleteShader(gShader);
+}
+
+void Shader::DeleteShader(){
+    // delete the shader
+    glDeleteProgram(ID);
 }
 
 void Shader::SetFloat(const char *name, float value, bool useShader){

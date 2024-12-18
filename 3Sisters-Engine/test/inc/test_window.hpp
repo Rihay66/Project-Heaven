@@ -3,7 +3,9 @@
 #ifndef TEST_WINDOW_HPP
 #define TEST_WINDOW_HPP
 
-#include <window/glfw_window.hpp>
+#include <window/sdl_window.hpp>
+
+using namespace SDL;
 
 class TestWindow : public Window {
     private:

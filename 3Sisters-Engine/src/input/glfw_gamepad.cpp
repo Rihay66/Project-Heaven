@@ -1,6 +1,6 @@
 #include <input/glfw_gamepad.hpp>
 
-bool getButtonInput(Gamepad &pad, int key){
+bool GLFW::getButtonInput(GLFW::Gamepad &pad, int key){
     // check if gamepad is set and connected
     if(pad.device != nullptr && pad.device->isConnected){
         // check state of given key
@@ -12,7 +12,7 @@ bool getButtonInput(Gamepad &pad, int key){
     return false;
 }
 
-float getAxisRawInput(Gamepad &pad, int key, float deadzone){
+float GLFW::getAxisRawInput(GLFW::Gamepad &pad, int key, float deadzone){
     // check that the pad is set and the state is valid
     if(pad.device != nullptr && pad.device->isConnected){
         //check for positive and negative values above deadzone
@@ -27,7 +27,7 @@ float getAxisRawInput(Gamepad &pad, int key, float deadzone){
     return 0.0f;
 }
 
-float getAxisInput(Gamepad& pad, int key, float deadzone){
+float GLFW::getAxisInput(GLFW::Gamepad& pad, int key, float deadzone){
     // check the that pad is set and the state is valid
     if(pad.device != nullptr && pad.device->isConnected){
         //check for positive and negative values above deadzone

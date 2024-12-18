@@ -7,6 +7,7 @@
 
 #include <input/glfw_keyboard.hpp>
 
+namespace GLFW{
 /* A static singleton KeyboardManager that hosts 
  several functions to hold and keep a reference of 
  the window handle to allow for simplified keyboard
@@ -15,8 +16,12 @@
 */
 class KeyboardManager {
     public:
+        //* setter functions
+
         // set the window handle to be stored
         static void SetWindowHandle(GLFWwindow* handle);
+
+        //* getter functions
 
         // get the window handle to be used
         static GLFWwindow& GetWindowHandle();
@@ -28,5 +33,5 @@ class KeyboardManager {
         // private constructor
         KeyboardManager() {}
 };
-
+}
 #endif

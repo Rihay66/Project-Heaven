@@ -11,7 +11,7 @@
 #include <ecs/components/boxcollider.hpp>
 
 // include interpolation
-#include "engine/interpolation.hpp"
+#include "engine/components/interpolation.hpp"
 
 // include GLM
 #include <glm/glm.hpp>

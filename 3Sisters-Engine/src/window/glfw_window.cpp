@@ -1,5 +1,9 @@
 #include <window/glfw_window.hpp>
 
+// include the namespace
+using namespace GLFW;
+
+// include standard libraries
 #include <iostream>
 #include <chrono>
 
@@ -70,14 +74,13 @@ void Window::initializeWindow(int w, int h, const char* name){
     glfwSetFramebufferSizeCallback((GLFWwindow *)handle, framebuffer_size_callback);
     // set openGL window size
     glViewport(0, 0, width, height);
-    // disable vsync
-    glfwSwapInterval(0);
 
+    // add additional OpenGL capabilities
     setUpOpenGL();
 
-    // TODO: Create debug options for the window class to display a console to
-    // show any errors or messages std::cout << "MSG: Window successfully created"
-    // << std::endl;
+    // TODO: Create debug options for the window class to display to a console
+    // show any errors or messages
+    // std::cout << "MSG: Window successfully created\n";
 }
 
 void Window::setTargetTimeStep(double time){
@@ -98,6 +101,9 @@ void Window::setFixedTimeStep(double time){
 
 void Window::additionalWindowOptions(){
     // add additional glfw window hints, options, etc.
+
+    // disable vsync by default
+    glfwSwapInterval(0);
 }
 
 void Window::setUpOpenGL(){
@@ -106,11 +112,11 @@ void Window::setUpOpenGL(){
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-float Window::getDeltaTime(){
+double Window::getDeltaTime(){
     // get current frame 
     currentFrame = glfwGetTime();
     // calculate delta time
-    this->DeltaTime = currentFrame - lastFrame;
+    DeltaTime = currentFrame - lastFrame;
     // ensure deltatime does not increase over 0.25ms
     if(DeltaTime > 0.25)
         DeltaTime = 0.25;
@@ -118,7 +124,28 @@ float Window::getDeltaTime(){
     // set the last frame to be current frame
     lastFrame = currentFrame;
 
-    return this->DeltaTime;
+    return DeltaTime;
+}
+
+// initialization
+void Window::init(){
+    // here goes the initial processing of shaders, textues, and objects
+}
+
+//updating
+void Window::update(){
+    // update any variables like moving objects or updating input
+    //* NOTE: that any object that needs input will need to have reference to the window handles a parameter to be passed down
+}
+
+// update physics or ticks
+void Window::stepUpdate(double ts){
+    // used to update physics, ticks, or other with a fixed time step 
+}
+
+// rendering
+void Window::render(double alpha){
+    // here update visually the objects, shaders, textures, etc
 }
 
 // single threaded runtime of input(), update(), stepUpdate() and render()
@@ -184,25 +211,4 @@ void Window::runtime(){
             while (std::chrono::high_resolution_clock::now() < end){}
         }
     }
-}
-
-// initialization
-void Window::init(){
-    // here goes the initial processing of shaders, textues, and objects
-}
-
-//updating
-void Window::update(){
-    // update any variables like moving objects or updating input
-    //* NOTE: that any object that needs input will need to have reference to the window handles a parameter to be passed down
-}
-
-// update physics or ticks
-void Window::stepUpdate(double ts){
-    // used to update physics, ticks, or other with a fixed time step 
-}
-
-// rendering
-void Window::render(double alpha){
-    // here update visually the objects, shaders, textures, etc
 }
