@@ -52,7 +52,7 @@ void ECS_Physics::renderBoxCollider(Entity entity){
     auto& boxCollider = ECS::GetComponent<BoxCollider2D>(entity);
 
     // render the collider
-    SpriteRenderer::DrawRect(transform.position + boxCollider.offset, transform.size * (boxCollider.size * glm::vec2(2.0f)), transform.rotation + boxCollider.rotationOffset, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    SpriteRenderer::DrawQuadWire(transform.position + boxCollider.offset, transform.size * (boxCollider.size * glm::vec2(2.0f)), transform.rotation + boxCollider.rotationOffset, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
 void ECS_Physics::renderAllBoxColliders(){
@@ -62,6 +62,6 @@ void ECS_Physics::renderAllBoxColliders(){
         auto& boxCollider = ECS::GetComponent<BoxCollider2D>(entity);
 
         // render the collider
-        SpriteRenderer::DrawRect(transform.position + boxCollider.offset, transform.size * (boxCollider.size * glm::vec2(2.0f)), transform.rotation + boxCollider.rotationOffset, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+        SpriteRenderer::DrawQuadWire(transform.position + boxCollider.offset, transform.size * (boxCollider.size * glm::vec2(2.0f)), transform.rotation + boxCollider.rotationOffset, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
     }
 }

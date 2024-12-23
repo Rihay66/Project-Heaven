@@ -51,8 +51,8 @@ class SpriteRenderer{
         // draw a single line from two given points
         static void DrawLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color = glm::vec4(1.0f));
 
-        // draw a single wireframe rectangle utilizing raw data and lines
-        static void DrawRect(glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f));
+        // draw a single wireframe of a quad utilizing raw data and lines
+        static void DrawQuadWire(glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f));
 
         //* stack primative functions
 
@@ -216,12 +216,12 @@ class SpriteRenderer{
 
         //! Currently EXPERIMENTAL, may cause exceptions or segfaults
         // private boolean to track automatic clear()
-        static bool isAutoClearSetQuad;
-        static bool isAutoClearSetLine;
+        static bool QuadSet;
+        static bool LineSet;
+        static bool isAutoClearSet;
         
         // set up automatic de-allocation of loaded resources
-        static void setUpAutoClearQuad();
-        static void setUpAutoClearLine();
+        static void setUpAutoClear();
 };
 
 #endif

@@ -44,18 +44,20 @@ glm::uvec2                          SpriteRenderer::spriteSize;
 // initialzie linear interpolation 
 State                       SpriteRenderer::interpolation;
 // initialize auto clear var
-bool                                SpriteRenderer::isAutoClearSetQuad = false;
-bool                                SpriteRenderer::isAutoClearSetLine = false;
+bool                                SpriteRenderer::QuadSet = false;
+bool                                SpriteRenderer::LineSet = false;
+bool                                SpriteRenderer::isAutoClearSet = false;
 
 void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
     // when auto clear is set, stop re-initializing rendering data
-    if(isAutoClearSetQuad){
+    if(QuadSet){
         std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
         return;
     }
 
     // set up automatic clear()
-    setUpAutoClearQuad();
+    setUpAutoClear();
+    
 
     // set the shader reference
     quadShader = s;
@@ -87,14 +89,13 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
 
 void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
     // when auto clear is set, stop re-initializing rendering data
-    if(isAutoClearSetQuad || isAutoClearSetLine){
+    if(QuadSet && LineSet){
         std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
         return;
     }
 
     // set up automatic clear()
-    setUpAutoClearQuad();
-    setUpAutoClearLine();
+    setUpAutoClear();
 
     // set the quad shader reference
     quadShader = q;
@@ -132,13 +133,13 @@ void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
 
 void SpriteRenderer::Init(Shader& l){
     // when auto clear is set, stop re-initializing rendering data
-    if(isAutoClearSetLine){
+    if(LineSet){
         std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
         return;
     }
 
     // set up automatic clear()
-    setUpAutoClearLine();
+    setUpAutoClear();
 
     // set the line shader renference
     lineShader = l;
@@ -211,7 +212,7 @@ void SpriteRenderer::DrawLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color){
     FlushLines();
 }
 
-void SpriteRenderer::DrawRect(glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color){
+void SpriteRenderer::DrawQuadWire(glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color){
     //? check if buffer hasn't been set up
     if(lineBuffer == nullptr){
         //! Display error
@@ -509,6 +510,9 @@ void SpriteRenderer::initQuadRenderData(){
     glGenBuffers(1, &quadEBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    // set quad set flag
+    QuadSet = true;
 }
 
 void SpriteRenderer::initLineRenderData(){
@@ -535,6 +539,9 @@ void SpriteRenderer::initLineRenderData(){
     // color attribute
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, color));
+
+    // set line set flag
+    LineSet = true;
 }
 
 void SpriteRenderer::beginQuadBatch(){
@@ -601,28 +608,21 @@ void SpriteRenderer::clear(){
     delete lineBufferPtr;
 
     // delete quad buffer data
-    if(isAutoClearSetQuad){
+    if(QuadSet){
         glDeleteVertexArrays(1, &quadVAO);
         glDeleteBuffers(1, &quadVBO);
         glDeleteBuffers(1, &quadEBO);
     }
     // delete line buffer data
-    if(isAutoClearSetLine){
+    if(LineSet){
         glDeleteVertexArrays(1, &lineVAO);
         glDeleteBuffers(1, &lineVBO);
     }
 }
 
-void SpriteRenderer::setUpAutoClearQuad(){
+void SpriteRenderer::setUpAutoClear(){
     // set up on exit to call the Clear()
-    if(!isAutoClearSetQuad && std::atexit(clear) == 0){
-        isAutoClearSetQuad = true; // disable calling this function again
-    }
-}
-
-void SpriteRenderer::setUpAutoClearLine(){
-    // set up on exit to call the Clear()
-    if(!isAutoClearSetLine && std::atexit(clear) == 0){
-        isAutoClearSetLine = true; // disable calling this function again
+    if(!isAutoClearSet && std::atexit(clear) == 0){
+        isAutoClearSet = true; // disable calling this function again
     }
 }
