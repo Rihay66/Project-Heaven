@@ -8,7 +8,6 @@
 #include <glm/trigonometric.hpp>
 
 // initialize static variables
-SpriteRenderer::RendererStats       SpriteRenderer::stats;
 const glm::vec4                     SpriteRenderer::quadVertexPositions[4] = {
     {-0.5f, -0.5f, 0.0f, 1.0f},
     {0.5f, -0.5f, 0.0f, 1.0f},
@@ -39,8 +38,9 @@ unsigned int                        SpriteRenderer::lineWidth = 1.0f;
 // initialize changeable shader
 Shader                              SpriteRenderer::quadShader;
 Shader                              SpriteRenderer::lineShader;
-// initialize "Universal" sprite size for all quads under this renderer
-glm::uvec2                          SpriteRenderer::spriteSize;
+// initialize "Universal" pixel size for all render primatives under this renderer
+glm::uvec2                          SpriteRenderer::quadPixelSize;
+glm::uvec2                          SpriteRenderer::linePixelSize;
 // initialzie linear interpolation 
 State                       SpriteRenderer::interpolation;
 // initialize auto clear var
@@ -48,7 +48,7 @@ bool                                SpriteRenderer::QuadSet = false;
 bool                                SpriteRenderer::LineSet = false;
 bool                                SpriteRenderer::isAutoClearSet = false;
 
-void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
+void SpriteRenderer::InitQuad(Shader& s, glm::uvec2 p){
     // when auto clear is set, stop re-initializing rendering data
     if(QuadSet){
         std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
@@ -81,13 +81,13 @@ void SpriteRenderer::Init(Shader& s, glm::uvec2 sp){
     glUniform1iv(loc, maxTextureSlots, samplers);
 
     // set up sprite model view
-    spriteSize = sp;
+    quadPixelSize = p;
 
     // set up rendering of quads
     initQuadRenderData(); 
 }
 
-void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
+void SpriteRenderer::Init(Shader& qS, Shader& lS, glm::uvec2 qP, glm::uvec2 lP){
     // when auto clear is set, stop re-initializing rendering data
     if(QuadSet && LineSet){
         std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
@@ -98,7 +98,7 @@ void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
     setUpAutoClear();
 
     // set the quad shader reference
-    quadShader = q;
+    quadShader = qS;
 
     // set up shader samples for the quad textures
     quadShader.Use();
@@ -119,10 +119,11 @@ void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
     glUniform1iv(loc, maxTextureSlots, samplers);
 
     // set the line shader renference
-    lineShader = l;
+    lineShader = lS;
 
-    // set up sprite model view
-    spriteSize = sp;
+    // set up model pixel size
+    quadPixelSize = qP;
+    linePixelSize = lP;
 
     // set up rendering of quads
     initQuadRenderData(); 
@@ -131,7 +132,7 @@ void SpriteRenderer::Init(Shader& q, Shader& l, glm::uvec2 sp){
     initLineRenderData();
 }
 
-void SpriteRenderer::Init(Shader& l){
+void SpriteRenderer::InitLine(Shader& l, glm::uvec2 lP){
     // when auto clear is set, stop re-initializing rendering data
     if(LineSet){
         std::cout << "Warning: Initialization of Sprite Renderer being called more than once!\n";
@@ -143,6 +144,9 @@ void SpriteRenderer::Init(Shader& l){
 
     // set the line shader renference
     lineShader = l;
+
+    // set up model pixel size
+    linePixelSize = lP;
 
     // set up rendering of lines
     initLineRenderData();
@@ -156,8 +160,6 @@ void SpriteRenderer::DrawQuad(int texIndex, glm::vec2 pos, glm::vec2 size, float
         return; // stop function
     }
 
-    // reset render stats
-    resetStats();
     // init the buffer
     beginQuadBatch();
 
@@ -176,8 +178,6 @@ void SpriteRenderer::DrawQuad(int texIndex, Interpolation inter, glm::vec2 size,
         return; // stop function
     }
 
-    // reset render stats
-    resetStats();
     // init the buffer
     beginQuadBatch();
 
@@ -259,8 +259,6 @@ void SpriteRenderer::StackQuad(int texIndex, glm::vec2 pos, glm::vec2 size, floa
 
     // check if the buffer pointer hasn't been set up
     if(quadBufferPtr == nullptr){
-        // reset render stats
-        resetStats();
         // then initialize the batch
         beginQuadBatch();
     }
@@ -281,8 +279,6 @@ void SpriteRenderer::StackQuad(int texIndex, Interpolation inter, glm::vec2 size
 
     // check if the buffer pointer hasn't been set up
     if(quadBufferPtr == nullptr){
-        // reset render stats
-        resetStats();
         // then initialize the batch
         beginQuadBatch();
     }
@@ -341,7 +337,6 @@ void SpriteRenderer::FlushQuads(){
     // draw the quad/s
     glBindVertexArray(quadVAO);
     glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_INT, nullptr);
-    stats.drawCount++;
 
     // reset buffer pointer
     quadBufferPtr = nullptr;
@@ -383,6 +378,14 @@ void SpriteRenderer::SetLineWidth(float width){
     glLineWidth(width);
 }
 
+void SpriteRenderer::SetQuadPixelSize(glm::uvec2 pixelSize){
+    quadPixelSize = pixelSize;
+}
+
+void SpriteRenderer::SetLinesPixelSize(glm::uvec2 pixelSize){
+    linePixelSize = pixelSize;
+}
+
 float SpriteRenderer::GetLineWidth(){
     return lineWidth;
 }
@@ -403,7 +406,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
     quadBufferPtr->position =
         (transform * vertexPositions[0]) *
         glm::scale(glm::mat4(1.0f),
-                   glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+                   glm::vec3(quadPixelSize.x, quadPixelSize.y, 1.0f));
     quadBufferPtr->texCoords = texCoords[0];
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
@@ -412,7 +415,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
     quadBufferPtr->position =
         (transform * vertexPositions[1]) *
         glm::scale(glm::mat4(1.0f),
-                   glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+                   glm::vec3(quadPixelSize.x, quadPixelSize.y, 1.0f));
     quadBufferPtr->texCoords = texCoords[1];
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
@@ -421,7 +424,7 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
     quadBufferPtr->position =
         (transform * vertexPositions[2]) *
         glm::scale(glm::mat4(1.0f),
-                   glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+                   glm::vec3(quadPixelSize.x, quadPixelSize.y, 1.0f));
     quadBufferPtr->texCoords = texCoords[2];
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
@@ -430,14 +433,13 @@ void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation
     quadBufferPtr->position =
         (transform * vertexPositions[3]) *
         glm::scale(glm::mat4(1.0f),
-                   glm::vec3(spriteSize.x, spriteSize.y, 1.0f));
+                   glm::vec3(quadPixelSize.x, quadPixelSize.y, 1.0f));
     quadBufferPtr->texCoords = texCoords[3];
     quadBufferPtr->texIndex = texIndex;
     quadBufferPtr->color = color;
     quadBufferPtr++;
 
     quadIndexCount += 6;
-    stats.quadCount++;
 }
 
 void SpriteRenderer::createLine(glm::vec2& p0, glm::vec2& p1, glm::vec4& color){
@@ -447,11 +449,11 @@ void SpriteRenderer::createLine(glm::vec2& p0, glm::vec2& p1, glm::vec4& color){
         beginLineBatch();
     }
 
-    lineBufferPtr->position = p0 * glm::vec2(spriteSize.x, spriteSize.y);
+    lineBufferPtr->position = p0 * glm::vec2(linePixelSize.x, linePixelSize.y);
     lineBufferPtr->color = color;
     lineBufferPtr++;
 
-    lineBufferPtr->position = p1 * glm::vec2(spriteSize.x, spriteSize.y);
+    lineBufferPtr->position = p1 * glm::vec2(linePixelSize.x, linePixelSize.y);
     lineBufferPtr->color = color;
     lineBufferPtr++;
 
@@ -589,11 +591,6 @@ bool SpriteRenderer::endLineBatch(){
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, lineBuffer);
 
     return true;
-}
-
-const void SpriteRenderer::resetStats(){
-    stats.quadCount = 0;
-    stats.drawCount = 0;
 }
 
 void SpriteRenderer::clear(){

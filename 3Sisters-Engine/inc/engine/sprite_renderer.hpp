@@ -27,19 +27,15 @@
 */
 class SpriteRenderer{    
     public:
-        // initialize the quad renderer which requires a loaded shader and optionally changeable sprite size of all quad objects
-        static void Init(Shader& shader, glm::uvec2 spriteSize = {10.0f, 10.0f});
+        // initialize the quad renderer which requires a loaded shader and pixel size of all quad objects
+        static void InitQuad(Shader& quadShader, glm::uvec2 pixelSize = {10.0f, 10.0f});
 
-        /* initialize the quad and line renderer which requires two loaded shaders, and optionally changeable sprite size of all quad objects
-        ! Overloaded function
-        */
-        static void Init(Shader& quadShader, Shader& lineShader, glm::uvec2 spriteSize = {10.0f, 10.0f});
+        // initialize the line renderer which requires a loaded shader and pixel size of all line objects
+        static void InitLine(Shader& lineShader, glm::uvec2 pixelSize = {10.0f, 10.0f});
+
+        // initialize the quad and line renderer which requires two loaded shaders, and pixel sizes of all quad objects and line objects
+        static void Init(Shader& quadShader, Shader& lineShader, glm::uvec2 quadPixelSize, glm::uvec2 linePixelSize);
         
-        /* initialize the line renderer which requires a loaded shader
-        ! Overloaded function
-        */
-        static void Init(Shader& lineShader);
-
         //* draw primative functions
 
         // draw a singular quad utilizing given raw data, without interpolation
@@ -88,18 +84,18 @@ class SpriteRenderer{
         */
         static void SetLineWidth(float width);
 
+        /* Set the model pixel size of quads
+        */
+        static void SetQuadPixelSize(glm::uvec2 pixelSize);
+
+        /* Set the model pixel size of lines
+        */
+        static void SetLinesPixelSize(glm::uvec2 pixelSize);
+
         //* setter functions
 
         // get the current width of all lines
         static float GetLineWidth();
-
-        // data struct for holding amount of draw calls and quad count
-        struct RendererStats{
-            int quadCount = 0, drawCount = 0;
-        };
-
-        // contain reference to amont of quads and amount of draw calls
-        static RendererStats stats;
 
     private:
         // used to store default offsets of quad vertex positions
@@ -122,13 +118,16 @@ class SpriteRenderer{
             glm::vec4 color;
         };
 
-        // reference to the model size
-        static glm::uvec2 spriteSize;
+        // reference to the model pixel size for quads
+        static glm::uvec2 quadPixelSize;
+
+        // reference to the model pixel size for lines
+        static glm::uvec2 linePixelSize;
 
         // stores data of a passed in quad shader
         static Shader quadShader;
 
-        // stores data of a line shader
+        // stores data of a passed in line shader
         static Shader lineShader;
 
         // stores data of a quad
@@ -207,9 +206,6 @@ class SpriteRenderer{
 
         // used to calculate amount of lines to be rendered, returns false for there are no lines and true for there are lines available
         static bool endLineBatch();
-
-        // resets stats such as draw calls and amount quads
-        const static void resetStats();
 
         // used to clean up resources
         static void clear();
