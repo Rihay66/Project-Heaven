@@ -50,16 +50,24 @@ class Physics {
 
         //* Adder functions
 
-        // create a Physics Object to the physics engine, returns reference of the Physics Object 
+        /* create a Physics Object to the physics engine, returns reference of the Physics Object 
+        * @NOTE: It is recommended for the components to come from the same object and seperate from others
+        */
         static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
-        // create a Physics Object to the physics engine, returns reference of the Physics Object 
+        /* create a Physics Object to the physics engine, returns reference of the Physics Object 
+        * @NOTE: It is recommended for the components to come from the same object and seperate from others
+        */
         static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody, Interpolation& interpolation);
 
-        // register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        /* register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        * @NOTE: It is recommended for the components to come from the same object and seperate from others
+        */
         static void RegisterPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
-        // register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        /* register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        * @NOTE: It is recommended for the components to come from the same object and seperate from others
+        */
         static void RegisterPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody, Interpolation& interpolation);
 
         //* Setter functions
@@ -93,7 +101,10 @@ class Physics {
 
         //* Helper functions
 
-        //TODO: Make a function that destroys a specified body
+        /* checks the memory address of given components and destroys the appropriate object
+        * @NOTE: 
+        */
+        static void DestroyPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
         //TODO: Make a OBB function to allow detecting rotational collisions
 

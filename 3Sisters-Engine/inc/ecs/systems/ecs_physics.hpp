@@ -11,8 +11,11 @@
 
 class ECS_Physics : public System{
     public:
-        // to register the entity's components, if already stored then it is skipped
+        // to register the entity's components
         void registerEntity(Entity entity);
+        
+        // to destroy an entity 
+        void destroyEntity(Entity entity);
 
         // update all registered entities
         void update();

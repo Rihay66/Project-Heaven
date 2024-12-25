@@ -81,7 +81,7 @@ class ComponentManager{
 
             if(componentTypes.find(typeName) == componentTypes.end()){
                 if(debugOption == 'd')
-                    std::cout << "ERROR: Failed to retrieve component type as component: " << typeName << " is NOT registered!\n";
+                    std::cout << "WARNING: Failed to retrieve component type as component: " << typeName << " is NOT registered!\n";
                 /* 
                     * NOTE: ComponentType is a unsigned 8 bit int is between 0-255, this returns 255 (aka garbage value) though iff 
                     * there are exactly 255 Component types registered this might cause issues as the ECS does check for the garbage 

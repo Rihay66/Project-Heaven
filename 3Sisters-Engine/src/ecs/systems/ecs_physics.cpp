@@ -1,7 +1,6 @@
 #include <ecs/systems/ecs_physics.hpp>
 
 // include Sprite Renderer
-#include "ecs/components/transform.hpp"
 #include "engine/physics.hpp"
 #include "engine/sprite_renderer.hpp"
 
@@ -23,6 +22,18 @@ void ECS_Physics::registerEntity(Entity entity){
      ECS::GetComponent<BoxCollider2D>(entity), 
      ECS::GetComponent<Rigidbody2D>(entity)
     );
+}
+
+void ECS_Physics::destroyEntity(Entity entity){
+    auto& transform = ECS::GetComponent<Transform2D>(entity);
+    auto& collider = ECS::GetComponent<BoxCollider2D>(entity);
+    auto& rb = ECS::GetComponent<Rigidbody2D>(entity);
+
+    // destroy physics object
+    Physics::DestroyPhysicsObject(transform, collider, rb);
+
+    // destroy the entity
+    ECS::DestroyEntity(entity);
 }
 
 void ECS_Physics::update(){
