@@ -22,3 +22,12 @@ bool SDL::getKeyInputDown(int key){
 
     return false;
 }
+
+bool SDL::getKeyInputUp(int key){
+    // grab the keyboard state holder, then check for given scancode when not pressed
+    if(KeyboardManager::GetKeyboardState()->keyboardState[key] == 0){
+        return true;
+    }
+
+    return false;
+}

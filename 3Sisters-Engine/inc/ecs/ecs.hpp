@@ -19,8 +19,8 @@ class ECS{
     public:
         /* initialize the entity, component, and system managers
             this function also contains debug options
-            d - debug, debug outputs, error checking (default).
-            r - release, skip most functional error checking and some debug outputs (use with caution).
+            @ d - debug, debug outputs, error checking (default).
+            @ r - release, skip most functional error checking and some debug outputs (use with caution).
         */
         static void Init(char debugOption = 'd');
 

@@ -15,16 +15,19 @@ namespace SDL{
 */
 
 /* key callback of the keyboard which checks for the given scancode
-* NOTE: Checks if key was pressed
+* @NOTE: Checks if key was pressed
 */
 bool getKeyInput(int scancode);
 
 /* key callback of the keyboard which checks for the given scancode
-* NOTE: Checks if key was pressed, similar to getKeyInput
+* @NOTE: Checks if key was pressed, similar to getKeyInput
 */
 bool getKeyInputDown(int scancode);
 
-//TODO: Figure out how to implement getKeyInputUp, when a key gets pressed and then released
+/* key callback of the keyboard which checks for the given scancode
+* @NOTE: Check if key was released
+*/
+bool getKeyInputUp(int scancode);
 
 }
 #endif

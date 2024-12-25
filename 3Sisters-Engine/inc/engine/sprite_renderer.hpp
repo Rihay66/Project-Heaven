@@ -53,19 +53,19 @@ class SpriteRenderer{
         //* stack primative functions
 
         /* store a single quad utilizing given raw data, without interpolation
-            !Requires the Flush() after this function in order to render what was stored
-            !Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
+            @Requires the Flush() after this function in order to render what was stored
+            @Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
         */
         static void StackQuad(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
         
         /* store a single quad utilizing given raw data, with interpolation
-            !Requires the Flush() after this function in order to render what was stored
-            !Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
+            @Requires the Flush() after this function in order to render what was stored
+            @Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
         */
         static void StackQuad(int texIndex, Interpolation inter, glm::vec2 size, float rotation, double alpha, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
         
         /* store a single line utilizing given points
-            !Requires the Flush() after this function in order to render what was stored
+            @Requires the Flush() after this function in order to render what was stored
         */
         static void StackLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color = glm::vec4(1.0f));
 
@@ -80,7 +80,7 @@ class SpriteRenderer{
         //* getter functions
 
         /* Set the width of all lines
-            !Can't be used to individually set the width of lines
+            @Can't be used to individually set the width of lines
         */
         static void SetLineWidth(float width);
 

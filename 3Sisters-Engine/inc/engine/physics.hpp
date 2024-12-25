@@ -44,7 +44,7 @@ class Physics {
         //* Initializer functions
 
         /* initializer function to initialize the physics world and physicsObject
-        * NOTE: Must be called once. Displays a warning that init() was called again!
+        * @NOTE: Must be called once. Displays a warning that init() was called again!
         */
         static void Init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
 
@@ -65,29 +65,29 @@ class Physics {
         //* Setter functions
 
         /* set the physics substep iteration, by default value is 4
-        * NOTE: Passed value cannot be less than 1
+        * @NOTE: Passed value cannot be less than 1
         */
         static void SetPhysicsSubStepIterations(int32_t iter);
 
         //* Update functions
 
         /* check all physics object and update their positions and rotations
-        *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void UpdatePhysics();
 
         /* check given components and update given transform and rigidbody components
-        *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void UpdateRegisteredObject(Transform2D& transform, Rigidbody2D& rigidbody);
 
         /* check given components and update given transform and rigidbody components
-        *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void UpdateRegisteredObject(Transform2D& transform, Rigidbody2D& rigidbody, Interpolation& inter);
 
         /* updates physics world which updates physics objects 
-        *  NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void UpdateWorld(float deltaTime);
 

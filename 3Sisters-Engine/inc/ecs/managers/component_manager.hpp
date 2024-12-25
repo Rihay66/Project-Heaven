@@ -73,7 +73,7 @@ class ComponentManager{
         }
 
         /* get component type of a existing component
-        * NOTE: iff component doesn't exist, returning value is 255 (aka garbage value)
+        * @NOTE: iff component doesn't exist, returning value is 255 (aka garbage value)
         */ 
         template<typename T>
         ComponentType GetComponentType(){
