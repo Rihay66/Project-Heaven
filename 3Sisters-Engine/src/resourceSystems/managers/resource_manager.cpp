@@ -21,8 +21,8 @@
 
 std::map<std::string, Shader>                                               ResourceManager::Shaders;
 std::map<std::string, Texture>                                              ResourceManager::Textures;
-std::map<std::string, std::map<char, Character>>           ResourceManager::Fonts;
-std::map<std::string, SubTexture>                          ResourceManager::SubTextures;
+std::map<std::string, std::map<char, Character>>                            ResourceManager::Fonts;
+std::map<std::string, SubTexture>                                           ResourceManager::SubTextures;
 std::vector<unsigned int>                                                   ResourceManager::texIDList;
 bool                                                                        ResourceManager::doesWhiteTexExist = false;
 bool                                                                        ResourceManager::isAutoClearSet = false;
@@ -173,7 +173,7 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
     return Fonts[name];
 }
 
-std::array<glm::vec2, 4>& ResourceManager::GenerateSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize){
+std::array<glm::vec2, 4>& ResourceManager::GenerateSubTexture(std::string name, Texture& texture, glm::uvec2 coordinates, glm::uvec2 cellSize, glm::uvec2 spriteSize){
     //create sub texture
     SubTexture st;
 
@@ -221,8 +221,11 @@ void ResourceManager::GenerateWhiteTexture(){
         //? bind the textures
         BindTextures();
         
-        // turn of ability to call this function again
+        // turn off ability to call this function again
         doesWhiteTexExist = true;
+    }else{
+        //print a warning when texture already exists
+        std::cout << "Warning: White Texture already generated!\n";
     }
 }
 
@@ -274,7 +277,7 @@ bool ResourceManager::BindTextures(){
 
     // bind all the textures from first to last
     for(int i = 0; i < texIDList.size(); i++){
-        // call to bind texture by their ID
+        // call to bind texture by their ID to an index 
         glBindTextureUnit(i, texIDList[i]);
     }
 
