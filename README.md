@@ -4,7 +4,7 @@ A Lightweight 2D OpenGL based Engine called:
 
 ![](3Sisters_Engine_logo.png)
 
-Current Version: 1.2-Candidate-A
+Current Version: 1.2-Dev
 
 Features:
 
