@@ -26,19 +26,24 @@ class ResourceManager{
     public:
         //* loader functions
 
-        // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader along with a name
+        /*  loads (and generates) a shader program from file along with a name, loads the files in this order of vertex, fragment (and geometry) and extracts the shader's source code
+        * @NOTE: it is optional to load a geometry shader file, if there is no geometry shader then set as nullptr
+        */
         static Shader& LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
 
         /* loads (and generates) a texture from file along with a name and optional texture filter option
-        * NOTE: depending on the file type alpha is automatically set
+        * @NOTE: depending on the file type alpha is automatically set
+        * @NOTE: by default the texture's filter is set to be nearest and it is optional to set it to true which sets to be linear
         */
         static Texture& LoadTexture(const char *file, std::string name, bool linearFilter = false);
 
-        // loads (and generates) a text texture from file along with a name and optional texture filter option
+        /* loads (and generates) a font from file with a font size along with a name and optional texture filter option
+        * @NOTE: by default the texture's filter is set to be nearest and it is optional to set it to true which sets to be linear
+        */
         static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool linearFilter = true);
 
         // use a loaded texture to create a sub texture along with a name
-        static std::array<glm::vec2, 4>& GenerateSubTexture(std::string name, Texture& texture, const glm::uvec2& coordinates, const glm::uvec2& cellSize, const glm::uvec2& spriteSize = {1, 1});
+        static std::array<glm::vec2, 4>& GenerateSubTexture(std::string name, Texture& texture, glm::uvec2 coordinates, glm::uvec2 cellSize, glm::uvec2 spriteSize = {1, 1});
         
         // create a white texture that is named "default"
         static void GenerateWhiteTexture();
@@ -54,7 +59,7 @@ class ResourceManager{
         // retrieves a stored texture
         static Texture& GetTexture(std::string name);
 
-        // retrieves a stored font texture map that contains characters and associated font
+        // retrieves a stored font texture map that contains characters and associated font character
         static std::map<char, Character>& GetFontTexture(std::string name);
 
         // retrieve a stored sub texture
@@ -62,7 +67,9 @@ class ResourceManager{
 
         //* helper functions
 
-        // binds all textures from the texture list to be used by OpenGL
+        /* binds all textures (not fonts) from the texture list to be used by OpenGL
+        * @NOTE: is automatically called by LoadTexture()
+        */
         static bool BindTextures();
         
     private:

@@ -1,6 +1,9 @@
+#include "ecs/components/boxcollider.hpp"
+#include <box2d/box2d.h>
 #include <engine/physics.hpp>
 
 // include standard library for debugging
+#include <exception>
 #include <iostream>
 
 #include <cmath>
@@ -16,10 +19,6 @@ std::vector<PhysicsObject>      Physics::physicsObjs;
 int32_t                         Physics::substepIterations = 4;
 b2WorldId                        Physics::world = b2_nullWorldId;
 bool                            Physics::isAutoClearSet = false;
-
-// template function 
-template < typename T, typename U > bool have_same_address( const T& a, const U& b ) 
-{ return reinterpret_cast<const char*>( std::addressof(a) ) == reinterpret_cast<const char*>( std::addressof(b) ) ; }
 
 void Physics::Init(glm::vec2 gravity){
     // set up automatic clear()
@@ -46,9 +45,9 @@ void Physics::Init(glm::vec2 gravity){
 PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody){
     // check if object already exists
     for(PhysicsObject& obj: physicsObjs){
-        if(have_same_address(transform, obj.transform) 
-         || have_same_address(collider, obj.collider)
-         || have_same_address(rigidbody, obj.rb)){
+        if((&transform == obj.transform) 
+         || (&collider == obj.collider)
+         || (&rigidbody == obj.rb)){
             throw std::invalid_argument("ERROR: Object already created!");
         }
     }
@@ -117,10 +116,10 @@ PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D
 PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody, Interpolation& interpolation){
     // check if object already exists
     for(PhysicsObject& obj: physicsObjs){
-        if(have_same_address(transform, obj.transform) 
-         || have_same_address(collider, obj.collider)
-         || have_same_address(rigidbody, obj.rb)
-         || have_same_address(interpolation, obj.inter)){
+        if((&transform == obj.transform) 
+         || (&collider == obj.collider)
+         || (&rigidbody == obj.rb)
+         || (&interpolation == obj.inter)){
             throw std::invalid_argument("ERROR: Object already created!");
         }
     }
@@ -194,6 +193,15 @@ PhysicsObject Physics::CreatePhysicsObject(Transform2D& transform, BoxCollider2D
 }
 
 void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &collider, Rigidbody2D &rigidbody){
+    // check if object already exists
+    for(PhysicsObject& obj: physicsObjs){
+        if((&transform == obj.transform) 
+         || (&collider == obj.collider)
+         || (&rigidbody == obj.rb)){
+            throw std::invalid_argument("ERROR: Object already created!");
+        }
+    }
+    
     // check if world has been initialized
     if(!b2World_IsValid(world)){
         throw std::invalid_argument("ERROR: Physics hasn't been initialized");
@@ -257,6 +265,16 @@ void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &colli
 }
 
 void Physics::RegisterPhysicsObject(Transform2D &transform, BoxCollider2D &collider, Rigidbody2D &rigidbody, Interpolation& interpolation){
+    // check if object already exists
+    for(PhysicsObject& obj: physicsObjs){
+        if((&transform == obj.transform) 
+         || (&collider == obj.collider)
+         || (&rigidbody == obj.rb)
+         || (&interpolation == obj.inter)){
+            throw std::invalid_argument("ERROR: Object already created!");
+        }
+    }
+    
     // check if world has been initialized
     if(!b2World_IsValid(world)){
         throw std::invalid_argument("ERROR: Physics hasn't been initialized");
@@ -343,6 +361,8 @@ void Physics::UpdateWorld(float deltaTime){
     if(b2World_IsValid(world)){
         // update any collisions detection, but not update the rigidbodies position
         b2World_Step(world, deltaTime, substepIterations);
+    }else{
+        throw std::invalid_argument("ERROR: Physics hasn't been initialized!");
     }
 }
 
@@ -416,22 +436,33 @@ void Physics::UpdateRegisteredObject(Transform2D &transform, Rigidbody2D &rigidb
     inter.current.posY = position.y;
 }
 
-void Physics::Clear(){
-    // remove reference to components of each Physics object
-    for(PhysicsObject& obj : physicsObjs){
-        obj.transform = nullptr;
-        obj.collider = nullptr;
-        obj.rb = nullptr;
-        obj.inter = nullptr;
+void Physics::DestroyPhysicsObject(Transform2D &transform, BoxCollider2D& collider, Rigidbody2D &rigidbody){
+    
+    for(int i = 0; i < physicsObjs.size(); i++){
+        // check if objects exists
+        if((&transform == physicsObjs.at(i).transform) 
+         || (&collider == physicsObjs.at(i).collider)
+         || (&rigidbody == physicsObjs.at(i).rb)){
 
-        delete obj.transform;
-        delete obj.collider;
-        delete obj.rb;
-        delete obj.inter;
+            // destroy object in box2d
+            b2DestroyBody(rigidbody.runtimeBody);
+
+            // set to be null
+            physicsObjs.at(i).transform = nullptr;
+            physicsObjs.at(i).rb = nullptr;
+            physicsObjs.at(i).collider = nullptr;
+            physicsObjs.at(i).inter = nullptr;
+
+            // erase object from list
+            physicsObjs.erase((physicsObjs.begin() + i));
+
+            return; // stop function
+        }
     }
 
-    // destroy the world
-    b2DestroyWorld(world);
+    // if object couldn't be found throw an error message
+    std::cout << "ERROR: Couldn't find physics object to destroy!\n";
+
 }
 
 bool Physics::AABBCollision(Transform2D& a, Transform2D& b){
@@ -463,4 +494,22 @@ void Physics::SetUpAutoClear(){
     if(!isAutoClearSet && std::atexit(Clear) == 0){
         isAutoClearSet = true; // disable calling this function again
     }
+}
+
+void Physics::Clear(){
+    // remove reference to components of each Physics object
+    for(PhysicsObject& obj : physicsObjs){
+        obj.transform = nullptr;
+        obj.collider = nullptr;
+        obj.rb = nullptr;
+        obj.inter = nullptr;
+
+        delete obj.transform;
+        delete obj.collider;
+        delete obj.rb;
+        delete obj.inter;
+    }
+
+    // destroy the world
+    b2DestroyWorld(world);
 }

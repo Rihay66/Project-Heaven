@@ -29,12 +29,12 @@ class Window{
         unsigned int width, height;
 
         /* Fixed rate that updates the stepUpdate(), adjust accordingly as needed
-         !Default value is 16.6ms
+         @Default value is 16.6ms
         */
         double fixedTimeStep = 1.0f / 60.0f;
 
         /* Fixed rate that updates application, adjust accordingly as needed
-         !Default value is 16.6ms
+         @Default value is 16.6ms
         */
         double targetTimeStep = 1.0f / 60.0f;
 
@@ -55,7 +55,7 @@ class Window{
         virtual void additionalWindowOptions();
 
         /* used for setting up OpenGL rendering
-         !Default is 2D rendering
+         @Default is 2D rendering
         */
         virtual void setUpOpenGL();
 
@@ -72,8 +72,8 @@ class Window{
 
         /* used to initialize the window and it's contexts by default
           initializes GLFW and creates a Window with OpenGL 4.5 capabilities
-          !Overwriting is not recommended, however due note that runtime(), getDeltaTime(),
-          !setUpOpenGL() require GLFW to be initialized and have a created window handle context
+          @Overwriting is not recommended, however due note that runtime(), getDeltaTime(),
+          @setUpOpenGL() require GLFW to be initialized and have a created window handle context
         */
         virtual void initializeWindow(int w, int h, const char* name = "");
 
@@ -83,7 +83,7 @@ class Window{
         GLFWwindow* getWindowHandle() {return this->handle;}
 
         /* returns the current deltatime
-            !Overwriting may need further modifications or accommodation to the update(), stepUpdate(), and render() as it may cause unintended behavior
+          @Overwriting may need further modifications or accommodation to the update(), stepUpdate(), and render() as it may cause unintended behavior
         */
         virtual double getDeltaTime();
 
@@ -109,9 +109,9 @@ class Window{
         
         /* Calls init() once, and then loops getDeltaTime(), update(), stepUpdate(), and render()
           Can be overwriten depending on the need of the game or application
-         *NOTE: it is a single threaded function
-         *NOTE: calls GLFW poll events, swap buffers and clears the OpenGL color buffer
-         !If overwritten, may need to apply calculations of time step, fixed time step and accumulator yourself
+        * @NOTE: it is a single threaded function
+        * @NOTE: calls GLFW poll events, swap buffers and clears the OpenGL color buffer
+          @If overwritten, may need to apply calculations of time step, fixed time step and accumulator yourself
         */
         void runtime();
 };

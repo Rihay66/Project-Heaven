@@ -35,8 +35,8 @@ class GamepadManager{
         static int GetGamepadAmount();
 
         /* add a gamepad reference that can be filled from the list of queried gamepads
-        * NOTE: By default picks the first gamepad
-        * NOTE: Multiple gamepads aiming to be the same index, only one will be set
+        * @NOTE: By default picks the first gamepad
+        * @NOTE: Multiple gamepads aiming to be the same index, only one will be set
         */
         static void SetGamepad(SDL::Gamepad& gamepad, int index = 0);
 

@@ -44,56 +44,67 @@ class Physics {
         //* Initializer functions
 
         /* initializer function to initialize the physics world and physicsObject
-        * NOTE: Must be called once. Displays a warning that init() was called again!
+        * @NOTE: Must be called once. Displays a warning that init() was called again!
         */
         static void Init(glm::vec2 gravity = glm::vec2(0.0f, -9.81f));
 
         //* Adder functions
 
-        // create a Physics Object to the physics engine, returns reference of the Physics Object 
+        /* create a Physics Object to the physics engine, returns reference of the Physics Object 
+        * @NOTE: It is recommended for the components to come from the same object and seperate from others
+        */
         static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
-        // create a Physics Object to the physics engine, returns reference of the Physics Object 
+        /* create a Physics Object to the physics engine, returns reference of the Physics Object 
+        * @NOTE: It is recommended for the components to come from the same object and seperate from others
+        */
         static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody, Interpolation& interpolation);
 
-        // register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        /* register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        * @NOTE: It is recommended for the components to come from the same object and seperate from others
+        */
         static void RegisterPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
-        // register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        /* register components that makes up a Physics Object to the physics engine, no Physics Object is created
+        * @NOTE: It is recommended for the components to come from the same object and seperate from others
+        */
         static void RegisterPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody, Interpolation& interpolation);
 
         //* Setter functions
 
         /* set the physics substep iteration, by default value is 4
-        * NOTE: Passed value cannot be less than 1
+        * @NOTE: Passed value cannot be less than 1
         */
         static void SetPhysicsSubStepIterations(int32_t iter);
 
         //* Update functions
 
         /* check all physics object and update their positions and rotations
-        *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void UpdatePhysics();
 
         /* check given components and update given transform and rigidbody components
-        *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void UpdateRegisteredObject(Transform2D& transform, Rigidbody2D& rigidbody);
 
         /* check given components and update given transform and rigidbody components
-        *   NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void UpdateRegisteredObject(Transform2D& transform, Rigidbody2D& rigidbody, Interpolation& inter);
 
         /* updates physics world which updates physics objects 
-        *  NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
+        * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
         static void UpdateWorld(float deltaTime);
 
         //* Helper functions
 
-        //TODO: Make a function that destroys a specified body
+        /* checks the memory address of given components and destroys the appropriate object
+        * @NOTE: 
+        */
+        static void DestroyPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
         //TODO: Make a OBB function to allow detecting rotational collisions
 

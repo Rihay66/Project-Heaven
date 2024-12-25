@@ -33,12 +33,12 @@ class Window{
         int width, height;
 
         /* Fixed rate that updates the stepUpdate(), adjust accordingly as needed
-         !Default value is 16.6ms
+         @Default value is 16.6ms
         */
         double fixedTimeStep = 1.0f / 60.0f;
 
         /* Fixed rate that updates application, adjust accordingly as needed
-         !Default value is 16.6ms
+         @Default value is 16.6ms
         */
         double targetTimeStep = 1.0f / 60.0f;
 
@@ -71,7 +71,7 @@ class Window{
         virtual void additionalWindowOptions();
 
         /* used for setting up OpenGL rendering
-         !Default is 2D rendering
+         @Default is 2D rendering
         */
         virtual void setUpOpenGL();
 
@@ -90,8 +90,8 @@ class Window{
 
         /* used to initialize the window and it's contexts by default
           initializes SDL and creates a Window with OpenGL 4.5 capabilities
-          !Overwriting is not recommended, however due note that runtime(), getDeltaTime(),
-          !setUpOpenGL() require SDL to be initialized and have a created window and GL context
+          @Overwriting is not recommended, however due note that runtime(), getDeltaTime(),
+          @setUpOpenGL() require SDL to be initialized and have a created window and GL context
         */
         virtual void initializeWindow(int w, int h, const char* name = "");
 
@@ -104,7 +104,7 @@ class Window{
         unsigned int getHeight(){return this->height;}
 
         /* return reference to the event handle
-        * NOTE: the event handle gets updated every frame 
+        * @NOTE: the event handle gets updated every frame 
         */
         SDL_Event& getEventState(){return this->eventHandle;}
 
@@ -129,9 +129,9 @@ class Window{
         
         /* Calls init() once, and then loops getDeltaTime(), update(), stepUpdate(), and render()
           Can be overwriten depending on the need of the game or application
-         *NOTE: it is a single threaded function
-         *NOTE: calls SDL poll events, swap buffers and clears the OpenGL color buffer
-         !If overwritten, may need to apply calculations of time step, fixed time step and accumulator yourself
+        * @NOTE: it is a single threaded function
+        * @NOTE: calls SDL poll events, swap buffers and clears the OpenGL color buffer
+         @If overwritten, may need to apply calculations of time step, fixed time step and accumulator yourself
         */
         void runtime();
 };

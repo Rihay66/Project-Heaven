@@ -33,7 +33,7 @@ class GamepadManager{
         static int GetGamepadAmount();
 
         /* add a gamepad reference that can be filled from the list of queried gamepads
-        * NOTE: By default picks the first gamepad
+        * @NOTE: By default picks the first gamepad
         */
         static void SetGamepad(GLFW::Gamepad& gamepad, int index = 0);
 

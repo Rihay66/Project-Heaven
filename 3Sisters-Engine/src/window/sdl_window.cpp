@@ -196,7 +196,7 @@ void Window::runtime(){
         // update any input, values, objects, loading etc..
         update();
 
-        // render background
+        // clear buffer
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw or render

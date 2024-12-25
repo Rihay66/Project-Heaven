@@ -36,7 +36,7 @@ class Shader{
         void DeleteShader();
 
         /* Setter utility functions
-        * NOTE: Allow for setting variables in the loaded shader
+        * @NOTE: Allow for setting variables in the loaded shader
         */
 
         void    SetFloat    (const char* name, float value, bool useShader = false);

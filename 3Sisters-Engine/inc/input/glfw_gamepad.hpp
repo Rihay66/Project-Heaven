@@ -111,17 +111,17 @@ struct Gamepad{
 //? Gamepad functions
 
 /* button callback of the gamepad which checks for the given button
-* NOTE: Requires a set gamepad
+* @NOTE: Requires a set gamepad
 */ 
 bool getButtonInput(Gamepad& pad, int key);
 
 /* axis callback of the gamepad which returns a incremental value when there is input of the given key
-* NOTE: Requires a set gamepad
+* @NOTE: Requires a set gamepad
 */
 float getAxisRawInput(Gamepad& pad, int key, float deadzone = 0.5f);
 
 /* axis callback of the gamepad which returns a value of direction when there is input of the given key
-* NOTE: Requires a set gamepad
+* @NOTE: Requires a set gamepad
 */
 float getAxisInput(Gamepad& pad, int key, float deadzone = 0.5f);
 
