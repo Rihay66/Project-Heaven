@@ -18,9 +18,9 @@
 #include <engine/components/interpolation.hpp>
 
 /* A static singleton Sprite Rendering Class used to 
- render 2D primatives. This class uses given raw data to 
+ render 2D render primatives. This class uses given raw data to 
  represent and render a 2D primative. This class utilizes 
- batch rendering when rendering a stack of 2D primatives. 
+ batch rendering when rendering a stack of 2D render primatives. 
  All functions and resources are static and no public 
  constructor is defined.  
  !Requires a shader class and a standard sprite size 
@@ -36,7 +36,7 @@ class SpriteRenderer{
         // initialize the quad and line renderer which requires two loaded shaders, and pixel sizes of all quad objects and line objects
         static void Init(Shader& quadShader, Shader& lineShader, glm::uvec2 quadPixelSize, glm::uvec2 linePixelSize);
         
-        //* draw primative functions
+        //* draw render primatives functions
 
         // draw a singular quad utilizing given raw data, without interpolation
         static void DrawQuad(int texIndex, glm::vec2 position, glm::vec2 size, float rotation, glm::vec4 color = glm::vec4(1.0f), const std::array<glm::vec2, 4> texCoords = textureCoordinates, const glm::vec4 vertexPositions[] = quadVertexPositions);
@@ -66,6 +66,7 @@ class SpriteRenderer{
         
         /* store a single line utilizing given points
             @Requires the Flush() after this function in order to render what was stored
+            @Without the Flush() stacked objects will be rendered either way, however it's behavior is undefined
         */
         static void StackLine(glm::vec2 p0, glm::vec2 p1, glm::vec4 color = glm::vec4(1.0f));
 
@@ -77,7 +78,7 @@ class SpriteRenderer{
         // used to tell the GPU to render the stored lines in the buffer
         static void FlushLines();
 
-        //* getter functions
+        //* setter functions
 
         /* Set the width of all lines
             @Can't be used to individually set the width of lines
@@ -92,7 +93,7 @@ class SpriteRenderer{
         */
         static void SetLinesPixelSize(glm::uvec2 pixelSize);
 
-        //* setter functions
+        //* getter functions
 
         // get the current width of all lines
         static float GetLineWidth();

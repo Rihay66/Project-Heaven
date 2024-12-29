@@ -1,10 +1,14 @@
 #include <engine/text_renderer.hpp>
 
+// additional GLM libraries
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 // standard library for debug outputs
 #include <iostream>
+
+// include ResourceManager
+#include <resourceSystems/managers/resource_manager.hpp>
 
 // check platform and then grab the Freetype library
 #ifdef __unix__ // Linux/Unix platform
@@ -21,7 +25,7 @@ unsigned int    TextRenderer::VBO;
 Shader          TextRenderer::textShader;
 bool            TextRenderer::isAutoClearSet = false;
 
-//TODO: Redo text renderer to use a batch rendering solution
+//TODO: Refactor text renderer to use a batch rendering solution
 
 void TextRenderer::Init(unsigned int width, unsigned int height,
  Shader& shader){
@@ -34,9 +38,9 @@ void TextRenderer::Init(unsigned int width, unsigned int height,
     // set up auto clear
     setUpAutoClear();
 
-    // create projection to be centered on the screen
-    glm::mat4 projection = glm::ortho(-(static_cast<float>(width) / 2.0f), (static_cast<float>(width) / 2.0f), 
-        -(static_cast<float>(height) / 2.0f), (static_cast<float>(height) / 2.0f), -1.0f, 1.0f);
+    // create projection to be bottom left on the screen
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(width), 
+        0.0f, static_cast<float>(height), -1.0f, 1.0f);
 
     // set shader
     textShader = shader;
@@ -48,7 +52,7 @@ void TextRenderer::Init(unsigned int width, unsigned int height,
     initTextRenderingData();
 }
 
-void TextRenderer::DisplayText(std::map<char, Character>& chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
+void TextRenderer::DrawText(std::map<char, Character>& chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
     // check if the text renderer has been set  
     if(!isAutoClearSet){
         std::cout << "ERROR: Missing text render data initialization!\n";
