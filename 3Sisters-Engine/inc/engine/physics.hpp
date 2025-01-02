@@ -50,25 +50,15 @@ class Physics {
 
         //* Adder functions
 
-        /* create a Physics Object to the physics engine, returns reference of the Physics Object 
+        /* create a Physics Object to the physics engine, returns a Physics Object 
         * @NOTE: It is recommended for the components to come from the same object and seperate from others
         */
         static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
 
-        /* create a Physics Object to the physics engine, returns reference of the Physics Object 
+        /* create a Physics Object to the physics engine, returns a Physics Object 
         * @NOTE: It is recommended for the components to come from the same object and seperate from others
         */
         static PhysicsObject CreatePhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody, Interpolation& interpolation);
-
-        /* register components that makes up a Physics Object to the physics engine, no Physics Object is created
-        * @NOTE: It is recommended for the components to come from the same object and seperate from others
-        */
-        static void RegisterPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody);
-
-        /* register components that makes up a Physics Object to the physics engine, no Physics Object is created
-        * @NOTE: It is recommended for the components to come from the same object and seperate from others
-        */
-        static void RegisterPhysicsObject(Transform2D& transform, BoxCollider2D& collider, Rigidbody2D& rigidbody, Interpolation& interpolation);
 
         //* Setter functions
 
@@ -84,15 +74,15 @@ class Physics {
         */
         static void UpdatePhysics();
 
-        /* check given components and update given transform and rigidbody components
+        /* check given components and update given components that refer to existing physics object
         * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
-        static void UpdateRegisteredObject(Transform2D& transform, Rigidbody2D& rigidbody);
+        static void UpdatePhysicsObject(Transform2D& transform, Rigidbody2D& rigidbody);
 
-        /* check given components and update given transform and rigidbody components
+        /* check given components and update given components that refer to existing physics object
         * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
         */
-        static void UpdateRegisteredObject(Transform2D& transform, Rigidbody2D& rigidbody, Interpolation& inter);
+        static void UpdatePhysicsObject(Transform2D& transform, Rigidbody2D& rigidbody, Interpolation& inter);
 
         /* updates physics world which updates physics objects 
         * @NOTE: It's recommended to call this function in a fixed time step, i.e stepUpdate()
