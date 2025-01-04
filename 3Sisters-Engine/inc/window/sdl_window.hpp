@@ -14,7 +14,7 @@
 
 // GLAD and SDL libraries
 #include <glad/glad.h>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 namespace SDL{
 /* Window abstract class used for creating a graphical context

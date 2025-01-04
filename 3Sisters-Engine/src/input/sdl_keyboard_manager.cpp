@@ -4,17 +4,17 @@ using namespace SDL;
 
 //? debug outputs
 #include <iostream>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 KeyboardStateHolder*  KeyboardManager::keyboardState = nullptr;
 
 void KeyboardManager::SetKeyboardState(KeyboardStateHolder*  handle){
     // check if SDL has been initialized
-    if(SDL_WasInit(SDL_INIT_EVERYTHING) == 0){
+    if(SDL_WasInit(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0){
         std::cout << "ERROR: SDL hasn't been initialized!\n";
         return; // stop function
     }
-
+    
     // set the window
     if(handle != nullptr)
         // set to track handle

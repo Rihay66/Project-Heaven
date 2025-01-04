@@ -10,7 +10,6 @@ Features:
 
 * Cross-platform building (Windows & Unix/Linux)
 * Batch Rendering solution
-* Box2D for physics simulation
 * OpenAL-based sound engine
 * Entity Component System
 * Controller-Support

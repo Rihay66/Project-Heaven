@@ -33,7 +33,9 @@ class SoundManager{
 
         //* adder/setter functions 
 
-        // load a sound by file path to generate the sound buffer
+        /* load a sound by file path to generate the sound buffer
+        *   @NOTE: The file format must be .wav
+        */
         static SoundBuffer& LoadSound(std::string name, const char* filename);
 
         /* store a sound source reference for automatic deletion when program terminates

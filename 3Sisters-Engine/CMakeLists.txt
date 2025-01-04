@@ -38,6 +38,8 @@ file(GLOB IMGUI
 
 endif()
 
+# Grab all engine source files
+
 file(GLOB_RECURSE GLAD
     ${CMAKE_SOURCE_DIR}/src/glad/*.c
     ${CMAKE_SOURCE_DIR}/src/glad/*.cpp)
@@ -68,29 +70,23 @@ file(GLOB_RECURSE ECS
     ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.c
     ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.cpp)
 
-#[[    
-# Grab all source files
-file(GLOB_RECURSE ENGINE
-    ${CMAKE_SOURCE_DIR}/src/engine/*.c
-    ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
-
+file(GLOB_RECURSE INPUT
+    ${CMAKE_SOURCE_DIR}/src/input/*.c
+    ${CMAKE_SOURCE_DIR}/src/input/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/input/managers/*.c
+    ${CMAKE_SOURCE_DIR}/src/input/managers/*.cpp)
 
 file(GLOB_RECURSE SOUND
     ${CMAKE_SOURCE_DIR}/src/sound/*.c
     ${CMAKE_SOURCE_DIR}/src/sound/*.cpp
     ${CMAKE_SOURCE_DIR}/src/sound/managers/*.c
-    ${CMAKE_SOURCE_DIR}/src/sound/managers/*.cpp
-)
+    ${CMAKE_SOURCE_DIR}/src/sound/managers/*.cpp)
 
-file(GLOB_RECURSE INPUT
-    ${CMAKE_SOURCE_DIR}/src/input/*.c
-    ${CMAKE_SOURCE_DIR}/src/input/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/input/managers/*.c
-    ${CMAKE_SOURCE_DIR}/src/input/managers/*.cpp
-)
-]]#
+file(GLOB_RECURSE ENGINE
+    ${CMAKE_SOURCE_DIR}/src/engine/*.c
+    ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
 
-# Create engine as a static library
+# Create engine as a static library and add source files
 add_library(3Sisters-Engine STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
 
 # Find all dependencies needed to compile
@@ -103,7 +99,7 @@ if(UNIX)
         GIT_TAG origin/master
         CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-            -DCMAKE_BUILD_TYPE=Release 
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
             -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
     )
@@ -113,7 +109,7 @@ if(UNIX)
         GIT_TAG origin/master
         CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-            -DCMAKE_BUILD_TYPE=Release 
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
             -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
     )
@@ -125,12 +121,12 @@ if(UNIX)
             -DBUILD_EXAMPLES=OFF
             -DBUILD_PROGRAMS=OFF
             -DBUILD_TESTING=OFF
-            -DENABLE_PACKAGE_CONFIG=OFF
-            -DINSTALL_PKGCONFIG_MODULE=OFF
-            -DCMAKE_INSTALL_PREFIX=<${CMAKE_BINARY_DIR}>
-            -DCMAKE_BUILD_TYPE=Release 
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
             -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DENABLE_MPEG=OFF
+            -DENABLE_EXTERNAL_LIBS=OFF
     )
     # Add Freetype and build freetype
     ExternalProject_Add(FREETYPE
@@ -138,7 +134,7 @@ if(UNIX)
         GIT_TAG origin/master
         CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-            -DCMAKE_BUILD_TYPE=Release 
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
             -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
             -DFT_DISABLE_PNG=ON
@@ -147,12 +143,40 @@ if(UNIX)
             -DFT_DISABLE_ZLIB=ON
             -DFT_DISABLE_BROTLI=ON
     )
+    # Add SDL and build SDL
+    ExternalProject_Add(SDL
+        GIT_REPOSITORY https://github.com/Rihay66/SDL.git
+        GIT_TAG origin/main
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DSDL_SHARED=OFF
+            -DSDL_STATIC=ON
+            -DSDL_TEST_LIBRARY=OFF
+    )
+    # Add OpenAL-Soft and build OpenAL-Soft
+    ExternalProject_Add(OPENALSOFT
+        GIT_REPOSITORY https://github.com/Rihay66/openal-soft.git
+        GIT_TAG origin/master
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DALSOFT_UTILS=OFF
+            -DALSOFT_TESTS=OFF
+            -DALSOFT_INSTALL_UTILS=OFF
+            -DALSOFT_INSTALL_CONFIG=OFF
+            -DALSOFT_INSTALL_EXAMPLES=OFF
+            -DALSOFT_INSTALL_HRTF_DATA=OFF
+            -DALSOFT_EXAMPLES=OFF
+            -DLIBTYPE=STATIC
+    )
 
     # Set dependencies to be built before engine
-    add_dependencies(3Sisters-Engine GLFW)
-    add_dependencies(3Sisters-Engine GLM)
-    add_dependencies(3Sisters-Engine SNDFILE)
-    add_dependencies(3Sisters-Engine FREETYPE)
+    add_dependencies(3Sisters-Engine GLFW GLM SNDFILE FREETYPE SDL OPENALSOFT)
 
     # explicit inclusion of freetype include 
     target_include_directories(3Sisters-Engine PUBLIC
@@ -165,6 +189,8 @@ if(UNIX)
         ${CMAKE_LIBRARY_PREFIX}/libglm.a
         ${CMAKE_LIBRARY_PREFIX}/libsndfile.a
         ${CMAKE_LIBRARY_PREFIX}/libfreetype.a
+        ${CMAKE_LIBRARY_PREFIX}/libSDL3.a
+        ${CMAKE_LIBRARY_PREFIX}/libopenal.a
     )
 
 endif ()
@@ -238,8 +264,8 @@ file(GLOB_RECURSE HEADER_FILES
 # Define resource folders
 set(SHADERS_DIR ${CMAKE_SOURCE_DIR}/shaders)
 set(FONTS_DIR ${CMAKE_SOURCE_DIR}/fonts)
-set(TEXTURES_DIR "${CMAKE_SOURCE_DIR}/test/textures")
-set(SOUNDS_DIR "${CMAKE_SOURCE_DIR}/test/sounds")
+set(TEXTURES_DIR "${CMAKE_SOURCE_DIR}/textures")
+set(SOUNDS_DIR "${CMAKE_SOURCE_DIR}/sounds")
 
 # Define the destination build folder
 set(BUILD_DIR ${CMAKE_BINARY_DIR})
@@ -302,31 +328,10 @@ copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
 
 if(MSVC) # msvc
 
-#GLM
-find_package(GLM CONFIG REQUIRED)
-
-#GLFW
-find_package(GLFW3 CONFIG REQUIRED)
-
-# Find SDL
-find_package(SDL2 CONFIG REQUIRED)
-
-#box2d
-find_package(BOX2D CONFIG REQUIRED)
-
-# Find OpenAL
-find_package(OpenAL CONFIG REQUIRED)
-
-# Find SNDFile
-find_package(SndFile CONFIG REQUIRED)
-
-#Find Freetype
-find_package(Freetype REQUIRED)
-
 # Link the extra packages their include directories to avoid linking errors
-target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine SDL2::SDL2 glm::glm glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine)
 # Link the 3Sisters-Engine to executable
-target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine glm::glm SDL2::SDL2 glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine)
 
 else () # mingw
 
@@ -334,6 +339,7 @@ else () # mingw
 target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine)
 # Link the 3Sisters-Engine to executable
 target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine)
+
 endif()
 
 endif ()

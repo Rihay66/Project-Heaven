@@ -11,7 +11,7 @@
 #include <input/sdl_gamepad.hpp>
 
 // include SDL libraries
-#include <SDL2/SDL_events.h>
+#include <SDL3/SDL.h>
 
 namespace SDL{
 /* A static singleton GamepadManager class that hosts 
