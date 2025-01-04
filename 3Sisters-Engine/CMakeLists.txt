@@ -1,12 +1,16 @@
 cmake_minimum_required(VERSION 3.28.0)
 set (CMAKE_CXX_STANDARD 20)
 project(3Sisters-Engine VERSION 0.1.3 LANGUAGES C CXX)
-project(3Sisters-Engine-s VERSION 0.1.3 LANGUAGES C CXX)
 project(Engine-Testing VERSION 0.1.0 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
+include(ExternalProject)
+
 # Set the install prefix to the build folder's lib directory
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
+
+# Set the library output to the build folder's bin directory
+set(CMAKE_LIBRARY_PREFIX "${CMAKE_BINARY_DIR}/bin")
 
 # Optionally, include ImGUI and any module that requires ImGUI
 option(BUILD_IMGUI "Build ImGUI into engine binary" OFF)
@@ -34,18 +38,13 @@ file(GLOB IMGUI
 
 endif()
 
-# Grab all source files
-file(GLOB_RECURSE ENGINE
-    ${CMAKE_SOURCE_DIR}/src/engine/*.c
-    ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
+file(GLOB_RECURSE GLAD
+    ${CMAKE_SOURCE_DIR}/src/glad/*.c
+    ${CMAKE_SOURCE_DIR}/src/glad/*.cpp)
 
-file(GLOB_RECURSE ECS
-    ${CMAKE_SOURCE_DIR}/src/ecs/*.c
-    ${CMAKE_SOURCE_DIR}/src/ecs/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.c
-    ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.c
-    ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.cpp)
+file(GLOB_RECURSE WINDOW 
+    ${CMAKE_SOURCE_DIR}/src/window/*.c
+    ${CMAKE_SOURCE_DIR}/src/window/*.cpp)
 
 file(GLOB_RECURSE STB
     ${CMAKE_SOURCE_DIR}/src/stb/*.c
@@ -61,13 +60,20 @@ file(GLOB_RECURSE RESOURCESYS
     ${CMAKE_SOURCE_DIR}/src/resourceSystems/managers/*.c
     ${CMAKE_SOURCE_DIR}/src/resourceSystems/managers/*.cpp)
 
-file(GLOB_RECURSE WINDOW 
-    ${CMAKE_SOURCE_DIR}/src/window/*.c
-    ${CMAKE_SOURCE_DIR}/src/window/*.cpp)
+file(GLOB_RECURSE ECS
+    ${CMAKE_SOURCE_DIR}/src/ecs/*.c
+    ${CMAKE_SOURCE_DIR}/src/ecs/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.c
+    ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.c
+    ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.cpp)
 
-file(GLOB_RECURSE GLAD
-    ${CMAKE_SOURCE_DIR}/src/glad/*.c
-    ${CMAKE_SOURCE_DIR}/src/glad/*.cpp)
+#[[    
+# Grab all source files
+file(GLOB_RECURSE ENGINE
+    ${CMAKE_SOURCE_DIR}/src/engine/*.c
+    ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
+
 
 file(GLOB_RECURSE SOUND
     ${CMAKE_SOURCE_DIR}/src/sound/*.c
@@ -82,151 +88,110 @@ file(GLOB_RECURSE INPUT
     ${CMAKE_SOURCE_DIR}/src/input/managers/*.c
     ${CMAKE_SOURCE_DIR}/src/input/managers/*.cpp
 )
+]]#
 
-# Include directory for engine's headers
-set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
-
-# Create both shared and static libraries
-add_library(3Sisters-Engine SHARED ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
-add_library(3Sisters-Engine-s STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
-
-# Include directories for header files
-target_include_directories(3Sisters-Engine PUBLIC
-    $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends>
-)
-
-target_include_directories(3Sisters-Engine-s PUBLIC
-    $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends>
-)
+# Create engine as a static library
+add_library(3Sisters-Engine STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
 
 # Find all dependencies needed to compile
 
 # *LINUX version of finding the dependencies
 if(UNIX)
-    # Find OpenGL package
-    find_package(OpenGL REQUIRED)
+    # Add GLFW and build GLFW
+    ExternalProject_Add(GLFW
+        GIT_REPOSITORY https://github.com/Rihay66/glfw.git
+        GIT_TAG origin/master
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
+            -DCMAKE_BUILD_TYPE=Release 
+            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+    )
+    # Add GLM and build GLM
+    ExternalProject_Add(GLM
+        GIT_REPOSITORY https://github.com/Rihay66/glm.git
+        GIT_TAG origin/master
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
+            -DCMAKE_BUILD_TYPE=Release 
+            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+    )
+    # Add sndfile and build sndfile
+    ExternalProject_Add(SNDFILE
+        GIT_REPOSITORY https://github.com/Rihay66/libsndfile.git
+        GIT_TAG origin/master
+        CMAKE_ARGS
+            -DBUILD_EXAMPLES=OFF
+            -DBUILD_PROGRAMS=OFF
+            -DBUILD_TESTING=OFF
+            -DENABLE_PACKAGE_CONFIG=OFF
+            -DINSTALL_PKGCONFIG_MODULE=OFF
+            -DCMAKE_INSTALL_PREFIX=<${CMAKE_BINARY_DIR}>
+            -DCMAKE_BUILD_TYPE=Release 
+            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+    )
+    # Add Freetype and build freetype
+    ExternalProject_Add(FREETYPE
+        GIT_REPOSITORY https://github.com/Rihay66/freetype.git
+        GIT_TAG origin/master
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
+            -DCMAKE_BUILD_TYPE=Release 
+            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
+            -DFT_DISABLE_PNG=ON
+            -DFT_DISABLE_HARFBUZZ=ON
+            -DFT_DISABLE_BZIP2=ON
+            -DFT_DISABLE_ZLIB=ON
+            -DFT_DISABLE_BROTLI=ON
+    )
 
-    # Find GLM package
-    find_package(glm CONFIG REQUIRED)
+    # Set dependencies to be built before engine
+    add_dependencies(3Sisters-Engine GLFW)
+    add_dependencies(3Sisters-Engine GLM)
+    add_dependencies(3Sisters-Engine SNDFILE)
+    add_dependencies(3Sisters-Engine FREETYPE)
 
-    # Find GLFW
-    find_package(glfw3 CONFIG REQUIRED)
+    # explicit inclusion of freetype include 
+    target_include_directories(3Sisters-Engine PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include/freetype2>
+    )
 
-    # Find SDL
-    find_package(SDL2 CONFIG REQUIRED)
+    # Link against the dependencies
+    target_link_libraries(3Sisters-Engine PRIVATE 
+        ${CMAKE_LIBRARY_PREFIX}/libglfw3.a 
+        ${CMAKE_LIBRARY_PREFIX}/libglm.a
+        ${CMAKE_LIBRARY_PREFIX}/libsndfile.a
+        ${CMAKE_LIBRARY_PREFIX}/libfreetype.a
+    )
 
-    # Find OpenAL
-    find_package(OpenAL CONFIG REQUIRED)
-
-    # Find SNDFile
-    find_package(SndFile CONFIG REQUIRED)
-
-    # Find FreeType2
-    find_package(Freetype REQUIRED)
-
-    # Put together all necessary libs into one variable
-    set(LIBS OpenGL glm box2d glfw ${SDL2_LIBRARIES} Freetype::Freetype sndfile)
-
-    # Get Xorg dependencies into one variable
-    set(Xorg Xxf86vm X11 Xrandr pthread Xi openal udev ogg vorbis vorbisenc vorbisfile)
-
-    # Grab GLFW dirs
-    target_link_directories(3Sisters-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
-    target_link_directories(3Sisters-Engine-s PUBLIC ${GLFW3_INCLUDE_DIR})
-
-    # Grab SDL dirs
-    target_link_directories(3Sisters-Engine PUBLIC ${SDL2_INCLUDE_DIR})
-    target_link_directories(3Sisters-Engine-s PUBLIC ${SDL2_INCLUDE_DIR})
-
-    # Link against all libraries used
-    target_link_libraries(3Sisters-Engine PUBLIC ${LIBS} ${Xorg})
-    target_link_libraries(3Sisters-Engine-s PUBLIC ${LIBS} ${Xorg})
 endif ()
 
 # *WINDOWS version of finding the dependencies
 if(WIN32)
-    # Find OpenGL
-    find_package(OpenGL REQUIRED)
-
-    # Find GLM
-    find_package(glm CONFIG REQUIRED)
-
-    # Find GLFW
-    find_package(GLFW3 REQUIRED)
-
-    # Find SDL
-    find_package(SDL2 CONFIG REQUIRED)
-
-    # Find BOX2D
-    find_package(BOX2D CONFIG REQUIRED)
-
-    # Find OpenAL
-    find_package(OpenAL CONFIG REQUIRED)
-
-    # Find SNDFile
-    find_package(SndFile CONFIG REQUIRED)
-
-    # Find Freetype
-    find_package(Freetype REQUIRED)
-
-    if(MSVC)
-        # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm::glm box2d::box2d glfw OpenAL::OpenAL SDL2::SDL2 Freetype::Freetype SndFile::sndfile)
-
-        # Grab GLFW headers
-        target_link_directories(3Sisters-Engine PUBLIC ${GLFW_INCLUDE_DIR})
-        target_link_directories(3Sisters-Engine-s PUBLIC ${GLFW_INCLUDE_DIR})
-
-        # Grab GLM headers
-        target_link_directories(3Sisters-Engine PUBLIC ${GLM_INCLUDE_DIR})
-        target_link_directories(3Sisters-Engine-s PUBLIC ${GLM_INCLUDE_DIR})
-
-         # Grab SDL dirs
-        target_link_directories(3Sisters-Engine PUBLIC ${SDL2_INCLUDE_DIR})
-        target_link_directories(3Sisters-Engine-s PUBLIC ${SDL2_INCLUDE_DIR})
-
-    else()
-        # Put together all necessary libs into one variable
-        set(LIBS opengl32 glm box2d glfw ${SDL2_LIBRARIES} openal Freetype::Freetype sndfile)
-
-        # Grab GLFW headers
-        target_link_directories(3Sisters-Engine PUBLIC ${GLFW3_INCLUDE_DIR})
-        target_link_directories(3Sisters-Engine-s PUBLIC ${GLFW3_INCLUDE_DIR})
-
-        # Grab GLM headers
-        target_link_directories(3Sisters-Engine PUBLIC ${GLM_INCLUDE_DIR})
-        target_link_directories(3Sisters-Engine-s PUBLIC ${GLM_INCLUDE_DIR})
-
-         # Grab SDL dirs
-        target_link_directories(3Sisters-Engine PUBLIC ${SDL2_INCLUDE_DIR})
-        target_link_directories(3Sisters-Engine-s PUBLIC ${SDL2_INCLUDE_DIR})
-    endif()
-
-    # Link against OpenGL and GLM
-    target_link_libraries(3Sisters-Engine PRIVATE ${LIBS})
-    target_link_libraries(3Sisters-Engine-s PRIVATE ${LIBS})
+    
+        
 endif()
+
+# Include directory for engine's headers
+set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+
+# Include directories for header files
+target_include_directories(3Sisters-Engine PUBLIC
+$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+$<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
+$<INSTALL_INTERFACE:include>
+$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui>
+$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends>
+)
 
 # Install the library and CMake configuration files
 install(TARGETS 3Sisters-Engine EXPORT 3Sisters-EngineConfig
     RUNTIME_DEPENDENCY_SET engine_depen
-    ARCHIVE DESTINATION ${CMAKE_BINARY_DIR}/bin
-    LIBRARY DESTINATION ${CMAKE_BINARY_DIR}/bin
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-# Install the library and CMake configuration files
-install(TARGETS 3Sisters-Engine-s EXPORT 3Sisters-Engine-sConfig
-    RUNTIME_DEPENDENCY_SET engine_depen-s
-    ARCHIVE DESTINATION ${CMAKE_BINARY_DIR}/bin
-    LIBRARY DESTINATION ${CMAKE_BINARY_DIR}/bin
+    ARCHIVE DESTINATION ${CMAKE_LIBRARY_PREFIX}
+    LIBRARY DESTINATION ${CMAKE_LIBRARY_PREFIX}
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
@@ -235,12 +200,7 @@ install(TARGETS 3Sisters-Engine-s EXPORT 3Sisters-Engine-sConfig
 if(UNIX)
     # include all dependencies
     install(RUNTIME_DEPENDENCY_SET engine_depen
-        DESTINATION ${CMAKE_BINARY_DIR}/bin    
-    )
-
-    # include all dependencies
-    install(RUNTIME_DEPENDENCY_SET engine_depen-s
-        DESTINATION ${CMAKE_BINARY_DIR}/bin    
+        DESTINATION ${CMAKE_LIBRARY_PREFIX}
     )
 endif(UNIX)
 
@@ -254,14 +214,7 @@ install(EXPORT 3Sisters-EngineConfig
     DESTINATION ${CMAKE_BINARY_DIR}
 )
 
-# Configure the package and specify the export destination
-install(EXPORT 3Sisters-Engine-sConfig
-    DESTINATION ${CMAKE_BINARY_DIR}
-)
-
 export(TARGETS 3Sisters-Engine FILE 3Sisters-Engine.cmake)
-
-export(TARGETS 3Sisters-Engine-s FILE 3Sisters-Engine-s.cmake)
 
 # Optionally, conditionally install the executable
 option(BUILD_ENGINE_TESTING "Build Engine-Testing executable" OFF)
@@ -371,9 +324,9 @@ find_package(SndFile CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
 
 # Link the extra packages their include directories to avoid linking errors
-target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine-s SDL2::SDL2 glm::glm glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine SDL2::SDL2 glm::glm glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
 # Link the 3Sisters-Engine to executable
-target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine-s glm::glm SDL2::SDL2 glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine glm::glm SDL2::SDL2 glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
 
 else () # mingw
 
