@@ -5,6 +5,7 @@
 #include "engine/components/interpolation.hpp"
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/resource_manager.hpp>
+#include <engine/text_renderer.hpp>
 
 TestWindow::TestWindow() : Window(){
 
@@ -18,8 +19,14 @@ void TestWindow::init(){
     // load quad shader  
     ResourceManager::LoadShader("shaders/quad.vs", "shaders/quad.frag", nullptr, "quad");
 
+    // load text shader
+    ResourceManager::LoadShader("shaders/text.vs", "shaders/text.frag", nullptr, "text");
+
     // load texture
     ResourceManager::GenerateWhiteTexture();
+
+    // load a font
+    ResourceManager::LoadFontTexture("fonts/Arcade.ttf", 36, "font", true);
 
     // Initialize camera
     camera.setDimensions(1280, 720);
@@ -27,6 +34,9 @@ void TestWindow::init(){
 
     // init sprite renderer
     SpriteRenderer::InitQuad(ResourceManager::GetShader("quad"), {50.0f, 50.0f});
+
+    // init text renderer
+    TextRenderer::Init(1280, 720, ResourceManager::GetShader("text"));
 
     // init ECS
     ECS::Init();
@@ -73,8 +83,13 @@ void TestWindow::update(){
 }
 
 void TestWindow::render(double alpha){
+    // render background
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-    // render stuff
+    // render all entities
     renderer->render(alpha);
+
+    // render example text
+    TextRenderer::DrawText(ResourceManager::GetFontTexture("font"), "Hello World!", 
+    glm::vec2(100.0f, 200.0f), glm::vec2(1.0f), glm::vec4(0.1f, 0.8f, 0.1f, 1.0f));
 }
