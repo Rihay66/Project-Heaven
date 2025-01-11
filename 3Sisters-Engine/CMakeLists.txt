@@ -1,10 +1,7 @@
 cmake_minimum_required(VERSION 3.28.0)
 set (CMAKE_CXX_STANDARD 20)
 project(3Sisters-Engine VERSION 0.1.3 LANGUAGES C CXX)
-project(Engine-Testing VERSION 0.1.0 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
-
-include(ExternalProject)
 
 # Set the install prefix to the build folder's lib directory
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
@@ -12,194 +9,72 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 # Set the library output to the build folder's bin directory
 set(CMAKE_LIBRARY_PREFIX "${CMAKE_BINARY_DIR}/bin")
 
-# Optionally, include ImGUI and any module that requires ImGUI
-option(BUILD_IMGUI "Build ImGUI into engine binary" OFF)
-
-if(BUILD_IMGUI)
-
-# Check if ImGUI is set up
-file(GLOB RESULT ${CMAKE_SOURCE_DIR}/imgui/*)
-list(LENGTH RESULT RES_LEN)
-if(RES_LEN EQUAL 0)
-
-# ImGUI directory empty throw an error
-message(SEND_ERROR "ERROR: ImGUI directory is Empty, verify that all git submodule were initialized and updated")
-endif()
-
-# Grab all ImGUI source files
-file(GLOB IMGUI
-    ${CMAKE_SOURCE_DIR}/imgui/*.cpp
-    ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_opengl3.cpp
-    ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_glfw.cpp
-    ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_sdl2.cpp
-)
-
-# ? Any module's source that requires ImGui need to be placed here
-
-endif()
-
 # Grab all engine source files
 
-file(GLOB_RECURSE GLAD
-    ${CMAKE_SOURCE_DIR}/src/glad/*.c
-    ${CMAKE_SOURCE_DIR}/src/glad/*.cpp)
+set(GLAD
+    src/glad/glad.c)
 
-file(GLOB_RECURSE WINDOW 
-    ${CMAKE_SOURCE_DIR}/src/window/*.c
-    ${CMAKE_SOURCE_DIR}/src/window/*.cpp)
+set(WINDOW
+    src/window/glfw_window.cpp
+    src/window/sdl_window.cpp)
 
-file(GLOB_RECURSE STB
-    ${CMAKE_SOURCE_DIR}/src/stb/*.c
-    ${CMAKE_SOURCE_DIR}/src/stb/*.cpp)
+set(STB 
+    src/stb/stb_image.cpp)
 
-file(GLOB_RECURSE CAMERAS 
-    ${CMAKE_SOURCE_DIR}/src/cameras/*.c
-    ${CMAKE_SOURCE_DIR}/src/cameras/*.cpp)
+set(CAMERAS 
+    src/cameras/ortho_camera.cpp)
 
-file(GLOB_RECURSE RESOURCESYS 
-    ${CMAKE_SOURCE_DIR}/src/resourceSystems/*.c
-    ${CMAKE_SOURCE_DIR}/src/resourceSystems/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/resourceSystems/managers/*.c
-    ${CMAKE_SOURCE_DIR}/src/resourceSystems/managers/*.cpp)
+set(RESOURCESYS
+    src/resourceSystems/resource_shader.cpp
+    src/resourceSystems/resource_texture.cpp
+    src/resourceSystems/managers/resource_manager.cpp
+    src/resourceSystems/managers/tag_manager.cpp)
 
-file(GLOB_RECURSE ECS
-    ${CMAKE_SOURCE_DIR}/src/ecs/*.c
-    ${CMAKE_SOURCE_DIR}/src/ecs/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.c
-    ${CMAKE_SOURCE_DIR}/src/ecs/managers/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.c
-    ${CMAKE_SOURCE_DIR}/src/ecs/systems/*.cpp)
+set(ECS 
+    src/ecs/ecs.cpp
+    src/ecs/managers/entity_manager.cpp
+    src/ecs/systems/ecs_sprite_renderer.cpp)
 
-file(GLOB_RECURSE INPUT
-    ${CMAKE_SOURCE_DIR}/src/input/*.c
-    ${CMAKE_SOURCE_DIR}/src/input/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/input/managers/*.c
-    ${CMAKE_SOURCE_DIR}/src/input/managers/*.cpp)
+set(INPUT
+    src/input/sdl_gamepad.cpp
+    src/input/glfw_gamepad.cpp
+    src/input/managers/glfw_gamepad_manager.cpp
+    src/input/managers/sdl_gamepad_manager.cpp
+    src/input/sdl_keyboard.cpp
+    src/input/glfw_keyboard.cpp
+    src/input/managers/glfw_keyboard_manager.cpp
+    src/input/managers/sdl_keyboard_manager.cpp)
 
-file(GLOB_RECURSE SOUND
-    ${CMAKE_SOURCE_DIR}/src/sound/*.c
-    ${CMAKE_SOURCE_DIR}/src/sound/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/sound/managers/*.c
-    ${CMAKE_SOURCE_DIR}/src/sound/managers/*.cpp)
+set(SOUND 
+    src/sound/sound_buffer.cpp
+    src/sound/sound_device.cpp
+    src/sound/sound_source.cpp
+    src/sound/managers/sound_manager.cpp)
 
-file(GLOB_RECURSE ENGINE
-    ${CMAKE_SOURCE_DIR}/src/engine/*.c
-    ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
+set(ENGINE 
+    src/engine/sprite_renderer.cpp
+    src/engine/text_renderer.cpp)
 
 # Create engine as a static library and add source files
-add_library(3Sisters-Engine STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${INPUT} ${GLAD} ${WINDOW} ${SOUND} ${IMGUI})
+add_library(3Sisters-Engine STATIC ${ENGINE} ${ECS} ${STB} ${CAMERAS} ${RESOURCESYS} ${INPUT} ${GLAD} ${WINDOW} ${SOUND})
 
 # Find all dependencies needed to compile
 
-# *LINUX version of finding the dependencies
-if(UNIX)
-    # Add GLFW and build GLFW
-    ExternalProject_Add(GLFW
-        GIT_REPOSITORY https://github.com/Rihay66/glfw.git
-        GIT_TAG origin/master
-        CMAKE_ARGS
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-    )
-    # Add GLM and build GLM
-    ExternalProject_Add(GLM
-        GIT_REPOSITORY https://github.com/Rihay66/glm.git
-        GIT_TAG origin/master
-        CMAKE_ARGS
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-    )
-    # Add sndfile and build sndfile
-    ExternalProject_Add(SNDFILE
-        GIT_REPOSITORY https://github.com/Rihay66/libsndfile.git
-        GIT_TAG origin/master
-        CMAKE_ARGS
-            -DBUILD_EXAMPLES=OFF
-            -DBUILD_PROGRAMS=OFF
-            -DBUILD_TESTING=OFF
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DENABLE_MPEG=OFF
-            -DENABLE_EXTERNAL_LIBS=OFF
-    )
-    # Add Freetype and build freetype
-    ExternalProject_Add(FREETYPE
-        GIT_REPOSITORY https://github.com/Rihay66/freetype.git
-        GIT_TAG origin/master
-        CMAKE_ARGS
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DFT_DISABLE_PNG=ON
-            -DFT_DISABLE_HARFBUZZ=ON
-            -DFT_DISABLE_BZIP2=ON
-            -DFT_DISABLE_ZLIB=ON
-            -DFT_DISABLE_BROTLI=ON
-    )
-    # Add SDL and build SDL
-    ExternalProject_Add(SDL
-        GIT_REPOSITORY https://github.com/Rihay66/SDL.git
-        GIT_TAG origin/main
-        CMAKE_ARGS
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DSDL_SHARED=OFF
-            -DSDL_STATIC=ON
-            -DSDL_TEST_LIBRARY=OFF
-    )
-    # Add OpenAL-Soft and build OpenAL-Soft
-    ExternalProject_Add(OPENALSOFT
-        GIT_REPOSITORY https://github.com/Rihay66/openal-soft.git
-        GIT_TAG origin/master
-        CMAKE_ARGS
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_PREFIX}
-            -DALSOFT_UTILS=OFF
-            -DALSOFT_TESTS=OFF
-            -DALSOFT_INSTALL_UTILS=OFF
-            -DALSOFT_INSTALL_CONFIG=OFF
-            -DALSOFT_INSTALL_EXAMPLES=OFF
-            -DALSOFT_INSTALL_HRTF_DATA=OFF
-            -DALSOFT_EXAMPLES=OFF
-            -DLIBTYPE=STATIC
-    )
+# include subdirectory
+add_subdirectory(vendor)
 
-    # Set dependencies to be built before engine
-    add_dependencies(3Sisters-Engine GLFW GLM SNDFILE FREETYPE SDL OPENALSOFT)
+# include all dependencies directories
+target_include_directories(3Sisters-Engine PRIVATE
+    vendor/freetype-src/include
+    vendor/glfw-src/include
+    vendor/glm-src
+    vendor/openalsoft-src/include
+    vendor/sdl-src/include
+    vendor/sndfile-src/include
+)
 
-    # explicit inclusion of freetype include 
-    target_include_directories(3Sisters-Engine PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include/freetype2>
-    )
-
-    # Link against the dependencies
-    target_link_libraries(3Sisters-Engine PRIVATE 
-        ${CMAKE_LIBRARY_PREFIX}/libglfw3.a 
-        ${CMAKE_LIBRARY_PREFIX}/libglm.a
-        ${CMAKE_LIBRARY_PREFIX}/libsndfile.a
-        ${CMAKE_LIBRARY_PREFIX}/libfreetype.a
-        ${CMAKE_LIBRARY_PREFIX}/libSDL3.a
-        ${CMAKE_LIBRARY_PREFIX}/libopenal.a
-    )
-
-endif ()
-
-# *WINDOWS version of finding the dependencies
-if(WIN32)
-    
-        
-endif()
+# include all dependencies
+target_link_libraries(3Sisters-Engine glm glfw freetype SDL3::SDL3-static OpenAL::OpenAL)
 
 # Include directory for engine's headers
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
@@ -209,139 +84,37 @@ target_include_directories(3Sisters-Engine PUBLIC
 $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
 $<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>
 $<INSTALL_INTERFACE:include>
-$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui>
-$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends>
 )
 
 # Install the library and CMake configuration files
 install(TARGETS 3Sisters-Engine EXPORT 3Sisters-EngineConfig
-    RUNTIME_DEPENDENCY_SET engine_depen
-    ARCHIVE DESTINATION ${CMAKE_LIBRARY_PREFIX}
-    LIBRARY DESTINATION ${CMAKE_LIBRARY_PREFIX}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+RUNTIME_DEPENDENCY_SET engine_depen
+ARCHIVE DESTINATION ${CMAKE_LIBRARY_PREFIX}
+LIBRARY DESTINATION ${CMAKE_LIBRARY_PREFIX}
+RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# UNIX specifically include all dynamic or static libraries into the a bin folder
-if(UNIX)
-    # include all dependencies
-    install(RUNTIME_DEPENDENCY_SET engine_depen
-        DESTINATION ${CMAKE_LIBRARY_PREFIX}
-    )
-endif(UNIX)
-
+# Include all headers of the engine and dependecies (only the ones that don't get included)
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc/
     DESTINATION "${CMAKE_SOURCE_DIR}/build/include"
 )
 
-# Configure the package and specify the export destination
-install(EXPORT 3Sisters-EngineConfig
-    DESTINATION ${CMAKE_BINARY_DIR}
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/vendor/sdl-src/include/SDL3
+    DESTINATION "${CMAKE_SOURCE_DIR}/build/include"
+    FILES_MATCHING PATTERN "*.h"
 )
 
-export(TARGETS 3Sisters-Engine FILE 3Sisters-Engine.cmake)
-
-# Optionally, conditionally install the executable
-option(BUILD_ENGINE_TESTING "Build Engine-Testing executable" OFF)
-
-# Test program
-
-if(BUILD_ENGINE_TESTING)
-
-# Include all files
-file(GLOB_RECURSE SOURCE_FILES
-    ${CMAKE_SOURCE_DIR}/test/src/*.c
-    ${CMAKE_SOURCE_DIR}/test/src/*.cpp
-    ${CMAKE_SOURCE_DIR}/test/*.cpp
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw-src/include/GLFW
+    DESTINATION "${CMAKE_SOURCE_DIR}/build/include"
+    FILES_MATCHING PATTERN "*.h"
 )
 
-file(GLOB_RECURSE HEADER_FILES
-    ${CMAKE_SOURCE_DIR}/test/inc/*.h
-    ${CMAKE_SOURCE_DIR}/test/inc/*.hpp
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm-src/glm
+    DESTINATION "${CMAKE_SOURCE_DIR}/build/include"
+    FILES_MATCHING PATTERN "*.hpp"
 )
-
-# Define resource folders
-set(SHADERS_DIR ${CMAKE_SOURCE_DIR}/shaders)
-set(FONTS_DIR ${CMAKE_SOURCE_DIR}/fonts)
-set(TEXTURES_DIR "${CMAKE_SOURCE_DIR}/textures")
-set(SOUNDS_DIR "${CMAKE_SOURCE_DIR}/sounds")
-
-# Define the destination build folder
-set(BUILD_DIR ${CMAKE_BINARY_DIR})
-
-# Create folders and their sub files for runtime loading
-# Function to copy files if they are different
-function(copy_if_different SRC_DIR DEST_DIR)
-    # Remove the existing destination directory
-    if(EXISTS ${DEST_DIR})
-        file(REMOVE_RECURSE ${DEST_DIR})
-    endif()
-
-    # Create the destination directory if it doesn't exist
-    file(MAKE_DIRECTORY ${DEST_DIR})
-
-    # Copy over the files
-    file(GLOB_RECURSE FILES_LIST "${SRC_DIR}/*")
-    foreach(FILE_PATH ${FILES_LIST})
-        get_filename_component(FILE_NAME ${FILE_PATH} NAME)
-        set(DEST_FILE_PATH "${DEST_DIR}/${FILE_NAME}")
-        configure_file(${FILE_PATH} ${DEST_FILE_PATH} COPYONLY)
-    endforeach()
-endfunction()
-
-# Check if detected OS is LINUX
-if(UNIX)
-
-# Create executable
-add_executable(Engine-Testing
-${HEADER_FILES}
-${SOURCE_FILES}
-)
-
-# Call the function for each resource folder
-copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
-copy_if_different(${TEXTURES_DIR} ${BUILD_DIR}/textures)
-copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/sounds)
-copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
-
-# Link the extra packages their include directories to avoid linking errors
-target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine)
-# Link the 3Sisters-Engine to executable
-target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine)
-
-endif ()
-
-if(WIN32)
-
-# Create executable
-add_executable(Engine-Testing
-${HEADER_FILES}
-${SOURCE_FILES}
-)
-
-# Call the function for each resource folder
-copy_if_different(${SHADERS_DIR} ${BUILD_DIR}/shaders)
-copy_if_different(${TEXTURES_DIR} ${BUILD_DIR}/textures)
-copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/sounds)
-copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
-
-if(MSVC) # msvc
-
-# Link the extra packages their include directories to avoid linking errors
-target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine)
-# Link the 3Sisters-Engine to executable
-target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine)
-
-else () # mingw
-
-# Link the extra packages their include directories to avoid linking errors
-target_include_directories(Engine-Testing PRIVATE 3Sisters-Engine)
-# Link the 3Sisters-Engine to executable
-target_link_libraries(Engine-Testing PRIVATE 3Sisters-Engine)
-
-endif()
-
-endif ()
-
-endif()

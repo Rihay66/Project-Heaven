@@ -1,4 +1,4 @@
-#include <input/glfw_gamepad_manager.hpp>
+#include <input/managers/glfw_gamepad_manager.hpp>
 
 //? include IO for debug prints
 #include <iostream>

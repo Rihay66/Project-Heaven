@@ -1,4 +1,4 @@
-#include <input/sdl_gamepad_manager.hpp>
+#include <input/managers/sdl_gamepad_manager.hpp>
 
 #include <cstdlib>
 #include <SDL3/SDL.h>

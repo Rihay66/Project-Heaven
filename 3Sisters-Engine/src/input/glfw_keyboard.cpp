@@ -1,7 +1,7 @@
 #include <input/glfw_keyboard.hpp>
 
 // include Keyboard Manager
-#include <input/glfw_keyboard_manager.hpp>
+#include <input/managers/glfw_keyboard_manager.hpp>
 
 using namespace GLFW;
 

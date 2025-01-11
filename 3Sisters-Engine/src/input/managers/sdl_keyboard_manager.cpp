@@ -1,4 +1,4 @@
-#include <input/sdl_keyboard_manager.hpp>
+#include <input/managers/sdl_keyboard_manager.hpp>
 
 using namespace SDL;
 

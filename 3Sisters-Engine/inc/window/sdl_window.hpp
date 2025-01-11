@@ -10,7 +10,7 @@
 
 // include SDL based input headers
 #include <input/sdl_keyboard.hpp>
-#include <input/sdl_gamepad_manager.hpp>
+#include <input/managers/sdl_gamepad_manager.hpp>
 
 // GLAD and SDL libraries
 #include <glad/glad.h>
