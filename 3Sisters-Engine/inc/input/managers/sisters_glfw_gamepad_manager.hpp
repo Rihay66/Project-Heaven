@@ -1,14 +1,14 @@
 #pragma once
 
-#ifndef GLFW_GAMEPAD_MANAGER_HPP
-#define GLFW_GAMEPAD_MANAGER_HPP
+#ifndef SISTERS_GLFW_GAMEPAD_MANAGER_HPP
+#define SISTERS_GLFW_GAMEPAD_MANAGER_HPP
 
 // include standard libraries
 #include <array>
 #include <vector>
 
 // include gamepad
-#include <input/glfw_gamepad.hpp>
+#include <input/sisters_glfw_gamepad.hpp>
 
 //TODO: Add debug options to display info of the gamepads
 

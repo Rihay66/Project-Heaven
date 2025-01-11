@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef GLFW_KEYBOARD_HPP
-#define GLFW_KEYBOARD_HPP
+#ifndef SISTERS_GLFW_KEYBOARD_HPP
+#define SISTERS_GLFW_KEYBOARD_HPP
 
 /* Host several functions to allow for keyboard inputs
 */

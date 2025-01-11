@@ -72,7 +72,7 @@ endif ()
 if(WIN32)
 
 # Create executable
-add_executable(Engine-Testing
+add_executable(3Sisters-Engine-Test
 ${HEADER_FILES}
 ${SOURCE_FILES}
 )
@@ -86,9 +86,9 @@ copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
 if(MSVC) # msvc
 
 # Link the extra packages their include directories to avoid linking errors
-target_include_directories(3Sisters-Engine-Test PRIVATE 3Sisters-Engine-s SDL2::SDL2 glm::glm glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+target_include_directories(3Sisters-Engine-Test PRIVATE 3Sisters-Engine)
 # Link the 3Sisters-Engine to executable
-target_link_libraries(3Sisters-Engine-Test PRIVATE 3Sisters-Engine-s glm::glm SDL2::SDL2 glfw box2d::box2d OpenAL::OpenAL Freetype::Freetype SndFile::sndfile)
+target_link_libraries(3Sisters-Engine-Test PRIVATE 3Sisters-Engine)
 
 else () # mingw
 

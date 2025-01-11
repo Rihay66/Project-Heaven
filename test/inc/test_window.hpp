@@ -3,7 +3,7 @@
 #ifndef TEST_WINDOW_HPP
 #define TEST_WINDOW_HPP
 
-#include <window/sdl_window.hpp>
+#include <window/sisters_sdl_window.hpp>
 #include <cameras/ortho_camera.hpp>
 #include <ecs/systems/ecs_sprite_renderer.hpp>
 

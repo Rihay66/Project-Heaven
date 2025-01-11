@@ -1,9 +1,9 @@
 #pragma once
 
-#ifndef SDL_KEYBOARD_MANAGER_HPP
-#define SDL_KEYBOARD_MANAGER_HPP
+#ifndef SISTERS_SDL_KEYBOARD_MANAGER_HPP
+#define SISTERS_SDL_KEYBOARD_MANAGER_HPP
 
-#include <input/sdl_keyboard.hpp>
+#include <input/sisters_sdl_keyboard.hpp>
 
 namespace SDL{
 /* A static singleton KeyboardManager that hosts 

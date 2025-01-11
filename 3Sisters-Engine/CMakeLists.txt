@@ -15,8 +15,8 @@ set(GLAD
     src/glad/glad.c)
 
 set(WINDOW
-    src/window/glfw_window.cpp
-    src/window/sdl_window.cpp)
+    src/window/sisters_glfw_window.cpp
+    src/window/sisters_sdl_window.cpp)
 
 set(STB 
     src/stb/stb_image.cpp)
@@ -36,14 +36,14 @@ set(ECS
     src/ecs/systems/ecs_sprite_renderer.cpp)
 
 set(INPUT
-    src/input/sdl_gamepad.cpp
-    src/input/glfw_gamepad.cpp
-    src/input/managers/glfw_gamepad_manager.cpp
-    src/input/managers/sdl_gamepad_manager.cpp
-    src/input/sdl_keyboard.cpp
-    src/input/glfw_keyboard.cpp
-    src/input/managers/glfw_keyboard_manager.cpp
-    src/input/managers/sdl_keyboard_manager.cpp)
+    src/input/sisters_sdl_gamepad.cpp
+    src/input/sisters_glfw_gamepad.cpp
+    src/input/managers/sisters_glfw_gamepad_manager.cpp
+    src/input/managers/sisters_sdl_gamepad_manager.cpp
+    src/input/sisters_sdl_keyboard.cpp
+    src/input/sisters_glfw_keyboard.cpp
+    src/input/managers/sisters_glfw_keyboard_manager.cpp
+    src/input/managers/sisters_sdl_keyboard_manager.cpp)
 
 set(SOUND 
     src/sound/sound_buffer.cpp

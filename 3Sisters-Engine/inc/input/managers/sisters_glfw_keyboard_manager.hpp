@@ -1,11 +1,11 @@
 #pragma once
 
-#ifndef GLFW_KEYBOARD_MANAGER_HPP
-#define GLFW_KEYBOARD_MANAGER_HPP
+#ifndef SISTERS_GLFW_KEYBOARD_MANAGER_HPP
+#define SISTERS_GLFW_KEYBOARD_MANAGER_HPP
 
 #include <GLFW/glfw3.h>
 
-#include <input/glfw_keyboard.hpp>
+#include <input/sisters_glfw_keyboard.hpp>
 
 namespace GLFW{
 /* A static singleton KeyboardManager that hosts 

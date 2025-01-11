@@ -1,4 +1,4 @@
-#include <window/sdl_window.hpp>
+#include <window/sisters_sdl_window.hpp>
 
 // include standard libraries
 #include <iostream>
@@ -181,7 +181,7 @@ void Window::runtime(){
         }
 
         // grab the current keyboard state
-        this->kState->keyboardState = (Uint8*)SDL_GetKeyboardState(NULL);
+        this->kState->keyboardState = (uint8_t*)SDL_GetKeyboardState(NULL);
 
         //  accumulate time and do stepUpdate()
         this->accumulator += this->DeltaTime;

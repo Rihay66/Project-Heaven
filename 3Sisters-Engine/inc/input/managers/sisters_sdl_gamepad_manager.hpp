@@ -1,14 +1,14 @@
 #pragma once
 
-#ifndef SDL_GAMEPAD_MANAGER_HPP
-#define SDL_GAMEPAD_MANAGER_HPP
+#ifndef SISTERS_SDL_GAMEPAD_MANAGER_HPP
+#define SISTERS_SDL_GAMEPAD_MANAGER_HPP
 
 // include standard library
 #include <array>
 #include <vector>
 
 // include gamepad
-#include <input/sdl_gamepad.hpp>
+#include <input/sisters_sdl_gamepad.hpp>
 
 // include SDL libraries
 #include <SDL3/SDL.h>

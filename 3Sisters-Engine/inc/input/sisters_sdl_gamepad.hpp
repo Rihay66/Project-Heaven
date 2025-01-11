@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef SDL_GAMEPAD_HPP
-#define SDL_GAMEPAD_HPP
+#ifndef SISTERS_SDL_GAMEPAD_HPP
+#define SISTERS_SDL_GAMEPAD_HPP
 
 // include memory lib
 #include <memory>
