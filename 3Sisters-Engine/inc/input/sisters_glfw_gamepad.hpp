@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef GLFW_GAMEPAD_HPP
-#define GLFW_GAMEPAD_HPP
+#ifndef SISTERS_GLFW_GAMEPAD_HPP
+#define SISTERS_GLFW_GAMEPAD_HPP
 
 // include standard memory library
 #include <memory>

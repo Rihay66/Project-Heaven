@@ -1,13 +1,13 @@
 #pragma once
 
-#ifndef SDL_KEYBOARD_HPP
-#define SDL_KEYBOARD_HPP
+#ifndef SISTERS_SDL_KEYBOARD_HPP
+#define SISTERS_SDL_KEYBOARD_HPP
 
-#include <sys/types.h>
+#include <stdint.h>
 
 // define a keyboard state holder
 struct KeyboardStateHolder{
-    u_int8_t* keyboardState;
+    uint8_t* keyboardState;
 };
 
 namespace SDL{

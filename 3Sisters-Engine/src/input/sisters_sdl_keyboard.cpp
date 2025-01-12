@@ -1,7 +1,7 @@
-#include <input/sdl_keyboard.hpp>
+#include <input/sisters_sdl_keyboard.hpp>
 
 // include keyboard manager
-#include <input/sdl_keyboard_manager.hpp>
+#include <input/managers/sisters_sdl_keyboard_manager.hpp>
 
 using namespace SDL;
 

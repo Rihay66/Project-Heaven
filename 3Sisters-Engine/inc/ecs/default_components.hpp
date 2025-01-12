@@ -7,7 +7,5 @@
 
 #include <ecs/components/transform.hpp>
 #include <ecs/components/material.hpp>
-#include <ecs/components/rigidbody.hpp>
-#include <ecs/components/boxcollider.hpp>
 
 #endif

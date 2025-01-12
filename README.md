@@ -4,13 +4,12 @@ A Lightweight 2D OpenGL based Engine called:
 
 ![](3Sisters_Engine_logo.png)
 
-Current Version: 1.2-Candidate-B
+Current Version: 1.2-Dev
 
 Features:
 
 * Cross-platform building (Windows & Unix/Linux)
 * Batch Rendering solution
-* Box2D for physics simulation
 * OpenAL-based sound engine
 * Entity Component System
 * Controller-Support

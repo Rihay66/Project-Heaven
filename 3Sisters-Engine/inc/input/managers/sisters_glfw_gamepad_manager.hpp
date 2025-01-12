@@ -1,19 +1,17 @@
 #pragma once
 
-#ifndef SDL_GAMEPAD_MANAGER_HPP
-#define SDL_GAMEPAD_MANAGER_HPP
+#ifndef SISTERS_GLFW_GAMEPAD_MANAGER_HPP
+#define SISTERS_GLFW_GAMEPAD_MANAGER_HPP
 
-// include standard library
+// include standard libraries
 #include <array>
 #include <vector>
 
 // include gamepad
-#include <input/sdl_gamepad.hpp>
+#include <input/sisters_glfw_gamepad.hpp>
 
-// include SDL libraries
-#include <SDL2/SDL_events.h>
+//TODO: Add debug options to display info of the gamepads
 
-namespace SDL{
 /* A static singleton GamepadManager class that hosts 
  several functions to query for connected or disconnected 
  Gamepads. Each obtained connected controller are stored for
@@ -27,7 +25,7 @@ class GamepadManager{
         //* helper functions
 
         // set query event callback, expands a list of connected and disconnected devices
-        static void InitializeQuery(SDL_Event& handle);
+        static void InitializeQuery();
 
         //* getter functions
 
@@ -36,13 +34,12 @@ class GamepadManager{
 
         /* add a gamepad reference that can be filled from the list of queried gamepads
         * @NOTE: By default picks the first gamepad
-        * @NOTE: Multiple gamepads aiming to be the same index, only one will be set
         */
-        static void SetGamepad(SDL::Gamepad& gamepad, int index = 0);
+        static void SetGamepad(GLFW::Gamepad& gamepad, int index = 0);
 
-        /* polls event from gamepads such as connections and disconnects
+        /* polls input from the connected gamepads to allow for checking for inputs
         */
-        static void PollIO();
+        static void PollInputs();
 
     private:
         // define a queued gamepad that needs to be set
@@ -50,7 +47,7 @@ class GamepadManager{
             // wanted index to be set, default picks a NULL value
             int index = -1;
             // stored reference of the gamepad that needs to be set
-            SDL::Gamepad* gamepad = nullptr;
+            GLFW::Gamepad* gamepad = nullptr;
         };
 
         //* private resource storage
@@ -59,24 +56,24 @@ class GamepadManager{
         static std::vector<QueuedGamepad> queuedGamepads;
 
         // define a list of game controllers detected by GLFW
-        static std::array<std::shared_ptr<SDL::ControllerDevice>, 15> devices;
-
-        // contain reference to the event handle
-        static SDL_Event* eventHandle;
-
+        static std::array<std::shared_ptr<GLFW::ControllerDevice>, 15> devices;
+ 
         // private constructor, that is to avoid any actual gamepad manager objects
         GamepadManager() {}
 
-        //* private helper functions
-
-        // create a gamepad reference to be used on connection
-        static void enableGamepad(int index);
-
-        // disable gamepad reference when disconnected
-        static void disableGamepad(int index);
-
         // properly de-allocates all resources
         static void clear();
+
+        //* private helper functions
+
+        // glfw callback to check connection of a gamepad
+        static void connectionCheck(int jid, int event); 
+
+        // create a gamepad reference to be used on connection
+        static void enableGamepad(int jid);
+
+        // disable gamepad reference when disconnected
+        static void disableGamepad(int jid);
 
         //! Currently EXPERIMENTAL, may cause exceptions or segfaults
         // private boolean to track automatic clear()
@@ -84,6 +81,5 @@ class GamepadManager{
         // set up automatic de-allocation of loaded resources
         static void setUpAutoClear();
 };
-}
 
 #endif

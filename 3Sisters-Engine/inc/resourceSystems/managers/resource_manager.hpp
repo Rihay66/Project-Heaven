@@ -40,7 +40,7 @@ class ResourceManager{
         /* loads (and generates) a font from file with a font size along with a name and optional texture filter option
         * @NOTE: by default the texture's filter is set to be nearest and it is optional to set it to true which sets to be linear
         */
-        static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool linearFilter = true);
+        static std::map<char, Character>& LoadFontTexture(const char *file, unsigned int fontsize, std::string name, bool linearFilter = false);
 
         // use a loaded texture to create a sub texture along with a name
         static std::array<glm::vec2, 4>& GenerateSubTexture(std::string name, Texture& texture, glm::uvec2 coordinates, glm::uvec2 cellSize, glm::uvec2 spriteSize = {1, 1});

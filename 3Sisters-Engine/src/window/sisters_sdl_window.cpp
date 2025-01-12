@@ -1,4 +1,4 @@
-#include <window/sdl_window.hpp>
+#include <window/sisters_sdl_window.hpp>
 
 // include standard libraries
 #include <iostream>
@@ -15,7 +15,7 @@ Window::~Window(){
     // delete the keyboard state holder
     delete this->kState;
 
-    SDL_GL_DeleteContext(context);
+    SDL_GL_DestroyContext(context);
     SDL_DestroyWindow(handle);
     SDL_Quit();
 }
@@ -58,7 +58,7 @@ void Window::initializeWindow(int w, int h, const char* name){
     }
 
     // init SDL
-    if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
+    if(!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK)){
         std::cout << "Failed to initialize SDL!" << std::endl;
         exit(-1);
     }
@@ -79,7 +79,7 @@ void Window::initializeWindow(int w, int h, const char* name){
     additionalWindowOptions();
 
     // create window handle
-    handle = SDL_CreateWindow(name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    handle = SDL_CreateWindow(name, w, h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if(handle == nullptr){
         std::cout << "Failed to create window!" << std::endl;
         exit(-1);
@@ -95,7 +95,7 @@ void Window::initializeWindow(int w, int h, const char* name){
     // initialize GLAD
 
     // load glad
-    if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
+    if (!gladLoadGL()) {
         std::cout << "Failed to init GLAD!" << std::endl;
         exit(-1);
     }
@@ -162,11 +162,11 @@ void Window::runtime(){
         while(SDL_PollEvent(&eventHandle)){
           // check the sdl events relating the window
           switch (eventHandle.type) {
-            case SDL_QUIT:
+            case SDL_EVENT_QUIT:
                 quit = true;
                 break;
-            case SDL_WINDOWEVENT:
-                if (eventHandle.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+            case SDL_EVENT_WINDOW_RESIZED:
+                if (eventHandle.window.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
                     // set openGL window size
                     SDL_GetWindowSize(handle, &width, &height);
                     glViewport(0, 0, width, height);
@@ -181,7 +181,7 @@ void Window::runtime(){
         }
 
         // grab the current keyboard state
-        this->kState->keyboardState = (Uint8*)SDL_GetKeyboardState(NULL);
+        this->kState->keyboardState = (uint8_t*)SDL_GetKeyboardState(NULL);
 
         //  accumulate time and do stepUpdate()
         this->accumulator += this->DeltaTime;

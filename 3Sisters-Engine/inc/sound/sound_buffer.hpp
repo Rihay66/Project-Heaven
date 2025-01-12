@@ -8,8 +8,7 @@
 
 /* Sound Buffer Class for loading and storing sound.
 Sounds are loading through file and returns a 
-buffer can be retrieved. Sound files can be any audio
-file format.
+buffer can be retrieved. Sound files must be .wav file format
 */
 class SoundBuffer{
     private:
@@ -24,7 +23,9 @@ class SoundBuffer{
 
         //* adder functions
 
-        // for loading a sound from file path, returns the sound as a buffer
+        /* for loading a sound from file path, returns the sound as a buffer
+        * @NOTE: The file format must be .wav
+        */
         ALuint loadSound(const char* filename);
 
         //* remove functions

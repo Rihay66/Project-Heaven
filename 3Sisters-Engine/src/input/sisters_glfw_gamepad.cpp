@@ -1,4 +1,4 @@
-#include <input/glfw_gamepad.hpp>
+#include <input/sisters_glfw_gamepad.hpp>
 
 bool GLFW::getButtonInput(GLFW::Gamepad &pad, int key){
     // check if gamepad is set and connected
