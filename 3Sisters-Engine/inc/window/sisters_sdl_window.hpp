@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SDL3/SDL_video.h"
 #ifndef SDL_WINDOW_HPP
 #define SDL_WINDOW_HPP
 
@@ -84,18 +85,11 @@ class Window{
         // deconstructor
         ~Window();
         
+        //* Getters functions
+        
         /* returns the current deltatime
         */
         double getDeltaTime();
-
-        /* used to initialize the window and it's contexts by default
-          initializes SDL and creates a Window with OpenGL 4.5 capabilities
-          @Overwriting is not recommended, however due note that runtime(), getDeltaTime(),
-          @setUpOpenGL() require SDL to be initialized and have a created window and GL context
-        */
-        virtual void initializeWindow(int w, int h, const char* name = "");
-
-        //* Getters functions
 
         // returns the width of the window
         unsigned int getWidth(){return this->width;}
@@ -113,7 +107,19 @@ class Window{
         */
         KeyboardStateHolder* getKeyboardState() {return this->kState;}
 
+        /* returns reference of the window handle
+        * @NOTE: initializeWindow() must be called otherwise this returns nullptr
+        */
+        SDL_Window* getWindowHandle() {return this->handle;}
+
         //* Virtual functions
+        
+        /* used to initialize the window and it's contexts by default
+          initializes SDL and creates a Window with OpenGL 4.5 capabilities
+          @Overwriting is not recommended, however due note that runtime(), getDeltaTime(),
+          @setUpOpenGL() require SDL to be initialized and have a created window and GL context
+        */
+        virtual void initializeWindow(int w, int h, const char* name = "");
 
         // used to call classes that handle the loading of shaders, textures, and objects
         virtual void init() = 0;

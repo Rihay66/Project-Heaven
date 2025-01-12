@@ -16,7 +16,7 @@ bool                                                    GamepadManager::isAutoCl
 
 void GamepadManager::InitializeQuery(SDL_Event& event){
     // check if SDL hasn't been initialized
-    if(SDL_WasInit(SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK) != 0){
+    if(!SDL_WasInit(SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK)){
         std::cout << "ERROR: SDL is not initialized!\n";
         return; // stop functions 
     }
@@ -69,7 +69,7 @@ void GamepadManager::PollIO(){
     }
 
     // check if SDL and event handle hasn't been initialized
-    if(SDL_WasInit(SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK) != 0){
+    if(!SDL_WasInit(SDL_INIT_GAMEPAD | SDL_INIT_JOYSTICK)){
         std::cout << "ERROR: SDL is not initialized!\n";
         return; // stop functions
     }

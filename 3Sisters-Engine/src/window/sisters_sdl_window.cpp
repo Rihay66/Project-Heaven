@@ -1,3 +1,4 @@
+#include "SDL3/SDL_events.h"
 #include <window/sisters_sdl_window.hpp>
 
 // include standard libraries
@@ -75,22 +76,22 @@ void Window::initializeWindow(int w, int h, const char* name){
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     
-    // call for additional window options
-    additionalWindowOptions();
-
     // create window handle
     handle = SDL_CreateWindow(name, w, h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if(handle == nullptr){
         std::cout << "Failed to create window!" << std::endl;
         exit(-1);
     }
-
+    
     // set the context
     context = SDL_GL_CreateContext(handle);
     if(context == NULL){
         std::cout << "Failed to create context!" << std::endl;
         exit(-1);
     }
+
+    // call for additional window options
+    additionalWindowOptions();
 
     // initialize GLAD
 
@@ -167,10 +168,22 @@ void Window::runtime(){
                 break;
             case SDL_EVENT_WINDOW_RESIZED:
                 if (eventHandle.window.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
-                    // set openGL window size
+                    // update window size and openGL viewport size
                     SDL_GetWindowSize(handle, &width, &height);
                     glViewport(0, 0, width, height);
                 }
+                break;
+            case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:
+                // update window size and openGL viewport size
+                SDL_GetWindowSize(handle, &width, &height);
+                glViewport(0, 0, width, height);
+
+                break;
+            case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:
+                // update window size and openGL viewport size
+                SDL_GetWindowSize(handle, &width, &height);
+                glViewport(0, 0, width, height);
+
                 break;
             default:
                 break;

@@ -10,7 +10,7 @@ KeyboardStateHolder*  KeyboardManager::keyboardState = nullptr;
 
 void KeyboardManager::SetKeyboardState(KeyboardStateHolder*  handle){
     // check if SDL has been initialized
-    if(SDL_WasInit(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0){
+    if(!SDL_WasInit(SDL_INIT_VIDEO | SDL_INIT_EVENTS)){
         std::cout << "ERROR: SDL hasn't been initialized!\n";
         return; // stop function
     }

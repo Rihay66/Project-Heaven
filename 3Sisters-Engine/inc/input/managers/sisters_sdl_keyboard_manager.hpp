@@ -16,12 +16,12 @@ class KeyboardManager {
     public:
         //* setter functions
 
-        // set the event handle to be stored
+        // set the keyboard state handle to be stored
         static void SetKeyboardState(KeyboardStateHolder*  handle);
 
         //* getter functions
 
-        // return the event handle
+        // return the reference of the keyboard state handle
         static KeyboardStateHolder* GetKeyboardState();
 
     private:
