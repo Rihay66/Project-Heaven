@@ -167,19 +167,6 @@ void Window::runtime(){
                 quit = true;
                 break;
             case SDL_EVENT_WINDOW_RESIZED:
-                if (eventHandle.window.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
-                    // update window size and openGL viewport size
-                    SDL_GetWindowSize(handle, &width, &height);
-                    glViewport(0, 0, width, height);
-                }
-                break;
-            case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:
-                // update window size and openGL viewport size
-                SDL_GetWindowSize(handle, &width, &height);
-                glViewport(0, 0, width, height);
-
-                break;
-            case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:
                 // update window size and openGL viewport size
                 SDL_GetWindowSize(handle, &width, &height);
                 glViewport(0, 0, width, height);
