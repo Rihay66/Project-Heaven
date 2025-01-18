@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28.0)
 set (CMAKE_CXX_STANDARD 20)
-project(3Sisters-Engine-Test VERSION 0.1.0 LANGUAGES C CXX)
+project(3Sisters-Engine-Testing VERSION 0.1.0 LANGUAGES C CXX)
 cmake_policy(SET CMP0072 NEW)
 
 # Include all files
@@ -51,7 +51,7 @@ add_subdirectory(3Sisters-Engine)
 if(UNIX)
 
 # Create executable
-add_executable(3Sisters-Engine-Test
+add_executable(3Sisters-Engine-Testing
 ${HEADER_FILES}
 ${SOURCE_FILES}
 )
@@ -63,16 +63,16 @@ copy_if_different(${SOUNDS_DIR} ${BUILD_DIR}/sounds)
 copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
 
 # Link the extra packages their include directories to avoid linking errors
-target_include_directories(3Sisters-Engine-Test PRIVATE 3Sisters-Engine)
+target_include_directories(3Sisters-Engine-Testing PRIVATE 3Sisters-Engine)
 # Link the 3Sisters-Engine to executable
-target_link_libraries(3Sisters-Engine-Test PRIVATE 3Sisters-Engine)
+target_link_libraries(3Sisters-Engine-Testing PRIVATE 3Sisters-Engine)
 
 endif ()
 
 if(WIN32)
 
 # Create executable
-add_executable(3Sisters-Engine-Test
+add_executable(3Sisters-Engine-Testing
 ${HEADER_FILES}
 ${SOURCE_FILES}
 )
@@ -86,16 +86,16 @@ copy_if_different(${FONTS_DIR} ${BUILD_DIR}/fonts)
 if(MSVC) # msvc
 
 # Link the extra packages their include directories to avoid linking errors
-target_include_directories(3Sisters-Engine-Test PRIVATE 3Sisters-Engine)
+target_include_directories(3Sisters-Engine-Testing PRIVATE 3Sisters-Engine)
 # Link the 3Sisters-Engine to executable
-target_link_libraries(3Sisters-Engine-Test PRIVATE 3Sisters-Engine)
+target_link_libraries(3Sisters-Engine-Testing PRIVATE 3Sisters-Engine)
 
 else () # mingw
 
 # Link the extra packages their include directories to avoid linking errors
-target_include_directories(3Sisters-Engine-Test PRIVATE 3Sisters-Engine)
+target_include_directories(3Sisters-Engine-Testing PRIVATE 3Sisters-Engine)
 # Link the 3Sisters-Engine to executable
-target_link_libraries(3Sisters-Engine-Test PRIVATE 3Sisters-Engine)
+target_link_libraries(3Sisters-Engine-Testing PRIVATE 3Sisters-Engine)
 
 endif()
 

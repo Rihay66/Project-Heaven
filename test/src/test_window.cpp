@@ -6,6 +6,9 @@
 #include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/resource_manager.hpp>
 #include <engine/text_renderer.hpp>
+#include <string>
+#include <cstddef>
+#include <chrono>
 
 TestWindow::TestWindow() : Window(){
 
@@ -13,6 +16,13 @@ TestWindow::TestWindow() : Window(){
 
 TestWindow::~TestWindow() {
     
+}
+
+std::string TestWindow::getFrameTime(){
+    // Calculate and print frame rate every second
+    frame = "FPS: " + std::to_string(getFrameDuration() * 1000);
+
+    return frame;
 }
 
 void TestWindow::init(){  
@@ -26,7 +36,7 @@ void TestWindow::init(){
     ResourceManager::GenerateWhiteTexture();
 
     // load a font
-    ResourceManager::LoadFontTexture("fonts/Arcade.ttf", 36, "font", true);
+    ResourceManager::LoadFontTexture("fonts/Forward.ttf", 36, "font", true);
 
     // Initialize camera
     camera.setDimensions(1280, 720);
@@ -55,27 +65,29 @@ void TestWindow::init(){
         ECS::GetComponentType<Material2D>()
     );
 
-    // create entity
-    Entity entity = ECS::CreateEntity();
+    // creat a lot of entities
+    for(int x = 0; x < 80; x++){
+        for(int y = 0; y < 80; y++){
+            // create entity
+            Entity entity = ECS::CreateEntity();
 
-    // add components to entity, it also gets included in the ECS renderer
-    ECS::AddComponent(entity,
-        Transform2D{
-            .position = {12.5f, 7.0f},
-            .rotation = 0.0f,
-            .size = {3.0f, 3.0f}
-        },
-        Material2D{
-            .texIndex = ResourceManager::GetTextureIndex("default")
+            // add components to entity, it also gets included in the ECS renderer
+            ECS::AddComponent(entity,
+                Transform2D{
+                    .position = {x, y},
+                    .rotation = 0.0f,
+                    .size = {0.5f, 0.5f}
+                },
+                Material2D{
+                    .texIndex = ResourceManager::GetTextureIndex("default")
+                }
+            );
         }
-    );
+    }
 }
 
 void TestWindow::stepUpdate(double ts){
-    // grab entity, assume entity ID is 0
-    auto& transform = ECS::GetComponent<Transform2D>(0);
-    // rotate the entity
-    transform.rotation += 100.0f * ts;
+
 }
 
 void TestWindow::update(){
@@ -90,6 +102,6 @@ void TestWindow::render(double alpha){
     renderer->render(alpha);
 
     // render example text
-    TextRenderer::DrawText(ResourceManager::GetFontTexture("font"), "Hello World!", 
+    TextRenderer::DrawText(ResourceManager::GetFontTexture("font"), getFrameTime(), 
     glm::vec2(100.0f, 200.0f), glm::vec2(1.0f), glm::vec4(0.1f, 0.8f, 0.1f, 1.0f));
 }

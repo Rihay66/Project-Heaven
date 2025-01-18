@@ -13,6 +13,11 @@ class TestWindow : public Window {
     private:
         OrthoCamera camera;
         ECS_SpriteRendererPtr renderer;
+
+        std::string frame = "";
+        // get frame rate
+        std::string getFrameTime();
+
     public:
         TestWindow();
         ~TestWindow();

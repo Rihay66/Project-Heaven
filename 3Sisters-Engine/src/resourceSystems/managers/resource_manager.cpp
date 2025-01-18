@@ -203,7 +203,7 @@ void ResourceManager::GenerateWhiteTexture(){
             data[i] = 255;
         }
         
-        whiteTexture.SetTextureInternalFormat(GL_RGBA);
+        whiteTexture.SetTextureInternalFormat(GL_RGBA8);
         whiteTexture.SetTextureImageFormat(GL_RGBA);
         
         // generate the texture
@@ -279,15 +279,16 @@ bool ResourceManager::BindTextures(){
     for(int i = 0; i < texIDList.size(); i++){
         // call to bind texture by their ID to an index 
         glBindTextureUnit(i, texIDList[i]);
+        // check OpenGL errors
+        int errorCode = glGetError();
+        if(errorCode != GL_NO_ERROR){
+            std::cout << "ERROR: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
+            std::cout << "ERROR: Texture ID: " << texIDList[i] << " | Failed to be binded to index: " << i << "\n";
+            return false; 
+        }
     }
 
     //TODO: Make a flag that allows to display warnings such as this
-    // check OpenGL errors
-    int errorCode = glGetError();
-    if(errorCode != GL_NO_ERROR){
-        std::cout << "WARNING: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
-        return false;
-    }
 
     return true;
 }
@@ -348,7 +349,7 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha, bool 
     // set alpha
     if (alpha)
     {
-        texture.SetTextureInternalFormat(GL_RGBA);
+        texture.SetTextureInternalFormat(GL_RGBA8);
         texture.SetTextureImageFormat(GL_RGBA);
     }
     // set filter
