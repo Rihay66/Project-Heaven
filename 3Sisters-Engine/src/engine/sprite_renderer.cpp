@@ -41,8 +41,6 @@ Shader                              SpriteRenderer::lineShader;
 // initialize "Universal" pixel size for all render primatives under this renderer
 glm::uvec2                          SpriteRenderer::quadPixelSize;
 glm::uvec2                          SpriteRenderer::linePixelSize;
-// initialzie linear interpolation 
-State                       SpriteRenderer::interpolation;
 // initialize auto clear var
 bool                                SpriteRenderer::QuadSet = false;
 bool                                SpriteRenderer::LineSet = false;
@@ -181,6 +179,9 @@ void SpriteRenderer::DrawQuad(int texIndex, Interpolation inter, glm::vec2 size,
     // init the buffer
     beginQuadBatch();
 
+    // create interpolation storage
+    State interpolation;
+
     // calculate interpolation
     interpolateState(interpolation, alpha, inter.previous, inter.current);
 
@@ -284,6 +285,9 @@ void SpriteRenderer::StackQuad(int texIndex, Interpolation inter, glm::vec2 size
     }
 
     // if not then add a quad to the buffer pointer
+
+    // create interpolation storage
+    State interpolation;
 
     // calculate interpolation
     interpolateState(interpolation, alpha, inter.previous, inter.current);
