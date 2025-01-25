@@ -27,8 +27,7 @@ bool            TextRenderer::isAutoClearSet = false;
 
 //TODO: Refactor text renderer to use a batch rendering solution
 
-void TextRenderer::Init(unsigned int width, unsigned int height,
- Shader& shader){
+void TextRenderer::Init(Shader& shader){
     // when auto clear is set, stop re-initializing rendering data
     if(isAutoClearSet){
         std::cout << "Warning: Initialization of Text Renderer being called more than once!\n";
@@ -38,15 +37,8 @@ void TextRenderer::Init(unsigned int width, unsigned int height,
     // set up auto clear
     setUpAutoClear();
 
-    // create projection to be bottom left on the screen
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(width), 
-        0.0f, static_cast<float>(height), -1.0f, 1.0f);
-
     // set shader
     textShader = shader;
-
-    // configure shader
-    textShader.SetMatrix4("projection", projection, true);
 
     // configure VAO/VBO for positioning and texturing
     initTextRenderingData();

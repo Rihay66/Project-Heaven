@@ -45,6 +45,7 @@ void TestWindow::init(){
     camera.setDimensions(1280, 720);
     camera.calculateProjectionView(ResourceManager::GetShader("quad"));
     camera.calculateProjectionView(ResourceManager::GetShader("line"));
+    camera.calculateProjectionView(ResourceManager::GetShader("text"));
 
     // init quad renderer
     SpriteRenderer::InitQuad(ResourceManager::GetShader("quad"), {50.0f, 50.0f});
@@ -55,7 +56,7 @@ void TestWindow::init(){
     SpriteRenderer::SetLineWidth(2.0f);
 
     // init text renderer
-    TextRenderer::Init(1280, 720, ResourceManager::GetShader("text"));
+    TextRenderer::Init(ResourceManager::GetShader("text"));
 
     // init ECS
     ECS::Init();
