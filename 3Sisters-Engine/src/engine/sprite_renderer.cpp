@@ -394,7 +394,7 @@ float SpriteRenderer::GetLineWidth(){
     return lineWidth;
 }
 
-void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, const std::array<glm::vec2, 4> texCoords,const glm::vec4 vertexPositions[]){
+void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2& size, float& rotation, int& texIndex, glm::vec4& color, const std::array<glm::vec2, 4> texCoords,const glm::vec4 vertexPositions[]){
     // check if not over the index count
     if (quadIndexCount >= maxQuadIndexCount){
         // flush what's left and start another batch
@@ -532,21 +532,22 @@ void SpriteRenderer::initLineRenderData(){
     lineBuffer = new LineVertex[maxLineVertexCount];
 
     // configure VAO/VBO
-    glGenVertexArrays(1, &lineVAO);
-    glGenBuffers(1, &lineVBO);
+    glCreateVertexArrays(1, &lineVAO);
+    glCreateBuffers(1, &lineVBO);
 
-    glBindVertexArray(lineVAO);
+    glNamedBufferData(lineVBO, sizeof(LineVertex) * maxLineVertexCount, nullptr, GL_DYNAMIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(LineVertex) * maxLineVertexCount, nullptr, GL_DYNAMIC_DRAW);
+    glVertexArrayVertexBuffer(lineVAO, 0, lineVBO, 0, sizeof(LineVertex));
 
     // vertex attribute
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, position));
+    glEnableVertexArrayAttrib(lineVAO, 0);
+    glVertexArrayAttribBinding(lineVAO, 0, 0);
+    glVertexArrayAttribFormat(lineVAO, 0, 2, GL_FLOAT, GL_FALSE, offsetof(LineVertex, position));
 
     // color attribute
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, color));
+    glEnableVertexArrayAttrib(lineVAO, 1);
+    glVertexArrayAttribBinding(lineVAO, 1, 0);
+    glVertexArrayAttribFormat(lineVAO, 1, 4, GL_FLOAT, GL_FALSE, offsetof(LineVertex, color));
 
     // set line set flag
     LineSet = true;
@@ -570,7 +571,7 @@ void SpriteRenderer::beginLineBatch(){
 
 bool SpriteRenderer::endQuadBatch(){
     // calculate amount of quads to render
-    GLsizeiptr size = (uint8_t *)quadBufferPtr - (uint8_t *)quadBuffer;
+    GLsizeiptr size = (uint8_t*)quadBufferPtr - (uint8_t*)quadBuffer;
     if(size < 0){
         // no quads available
         return false;
@@ -585,15 +586,14 @@ bool SpriteRenderer::endQuadBatch(){
 
 bool SpriteRenderer::endLineBatch(){
     // calculate amount of lines to render
-    GLsizeiptr size = (uint8_t *)lineBufferPtr - (uint8_t *)lineBuffer;
+    GLsizeiptr size = (uint8_t*)lineBufferPtr - (uint8_t*)lineBuffer;
     if(size < 0){
         // no quads available
         return false;
     }
 
     // set up dynamic buffer
-    glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, lineBuffer);
+    glNamedBufferSubData(lineVBO, 0, size, lineBuffer);
 
     return true;
 }

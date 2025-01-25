@@ -52,7 +52,7 @@ void TextRenderer::Init(unsigned int width, unsigned int height,
     initTextRenderingData();
 }
 
-void TextRenderer::DrawText(std::map<char, Character>& chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
+void TextRenderer::DrawText(std::map<char, Character>& chars, std::string text, glm::vec2 position, glm::vec2 scale, float rotation, glm::vec4 color){
     // check if the text renderer has been set  
     if(!isAutoClearSet){
         std::cout << "ERROR: Missing text render data initialization!\n";
@@ -89,10 +89,9 @@ void TextRenderer::DrawText(std::map<char, Character>& chars, std::string text, 
         };
         
         // render glyph texture over quad
-        glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+        glBindTextureUnit(0, ch.TextureID);
         // update content of VBO memory
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // be sure to use glBufferSubData and not glBufferData
+        glNamedBufferSubData(VBO, 0, sizeof(vertices), vertices);
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
@@ -106,17 +105,14 @@ void TextRenderer::DrawText(std::map<char, Character>& chars, std::string text, 
 void TextRenderer::initTextRenderingData(){
     // configure VAO/VBO for texture quads
     glCreateVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
     glCreateBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
     
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    glNamedBufferData(VBO, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
+    glVertexArrayVertexBuffer(VAO, 0, VBO, 0, 4 * sizeof(float));
+
+    glEnableVertexArrayAttrib(VAO, 0);
+    glVertexArrayAttribBinding(VAO, 0, 0);
+    glVertexArrayAttribFormat(VAO, 0, 4, GL_FLOAT, GL_FALSE, 0);
 }
 
 void TextRenderer::clear(){

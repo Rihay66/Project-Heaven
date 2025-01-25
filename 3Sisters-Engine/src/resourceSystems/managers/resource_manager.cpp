@@ -115,38 +115,37 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
     for (unsigned char c = 0; c < 128; c++){
         // load character glyph
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)){
-            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+            std::cout << "ERROR::FREETYTPE: Failed to load Glyph\n";
             continue;
         }
+
+        // check if glyph data is not empty
+        if(!face->glyph->bitmap.buffer){
+            continue; // skip iteration
+        }
+
         // generate texture
         unsigned int texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RED,
-            face->glyph->bitmap.width,
-            face->glyph->bitmap.rows,
-            0,
-            GL_RED,
-            GL_UNSIGNED_BYTE,
-            face->glyph->bitmap.buffer);
+        glCreateTextures(GL_TEXTURE_2D, 1, &texture);
+        
+        glTextureStorage2D(texture, 1, GL_R8, face->glyph->bitmap.width, face->glyph->bitmap.rows);
+        glTextureSubImage2D(texture, 0, 0, 0, face->glyph->bitmap.width, face->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
+        
         // set texture options
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         //Check for linear flag then set the texture filter
         if(isLinear){
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }else{
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         }
 
         // create mipmap, when objects are far away, OpenGL will set the correct texture resolution
-        glGenerateMipmap(GL_TEXTURE_2D);
+        glGenerateTextureMipmap(texture);
 
         // now store character for later use
         Character character = {
@@ -155,6 +154,14 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             static_cast<unsigned int>(face->glyph->advance.x)};
         Characters.insert(std::pair<char, Character>(c, character));
+
+        // check for OpenGL errors
+        // check OpenGL errors
+        int errorCode = glGetError();
+        if(errorCode != GL_NO_ERROR){
+            std::cout << "ERROR: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
+            std::cout << "ERROR: Texture ID: " << texture << " | Failed to be created\n";
+        }
     }
 
     // free Freetype resources

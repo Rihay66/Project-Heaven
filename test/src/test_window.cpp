@@ -29,6 +29,9 @@ void TestWindow::init(){
     // load quad shader  
     ResourceManager::LoadShader("shaders/quad.vs", "shaders/quad.frag", nullptr, "quad");
 
+    // load line shader
+    ResourceManager::LoadShader("shaders/line.vs", "shaders/line.frag", nullptr, "line");
+
     // load text shader
     ResourceManager::LoadShader("shaders/text.vs", "shaders/text.frag", nullptr, "text");
 
@@ -41,9 +44,15 @@ void TestWindow::init(){
     // Initialize camera
     camera.setDimensions(1280, 720);
     camera.calculateProjectionView(ResourceManager::GetShader("quad"));
+    camera.calculateProjectionView(ResourceManager::GetShader("line"));
 
-    // init sprite renderer
+    // init quad renderer
     SpriteRenderer::InitQuad(ResourceManager::GetShader("quad"), {50.0f, 50.0f});
+
+    // init line renderer
+    SpriteRenderer::InitLine(ResourceManager::GetShader("line"), glm::vec2(50.0f));
+
+    SpriteRenderer::SetLineWidth(2.0f);
 
     // init text renderer
     TextRenderer::Init(1280, 720, ResourceManager::GetShader("text"));
@@ -74,7 +83,7 @@ void TestWindow::init(){
             // add components to entity, it also gets included in the ECS renderer
             ECS::AddComponent(entity,
                 Transform2D{
-                    .position = {x, y},
+                    .position = {x + 1, y + 1},
                     .rotation = 0.0f,
                     .size = {0.5f, 0.5f}
                 },
@@ -101,7 +110,10 @@ void TestWindow::render(double alpha){
     // render all entities
     renderer->render(alpha);
 
+    // render a test line
+    SpriteRenderer::DrawLine({0.0f, 0.0f}, {5.0f, 5.0f}, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
     // render example text
     TextRenderer::DrawText(ResourceManager::GetFontTexture("font"), getFrameTime(), 
-    glm::vec2(100.0f, 200.0f), glm::vec2(1.0f), glm::vec4(0.1f, 0.8f, 0.1f, 1.0f));
+    glm::vec2(100.0f, 200.0f), glm::vec2(1.0f), 25.0f,glm::vec4(0.1f, 0.8f, 0.1f, 1.0f));
 }
