@@ -1,4 +1,5 @@
 #version 320 es
+precision highp float;
 in vec2 o_TexCoords;
 in vec4 o_spriteColor;
 in float o_TexIndex;
