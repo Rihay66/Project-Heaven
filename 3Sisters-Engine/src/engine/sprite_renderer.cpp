@@ -488,36 +488,68 @@ void SpriteRenderer::initQuadRenderData(){
         offset += 4;
     }
 
-    // configure VAO/VBO/EBO
-    glCreateVertexArrays(1, &quadVAO);
-    glCreateBuffers(1, &quadVBO);
-    glCreateBuffers(1, &quadEBO);
+    // check opengl version
+    if(GLAD_GL_VERSION_4_5){
+        // configure VAO/VBO/EBO
+        glCreateVertexArrays(1, &quadVAO);
+        glCreateBuffers(1, &quadVBO);
+        glCreateBuffers(1, &quadEBO);
 
-    glNamedBufferData(quadVBO, sizeof(QuadVertex) * maxQuadVertexCount, nullptr, GL_DYNAMIC_DRAW);
-    glNamedBufferData(quadEBO, sizeof(indices), indices, GL_STATIC_DRAW);
+        glNamedBufferData(quadVBO, sizeof(QuadVertex) * maxQuadVertexCount, nullptr, GL_DYNAMIC_DRAW);
+        glNamedBufferData(quadEBO, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexArrayVertexBuffer(quadVAO, 0, quadVBO, 0, sizeof(QuadVertex));
-    glVertexArrayElementBuffer(quadVAO, quadEBO);
+        glVertexArrayVertexBuffer(quadVAO, 0, quadVBO, 0, sizeof(QuadVertex));
+        glVertexArrayElementBuffer(quadVAO, quadEBO);
 
-    // vertex attribute
-    glEnableVertexArrayAttrib(quadVAO, 0);
-    glVertexArrayAttribBinding(quadVAO, 0, 0);
-    glVertexArrayAttribFormat(quadVAO, 0, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, position));
+        // vertex attribute
+        glEnableVertexArrayAttrib(quadVAO, 0);
+        glVertexArrayAttribBinding(quadVAO, 0, 0);
+        glVertexArrayAttribFormat(quadVAO, 0, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, position));
 
-    // texture coordinates attribute
-    glEnableVertexArrayAttrib(quadVAO, 1);
-    glVertexArrayAttribBinding(quadVAO, 1, 0);
-    glVertexArrayAttribFormat(quadVAO,1, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texCoords));
+        // texture coordinates attribute
+        glEnableVertexArrayAttrib(quadVAO, 1);
+        glVertexArrayAttribBinding(quadVAO, 1, 0);
+        glVertexArrayAttribFormat(quadVAO,1, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texCoords));
 
-    // texture index attribute
-    glEnableVertexArrayAttrib(quadVAO, 2);
-    glVertexArrayAttribBinding(quadVAO, 2, 0);
-    glVertexArrayAttribFormat(quadVAO, 2, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texIndex));
+        // texture index attribute
+        glEnableVertexArrayAttrib(quadVAO, 2);
+        glVertexArrayAttribBinding(quadVAO, 2, 0);
+        glVertexArrayAttribFormat(quadVAO, 2, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texIndex));
 
-    // color attribute
-    glEnableVertexArrayAttrib(quadVAO, 3);
-    glVertexArrayAttribBinding(quadVAO, 3, 0);
-    glVertexArrayAttribFormat(quadVAO, 3, 4, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, color));
+        // color attribute
+        glEnableVertexArrayAttrib(quadVAO, 3);
+        glVertexArrayAttribBinding(quadVAO, 3, 0);
+        glVertexArrayAttribFormat(quadVAO, 3, 4, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, color));
+    }else{
+        // configure VAO/VBO/EBO
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+
+        glBindVertexArray(quadVAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(QuadVertex) * maxQuadVertexCount, nullptr, GL_DYNAMIC_DRAW);
+
+        // vertex attribute
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, position));
+
+        // texture coordinates attribute
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, texCoords));
+
+        // texture index attribute
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, texIndex));
+
+        // color attribute
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, color));
+        
+        glGenBuffers(1, &quadEBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    }
 
     // set quad set flag
     QuadSet = true;
@@ -531,23 +563,43 @@ void SpriteRenderer::initLineRenderData(){
     // configure the buffer
     lineBuffer = new LineVertex[maxLineVertexCount];
 
-    // configure VAO/VBO
-    glCreateVertexArrays(1, &lineVAO);
-    glCreateBuffers(1, &lineVBO);
+    // check opengl version
+    if(GLAD_GL_VERSION_4_5){
+        // configure VAO/VBO
+        glCreateVertexArrays(1, &lineVAO);
+        glCreateBuffers(1, &lineVBO);
+        
+        glNamedBufferData(lineVBO, sizeof(LineVertex) * maxLineVertexCount, nullptr, GL_DYNAMIC_DRAW);
+        
+        glVertexArrayVertexBuffer(lineVAO, 0, lineVBO, 0, sizeof(LineVertex));
+        
+        // vertex attribute
+        glEnableVertexArrayAttrib(lineVAO, 0);
+        glVertexArrayAttribBinding(lineVAO, 0, 0);
+        glVertexArrayAttribFormat(lineVAO, 0, 2, GL_FLOAT, GL_FALSE, offsetof(LineVertex, position));
+        
+        // color attribute
+        glEnableVertexArrayAttrib(lineVAO, 1);
+        glVertexArrayAttribBinding(lineVAO, 1, 0);
+        glVertexArrayAttribFormat(lineVAO, 1, 4, GL_FLOAT, GL_FALSE, offsetof(LineVertex, color));
+    }else{
+        // configure VAO/VBO
+        glGenVertexArrays(1, &lineVAO);
+        glGenBuffers(1, &lineVBO);
 
-    glNamedBufferData(lineVBO, sizeof(LineVertex) * maxLineVertexCount, nullptr, GL_DYNAMIC_DRAW);
+        glBindVertexArray(lineVAO);
 
-    glVertexArrayVertexBuffer(lineVAO, 0, lineVBO, 0, sizeof(LineVertex));
+        glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(LineVertex) * maxLineVertexCount, nullptr, GL_DYNAMIC_DRAW);
 
-    // vertex attribute
-    glEnableVertexArrayAttrib(lineVAO, 0);
-    glVertexArrayAttribBinding(lineVAO, 0, 0);
-    glVertexArrayAttribFormat(lineVAO, 0, 2, GL_FLOAT, GL_FALSE, offsetof(LineVertex, position));
+        // vertex attribute
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, position));
 
-    // color attribute
-    glEnableVertexArrayAttrib(lineVAO, 1);
-    glVertexArrayAttribBinding(lineVAO, 1, 0);
-    glVertexArrayAttribFormat(lineVAO, 1, 4, GL_FLOAT, GL_FALSE, offsetof(LineVertex, color));
+        // color attribute
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, color));
+    }
 
     // set line set flag
     LineSet = true;
@@ -576,10 +628,17 @@ bool SpriteRenderer::endQuadBatch(){
         // no quads available
         return false;
     }
-    
-    // set up dynamic buffer
-    glNamedBufferSubData(quadVBO, 0, size, quadBuffer);
-   
+
+    // check opengl version
+    if(GLAD_GL_VERSION_4_5){
+        // set up dynamic buffer
+        glNamedBufferSubData(quadVBO, 0, size, quadBuffer);
+    }else{
+        // set up dynamic buffer
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, size, quadBuffer);
+    }
+
     // batch is fully set up
     return true;
 }
@@ -592,9 +651,15 @@ bool SpriteRenderer::endLineBatch(){
         return false;
     }
 
-    // set up dynamic buffer
-    glNamedBufferSubData(lineVBO, 0, size, lineBuffer);
-
+    // check opengl version
+    if(GLAD_GL_VERSION_4_5){
+        // set up dynamic buffer
+        glNamedBufferSubData(lineVBO, 0, size, lineBuffer);
+    }else{
+        // set up dynamic buffer
+        glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, size, lineBuffer);
+    }
     return true;
 }
 

@@ -71,10 +71,20 @@ void Window::initializeWindow(int w, int h, const char* name){
     // Load default OpenGL
     SDL_GL_LoadLibrary(NULL);
 
-    // set up OpenGL context
+    // check if using emscripten
+    #ifdef __EMSCRIPTEN__
+    // set up OpenGL ES 3.2 context
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    #else
+    // set up OpenGL core 4.5 context
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+    #endif
+
     
     // create window handle
     handle = SDL_CreateWindow(name, w, h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -89,17 +99,21 @@ void Window::initializeWindow(int w, int h, const char* name){
         std::cout << "Failed to create context!" << std::endl;
         exit(-1);
     }
-
+    
     // call for additional window options
     additionalWindowOptions();
-
+    
     // initialize GLAD
-
+    
     // load glad
     if (!gladLoadGL()) {
         std::cout << "Failed to init GLAD!" << std::endl;
         exit(-1);
     }
+
+    //? debug print of GL version
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
+
     // set openGL window size
     SDL_GetWindowSize(handle, &w, &h);
     glViewport(0, 0, w, h);

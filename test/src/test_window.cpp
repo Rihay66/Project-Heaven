@@ -1,14 +1,7 @@
 #include "../inc/test_window.hpp"
-#include "ecs/components/material.hpp"
-#include "ecs/components/transform.hpp"
-#include "ecs/systems/ecs_sprite_renderer.hpp"
-#include "engine/components/interpolation.hpp"
-#include <engine/sprite_renderer.hpp>
 #include <resourceSystems/managers/resource_manager.hpp>
+#include <engine/sprite_renderer.hpp>
 #include <engine/text_renderer.hpp>
-#include <string>
-#include <cstddef>
-#include <chrono>
 
 TestWindow::TestWindow() : Window(){
 
@@ -18,82 +11,30 @@ TestWindow::~TestWindow() {
     
 }
 
-std::string TestWindow::getFrameTime(){
-    // Calculate and print frame rate every second
-    frame = "FPS: " + std::to_string(getFrameDuration() * 1000);
-
-    return frame;
-}
-
 void TestWindow::init(){  
-    // load quad shader  
-    ResourceManager::LoadShader("shaders/quad.vs", "shaders/quad.frag", nullptr, "quad");
-
-    // load line shader
-    ResourceManager::LoadShader("shaders/line.vs", "shaders/line.frag", nullptr, "line");
-
-    // load text shader
-    ResourceManager::LoadShader("shaders/text.vs", "shaders/text.frag", nullptr, "text");
-
-    // load texture
+    // load a quad shader
+    ResourceManager::LoadShader("shaders/quad_es.vs", "shaders/quad_es.frag", nullptr, "quad");
+    // load a line shader
+    ResourceManager::LoadShader("shaders/line_es.vs", "shaders/line_es.frag", nullptr, "line");
+    // load a text shader
+    ResourceManager::LoadShader("shaders/text_es.vs", "shaders/text_es.frag", nullptr, "text");
+    
+    // generate white texture
     ResourceManager::GenerateWhiteTexture();
-
+    // load a texture
+    ResourceManager::LoadTexture("textures/sisters.png", "sisters");
     // load a font
-    ResourceManager::LoadFontTexture("fonts/Forward.ttf", 36, "font", true);
-
-    // Initialize camera
-    camera.setDimensions(1280, 720);
+    ResourceManager::LoadFontTexture("fonts/November.ttf", 36, "font");
+    
+    // set up camera
+    camera.setDimensions(getWidth(), getHeight());
     camera.calculateProjectionView(ResourceManager::GetShader("quad"));
     camera.calculateProjectionView(ResourceManager::GetShader("line"));
     camera.calculateProjectionView(ResourceManager::GetShader("text"));
 
-    // init quad renderer
-    SpriteRenderer::InitQuad(ResourceManager::GetShader("quad"), {50.0f, 50.0f});
-
-    // init line renderer
-    SpriteRenderer::InitLine(ResourceManager::GetShader("line"), glm::vec2(50.0f));
-
-    SpriteRenderer::SetLineWidth(2.0f);
-
-    // init text renderer
+    // set up renderers
+    SpriteRenderer::Init(ResourceManager::GetShader("quad"), ResourceManager::GetShader("line"), glm::vec2(15.0f), glm::vec2(15.0f));
     TextRenderer::Init(ResourceManager::GetShader("text"));
-
-    // init ECS
-    ECS::Init();
-    
-    // Register components
-    ECS::RegisterComponent<Transform2D>();
-    ECS::RegisterComponent<Material2D>();
-    ECS::RegisterComponent<Interpolation>();
-
-    // register systems
-    renderer = ECS::RegisterSystem<ECS_SpriteRenderer>();
-
-    // set signatures
-    ECS::SetSystemSignature<ECS_SpriteRenderer>(
-        ECS::GetComponentType<Transform2D>(),
-        ECS::GetComponentType<Material2D>()
-    );
-
-    // creat a lot of entities
-    for(int x = 0; x < 80; x++){
-        for(int y = 0; y < 80; y++){
-            // create entity
-            Entity entity = ECS::CreateEntity();
-
-            // add components to entity, it also gets included in the ECS renderer
-            ECS::AddComponent(entity,
-                Transform2D{
-                    .position = {x + 1, y + 1},
-                    .rotation = 0.0f,
-                    .size = {0.5f, 0.5f}
-                },
-                Material2D{
-                    .texIndex = ResourceManager::GetTextureIndex("default")
-                }
-            );
-        }
-    }
 }
 
 void TestWindow::stepUpdate(double ts){
@@ -108,13 +49,17 @@ void TestWindow::render(double alpha){
     // render background
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-    // render all entities
-    renderer->render(alpha);
+    // test quad renderer
+    SpriteRenderer::StackQuad(ResourceManager::GetTextureIndex("default"), glm::vec2(15.0f), glm::vec2(2.0f), 0.0f, glm::vec4(0.0f, 0.5f, 0.5f, 1.0f));
+    SpriteRenderer::StackQuad(ResourceManager::GetTextureIndex("sisters"), glm::vec2(5.0f), glm::vec2(5.0f), 45.0f);
 
-    // render a test line
-    SpriteRenderer::DrawLine({0.0f, 0.0f}, {5.0f, 5.0f}, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    SpriteRenderer::FlushQuads();
 
-    // render example text
-    TextRenderer::DrawText(ResourceManager::GetFontTexture("font"), getFrameTime(), 
-    glm::vec2(100.0f, 200.0f), glm::vec2(1.0f), 25.0f,glm::vec4(0.1f, 0.8f, 0.1f, 1.0f));
+    SpriteRenderer::DrawQuad(ResourceManager::GetTextureIndex("default"), glm::vec2(40.0f, 20.0f), glm::vec2(10.0f), 0.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+    // test line renderer
+    SpriteRenderer::DrawLine(glm::vec2(1.0f), glm::vec2(10.0f));
+
+    // render text
+    TextRenderer::DrawText(ResourceManager::GetFontTexture("font"), "HELLO world!", glm::vec2(100.0f, 200.0f), glm::vec2(1.0f));
 }

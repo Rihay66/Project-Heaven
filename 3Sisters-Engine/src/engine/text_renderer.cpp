@@ -1,3 +1,4 @@
+#include <GLES2/gl2.h>
 #include <engine/text_renderer.hpp>
 
 // additional GLM libraries
@@ -44,7 +45,7 @@ void TextRenderer::Init(Shader& shader){
     initTextRenderingData();
 }
 
-void TextRenderer::DrawText(std::map<char, Character>& chars, std::string text, glm::vec2 position, glm::vec2 scale, float rotation, glm::vec4 color){
+void TextRenderer::DrawText(std::map<char, Character>& chars, std::string text, glm::vec2 position, glm::vec2 scale, glm::vec4 color){
     // check if the text renderer has been set  
     if(!isAutoClearSet){
         std::cout << "ERROR: Missing text render data initialization!\n";
@@ -80,31 +81,63 @@ void TextRenderer::DrawText(std::map<char, Character>& chars, std::string text, 
             { xpos + w, ypos + h,   1.0f, 0.0f }           
         };
         
-        // render glyph texture over quad
-        glBindTextureUnit(0, ch.TextureID);
-        // update content of VBO memory
-        glNamedBufferSubData(VBO, 0, sizeof(vertices), vertices);
+        // check opengl version
+        if(GLAD_GL_VERSION_4_5){
+            // render glyph texture over quad
+            glBindTextureUnit(0, ch.TextureID);
+        
+            // update content of VBO memory
+            glNamedBufferSubData(VBO, 0, sizeof(vertices), vertices);
+        }else{
+            // render glyph texture over quad
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+
+            // update content of VBO memory
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // be sure to use glBufferSubData and not glBufferData
+        }
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
         position.x += (ch.Advance >> 6) * scale.x; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
     }
+    
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     // rebind non-font textures
     ResourceManager::BindTextures();
 }
 
 void TextRenderer::initTextRenderingData(){
-    // configure VAO/VBO for texture quads
-    glCreateVertexArrays(1, &VAO);
-    glCreateBuffers(1, &VBO);
-    
-    glNamedBufferData(VBO, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
-    glVertexArrayVertexBuffer(VAO, 0, VBO, 0, 4 * sizeof(float));
+    // check opengl version
+    if(GLAD_GL_VERSION_4_5){
+        // configure VAO/VBO for texture quads
+        glCreateVertexArrays(1, &VAO);
+        glCreateBuffers(1, &VBO);
+        
+        glNamedBufferData(VBO, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
+        glVertexArrayVertexBuffer(VAO, 0, VBO, 0, 4 * sizeof(float));
 
-    glEnableVertexArrayAttrib(VAO, 0);
-    glVertexArrayAttribBinding(VAO, 0, 0);
-    glVertexArrayAttribFormat(VAO, 0, 4, GL_FLOAT, GL_FALSE, 0);
+        glEnableVertexArrayAttrib(VAO, 0);
+        glVertexArrayAttribBinding(VAO, 0, 0);
+        glVertexArrayAttribFormat(VAO, 0, 4, GL_FLOAT, GL_FALSE, 0);
+    }else{
+        // configure VAO/VBO for texture quads
+        glGenVertexArrays(1, &VAO);
+        glBindVertexArray(VAO);
+        
+        glGenBuffers(1, &VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+        
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
 }
 
 void TextRenderer::clear(){
