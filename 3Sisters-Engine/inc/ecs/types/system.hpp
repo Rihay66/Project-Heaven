@@ -13,6 +13,9 @@ signatures that it can iterate through
 class System{
     public:
         std::set<Entity> entities;
+
+        // makes class polymorphic
+        virtual ~System() = default;
 };
 
 #endif

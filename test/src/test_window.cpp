@@ -1,7 +1,12 @@
 #include "../inc/test_window.hpp"
+#include "ecs/systems/ecs_sprite_renderer.hpp"
+#include <engine/components/interpolation.hpp>
 #include <resourceSystems/managers/resource_manager.hpp>
 #include <engine/sprite_renderer.hpp>
 #include <engine/text_renderer.hpp>
+#include <ecs/ecs.hpp>
+#include <ecs/components/material.hpp>
+#include <ecs/components/transform.hpp>
 
 TestWindow::TestWindow() : Window(){
 
@@ -35,10 +40,47 @@ void TestWindow::init(){
     // set up renderers
     SpriteRenderer::Init(ResourceManager::GetShader("quad"), ResourceManager::GetShader("line"), glm::vec2(15.0f), glm::vec2(15.0f));
     TextRenderer::Init(ResourceManager::GetShader("text"));
+
+    // init ECS
+    ECS::Init();
+
+    // register components
+    ECS::RegisterComponent<Transform2D>();
+    ECS::RegisterComponent<Material2D>();
+    ECS::RegisterComponent<Interpolation>();
+
+    // register systems
+    ECS::RegisterSystem<ECS_SpriteRenderer>();
+
+    // get reference of the system
+    renderer = ECS::GetSystem<ECS_SpriteRenderer>();
+
+    // set signatures to system
+    ECS::SetSystemSignature<ECS_SpriteRenderer>(
+        ECS::GetComponentType<Transform2D>(),
+        ECS::GetComponentType<Material2D>()
+    );
+
+    // create entity
+    entity = ECS::CreateEntity();
+    // add components to entity
+    ECS::AddComponent(entity, 
+    Transform2D{
+        .position = {20.0f, 20.0f},
+        .rotation = 0.0f,
+        .size = {1.5f, 1.5f}
+    },
+    Material2D{
+        .texIndex = ResourceManager::GetTextureIndex("default"),
+        .color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)
+    }    
+    );
 }
 
 void TestWindow::stepUpdate(double ts){
-
+    // make entity spin
+    auto& pos = ECS::GetComponent<Transform2D>(entity);
+    pos.rotation += 2.0f;
 }
 
 void TestWindow::update(){
@@ -48,6 +90,9 @@ void TestWindow::update(){
 void TestWindow::render(double alpha){
     // render background
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
+    // test ECS quad renderer system
+    renderer->render(alpha); 
 
     // test quad renderer
     SpriteRenderer::StackQuad(ResourceManager::GetTextureIndex("default"), glm::vec2(15.0f), glm::vec2(2.0f), 0.0f, glm::vec4(0.0f, 0.5f, 0.5f, 1.0f));

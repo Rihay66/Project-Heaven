@@ -41,6 +41,7 @@ class SystemManager{
             const char* typeName = typeid(T).name();
 
             if(systems.find(typeName) != systems.end()){
+                std::cout << "ERROR: " << typeName << " is already registered, cannot have duplicate registrations\n";
                 return nullptr;
             }
 
@@ -48,6 +49,22 @@ class SystemManager{
             auto system = std::make_shared<T>();
             systems.insert({typeName, system});
             return system;
+        }
+
+        // get registered system and return reference of such system for external use
+        template<typename T>
+        std::shared_ptr<T> GetSystem(){
+            static_assert(std::is_base_of<System, T>::value, "ERROR: given type to register system does not inherit from System");
+
+            const char* typeName = typeid(T).name();
+
+            if(systems.find(typeName) == systems.end()){
+                std::cout << "ERROR: " << typeName << " is not registered, given system type can't be found\n";
+                // no registered system was found, return nothing
+                return nullptr;
+            }
+            
+            return std::dynamic_pointer_cast<T>(systems[typeName]);
         }
 
         // set the signature to specified system
