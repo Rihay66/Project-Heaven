@@ -108,10 +108,7 @@ void Window::initializeWindow(int w, int h, const char* name){
         std::cout << "Failed to init GLAD!" << std::endl;
         exit(-1);
     }
-
-    //? debug print of GL version
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
-
+    
     // set openGL window size
     SDL_GetWindowSize(handle, &w, &h);
     glViewport(0, 0, w, h);
