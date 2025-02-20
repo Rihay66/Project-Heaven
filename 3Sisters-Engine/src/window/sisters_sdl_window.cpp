@@ -1,4 +1,3 @@
-#include "SDL3/SDL_events.h"
 #include <window/sisters_sdl_window.hpp>
 
 // include standard libraries
@@ -73,7 +72,7 @@ void Window::initializeWindow(int w, int h, const char* name){
 
     // check if using emscripten
     #ifdef __EMSCRIPTEN__
-    // set up OpenGL ES 3.2 context
+    // set up OpenGL ES 3.x context
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
@@ -85,7 +84,6 @@ void Window::initializeWindow(int w, int h, const char* name){
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     #endif
 
-    
     // create window handle
     handle = SDL_CreateWindow(name, w, h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if(handle == nullptr){

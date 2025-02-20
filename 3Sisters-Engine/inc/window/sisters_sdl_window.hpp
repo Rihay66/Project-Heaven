@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SDL3/SDL_video.h"
 #ifndef SDL_WINDOW_HPP
 #define SDL_WINDOW_HPP
 
@@ -121,7 +120,7 @@ class Window{
         //* Virtual functions
         
         /* used to initialize the window and it's contexts by default
-          initializes SDL and creates a Window with OpenGL 4.5 capabilities
+          initializes SDL and creates a Window with OpenGL 4.5, or OpenGLES 3.X if using Emscripten, capabilities
           @Overwriting is not recommended, however due note that runtime(), getDeltaTime(),
           @setUpOpenGL() require SDL to be initialized and have a created window and GL context
         */

@@ -113,7 +113,7 @@ void TextRenderer::DrawText(std::map<char, Character>& chars, std::string text, 
 void TextRenderer::initTextRenderingData(){
     // check opengl version
     if(GLAD_GL_VERSION_4_5){
-        // configure VAO/VBO for texture quads
+        // configure VAO/VBO for text
         glCreateVertexArrays(1, &VAO);
         glCreateBuffers(1, &VBO);
         
@@ -124,7 +124,7 @@ void TextRenderer::initTextRenderingData(){
         glVertexArrayAttribBinding(VAO, 0, 0);
         glVertexArrayAttribFormat(VAO, 0, 4, GL_FLOAT, GL_FALSE, 0);
     }else{
-        // configure VAO/VBO for texture quads
+        // configure VAO/VBO for text
         glGenVertexArrays(1, &VAO);
         glBindVertexArray(VAO);
         
