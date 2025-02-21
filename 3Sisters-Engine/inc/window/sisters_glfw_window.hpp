@@ -59,6 +59,12 @@ class Window{
         */
         virtual void setUpOpenGL();
 
+        // used to retrieve how long a frame took
+        double getFrameDuration() {return this->frameDuration;}
+
+        // used to retrieve the current frame
+        double getCurrentFrame() {return this->currentFrame;}
+
         //TODO: Refactor the window state system to allow for robust changing input or going to debug, etc...
 
     public:

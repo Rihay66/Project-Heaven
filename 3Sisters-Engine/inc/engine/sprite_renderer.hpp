@@ -171,11 +171,6 @@ class SpriteRenderer{
 
         // stores maximum amount of textures there can be
         const static int maxTextureSlots = 32;
-
-        /* overwrittable state holder
-            !Its defined and used to avoid having to make memory space every frame
-        */
-        static State interpolation;
         
         // private constructor 
         SpriteRenderer() {}

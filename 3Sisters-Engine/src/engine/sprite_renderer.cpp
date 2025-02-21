@@ -41,8 +41,6 @@ Shader                              SpriteRenderer::lineShader;
 // initialize "Universal" pixel size for all render primatives under this renderer
 glm::uvec2                          SpriteRenderer::quadPixelSize;
 glm::uvec2                          SpriteRenderer::linePixelSize;
-// initialzie linear interpolation 
-State                       SpriteRenderer::interpolation;
 // initialize auto clear var
 bool                                SpriteRenderer::QuadSet = false;
 bool                                SpriteRenderer::LineSet = false;
@@ -181,6 +179,9 @@ void SpriteRenderer::DrawQuad(int texIndex, Interpolation inter, glm::vec2 size,
     // init the buffer
     beginQuadBatch();
 
+    // create interpolation storage
+    State interpolation;
+
     // calculate interpolation
     interpolateState(interpolation, alpha, inter.previous, inter.current);
 
@@ -284,6 +285,9 @@ void SpriteRenderer::StackQuad(int texIndex, Interpolation inter, glm::vec2 size
     }
 
     // if not then add a quad to the buffer pointer
+
+    // create interpolation storage
+    State interpolation;
 
     // calculate interpolation
     interpolateState(interpolation, alpha, inter.previous, inter.current);
@@ -390,7 +394,7 @@ float SpriteRenderer::GetLineWidth(){
     return lineWidth;
 }
 
-void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2 &size, float &rotation, int &texIndex, glm::vec4 &color, const std::array<glm::vec2, 4> texCoords,const glm::vec4 vertexPositions[]){
+void SpriteRenderer::createQuad(glm::vec2& pos, glm::vec2& size, float& rotation, int& texIndex, glm::vec4& color, const std::array<glm::vec2, 4> texCoords,const glm::vec4 vertexPositions[]){
     // check if not over the index count
     if (quadIndexCount >= maxQuadIndexCount){
         // flush what's left and start another batch
@@ -469,31 +473,6 @@ void SpriteRenderer::initQuadRenderData(){
     // configure buffer
     quadBuffer = new QuadVertex[maxQuadVertexCount];
 
-    // configure VAO/VBO/EBO
-    glGenVertexArrays(1, &quadVAO);
-    glGenBuffers(1, &quadVBO);
-
-    glBindVertexArray(quadVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(QuadVertex) * maxQuadVertexCount, nullptr, GL_DYNAMIC_DRAW);
-
-    // vertex attribute
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, position));
-
-    // texture coordinates attribute
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, texCoords));
-
-    // texture index attribute
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, texIndex));
-
-    // color attribute
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, color));
-
     // indices buffer data
     unsigned int indices[maxQuadIndexCount];
     unsigned int offset = 0;
@@ -509,9 +488,68 @@ void SpriteRenderer::initQuadRenderData(){
         offset += 4;
     }
 
-    glGenBuffers(1, &quadEBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    // check opengl version
+    if(GLAD_GL_VERSION_4_5){
+        // configure VAO/VBO/EBO
+        glCreateVertexArrays(1, &quadVAO);
+        glCreateBuffers(1, &quadVBO);
+        glCreateBuffers(1, &quadEBO);
+
+        glNamedBufferData(quadVBO, sizeof(QuadVertex) * maxQuadVertexCount, nullptr, GL_DYNAMIC_DRAW);
+        glNamedBufferData(quadEBO, sizeof(indices), indices, GL_STATIC_DRAW);
+
+        glVertexArrayVertexBuffer(quadVAO, 0, quadVBO, 0, sizeof(QuadVertex));
+        glVertexArrayElementBuffer(quadVAO, quadEBO);
+
+        // vertex attribute
+        glEnableVertexArrayAttrib(quadVAO, 0);
+        glVertexArrayAttribBinding(quadVAO, 0, 0);
+        glVertexArrayAttribFormat(quadVAO, 0, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, position));
+
+        // texture coordinates attribute
+        glEnableVertexArrayAttrib(quadVAO, 1);
+        glVertexArrayAttribBinding(quadVAO, 1, 0);
+        glVertexArrayAttribFormat(quadVAO,1, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texCoords));
+
+        // texture index attribute
+        glEnableVertexArrayAttrib(quadVAO, 2);
+        glVertexArrayAttribBinding(quadVAO, 2, 0);
+        glVertexArrayAttribFormat(quadVAO, 2, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texIndex));
+
+        // color attribute
+        glEnableVertexArrayAttrib(quadVAO, 3);
+        glVertexArrayAttribBinding(quadVAO, 3, 0);
+        glVertexArrayAttribFormat(quadVAO, 3, 4, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, color));
+    }else{
+        // configure VAO/VBO/EBO
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+
+        glBindVertexArray(quadVAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(QuadVertex) * maxQuadVertexCount, nullptr, GL_DYNAMIC_DRAW);
+
+        // vertex attribute
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, position));
+
+        // texture coordinates attribute
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, texCoords));
+
+        // texture index attribute
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, texIndex));
+
+        // color attribute
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void *)offsetof(QuadVertex, color));
+        
+        glGenBuffers(1, &quadEBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    }
 
     // set quad set flag
     QuadSet = true;
@@ -525,22 +563,43 @@ void SpriteRenderer::initLineRenderData(){
     // configure the buffer
     lineBuffer = new LineVertex[maxLineVertexCount];
 
-    // configure VAO/VBO
-    glGenVertexArrays(1, &lineVAO);
-    glGenBuffers(1, &lineVBO);
+    // check opengl version
+    if(GLAD_GL_VERSION_4_5){
+        // configure VAO/VBO
+        glCreateVertexArrays(1, &lineVAO);
+        glCreateBuffers(1, &lineVBO);
+        
+        glNamedBufferData(lineVBO, sizeof(LineVertex) * maxLineVertexCount, nullptr, GL_DYNAMIC_DRAW);
+        
+        glVertexArrayVertexBuffer(lineVAO, 0, lineVBO, 0, sizeof(LineVertex));
+        
+        // vertex attribute
+        glEnableVertexArrayAttrib(lineVAO, 0);
+        glVertexArrayAttribBinding(lineVAO, 0, 0);
+        glVertexArrayAttribFormat(lineVAO, 0, 2, GL_FLOAT, GL_FALSE, offsetof(LineVertex, position));
+        
+        // color attribute
+        glEnableVertexArrayAttrib(lineVAO, 1);
+        glVertexArrayAttribBinding(lineVAO, 1, 0);
+        glVertexArrayAttribFormat(lineVAO, 1, 4, GL_FLOAT, GL_FALSE, offsetof(LineVertex, color));
+    }else{
+        // configure VAO/VBO
+        glGenVertexArrays(1, &lineVAO);
+        glGenBuffers(1, &lineVBO);
 
-    glBindVertexArray(lineVAO);
+        glBindVertexArray(lineVAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(LineVertex) * maxLineVertexCount, nullptr, GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(LineVertex) * maxLineVertexCount, nullptr, GL_DYNAMIC_DRAW);
 
-    // vertex attribute
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, position));
+        // vertex attribute
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, position));
 
-    // color attribute
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, color));
+        // color attribute
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, color));
+    }
 
     // set line set flag
     LineSet = true;
@@ -564,15 +623,21 @@ void SpriteRenderer::beginLineBatch(){
 
 bool SpriteRenderer::endQuadBatch(){
     // calculate amount of quads to render
-    GLsizeiptr size = (uint8_t *)quadBufferPtr - (uint8_t *)quadBuffer;
+    GLsizeiptr size = (uint8_t*)quadBufferPtr - (uint8_t*)quadBuffer;
     if(size < 0){
         // no quads available
         return false;
     }
-    
-    // set up dynamic buffer
-    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, quadBuffer);
+
+    // check opengl version
+    if(GLAD_GL_VERSION_4_5){
+        // set up dynamic buffer
+        glNamedBufferSubData(quadVBO, 0, size, quadBuffer);
+    }else{
+        // set up dynamic buffer
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, size, quadBuffer);
+    }
 
     // batch is fully set up
     return true;
@@ -580,16 +645,21 @@ bool SpriteRenderer::endQuadBatch(){
 
 bool SpriteRenderer::endLineBatch(){
     // calculate amount of lines to render
-    GLsizeiptr size = (uint8_t *)lineBufferPtr - (uint8_t *)lineBuffer;
+    GLsizeiptr size = (uint8_t*)lineBufferPtr - (uint8_t*)lineBuffer;
     if(size < 0){
         // no quads available
         return false;
     }
 
-    // set up dynamic buffer
-    glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, lineBuffer);
-
+    // check opengl version
+    if(GLAD_GL_VERSION_4_5){
+        // set up dynamic buffer
+        glNamedBufferSubData(lineVBO, 0, size, lineBuffer);
+    }else{
+        // set up dynamic buffer
+        glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, size, lineBuffer);
+    }
     return true;
 }
 

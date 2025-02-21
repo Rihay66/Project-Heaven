@@ -127,6 +127,12 @@ class ECS{
             return systemManager->RegisterSystem<T>();
         }
 
+        // get reference of a registered system for external use
+        template<typename T>
+        static std::shared_ptr<T> GetSystem(){
+            return systemManager->GetSystem<T>();
+        }
+
         /* set the signatures that a system can use for in the entities
 
         */

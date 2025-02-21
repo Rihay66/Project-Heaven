@@ -24,7 +24,7 @@
 class TextRenderer{
     public:        
         // initialize the text renderer which requires the width and height of the display area and a loaded shader
-        static void Init(unsigned int width, unsigned int height, Shader& shader);
+        static void Init(Shader& shader);
 
         /* used to draw text on the screen using a loaded font
             @ Recommended to use a font loaded through from the ResourceManager

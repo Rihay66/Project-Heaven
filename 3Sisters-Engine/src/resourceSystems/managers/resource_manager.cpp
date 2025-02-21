@@ -1,3 +1,4 @@
+#include <GLES2/gl2.h>
 #include <resourceSystems/managers/resource_manager.hpp>
 
 #include <cstring>
@@ -115,39 +116,65 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
     for (unsigned char c = 0; c < 128; c++){
         // load character glyph
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)){
-            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+            std::cout << "ERROR::FREETYTPE: Failed to load Glyph\n";
             continue;
         }
-        // generate texture
+
         unsigned int texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RED,
-            face->glyph->bitmap.width,
-            face->glyph->bitmap.rows,
-            0,
-            GL_RED,
-            GL_UNSIGNED_BYTE,
-            face->glyph->bitmap.buffer);
-        // set texture options
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        //Check for linear flag then set the texture filter
-        if(isLinear){
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // check opengl version
+        if(GLAD_GL_VERSION_4_5){
+            // generate texture
+            glCreateTextures(GL_TEXTURE_2D, 1, &texture);
+            
+            glTextureStorage2D(texture, 1, GL_R8, face->glyph->bitmap.width, face->glyph->bitmap.rows);
+            glTextureSubImage2D(texture, 0, 0, 0, face->glyph->bitmap.width, face->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
+            
+            // set texture options
+            glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+            //Check for linear flag then set the texture filter
+            if(isLinear){
+                glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            }else{
+                glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            }
         }else{
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            // generate texture
+            glGenTextures(1, &texture);
+            glBindTexture(GL_TEXTURE_2D, texture);
+            
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RED,
+                face->glyph->bitmap.width,
+                face->glyph->bitmap.rows,
+                0,
+                GL_RED,
+                GL_UNSIGNED_BYTE,
+                face->glyph->bitmap.buffer
+            );
+
+            // set texture options
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            
+            //Check for linear flag then set the texture filter
+            if(isLinear){
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            }else{
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            }
+            
+            // unbind the texture
+            glBindTexture(GL_TEXTURE_2D, 0);
         }
-
-        // create mipmap, when objects are far away, OpenGL will set the correct texture resolution
-        glGenerateMipmap(GL_TEXTURE_2D);
-
+        
         // now store character for later use
         Character character = {
             texture,
@@ -155,6 +182,16 @@ std::map<char, Character>& ResourceManager::LoadFontTexture(const char* filename
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             static_cast<unsigned int>(face->glyph->advance.x)};
         Characters.insert(std::pair<char, Character>(c, character));
+
+        // check for OpenGL errors
+        // check OpenGL errors
+        int errorCode = glGetError();
+        if(errorCode != GL_NO_ERROR && error == GL_INVALID_VALUE){
+            std::cout << "ERROR: An error occured during binding texures | ERROR Code: " << errorCode << std::endl;
+            std::cout << "ERROR: Texture ID: " << texture << " | Failed to be created\n";
+            // skip iteration
+            continue;
+        }
     }
 
     // free Freetype resources
@@ -203,8 +240,14 @@ void ResourceManager::GenerateWhiteTexture(){
             data[i] = 255;
         }
         
-        whiteTexture.SetTextureInternalFormat(GL_RGBA);
-        whiteTexture.SetTextureImageFormat(GL_RGBA);
+        // check opengl version
+        if(GLAD_GL_VERSION_4_5){
+            whiteTexture.SetTextureInternalFormat(GL_RGBA8);
+            whiteTexture.SetTextureImageFormat(GL_RGBA);
+        }else{       
+            whiteTexture.SetTextureInternalFormat(GL_RGBA);
+            whiteTexture.SetTextureImageFormat(GL_RGBA);
+        }
         
         // generate the texture
         whiteTexture.Generate(16, 16, data);
@@ -277,17 +320,26 @@ bool ResourceManager::BindTextures(){
 
     // bind all the textures from first to last
     for(int i = 0; i < texIDList.size(); i++){
-        // call to bind texture by their ID to an index 
-        glBindTextureUnit(i, texIDList[i]);
+        // check opengl version
+        if(GLAD_GL_VERSION_4_5){
+            // call to bind texture by their ID to an index 
+            glBindTextureUnit(i, texIDList[i]);
+        }else{
+            //? this may cause issues with multiple textures
+            // call to bind texture by their ID to an index
+            glActiveTexture(GL_TEXTURE0 + i);;
+            glBindTexture(GL_TEXTURE_2D, texIDList[i]);
+        }
+        // check OpenGL errors
+        int errorCode = glGetError();
+        if(errorCode != GL_NO_ERROR){
+            std::cout << "ERROR: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
+            std::cout << "ERROR: Texture ID: " << texIDList[i] << " | Failed to be binded to index: " << i << "\n";
+            return false; 
+        }
     }
 
     //TODO: Make a flag that allows to display warnings such as this
-    // check OpenGL errors
-    int errorCode = glGetError();
-    if(errorCode != GL_NO_ERROR){
-        std::cout << "WARNING: An error occured during binding texures, ERROR Code: " << errorCode << std::endl;
-        return false;
-    }
 
     return true;
 }
@@ -346,10 +398,16 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha, bool 
     // create texture object
     Texture texture;
     // set alpha
-    if (alpha)
-    {
-        texture.SetTextureInternalFormat(GL_RGBA);
-        texture.SetTextureImageFormat(GL_RGBA);
+    if (alpha){
+        // check opengl version
+        if(GLAD_GL_VERSION_4_5){
+            texture.SetTextureInternalFormat(GL_RGBA8);
+            texture.SetTextureImageFormat(GL_RGBA);
+        }else{        
+            texture.SetTextureInternalFormat(GL_RGBA);
+            texture.SetTextureImageFormat(GL_RGBA);
+        }
+
     }
     // set filter
     if(isLinear){
