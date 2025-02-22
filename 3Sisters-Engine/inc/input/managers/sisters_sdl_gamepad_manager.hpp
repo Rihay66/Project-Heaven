@@ -4,7 +4,6 @@
 #define SISTERS_SDL_GAMEPAD_MANAGER_HPP
 
 // include standard library
-#include <array>
 #include <vector>
 
 // include gamepad
@@ -36,9 +35,9 @@ class GamepadManager{
 
         /* add a gamepad reference that can be filled from the list of queried gamepads
         * @NOTE: By default picks the first gamepad
-        * @NOTE: Multiple gamepads aiming to be the same index, only one will be set
+        * @NOTE: Multiple gamepads aiming to be the same priority, only one will be set
         */
-        static void SetGamepad(SDL::Gamepad& gamepad, int index = 0);
+        static void SetGamepad(SDL::Gamepad& gamepad, int priority = 0);
 
         /* polls event from gamepads such as connections and disconnects
         */
@@ -47,8 +46,8 @@ class GamepadManager{
     private:
         // define a queued gamepad that needs to be set
         struct QueuedGamepad{
-            // wanted index to be set, default picks a NULL value
-            int index = -1;
+            // wanted priority to be set, default picks a NULL value
+            int priority = 0;
             // stored reference of the gamepad that needs to be set
             SDL::Gamepad* gamepad = nullptr;
         };
@@ -57,9 +56,6 @@ class GamepadManager{
 
         // define a dynamic list of yet to be set gamepads components from objects or entities
         static std::vector<QueuedGamepad> queuedGamepads;
-
-        // define a list of game controllers detected by GLFW
-        static std::array<std::shared_ptr<SDL::ControllerDevice>, 15> devices;
 
         // contain reference to the event handle
         static SDL_Event* eventHandle;
