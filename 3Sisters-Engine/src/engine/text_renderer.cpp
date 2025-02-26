@@ -1,4 +1,3 @@
-#include <GLES2/gl2.h>
 #include <engine/text_renderer.hpp>
 
 // additional GLM libraries

@@ -7,7 +7,6 @@ cmake_policy(SET CMP0072 NEW)
 file(GLOB_RECURSE SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/test/src/*.c
     ${CMAKE_SOURCE_DIR}/test/src/*.cpp
-    ${CMAKE_SOURCE_DIR}/test/*.cpp
 )
 
 file(GLOB_RECURSE HEADER_FILES

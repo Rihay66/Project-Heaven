@@ -106,5 +106,5 @@ void TestWindow::render(double alpha){
     SpriteRenderer::DrawLine(glm::vec2(1.0f), glm::vec2(10.0f));
 
     // render text
-    TextRenderer::DrawText(ResourceManager::GetFontTexture("font"), "HELLO world!", glm::vec2(100.0f, 200.0f), glm::vec2(1.0f));
+    TextRenderer::DrawString(ResourceManager::GetFontTexture("font"), "HELLO world!", glm::vec2(100.0f, 200.0f), glm::vec2(1.0f));
 }
