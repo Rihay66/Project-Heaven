@@ -34,12 +34,13 @@ class GamepadManager{
         static int GetGamepadAmount();
 
         /* add a gamepad reference that can be filled from the list of queried gamepads
-        * @NOTE: By default picks the first gamepad
+        * @NOTE: By default picks and sets the first gamepad with the highest priority number
         * @NOTE: Multiple gamepads aiming to be the same priority, only one will be set
         */
         static void SetGamepad(SDL::Gamepad& gamepad, int priority = 0);
 
         /* polls event from gamepads such as connections and disconnects
+        * @NOTE: Already called by SDL Window runtime()
         */
         static void PollIO();
 

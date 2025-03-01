@@ -41,6 +41,9 @@ void TestWindow::init(){
     SpriteRenderer::Init(ResourceManager::GetShader("quad"), ResourceManager::GetShader("line"), glm::vec2(15.0f), glm::vec2(15.0f));
     TextRenderer::Init(ResourceManager::GetShader("text"));
 
+    // initialize gamepad
+    GamepadManager::InitializeQuery(getEventState());
+
     // init ECS
     ECS::Init();
 
@@ -48,6 +51,7 @@ void TestWindow::init(){
     ECS::RegisterComponent<Transform2D>();
     ECS::RegisterComponent<Material2D>();
     ECS::RegisterComponent<Interpolation>();
+    ECS::RegisterComponent<Gamepad>();
 
     // register systems
     ECS::RegisterSystem<ECS_SpriteRenderer>();
@@ -62,9 +66,9 @@ void TestWindow::init(){
     );
 
     // create entity
-    entity = ECS::CreateEntity();
+    greenEntity = ECS::CreateEntity();
     // add components to entity
-    ECS::AddComponent(entity, 
+    ECS::AddComponent(greenEntity, 
     Transform2D{
         .position = {20.0f, 20.0f},
         .rotation = 0.0f,
@@ -73,18 +77,66 @@ void TestWindow::init(){
     Material2D{
         .texIndex = ResourceManager::GetTextureIndex("default"),
         .color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)
-    }    
+    },
+    Gamepad{
+
+    }
     );
+
+    // create another entity
+    redEntity = ECS::CreateEntity();
+    // add components to entity
+    ECS::AddComponent(redEntity, 
+    Transform2D{
+        .position = {10.0f, 20.0f},
+        .rotation = 0.0f,
+        .size = {1.5f, 1.5f}
+    },
+    Material2D{
+        .texIndex = ResourceManager::GetTextureIndex("default"),
+        .color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)
+    },
+    Gamepad{
+
+    }
+    );
+
+    // put gamepad into gamepad manager
+    GamepadManager::SetGamepad(ECS::GetComponent<Gamepad>(greenEntity), 0);
+    GamepadManager::SetGamepad(ECS::GetComponent<Gamepad>(redEntity), 1);
 }
 
 void TestWindow::stepUpdate(double ts){
     // make entity spin
-    auto& pos = ECS::GetComponent<Transform2D>(entity);
+    auto& redpos = ECS::GetComponent<Transform2D>(redEntity);
+    redpos.rotation += 2.0f;
+
+    // make entity move according to the controller input
+    auto& redgamepad = ECS::GetComponent<Gamepad>(redEntity);
+
+    // check for input
+    if(getButtonInput(redgamepad, PLAYSTATION_BUTTON_CROSS)){
+        // move entity upwards
+        redpos.position.y += 1.0f * ts;
+    }
+
+    // make entity spin
+    auto& pos = ECS::GetComponent<Transform2D>(greenEntity);
     pos.rotation += 2.0f;
+
+    // make entity move according to the controller input
+    auto& gamepad = ECS::GetComponent<Gamepad>(greenEntity);
+
+    // check for input
+    if(getButtonInput(gamepad, PLAYSTATION_BUTTON_CROSS)){
+        // move entity upwards
+        pos.position.y += 1.0f * ts;
+    }
 }
 
 void TestWindow::update(){
-
+    // poll gamepad inputs
+    GamepadManager::PollIO();
 }
 
 void TestWindow::render(double alpha){
